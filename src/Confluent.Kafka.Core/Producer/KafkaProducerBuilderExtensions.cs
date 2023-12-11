@@ -1,5 +1,4 @@
 ﻿using Confluent.Kafka.Core.Internal;
-using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Linq;
 using System.Reflection;
@@ -10,7 +9,7 @@ namespace Confluent.Kafka.Core.Producer
     {
         public static IKafkaProducerBuilder<TKey, TValue> WithInterceptorsFromAssemblies<TKey, TValue>(
             this IKafkaProducerBuilder<TKey, TValue> builder,
-            params Assembly[] scanningAssemblies)
+            params Assembly[] assemblies)
         {
             if (builder is null)
             {
@@ -20,17 +19,16 @@ namespace Confluent.Kafka.Core.Producer
             var interceptorType = typeof(IKafkaProducerInterceptor<TKey, TValue>);
 
             var interceptorTypes = AssemblyScanner.Scan(
-                scanningAssemblies,
-                scannedType => interceptorType.IsAssignableFrom(scannedType) &&
-                    !scannedType.IsInterface &&
-                    !scannedType.IsAbstract);
+                assemblies,
+                loadedType => interceptorType.IsAssignableFrom(loadedType) &&
+                    !loadedType.IsInterface &&
+                    !loadedType.IsAbstract);
 
-            if (interceptorTypes.Any())
+            if (interceptorTypes.Length > 0)
             {
                 var interceptors = interceptorTypes
-                    .Select(interceptorType => builder.ServiceProvider is null
-                        ? Activator.CreateInstance(interceptorType)
-                        : ActivatorUtilities.CreateInstance(builder.ServiceProvider, interceptorType))
+                    .Select(interceptorType => ObjectFactory.TryCreateInstance(builder.ServiceProvider, interceptorType))
+                    .Where(interceptor => interceptor is not null)
                     .Cast<IKafkaProducerInterceptor<TKey, TValue>>()
                     .ToArray();
 

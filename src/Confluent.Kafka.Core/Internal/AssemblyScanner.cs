@@ -7,23 +7,23 @@ namespace Confluent.Kafka.Core.Internal
 {
     internal static class AssemblyScanner
     {
-        public static Type[] Scan(IEnumerable<Assembly> scanningAssemblies, Func<Type, bool> scanningFilter)
+        public static Type[] Scan(IEnumerable<Assembly> assemblies, Func<Type, bool> predicate)
         {
-            if (scanningAssemblies is null)
+            if (assemblies is null)
             {
-                throw new ArgumentNullException(nameof(scanningAssemblies), $"{nameof(scanningAssemblies)} cannot be null.");
+                throw new ArgumentNullException(nameof(assemblies), $"{nameof(assemblies)} cannot be null.");
             }
 
-            if (scanningFilter is null)
+            if (predicate is null)
             {
-                throw new ArgumentNullException(nameof(scanningFilter), $"{nameof(scanningFilter)} cannot be null.");
+                throw new ArgumentNullException(nameof(predicate), $"{nameof(predicate)} cannot be null.");
             }
 
             var assemblyTypes = AppDomain.CurrentDomain
                 .GetAssemblies()
-                .Where(scannedAssembly => !scanningAssemblies.Any() || scanningAssemblies.Contains(scannedAssembly))
-                .SelectMany(scannedAssembly => scannedAssembly.GetTypes())
-                .Where(scanningFilter)
+                .Where(loadedAssembly => !assemblies.Any(assembly => assembly is not null) || assemblies.Contains(loadedAssembly))
+                .SelectMany(loadedAssembly => loadedAssembly.GetTypes())
+                .Where(predicate)
                 .ToArray();
 
             return assemblyTypes;
