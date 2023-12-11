@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Confluent.Kafka.Core.Diagnostics.Internal
 {
-    internal sealed class PropagationContext
+    internal sealed class PropagationContext : IPropagationContext
     {
         public ActivityContext ActivityContext { get; }
         public IEnumerable<KeyValuePair<string, string>> Baggage { get; } = EmptyBaggage();

@@ -26,7 +26,7 @@ namespace Confluent.Kafka.Core.Diagnostics.Internal
                 });
         }
 
-        public static PropagationContext Extract(this DistributedContextPropagator propagator, IDictionary<string, string> carrier)
+        public static IPropagationContext Extract(this DistributedContextPropagator propagator, IDictionary<string, string> carrier)
         {
             if (propagator is null)
             {
@@ -63,9 +63,9 @@ namespace Confluent.Kafka.Core.Diagnostics.Internal
 
             ActivityContext.TryParse(traceId, traceState, out var activityContext);
 
-            var propationContext = new PropagationContext(activityContext, baggageItems);
+            var propagationContext = new PropagationContext(activityContext, baggageItems);
 
-            return propationContext;
+            return propagationContext;
         }
     }
 }

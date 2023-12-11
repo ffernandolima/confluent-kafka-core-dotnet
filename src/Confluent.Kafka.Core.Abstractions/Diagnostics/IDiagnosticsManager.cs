@@ -4,19 +4,19 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace Confluent.Kafka.Core.Diagnostics.Internal
+namespace Confluent.Kafka.Core.Diagnostics
 {
-    internal interface IDiagnosticsManager
+    public interface IDiagnosticsManager
     {
+        Activity StartActivity(string activityName, ActivityKind activityKind, IPropagationContext propagationContext);
+
         Activity StartProducerActivity(string activityName, IDictionary<string, string> carrier);
 
         Activity StartConsumerActivity(string activityName, IDictionary<string, string> carrier);
 
-        Activity StartActivity(string activityName, ActivityKind activityKind, PropagationContext context);
-
         void InjectContext(Activity activity, IDictionary<string, string> carrier);
 
-        PropagationContext ExtractContext(IDictionary<string, string> carrier);
+        IPropagationContext ExtractContext(IDictionary<string, string> carrier);
 
         void Enrich(Activity activity, ConsumeException consumeException, IConsumerConfig consumerConfig, Func<byte[], object> messageIdHandler = null);
 

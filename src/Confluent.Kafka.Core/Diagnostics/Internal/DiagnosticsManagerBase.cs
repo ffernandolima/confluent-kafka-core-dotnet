@@ -12,6 +12,13 @@ namespace Confluent.Kafka.Core.Diagnostics.Internal
         protected abstract ActivityEnricherBase ActivityEnricher { get; }
         protected virtual DistributedContextPropagator Propagator { get; } = DistributedContextPropagator.CreateDefaultPropagator();
 
+        public Activity StartActivity(string activityName, ActivityKind activityKind, IPropagationContext propagationContext)
+        {
+            var activity = ActivitySource?.StartActivity(activityName, activityKind, propagationContext);
+
+            return activity;
+        }
+
         public Activity StartProducerActivity(string activityName, IDictionary<string, string> carrier)
         {
             var propagationContext = ExtractContext(carrier);
@@ -41,19 +48,12 @@ namespace Confluent.Kafka.Core.Diagnostics.Internal
             return activity;
         }
 
-        public Activity StartActivity(string activityName, ActivityKind activityKind, PropagationContext context)
-        {
-            var activity = ActivitySource?.StartActivity(activityName, activityKind, context);
-
-            return activity;
-        }
-
         public void InjectContext(Activity activity, IDictionary<string, string> carrier)
         {
             Propagator?.Inject(activity, carrier);
         }
 
-        public PropagationContext ExtractContext(IDictionary<string, string> carrier)
+        public IPropagationContext ExtractContext(IDictionary<string, string> carrier)
         {
             var propagationContext = Propagator?.Extract(carrier);
 

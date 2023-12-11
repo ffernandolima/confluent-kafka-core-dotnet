@@ -1,4 +1,5 @@
-﻿using Confluent.Kafka.Core.Retry;
+﻿using Confluent.Kafka.Core.Diagnostics;
+using Confluent.Kafka.Core.Retry;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,8 @@ namespace Confluent.Kafka.Core.Consumer
         ILoggerFactory LoggerFactory { get; }
 
         IKafkaConsumerConfig ConsumerConfig { get; }
+
+        IDiagnosticsManager DiagnosticsManager { get; }
 
         IDeserializer<TKey> KeyDeserializer { get; }
 

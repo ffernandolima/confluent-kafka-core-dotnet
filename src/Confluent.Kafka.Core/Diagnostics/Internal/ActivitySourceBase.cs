@@ -19,12 +19,12 @@ namespace Confluent.Kafka.Core.Diagnostics.Internal
             ActivitySource = new ActivitySource(activitySourceName, activitySourceVersion);
         }
 
-        public Activity StartActivity(string activityName, ActivityKind activityKind, PropagationContext context)
+        public Activity StartActivity(string activityName, ActivityKind activityKind, IPropagationContext propagationContext)
         {
-            var activity = context is null
+            var activity = propagationContext is null
                 ? ActivitySource.StartActivity(activityName, activityKind)
-                : ActivitySource.StartActivity(activityName, activityKind, context.ActivityContext)
-                                .SetBaggageItems(context.Baggage);
+                : ActivitySource.StartActivity(activityName, activityKind, propagationContext.ActivityContext)
+                                .SetBaggageItems(propagationContext.Baggage);
 
             return activity;
         }
