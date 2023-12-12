@@ -46,7 +46,7 @@ namespace Confluent.Kafka.Core.Diagnostics.Internal
                 .WithGroupId(consumerConfig.GroupId)
                 .WithBootstrapServers(consumerConfig.BootstrapServers);
 
-            if (consumerRecord!.Message is not null)
+            if (consumerRecord.Message is not null)
             {
                 builder.WithMessageId(messageIdHandler?.Invoke(consumerRecord.Message.Value))
                        .WithMessageKey(consumerRecord.Message.Key)
