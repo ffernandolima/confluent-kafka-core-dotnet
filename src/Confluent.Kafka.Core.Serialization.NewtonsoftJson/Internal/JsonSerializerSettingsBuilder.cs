@@ -61,7 +61,7 @@ namespace Confluent.Kafka.Core.Serialization.NewtonsoftJson.Internal
             {
                 settings.Converters ??= new List<JsonConverter>();
 
-                if (converters is not null && converters.Any())
+                if (converters is not null && converters.Any(converter => converter is not null))
                 {
                     foreach (var converter in converters.Where(converter => converter is not null))
                     {

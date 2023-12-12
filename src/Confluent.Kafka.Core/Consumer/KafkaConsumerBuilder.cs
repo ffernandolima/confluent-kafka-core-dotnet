@@ -223,7 +223,7 @@ namespace Confluent.Kafka.Core.Consumer
 
         public IKafkaConsumerBuilder<TKey, TValue> WithInterceptors(IEnumerable<IKafkaConsumerInterceptor<TKey, TValue>> interceptors)
         {
-            if (interceptors is not null && interceptors.Any())
+            if (interceptors is not null && interceptors.Any(interceptor => interceptor is not null))
             {
                 _interceptors = (_interceptors ?? Enumerable.Empty<IKafkaConsumerInterceptor<TKey, TValue>>())
                     .Union(interceptors.Where(interceptor => interceptor is not null));
@@ -325,12 +325,12 @@ namespace Confluent.Kafka.Core.Consumer
 
             if (_consumerConfig.HasTopicSubscriptions)
             {
-                _builtConsumer.Subscribe(_consumerConfig.TopicSubscriptions.Where(topic => !string.IsNullOrWhiteSpace(topic)));
+                _builtConsumer.Subscribe(_consumerConfig.TopicSubscriptions!.Where(topic => !string.IsNullOrWhiteSpace(topic)));
             }
 
             if (_consumerConfig.HasPartitionAssignments)
             {
-                _builtConsumer.Assign(_consumerConfig.PartitionAssignments.Where(partition => partition is not null));
+                _builtConsumer.Assign(_consumerConfig.PartitionAssignments!.Where(partition => partition is not null));
             }
 
             return _builtConsumer;

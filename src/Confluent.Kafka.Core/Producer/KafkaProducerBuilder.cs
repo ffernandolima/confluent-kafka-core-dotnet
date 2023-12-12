@@ -193,7 +193,7 @@ namespace Confluent.Kafka.Core.Producer
 
         public IKafkaProducerBuilder<TKey, TValue> WithInterceptors(IEnumerable<IKafkaProducerInterceptor<TKey, TValue>> interceptors)
         {
-            if (interceptors is not null && interceptors.Any())
+            if (interceptors is not null && interceptors.Any(interceptor => interceptor is not null))
             {
                 _interceptors = (_interceptors ?? Enumerable.Empty<IKafkaProducerInterceptor<TKey, TValue>>())
                     .Union(interceptors.Where(interceptor => interceptor is not null));
@@ -285,7 +285,7 @@ namespace Confluent.Kafka.Core.Producer
 
         #region Public Methods
 
-        public static IKafkaProducerBuilder<TKey, TValue> CreateBuilder(IKafkaProducerConfig producerConfig = null) 
+        public static IKafkaProducerBuilder<TKey, TValue> CreateBuilder(IKafkaProducerConfig producerConfig = null)
             => new KafkaProducerBuilder<TKey, TValue>(producerConfig);
 
         #endregion Public Methods

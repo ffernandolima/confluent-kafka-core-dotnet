@@ -4,7 +4,6 @@ using Confluent.Kafka.Core.Models.Internal;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Confluent.Kafka.Core.Consumer.Internal
 {
@@ -61,7 +60,7 @@ namespace Confluent.Kafka.Core.Consumer.Internal
 
         public Action<IConsumer<TKey, TValue>, List<TopicPartition>> CreatePartitionsAssignedHandler() => (consumer, assignments) =>
         {
-            if (consumer is null || assignments is null || !assignments.Any())
+            if (consumer is null || assignments is null || assignments.Count == 0)
             {
                 return;
             }
@@ -72,7 +71,7 @@ namespace Confluent.Kafka.Core.Consumer.Internal
 
         public Action<IConsumer<TKey, TValue>, List<TopicPartitionOffset>> CreatePartitionsRevokedHandler() => (consumer, revokements) =>
         {
-            if (consumer is null || revokements is null || !revokements.Any())
+            if (consumer is null || revokements is null || revokements.Count == 0)
             {
                 return;
             }
@@ -83,7 +82,7 @@ namespace Confluent.Kafka.Core.Consumer.Internal
 
         public Action<IConsumer<TKey, TValue>, List<TopicPartitionOffset>> CreatePartitionsLostHandler() => (consumer, losses) =>
         {
-            if (consumer is null || losses is null || !losses.Any())
+            if (consumer is null || losses is null || losses.Count == 0)
             {
                 return;
             }

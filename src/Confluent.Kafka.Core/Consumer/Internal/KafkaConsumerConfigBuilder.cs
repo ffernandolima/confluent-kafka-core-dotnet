@@ -1,6 +1,7 @@
 ﻿using Confluent.Kafka.Core.Internal;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Confluent.Kafka.Core.Consumer.Internal
 {
@@ -639,13 +640,27 @@ namespace Confluent.Kafka.Core.Consumer.Internal
 
         public IKafkaConsumerConfigBuilder WithTopicSubscriptions(IEnumerable<string> topicSubscriptions)
         {
-            AppendAction(config => config.TopicSubscriptions = topicSubscriptions);
+            AppendAction(config =>
+            {
+                if (topicSubscriptions is not null && topicSubscriptions.Any(topic => !string.IsNullOrWhiteSpace(topic)))
+                {
+                    config.TopicSubscriptions = (config.TopicSubscriptions ?? Enumerable.Empty<string>())
+                        .Union(topicSubscriptions.Where(topic => !string.IsNullOrWhiteSpace(topic)));
+                }
+            });
             return this;
         }
 
         public IKafkaConsumerConfigBuilder WithPartitionAssignments(IEnumerable<TopicPartition> partitionAssignments)
         {
-            AppendAction(config => config.PartitionAssignments = partitionAssignments);
+            AppendAction(config =>
+            {
+                if (partitionAssignments is not null && partitionAssignments.Any(partition => partition is not null))
+                {
+                    config.PartitionAssignments = (config.PartitionAssignments ?? Enumerable.Empty<TopicPartition>())
+                        .Union(partitionAssignments.Where(partition => partition is not null));
+                }
+            });
             return this;
         }
 

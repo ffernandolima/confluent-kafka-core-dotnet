@@ -49,8 +49,8 @@ namespace Confluent.Kafka.Core.Consumer
 
         #region IKafkaConsumerConfig Explicity Members
 
-        bool IKafkaConsumerConfig.HasTopicSubscriptions => TopicSubscriptions is not null && TopicSubscriptions.Any();
-        bool IKafkaConsumerConfig.HasPartitionAssignments => PartitionAssignments is not null && PartitionAssignments.Any();
+        bool IKafkaConsumerConfig.HasTopicSubscriptions => TopicSubscriptions is not null && TopicSubscriptions.Any(topic => !string.IsNullOrWhiteSpace(topic));
+        bool IKafkaConsumerConfig.HasPartitionAssignments => PartitionAssignments is not null && PartitionAssignments.Any(assignment => assignment is not null);
 
         #endregion IKafkaConsumerConfig Explicity Members
 

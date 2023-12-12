@@ -144,7 +144,7 @@ namespace Confluent.Kafka.Core.Idempotency.Redis.Internal
         {
             AppendAction(options =>
             {
-                if (options.EndPoints is not null && endPoints is not null && endPoints.Any())
+                if (options.EndPoints is not null && endPoints is not null && endPoints.Any(endPoint => endPoint is not null))
                 {
                     foreach (var endPoint in endPoints.Where(endPoint => endPoint is not null))
                     {
