@@ -21,6 +21,8 @@ namespace Microsoft.Extensions.DependencyInjection
                 throw new ArgumentNullException(nameof(configureConsumer), $"{nameof(configureConsumer)} cannot be null.");
             }
 
+            services.AddKafkaDiagnostics();
+
             services.AddSingleton(provider =>
             {
                 var loggerFactory = provider.GetService<ILoggerFactory>();
@@ -38,15 +40,6 @@ namespace Microsoft.Extensions.DependencyInjection
             {
                 var builder = provider.GetRequiredService<IKafkaConsumerBuilder<TKey, TValue>>();
 
-                var options = builder.ToOptions();
-
-                return options;
-            });
-
-            services.AddSingleton(provider =>
-            {
-                var builder = provider.GetRequiredService<IKafkaConsumerBuilder<TKey, TValue>>();
-
                 var consumer = builder.Build();
 
                 return consumer;
@@ -54,16 +47,16 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.AddSingleton<IKafkaConsumerHandlerFactory<TKey, TValue>>(provider =>
             {
-                var consumerOptions = provider.GetRequiredService<IKafkaConsumerOptions<TKey, TValue>>();
+                var builder = provider.GetRequiredService<KafkaConsumerBuilder<TKey, TValue>>();
 
-                var loggerFactory = consumerOptions.LoggerFactory ?? provider.GetService<ILoggerFactory>();
+                var loggerFactory = builder.LoggerFactory ?? provider.GetService<ILoggerFactory>();
 
-                var consumerHandlerFactoryOptions = new KafkaConsumerHandlerFactoryOptions
+                var options = new KafkaConsumerHandlerFactoryOptions
                 {
-                    EnableLogging = consumerOptions.ConsumerConfig!.EnableLogging
+                    EnableLogging = builder.ConsumerConfig!.EnableLogging
                 };
 
-                return new KafkaConsumerHandlerFactory<TKey, TValue>(loggerFactory, consumerHandlerFactoryOptions);
+                return new KafkaConsumerHandlerFactory<TKey, TValue>(loggerFactory, options);
             });
 
             return services;

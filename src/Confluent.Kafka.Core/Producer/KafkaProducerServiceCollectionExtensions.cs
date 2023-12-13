@@ -21,6 +21,8 @@ namespace Microsoft.Extensions.DependencyInjection
                 throw new ArgumentNullException(nameof(configureProducer), $"{nameof(configureProducer)} cannot be null.");
             }
 
+            services.AddKafkaDiagnostics();
+
             services.AddSingleton(provider =>
             {
                 var loggerFactory = provider.GetService<ILoggerFactory>();
@@ -38,15 +40,6 @@ namespace Microsoft.Extensions.DependencyInjection
             {
                 var builder = provider.GetRequiredService<IKafkaProducerBuilder<TKey, TValue>>();
 
-                var options = builder.ToOptions();
-
-                return options;
-            });
-
-            services.AddSingleton(provider =>
-            {
-                var builder = provider.GetRequiredService<IKafkaProducerBuilder<TKey, TValue>>();
-
                 var producer = builder.Build();
 
                 return producer;
@@ -54,16 +47,16 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.AddSingleton<IKafkaProducerHandlerFactory<TKey, TValue>>(provider =>
             {
-                var producerOptions = provider.GetRequiredService<IKafkaProducerOptions<TKey, TValue>>();
+                var builder = provider.GetRequiredService<IKafkaProducerBuilder<TKey, TValue>>();
 
-                var loggerFactory = producerOptions.LoggerFactory ?? provider.GetService<ILoggerFactory>();
+                var loggerFactory = builder.LoggerFactory ?? provider.GetService<ILoggerFactory>();
 
-                var producerHandlerFactoryOptions = new KafkaProducerHandlerFactoryOptions
+                var options = new KafkaProducerHandlerFactoryOptions
                 {
-                    EnableLogging = producerOptions.ProducerConfig!.EnableLogging
+                    EnableLogging = builder.ProducerConfig!.EnableLogging
                 };
 
-                return new KafkaProducerHandlerFactory<TKey, TValue>(loggerFactory, producerHandlerFactoryOptions);
+                return new KafkaProducerHandlerFactory<TKey, TValue>(loggerFactory, options);
             });
 
             return services;
