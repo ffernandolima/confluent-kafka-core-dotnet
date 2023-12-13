@@ -47,7 +47,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.AddSingleton<IKafkaConsumerHandlerFactory<TKey, TValue>>(provider =>
             {
-                var builder = provider.GetRequiredService<KafkaConsumerBuilder<TKey, TValue>>();
+                var builder = provider.GetRequiredService<IKafkaConsumerBuilder<TKey, TValue>>();
 
                 var loggerFactory = builder.LoggerFactory ?? provider.GetService<ILoggerFactory>();
 
