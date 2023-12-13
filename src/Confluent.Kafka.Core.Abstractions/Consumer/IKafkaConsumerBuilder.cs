@@ -17,6 +17,8 @@ namespace Confluent.Kafka.Core.Consumer
 
         IServiceProvider ServiceProvider { get; }
 
+        IKafkaConsumerConfig ConsumerConfig { get; }
+
         IKafkaConsumerBuilder<TKey, TValue> WithStatisticsHandler(Action<IConsumer<TKey, TValue>, string> statisticsHandler);
 
         IKafkaConsumerBuilder<TKey, TValue> WithErrorHandler(Action<IConsumer<TKey, TValue>, Error> errorHandler);

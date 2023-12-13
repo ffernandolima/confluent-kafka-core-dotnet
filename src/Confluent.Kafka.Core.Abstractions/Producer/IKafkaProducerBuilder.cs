@@ -17,6 +17,8 @@ namespace Confluent.Kafka.Core.Producer
 
         IServiceProvider ServiceProvider { get; }
 
+        IKafkaProducerConfig ProducerConfig { get; }
+
         IKafkaProducerBuilder<TKey, TValue> WithStatisticsHandler(Action<IProducer<TKey, TValue>, string> statisticsHandler);
 
         IKafkaProducerBuilder<TKey, TValue> WithPartitioner(string topic, PartitionerDelegate partitioner);
