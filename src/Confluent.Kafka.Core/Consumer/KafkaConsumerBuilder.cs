@@ -1,4 +1,6 @@
 ﻿using Confluent.Kafka.Core.Consumer.Internal;
+using Confluent.Kafka.Core.Diagnostics;
+using Confluent.Kafka.Core.Diagnostics.Internal;
 using Confluent.Kafka.Core.Internal;
 using Confluent.Kafka.Core.Retry;
 using Confluent.Kafka.Core.Serialization.Internal;
@@ -18,11 +20,9 @@ namespace Confluent.Kafka.Core.Consumer
         #region Private Fields
 
         private static readonly Type DefaultConsumerType = typeof(KafkaConsumer<TKey, TValue>);
-
-        private readonly IKafkaConsumerConfig _consumerConfig;
-
         private Type _consumerType;
         private Func<TValue, object> _messageIdHandler;
+        private IDiagnosticsManager _diagnosticsManager;
         private IRetryHandler<TKey, TValue> _retryHandler;
         private IKafkaConsumerHandlerFactory<TKey, TValue> _handlerFactory;
         private Func<IKafkaConsumer<TKey, TValue>, object> _consumerIdHandler;
@@ -37,7 +37,6 @@ namespace Confluent.Kafka.Core.Consumer
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private IKafkaConsumerOptions<TKey, TValue> _builtOptions;
 
-
         #endregion Private Fields
 
         #region Ctors
@@ -49,7 +48,7 @@ namespace Confluent.Kafka.Core.Consumer
         public KafkaConsumerBuilder(IKafkaConsumerConfig consumerConfig)
             : base(consumerConfig ??= BuildConfig())
         {
-            _consumerConfig = consumerConfig;
+            ConsumerConfig = consumerConfig;
         }
 
         #endregion Ctors
@@ -58,7 +57,7 @@ namespace Confluent.Kafka.Core.Consumer
 
         ILogger IKafkaConsumerBuilder<TKey, TValue>.CreateLogger()
         {
-            var logger = LoggerFactory.CreateLogger(_consumerConfig.EnableLogging, _consumerType);
+            var logger = LoggerFactory.CreateLogger(ConsumerConfig.EnableLogging, _consumerType);
 
             return logger;
         }
@@ -76,7 +75,8 @@ namespace Confluent.Kafka.Core.Consumer
             {
                 ConsumerType = _consumerType,
                 LoggerFactory = LoggerFactory,
-                ConsumerConfig = _consumerConfig,
+                ConsumerConfig = ConsumerConfig,
+                DiagnosticsManager = _diagnosticsManager,
                 KeyDeserializer = KeyDeserializer,
                 ValueDeserializer = ValueDeserializer,
                 ConsumerIdHandler = _consumerIdHandler,
@@ -94,6 +94,7 @@ namespace Confluent.Kafka.Core.Consumer
 
         public ILoggerFactory LoggerFactory { get; private set; }
         public IServiceProvider ServiceProvider { get; private set; }
+        public IKafkaConsumerConfig ConsumerConfig { get; private set; }
 
         public IKafkaConsumerBuilder<TKey, TValue> WithStatisticsHandler(Action<IConsumer<TKey, TValue>, string> statisticsHandler)
         {
@@ -221,6 +222,12 @@ namespace Confluent.Kafka.Core.Consumer
             return this;
         }
 
+        public IKafkaConsumerBuilder<TKey, TValue> WithHandlerFactory(IKafkaConsumerHandlerFactory<TKey, TValue> handlerFactory)
+        {
+            _handlerFactory = handlerFactory;
+            return this;
+        }
+
         public IKafkaConsumerBuilder<TKey, TValue> WithInterceptors(IEnumerable<IKafkaConsumerInterceptor<TKey, TValue>> interceptors)
         {
             if (interceptors is not null && interceptors.Any(interceptor => interceptor is not null))
@@ -231,15 +238,9 @@ namespace Confluent.Kafka.Core.Consumer
             return this;
         }
 
-        public IKafkaConsumerBuilder<TKey, TValue> WithHandlerFactory(IKafkaConsumerHandlerFactory<TKey, TValue> handlerFactory)
-        {
-            _handlerFactory = handlerFactory;
-            return this;
-        }
-
         public IKafkaConsumerBuilder<TKey, TValue> WithConfigureConsumer(Action<IServiceProvider, IKafkaConsumerConfigBuilder> configureConsumer)
         {
-            BuildConfig(ServiceProvider, _consumerConfig, configureConsumer);
+            BuildConfig(ServiceProvider, ConsumerConfig, configureConsumer);
             return this;
         }
 
@@ -250,8 +251,8 @@ namespace Confluent.Kafka.Core.Consumer
                 return _builtConsumer;
             }
 
-            _consumerConfig.ValidateAndThrow<KafkaConsumerConfigException>(
-                new ValidationContext(_consumerConfig, new Dictionary<object, object>
+            ConsumerConfig.ValidateAndThrow<KafkaConsumerConfigException>(
+                new ValidationContext(ConsumerConfig, new Dictionary<object, object>
                 {
                     ["RetryHandler"] = _retryHandler
                 }));
@@ -279,8 +280,6 @@ namespace Confluent.Kafka.Core.Consumer
                     SetValueDeserializer(valueDeserializer);
                 }
             }
-
-            _interceptors ??= Enumerable.Empty<IKafkaConsumerInterceptor<TKey, TValue>>();
 
             _handlerFactory ??= ServiceProvider?.GetService<IKafkaConsumerHandlerFactory<TKey, TValue>>();
 
@@ -321,16 +320,22 @@ namespace Confluent.Kafka.Core.Consumer
                 _messageIdHandler ??= _handlerFactory.CreateMessageIdHandler();
             }
 
+            _interceptors ??= Enumerable.Empty<IKafkaConsumerInterceptor<TKey, TValue>>();
+
+            _diagnosticsManager ??= DiagnosticsManagerFactory.GetDiagnosticsManager(
+                ServiceProvider,
+                ConsumerConfig.EnableDiagnostics);
+
             _builtConsumer = (IKafkaConsumer<TKey, TValue>)Activator.CreateInstance(_consumerType, this);
 
-            if (_consumerConfig.HasTopicSubscriptions)
+            if (ConsumerConfig.HasTopicSubscriptions)
             {
-                _builtConsumer.Subscribe(_consumerConfig.TopicSubscriptions!.Where(topic => !string.IsNullOrWhiteSpace(topic)));
+                _builtConsumer.Subscribe(ConsumerConfig.TopicSubscriptions!.Where(topic => !string.IsNullOrWhiteSpace(topic)));
             }
 
-            if (_consumerConfig.HasPartitionAssignments)
+            if (ConsumerConfig.HasPartitionAssignments)
             {
-                _builtConsumer.Assign(_consumerConfig.PartitionAssignments!.Where(partition => partition is not null));
+                _builtConsumer.Assign(ConsumerConfig.PartitionAssignments!.Where(partition => partition is not null));
             }
 
             return _builtConsumer;
