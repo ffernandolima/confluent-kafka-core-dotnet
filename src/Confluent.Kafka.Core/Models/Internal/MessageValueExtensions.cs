@@ -6,9 +6,11 @@ namespace Confluent.Kafka.Core.Models.Internal
     {
         public static Guid? GetId(this IMessageValue messageValue)
         {
-            return messageValue is not null && !messageValue.Id.Equals(Guid.Empty)
-                 ? messageValue.Id
-                 : null;
+            var messageId = messageValue is not null && !messageValue.Id.Equals(Guid.Empty)
+                ? new Guid?(messageValue.Id)
+                : null;
+
+            return messageId;
         }
     }
 }
