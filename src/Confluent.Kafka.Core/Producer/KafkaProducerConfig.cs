@@ -79,7 +79,9 @@ namespace Confluent.Kafka.Core.Producer
             {
                 const string RetryHandler = "RetryHandler";
 
-                if (producerConfig.EnableRetryOnFailure && validationContext.Items.TryGetValue(RetryHandler, out object retryHandler) && retryHandler is null)
+                if (producerConfig.EnableRetryOnFailure &&
+                    validationContext.Items.TryGetValue(RetryHandler, out object retryHandler) &&
+                    retryHandler is null)
                 {
                     yield return new ValidationResult(
                         $"{RetryHandler} cannot be null when {nameof(producerConfig.EnableRetryOnFailure)} is enabled.",

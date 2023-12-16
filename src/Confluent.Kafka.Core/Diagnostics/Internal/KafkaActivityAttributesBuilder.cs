@@ -47,7 +47,7 @@ namespace Confluent.Kafka.Core.Diagnostics.Internal
         {
             AppendAction(attribute =>
             {
-                if (messageKey is not null && !messageKey.GetType().IsAssignableFrom(typeof(Null)))
+                if (messageKey is not null && messageKey is not Null && messageKey is not Ignore)
                 {
                     attribute.MessageKey = messageKey.ToString();
                 }
@@ -57,7 +57,13 @@ namespace Confluent.Kafka.Core.Diagnostics.Internal
 
         public KafkaActivityAttributesBuilder WithMessageValue(object messageValue)
         {
-            AppendAction(attribute => attribute.MessageTombstone = !string.IsNullOrWhiteSpace(attribute.MessageKey) && messageValue is null);
+            AppendAction(attribute =>
+            {
+                if (!string.IsNullOrWhiteSpace(attribute.MessageKey) && messageValue is null)
+                {
+                    attribute.MessageTombstone = true;
+                }
+            });
             return this;
         }
 

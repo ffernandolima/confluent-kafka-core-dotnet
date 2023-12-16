@@ -126,7 +126,8 @@ namespace Confluent.Kafka.Core.Producer
             return this;
         }
 
-        public IKafkaProducerBuilder<TKey, TValue> WithOAuthBearerTokenRefreshHandler(Action<IProducer<TKey, TValue>, string> oAuthBearerTokenRefreshHandler)
+        public IKafkaProducerBuilder<TKey, TValue> WithOAuthBearerTokenRefreshHandler(
+            Action<IProducer<TKey, TValue>, string> oAuthBearerTokenRefreshHandler)
         {
             SetOAuthBearerTokenRefreshHandler(oAuthBearerTokenRefreshHandler);
             return this;

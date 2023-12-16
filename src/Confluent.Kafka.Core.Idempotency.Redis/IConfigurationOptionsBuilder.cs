@@ -77,7 +77,8 @@ namespace Confluent.Kafka.Core.Idempotency.Redis
 
 #if NETCOREAPP3_1_OR_GREATER
 
-        IConfigurationOptionsBuilder WithSslClientAuthenticationOptions(Func<string, SslClientAuthenticationOptions> sslClientAuthenticationOptions);
+        IConfigurationOptionsBuilder WithSslClientAuthenticationOptions(
+            Func<string, SslClientAuthenticationOptions> sslClientAuthenticationOptions);
 #endif
 
         IConfigurationOptionsBuilder WithSsl(bool ssl);

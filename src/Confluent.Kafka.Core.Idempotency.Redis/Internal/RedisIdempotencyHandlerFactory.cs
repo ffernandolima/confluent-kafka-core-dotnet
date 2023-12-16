@@ -19,7 +19,10 @@ namespace Confluent.Kafka.Core.Idempotency.Redis.Internal
 
             var multiplexer = ConnectionMultiplexer.Connect(builder.RedisOptions);
 
-            var idempotencyHandler = new RedisIdempotencyHandler<TKey, TValue>(loggerFactory, multiplexer, builder.HandlerOptions);
+            var idempotencyHandler = new RedisIdempotencyHandler<TKey, TValue>(
+                loggerFactory,
+                multiplexer,
+                builder.HandlerOptions);
 
             return idempotencyHandler;
         }

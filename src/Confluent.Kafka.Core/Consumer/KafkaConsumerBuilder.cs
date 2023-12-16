@@ -114,7 +114,8 @@ namespace Confluent.Kafka.Core.Consumer
             return this;
         }
 
-        public IKafkaConsumerBuilder<TKey, TValue> WithOAuthBearerTokenRefreshHandler(Action<IConsumer<TKey, TValue>, string> oAuthBearerTokenRefreshHandler)
+        public IKafkaConsumerBuilder<TKey, TValue> WithOAuthBearerTokenRefreshHandler(
+            Action<IConsumer<TKey, TValue>, string> oAuthBearerTokenRefreshHandler)
         {
             SetOAuthBearerTokenRefreshHandler(oAuthBearerTokenRefreshHandler);
             return this;
@@ -144,43 +145,50 @@ namespace Confluent.Kafka.Core.Consumer
             return this;
         }
 
-        public IKafkaConsumerBuilder<TKey, TValue> WithPartitionsAssignedHandler(Func<IConsumer<TKey, TValue>, List<TopicPartition>, IEnumerable<TopicPartitionOffset>> partitionsAssignedHandler)
+        public IKafkaConsumerBuilder<TKey, TValue> WithPartitionsAssignedHandler(
+            Func<IConsumer<TKey, TValue>, List<TopicPartition>, IEnumerable<TopicPartitionOffset>> partitionsAssignedHandler)
         {
             SetPartitionsAssignedHandler(partitionsAssignedHandler);
             return this;
         }
 
-        public IKafkaConsumerBuilder<TKey, TValue> WithPartitionsAssignedHandler(Action<IConsumer<TKey, TValue>, List<TopicPartition>> partitionAssignmentHandler)
+        public IKafkaConsumerBuilder<TKey, TValue> WithPartitionsAssignedHandler(
+            Action<IConsumer<TKey, TValue>, List<TopicPartition>> partitionAssignmentHandler)
         {
             SetPartitionsAssignedHandler(partitionAssignmentHandler);
             return this;
         }
 
-        public IKafkaConsumerBuilder<TKey, TValue> WithPartitionsRevokedHandler(Func<IConsumer<TKey, TValue>, List<TopicPartitionOffset>, IEnumerable<TopicPartitionOffset>> partitionsRevokedHandler)
+        public IKafkaConsumerBuilder<TKey, TValue> WithPartitionsRevokedHandler(
+            Func<IConsumer<TKey, TValue>, List<TopicPartitionOffset>, IEnumerable<TopicPartitionOffset>> partitionsRevokedHandler)
         {
             SetPartitionsRevokedHandler(partitionsRevokedHandler);
             return this;
         }
 
-        public IKafkaConsumerBuilder<TKey, TValue> WithPartitionsRevokedHandler(Action<IConsumer<TKey, TValue>, List<TopicPartitionOffset>> partitionsRevokedHandler)
+        public IKafkaConsumerBuilder<TKey, TValue> WithPartitionsRevokedHandler(
+            Action<IConsumer<TKey, TValue>, List<TopicPartitionOffset>> partitionsRevokedHandler)
         {
             SetPartitionsRevokedHandler(partitionsRevokedHandler);
             return this;
         }
 
-        public IKafkaConsumerBuilder<TKey, TValue> WithPartitionsLostHandler(Func<IConsumer<TKey, TValue>, List<TopicPartitionOffset>, IEnumerable<TopicPartitionOffset>> partitionsLostHandler)
+        public IKafkaConsumerBuilder<TKey, TValue> WithPartitionsLostHandler(
+            Func<IConsumer<TKey, TValue>, List<TopicPartitionOffset>, IEnumerable<TopicPartitionOffset>> partitionsLostHandler)
         {
             SetPartitionsLostHandler(partitionsLostHandler);
             return this;
         }
 
-        public IKafkaConsumerBuilder<TKey, TValue> WithPartitionsLostHandler(Action<IConsumer<TKey, TValue>, List<TopicPartitionOffset>> partitionsLostHandler)
+        public IKafkaConsumerBuilder<TKey, TValue> WithPartitionsLostHandler(
+            Action<IConsumer<TKey, TValue>, List<TopicPartitionOffset>> partitionsLostHandler)
         {
             SetPartitionsLostHandler(partitionsLostHandler);
             return this;
         }
 
-        public IKafkaConsumerBuilder<TKey, TValue> WithOffsetsCommittedHandler(Action<IConsumer<TKey, TValue>, CommittedOffsets> offsetsCommittedHandler)
+        public IKafkaConsumerBuilder<TKey, TValue> WithOffsetsCommittedHandler(
+            Action<IConsumer<TKey, TValue>, CommittedOffsets> offsetsCommittedHandler)
         {
             SetOffsetsCommittedHandler(offsetsCommittedHandler);
             return this;

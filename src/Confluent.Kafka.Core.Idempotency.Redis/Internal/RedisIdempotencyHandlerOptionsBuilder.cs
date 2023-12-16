@@ -37,7 +37,8 @@ namespace Confluent.Kafka.Core.Idempotency.Redis.Internal
             return this;
         }
 
-        internal static RedisIdempotencyHandlerOptions<TKey, TValue> Build(Action<IRedisIdempotencyHandlerOptionsBuilder<TKey, TValue>> configureOptions)
+        internal static RedisIdempotencyHandlerOptions<TKey, TValue> Build(
+            Action<IRedisIdempotencyHandlerOptionsBuilder<TKey, TValue>> configureOptions)
         {
             using var builder = new RedisIdempotencyHandlerOptionsBuilder<TKey, TValue>();
 

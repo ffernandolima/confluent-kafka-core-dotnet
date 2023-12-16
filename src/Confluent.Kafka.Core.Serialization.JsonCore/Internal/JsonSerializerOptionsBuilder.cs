@@ -24,7 +24,9 @@ namespace Confluent.Kafka.Core.Serialization.JsonCore.Internal
         {
             AppendAction(options =>
             {
-                if (options.Converters is not null && converters is not null && converters.Any(converter => converter is not null))
+                if (options.Converters is not null &&
+                            converters is not null &&
+                            converters.Any(converter => converter is not null))
                 {
                     foreach (var converter in converters.Where(converter => converter is not null))
                     {
@@ -48,7 +50,9 @@ namespace Confluent.Kafka.Core.Serialization.JsonCore.Internal
         {
             AppendAction(options =>
             {
-                if (options.TypeInfoResolverChain is not null && typeInfoResolverChain is not null && typeInfoResolverChain.Any(typeInfoResolver => typeInfoResolver is not null))
+                if (options.TypeInfoResolverChain is not null &&
+                            typeInfoResolverChain is not null &&
+                            typeInfoResolverChain.Any(typeInfoResolver => typeInfoResolver is not null))
                 {
                     foreach (var typeInfoResolver in typeInfoResolverChain.Where(typeInfoResolver => typeInfoResolver is not null))
                     {

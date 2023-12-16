@@ -144,7 +144,9 @@ namespace Confluent.Kafka.Core.Idempotency.Redis.Internal
         {
             AppendAction(options =>
             {
-                if (options.EndPoints is not null && endPoints is not null && endPoints.Any(endPoint => endPoint is not null))
+                if (options.EndPoints is not null &&
+                            endPoints is not null &&
+                            endPoints.Any(endPoint => endPoint is not null))
                 {
                     foreach (var endPoint in endPoints.Where(endPoint => endPoint is not null))
                     {
@@ -238,7 +240,8 @@ namespace Confluent.Kafka.Core.Idempotency.Redis.Internal
 
 #if NETCOREAPP3_1_OR_GREATER
 
-        public IConfigurationOptionsBuilder WithSslClientAuthenticationOptions(Func<string, SslClientAuthenticationOptions> sslClientAuthenticationOptions)
+        public IConfigurationOptionsBuilder WithSslClientAuthenticationOptions(
+            Func<string, SslClientAuthenticationOptions> sslClientAuthenticationOptions)
         {
             AppendAction(options => options.SslClientAuthenticationOptions = sslClientAuthenticationOptions);
             return this;
