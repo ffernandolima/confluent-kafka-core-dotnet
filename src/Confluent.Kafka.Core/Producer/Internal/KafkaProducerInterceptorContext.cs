@@ -1,6 +1,6 @@
-﻿namespace Confluent.Kafka.Core.Producer
+﻿namespace Confluent.Kafka.Core.Producer.Internal
 {
-    public sealed class KafkaProducerInterceptorContext<TKey, TValue> : IKafkaProducerInterceptorContext<TKey, TValue>
+    internal sealed class KafkaProducerInterceptorContext<TKey, TValue> : IKafkaProducerInterceptorContext<TKey, TValue>
     {
         public TKey Key { get; init; }
         public TValue Value { get; init; }
