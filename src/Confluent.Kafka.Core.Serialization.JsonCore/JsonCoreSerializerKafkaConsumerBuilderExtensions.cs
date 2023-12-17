@@ -16,7 +16,6 @@ namespace Confluent.Kafka.Core.Consumer
             }
 
             builder.WithJsonCoreKeyDeserializer(configureOptions);
-
             builder.WithJsonCoreValueDeserializer(configureOptions);
 
             return builder;

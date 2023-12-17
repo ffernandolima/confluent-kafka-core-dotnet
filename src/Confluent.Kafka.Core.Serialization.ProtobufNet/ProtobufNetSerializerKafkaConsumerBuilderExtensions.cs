@@ -16,7 +16,6 @@ namespace Confluent.Kafka.Core.Consumer
             }
 
             builder.WithProtobufNetKeyDeserializer(configureOptions);
-
             builder.WithProtobufNetValueDeserializer(configureOptions);
 
             return builder;

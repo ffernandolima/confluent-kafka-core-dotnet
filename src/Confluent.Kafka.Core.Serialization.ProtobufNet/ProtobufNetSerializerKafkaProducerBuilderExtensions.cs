@@ -16,7 +16,6 @@ namespace Confluent.Kafka.Core.Producer
             }
 
             builder.WithProtobufNetKeySerializer(configureOptions);
-
             builder.WithProtobufNetValueSerializer(configureOptions);
 
             return builder;
