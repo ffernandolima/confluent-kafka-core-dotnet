@@ -1,108 +1,40 @@
-﻿using Confluent.Kafka.Core.Internal;
-using Confluent.Kafka.Core.Models;
-using Confluent.Kafka.Core.Models.Internal;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
 
 namespace Confluent.Kafka.Core.Consumer.Internal
 {
-    internal sealed class KafkaConsumerHandlerFactory<TKey, TValue> : IKafkaConsumerHandlerFactory<TKey, TValue>
+    internal static class KafkaConsumerHandlerFactory
     {
-        private static readonly Type DefaultConsumerHandlerFactoryType = typeof(KafkaConsumerHandlerFactory<TKey, TValue>);
-
-        private readonly ILogger _logger;
-
-        public KafkaConsumerHandlerFactory(ILoggerFactory loggerFactory, KafkaConsumerHandlerFactoryOptions options)
+        public static IKafkaConsumerHandlerFactory<TKey, TValue> GetOrCreateHandlerFactory<TKey, TValue>(
+            IServiceProvider serviceProvider,
+            ILoggerFactory loggerFactory = null,
+            Action<IServiceProvider, IKafkaConsumerHandlerFactoryOptionsBuilder> configureOptions = null,
+            object consumerKey = null)
         {
-            if (options is null)
-            {
-                throw new ArgumentNullException(nameof(options), $"{nameof(options)} cannot be null.");
-            }
+            var handlerFactory = serviceProvider?.GetKeyedService<IKafkaConsumerHandlerFactory<TKey, TValue>>(consumerKey) ??
+                CreateHandlerFactory<TKey, TValue>(
+                    serviceProvider,
+                    loggerFactory,
+                    configureOptions);
 
-            _logger = loggerFactory.CreateLogger(options.EnableLogging, DefaultConsumerHandlerFactoryType);
+            return handlerFactory;
         }
 
-        public Action<IConsumer<TKey, TValue>, string> CreateStatisticsHandler() => (consumer, statistics) =>
+        public static IKafkaConsumerHandlerFactory<TKey, TValue> CreateHandlerFactory<TKey, TValue>(
+            IServiceProvider serviceProvider,
+            ILoggerFactory loggerFactory = null,
+            Action<IServiceProvider, IKafkaConsumerHandlerFactoryOptionsBuilder> configureOptions = null)
         {
-            if (consumer is null || string.IsNullOrWhiteSpace(statistics))
-            {
-                return;
-            }
+            var options = KafkaConsumerHandlerFactoryOptionsBuilder.Build(
+                serviceProvider,
+                configureOptions);
 
-            _logger.LogInformation("[StatisticsHandler] -> ConsumerName: {ConsumerName} | Statistics: {Statistics}",
-                consumer.Name, statistics);
-        };
+            var handlerFactory = new KafkaConsumerHandlerFactory<TKey, TValue>(
+                loggerFactory ?? serviceProvider?.GetService<ILoggerFactory>(),
+                options);
 
-        public Action<IConsumer<TKey, TValue>, Error> CreateErrorHandler() => (consumer, error) =>
-        {
-            if (consumer is null || error is null)
-            {
-                return;
-            }
-
-            _logger.LogError("[ErrorHandler] -> ConsumerName: {ConsumerName} | Code: {Code} | Reason: {Reason}",
-                consumer.Name, error.Code, error.Reason);
-        };
-
-        public Action<IConsumer<TKey, TValue>, LogMessage> CreateLogHandler() => (consumer, logMessage) =>
-        {
-            if (consumer is null || logMessage is null)
-            {
-                return;
-            }
-
-            var logLevel = (LogLevel)logMessage.LevelAs(LogLevelType.MicrosoftExtensionsLogging);
-
-            _logger.Log(logLevel, "[LogHandler] -> ConsumerName: {ConsumerName} | ClientName: {ClientName} | SysLogLevel: {SysLogLevel} | Facility: {Facility} | Message: {Message}",
-                consumer.Name, logMessage.Name, logMessage.Level, logMessage.Facility, logMessage.Message);
-        };
-
-        public Action<IConsumer<TKey, TValue>, List<TopicPartition>> CreatePartitionsAssignedHandler() => (consumer, assignments) =>
-        {
-            if (consumer is null || assignments is null || assignments.Count == 0)
-            {
-                return;
-            }
-
-            _logger.LogInformation("[PartitionsAssignedHandler] -> ConsumerName: {ConsumerName} | Assignments: [ {Assignments} ]",
-                consumer.Name, string.Join(",", assignments));
-        };
-
-        public Action<IConsumer<TKey, TValue>, List<TopicPartitionOffset>> CreatePartitionsRevokedHandler() => (consumer, revokements) =>
-        {
-            if (consumer is null || revokements is null || revokements.Count == 0)
-            {
-                return;
-            }
-
-            _logger.LogInformation("[PartitionsRevokedHandler] -> ConsumerName: {ConsumerName} | Revokements: [ {Revokements} ]",
-                consumer.Name, string.Join(",", revokements));
-        };
-
-        public Action<IConsumer<TKey, TValue>, List<TopicPartitionOffset>> CreatePartitionsLostHandler() => (consumer, losses) =>
-        {
-            if (consumer is null || losses is null || losses.Count == 0)
-            {
-                return;
-            }
-
-            _logger.LogInformation("[PartitionsLostHandler] -> ConsumerName: {ConsumerName} | Losses: [ {Losses} ]",
-                consumer.Name, string.Join(",", losses));
-        };
-
-        public Func<IKafkaConsumer<TKey, TValue>, object> CreateConsumerIdHandler() => (consumer) =>
-        {
-            var consumerId = $"{consumer.GetType().ExtractTypeName()} - {Guid.NewGuid()}";
-
-            return consumerId;
-        };
-
-        public Func<TValue, object> CreateMessageIdHandler() => (messageValue) =>
-        {
-            var messageId = (messageValue as IMessageValue)?.GetId();
-
-            return messageId;
-        };
+            return handlerFactory;
+        }
     }
 }

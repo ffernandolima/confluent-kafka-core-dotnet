@@ -1,74 +1,40 @@
-﻿using Confluent.Kafka.Core.Internal;
-using Confluent.Kafka.Core.Models;
-using Confluent.Kafka.Core.Models.Internal;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
 
 namespace Confluent.Kafka.Core.Producer.Internal
 {
-    internal sealed class KafkaProducerHandlerFactory<TKey, TValue> : IKafkaProducerHandlerFactory<TKey, TValue>
+    internal static class KafkaProducerHandlerFactory
     {
-        private static readonly Type DefaultProducerHandlerFactoryType = typeof(KafkaProducerHandlerFactory<TKey, TValue>);
-
-        private readonly ILogger _logger;
-
-        public KafkaProducerHandlerFactory(ILoggerFactory loggerFactory, KafkaProducerHandlerFactoryOptions options)
+        public static IKafkaProducerHandlerFactory<TKey, TValue> GetOrCreateHandlerFactory<TKey, TValue>(
+            IServiceProvider serviceProvider,
+            ILoggerFactory loggerFactory = null,
+            Action<IServiceProvider, IKafkaProducerHandlerFactoryOptionsBuilder> configureOptions = null,
+            object producerKey = null)
         {
-            if (options is null)
-            {
-                throw new ArgumentNullException(nameof(options), $"{nameof(options)} cannot be null.");
-            }
+            var handlerFactory = serviceProvider?.GetKeyedService<IKafkaProducerHandlerFactory<TKey, TValue>>(producerKey) ??
+                CreateHandlerFactory<TKey, TValue>(
+                    serviceProvider,
+                    loggerFactory,
+                    configureOptions);
 
-            _logger = loggerFactory.CreateLogger(options.EnableLogging, DefaultProducerHandlerFactoryType);
+            return handlerFactory;
         }
 
-        public Action<IProducer<TKey, TValue>, string> CreateStatisticsHandler() => (producer, statistics) =>
+        public static IKafkaProducerHandlerFactory<TKey, TValue> CreateHandlerFactory<TKey, TValue>(
+            IServiceProvider serviceProvider,
+            ILoggerFactory loggerFactory = null,
+            Action<IServiceProvider, IKafkaProducerHandlerFactoryOptionsBuilder> configureOptions = null)
         {
-            if (producer is null || string.IsNullOrWhiteSpace(statistics))
-            {
-                return;
-            }
+            var options = KafkaProducerHandlerFactoryOptionsBuilder.Build(
+                serviceProvider,
+                configureOptions);
 
-            _logger.LogInformation("[StatisticsHandler] -> ProducerName: {ProducerName} | Statistics: {Statistics}",
-                producer.Name, statistics);
-        };
+            var handlerFactory = new KafkaProducerHandlerFactory<TKey, TValue>(
+                loggerFactory ?? serviceProvider?.GetService<ILoggerFactory>(),
+                options);
 
-        public Action<IProducer<TKey, TValue>, Error> CreateErrorHandler() => (producer, error) =>
-        {
-            if (producer is null || error is null)
-            {
-                return;
-            }
-
-            _logger.LogError("[ErrorHandler] -> ProducerName: {ProducerName} | Code: {Code} | Reason: {Reason}",
-                producer.Name, error.Code, error.Reason);
-        };
-
-        public Action<IProducer<TKey, TValue>, LogMessage> CreateLogHandler() => (producer, logMessage) =>
-        {
-            if (producer is null || logMessage is null)
-            {
-                return;
-            }
-
-            var logLevel = (LogLevel)logMessage.LevelAs(LogLevelType.MicrosoftExtensionsLogging);
-
-            _logger.Log(logLevel, "[LogHandler] -> ProducerName: {ProducerName} | ClientName: {ClientName} | SysLogLevel: {SysLogLevel} | Facility: {Facility} | Message: {Message}",
-                producer.Name, logMessage.Name, logMessage.Level, logMessage.Facility, logMessage.Message);
-        };
-
-        public Func<IKafkaProducer<TKey, TValue>, object> CreateProducerIdHandler() => (producer) =>
-        {
-            var producerId = $"{producer.GetType().ExtractTypeName()} - {Guid.NewGuid()}";
-
-            return producerId;
-        };
-
-        public Func<TValue, object> CreateMessageIdHandler() => (messageValue) =>
-        {
-            var messageId = (messageValue as IMessageValue)?.GetId();
-
-            return messageId;
-        };
+            return handlerFactory;
+        }
     }
 }
