@@ -1,4 +1,6 @@
 ﻿using Confluent.Kafka.Core.Diagnostics;
+using Confluent.Kafka.Core.Models;
+using Confluent.Kafka.Core.Producer;
 using Confluent.Kafka.Core.Retry;
 using Microsoft.Extensions.Logging;
 using System;
@@ -19,8 +21,6 @@ namespace Confluent.Kafka.Core.Consumer
         IDeserializer<TKey> KeyDeserializer { get; }
 
         IDeserializer<TValue> ValueDeserializer { get; }
-
-        Func<IKafkaConsumer<TKey, TValue>, object> ConsumerIdHandler { get; }
 
         Func<TValue, object> MessageIdHandler { get; }
 

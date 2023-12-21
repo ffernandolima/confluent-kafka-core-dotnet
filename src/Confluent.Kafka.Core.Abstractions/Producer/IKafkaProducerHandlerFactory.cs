@@ -10,8 +10,6 @@ namespace Confluent.Kafka.Core.Producer
 
         Action<IProducer<TKey, TValue>, LogMessage> CreateLogHandler();
 
-        Func<IKafkaProducer<TKey, TValue>, object> CreateProducerIdHandler();
-
         Func<TValue, object> CreateMessageIdHandler();
     }
 }

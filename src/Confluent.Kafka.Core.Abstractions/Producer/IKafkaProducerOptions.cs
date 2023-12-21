@@ -20,8 +20,6 @@ namespace Confluent.Kafka.Core.Producer
 
         ISerializer<TValue> ValueSerializer { get; }
 
-        Func<IKafkaProducer<TKey, TValue>, object> ProducerIdHandler { get; }
-
         Func<TValue, object> MessageIdHandler { get; }
 
         IRetryHandler<TKey, TValue> RetryHandler { get; }
