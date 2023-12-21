@@ -1,4 +1,5 @@
 ﻿using Confluent.Kafka.Core.Producer;
+using Confluent.Kafka.Core.Producer.Internal;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using System;
 
@@ -8,30 +9,43 @@ namespace Microsoft.Extensions.DependencyInjection
     {
         public static IServiceCollection AddKafkaProducerHandlerFactory<TKey, TValue>(
             this IServiceCollection services,
-            IKafkaProducerHandlerFactory<TKey, TValue> implementationInstance)
+            Action<IServiceProvider, IKafkaProducerHandlerFactoryOptionsBuilder> configureOptions = null,
+            object producerKey = null)
         {
             if (services is null)
             {
                 throw new ArgumentNullException(nameof(services), $"{nameof(services)} cannot be null.");
             }
 
-            services.RemoveAll<IKafkaProducerHandlerFactory<TKey, TValue>>();
-            services.AddSingleton(implementationInstance);
+            services.AddKafkaProducerHandlerFactory(serviceProvider =>
+            {
+                var handlerFactory = KafkaProducerHandlerFactory.CreateHandlerFactory<TKey, TValue>(
+                    serviceProvider,
+                    configureOptions: configureOptions);
+
+                return handlerFactory;
+            },
+            producerKey);
 
             return services;
         }
 
         public static IServiceCollection AddKafkaProducerHandlerFactory<TKey, TValue>(
             this IServiceCollection services,
-            Func<IServiceProvider, IKafkaProducerHandlerFactory<TKey, TValue>> implementationFactory)
+            Func<IServiceProvider, IKafkaProducerHandlerFactory<TKey, TValue>> implementationFactory,
+            object producerKey = null)
         {
             if (services is null)
             {
                 throw new ArgumentNullException(nameof(services), $"{nameof(services)} cannot be null.");
             }
 
-            services.RemoveAll<IKafkaProducerHandlerFactory<TKey, TValue>>();
-            services.AddSingleton(implementationFactory);
+            if (implementationFactory is null)
+            {
+                throw new ArgumentNullException(nameof(implementationFactory), $"{nameof(implementationFactory)} cannot be null.");
+            }
+
+            services.TryAddKeyedSingleton(producerKey, (serviceProvider, _) => implementationFactory.Invoke(serviceProvider));
 
             return services;
         }
