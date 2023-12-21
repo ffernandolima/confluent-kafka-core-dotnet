@@ -27,9 +27,7 @@ namespace Confluent.Kafka.Core.Diagnostics.Internal
             {
                 var currentActivity = Activity.Current;
 
-                propagationContext = new PropagationContext(
-                    currentActivity.GetContextOrDefault(),
-                    currentActivity.GetBaggageOrEmpty());
+                propagationContext = new PropagationContext(currentActivity.GetContextOrDefault(), currentActivity.GetBaggageOrEmpty());
             }
 
             var activity = StartActivity(activityName, ActivityKind.Producer, propagationContext);
@@ -62,43 +60,27 @@ namespace Confluent.Kafka.Core.Diagnostics.Internal
             return propagationContext;
         }
 
-        public void Enrich(
-            Activity activity,
-            ConsumeException consumeException,
-            IConsumerConfig consumerConfig,
-            Func<byte[], object> messageIdHandler = null)
+        public void Enrich(Activity activity, ConsumeException consumeException, IConsumerConfig consumerConfig, Func<byte[], object> messageIdHandler = null)
         {
             ActivityEnricher?.Enrich(activity, consumeException, consumerConfig, messageIdHandler);
         }
 
-        public void Enrich<TKey, TValue>(
-            Activity activity,
-            ConsumeResult<TKey, TValue> consumeResult,
-            IKafkaConsumerOptions<TKey, TValue> options)
+        public void Enrich<TKey, TValue>(Activity activity, ConsumeResult<TKey, TValue> consumeResult, IKafkaConsumerOptions<TKey, TValue> options)
         {
             ActivityEnricher?.Enrich(activity, consumeResult, options);
         }
 
-        public void Enrich<TKey, TValue>(
-            Activity activity,
-            ProduceException<TKey, TValue> produceException,
-            IKafkaProducerOptions<TKey, TValue> options)
+        public void Enrich<TKey, TValue>(Activity activity, ProduceException<TKey, TValue> produceException, IKafkaProducerOptions<TKey, TValue> options)
         {
             ActivityEnricher?.Enrich(activity, produceException, options);
         }
 
-        public void Enrich<TKey, TValue>(
-            Activity activity,
-            DeliveryReport<TKey, TValue> deliveryReport,
-            IKafkaProducerOptions<TKey, TValue> options)
+        public void Enrich<TKey, TValue>(Activity activity, DeliveryReport<TKey, TValue> deliveryReport, IKafkaProducerOptions<TKey, TValue> options)
         {
             ActivityEnricher?.Enrich(activity, deliveryReport, options);
         }
 
-        public void Enrich<TKey, TValue>(
-            Activity activity,
-            DeliveryResult<TKey, TValue> deliveryResult,
-            IKafkaProducerOptions<TKey, TValue> options)
+        public void Enrich<TKey, TValue>(Activity activity, DeliveryResult<TKey, TValue> deliveryResult, IKafkaProducerOptions<TKey, TValue> options)
         {
             ActivityEnricher?.Enrich(activity, deliveryResult, options);
         }

@@ -7,30 +7,14 @@ namespace Confluent.Kafka.Core.Diagnostics.Internal
 {
     internal abstract class ActivityEnricherBase
     {
-        public abstract void Enrich(
-            Activity activity,
-            ConsumeException consumeException,
-            IConsumerConfig consumerConfig,
-            Func<byte[], object> messageIdHandler = null);
+        public abstract void Enrich(Activity activity, ConsumeException consumeException, IConsumerConfig consumerConfig, Func<byte[], object> messageIdHandler = null);
 
-        public abstract void Enrich<TKey, TValue>(
-            Activity activity,
-            ConsumeResult<TKey, TValue> consumeResult,
-            IKafkaConsumerOptions<TKey, TValue> options);
+        public abstract void Enrich<TKey, TValue>(Activity activity, ConsumeResult<TKey, TValue> consumeResult, IKafkaConsumerOptions<TKey, TValue> options);
 
-        public abstract void Enrich<TKey, TValue>(
-            Activity activity,
-            ProduceException<TKey, TValue> produceException,
-            IKafkaProducerOptions<TKey, TValue> options);
+        public abstract void Enrich<TKey, TValue>(Activity activity, ProduceException<TKey, TValue> produceException, IKafkaProducerOptions<TKey, TValue> options);
 
-        public abstract void Enrich<TKey, TValue>(
-            Activity activity,
-            DeliveryReport<TKey, TValue> deliveryReport,
-            IKafkaProducerOptions<TKey, TValue> options);
+        public abstract void Enrich<TKey, TValue>(Activity activity, DeliveryReport<TKey, TValue> deliveryReport, IKafkaProducerOptions<TKey, TValue> options);
 
-        public abstract void Enrich<TKey, TValue>(
-            Activity activity,
-            DeliveryResult<TKey, TValue> deliveryResult,
-            IKafkaProducerOptions<TKey, TValue> options);
+        public abstract void Enrich<TKey, TValue>(Activity activity, DeliveryResult<TKey, TValue> deliveryResult, IKafkaProducerOptions<TKey, TValue> options);
     }
 }
