@@ -16,10 +16,10 @@ namespace Microsoft.Extensions.DependencyInjection
                 throw new ArgumentNullException(nameof(services), $"{nameof(services)} cannot be null.");
             }
 
-            services.TryAddSingleton(provider =>
+            services.TryAddSingleton(serviceProvider =>
             {
                 var idempotencyHandler = RedisIdempotencyHandlerFactory.CreateIdempotencyHandler(
-                    provider,
+                    serviceProvider,
                     configureHandler);
 
                 return idempotencyHandler;

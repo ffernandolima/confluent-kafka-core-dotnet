@@ -16,10 +16,10 @@ namespace Microsoft.Extensions.DependencyInjection
                 throw new ArgumentNullException(nameof(services), $"{nameof(services)} cannot be null.");
             }
 
-            services.TryAddSingleton(provider =>
+            services.TryAddSingleton(serviceProvider =>
             {
                 var retryHandler = PollyRetryHandlerFactory.CreateRetryHandler<TKey, TValue>(
-                    provider,
+                    serviceProvider,
                     configureOptions: configureOptions);
 
                 return retryHandler;

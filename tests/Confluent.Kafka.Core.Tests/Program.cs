@@ -10,13 +10,13 @@ namespace Confluent.Kafka.Core.Tests
             // IKafkaConsumerBuilder<string, object> builder = new KafkaConsumerBuilder<string, object>();
 
             var services = new ServiceCollection()
-                 .AddKafkaConsumer<string, object>((_, builder) =>
-                     builder.WithConfigureConsumer((_, builder) => builder.WithBootstrapServers("localhost:9092"))
-                            .WithJsonCoreValueDeserializer());
+                .AddKafkaConsumer<string, object>((_, builder) =>
+                  builder.WithConfigureConsumer((_, builder) => builder.WithBootstrapServers("localhost:9092"))
+                         .WithJsonCoreValueDeserializer());
 
-            using var provider = services.BuildServiceProvider();
+            using var serviceProvider = services.BuildServiceProvider();
 
-            var consumer = provider.GetRequiredService<IKafkaConsumer<string, object>>();
+            var consumer = serviceProvider.GetRequiredService<IKafkaConsumer<string, object>>();
         }
     }
 }
