@@ -1,5 +1,5 @@
 ﻿using Confluent.Kafka.Core.Producer;
-using Confluent.Kafka.Core.Producer.Internal;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using System;
 
@@ -9,7 +9,8 @@ namespace Microsoft.Extensions.DependencyInjection
     {
         public static IServiceCollection AddKafkaProducer<TKey, TValue>(
             this IServiceCollection services,
-            Action<IServiceProvider, IKafkaProducerBuilder<TKey, TValue>> configureProducer)
+            Action<IServiceProvider, IKafkaProducerBuilder<TKey, TValue>> configureProducer,
+            object producerKey = null)
         {
             if (services is null)
             {
@@ -23,41 +24,36 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.AddKafkaDiagnostics();
 
-            services.AddSingleton(provider =>
+            services.TryAddKeyedSingleton(producerKey, (serviceProvider, _) =>
             {
-                var loggerFactory = provider.GetService<ILoggerFactory>();
+                var loggerFactory = serviceProvider.GetService<ILoggerFactory>();
 
                 var builder = new KafkaProducerBuilder<TKey, TValue>()
-                    .WithServiceProvider(provider)
-                    .WithLoggerFactory(loggerFactory);
+                    .WithProducerKey(producerKey)
+                    .WithLoggerFactory(loggerFactory)
+                    .WithServiceProvider(serviceProvider);
 
-                configureProducer.Invoke(provider, builder);
+                configureProducer.Invoke(serviceProvider, builder);
 
                 return builder;
             });
 
-            services.AddSingleton(provider =>
+            services.TryAddKeyedSingleton(producerKey, (serviceProvider, _) =>
             {
-                var builder = provider.GetRequiredService<IKafkaProducerBuilder<TKey, TValue>>();
+                var builder = serviceProvider.GetRequiredKeyedService<IKafkaProducerBuilder<TKey, TValue>>(producerKey);
 
                 var producer = builder.Build();
 
                 return producer;
             });
 
-            services.AddSingleton<IKafkaProducerHandlerFactory<TKey, TValue>>(provider =>
+            services.AddKafkaProducerHandlerFactory<TKey, TValue>((serviceProvider, builder) =>
             {
-                var builder = provider.GetRequiredService<IKafkaProducerBuilder<TKey, TValue>>();
+                var producerBuilder = serviceProvider.GetRequiredKeyedService<IKafkaProducerBuilder<TKey, TValue>>(producerKey);
 
-                var loggerFactory = builder.LoggerFactory ?? provider.GetService<ILoggerFactory>();
-
-                var options = new KafkaProducerHandlerFactoryOptions
-                {
-                    EnableLogging = builder.ProducerConfig!.EnableLogging
-                };
-
-                return new KafkaProducerHandlerFactory<TKey, TValue>(loggerFactory, options);
-            });
+                builder.WithEnableLogging(producerBuilder.ProducerConfig!.EnableLogging);
+            },
+            producerKey);
 
             return services;
         }
