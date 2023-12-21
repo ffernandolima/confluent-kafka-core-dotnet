@@ -18,14 +18,30 @@ namespace Confluent.Kafka.Core.Diagnostics
 
         IPropagationContext ExtractContext(IDictionary<string, string> carrier);
 
-        void Enrich(Activity activity, ConsumeException consumeException, IConsumerConfig consumerConfig, Func<byte[], object> messageIdHandler = null);
+        void Enrich(
+            Activity activity,
+            ConsumeException consumeException,
+            IConsumerConfig consumerConfig,
+            Func<byte[], object> messageIdHandler = null);
 
-        void Enrich<TKey, TValue>(Activity activity, ConsumeResult<TKey, TValue> consumeResult, IKafkaConsumerOptions<TKey, TValue> options);
+        void Enrich<TKey, TValue>(
+            Activity activity,
+            ConsumeResult<TKey, TValue> consumeResult,
+            IKafkaConsumerOptions<TKey, TValue> options);
 
-        void Enrich<TKey, TValue>(Activity activity, ProduceException<TKey, TValue> produceException, IKafkaProducerOptions<TKey, TValue> options);
+        void Enrich<TKey, TValue>(
+            Activity activity,
+            ProduceException<TKey, TValue> produceException,
+            IKafkaProducerOptions<TKey, TValue> options);
 
-        void Enrich<TKey, TValue>(Activity activity, DeliveryReport<TKey, TValue> deliveryReport, IKafkaProducerOptions<TKey, TValue> options);
+        void Enrich<TKey, TValue>(
+            Activity activity,
+            DeliveryReport<TKey, TValue> deliveryReport,
+            IKafkaProducerOptions<TKey, TValue> options);
 
-        void Enrich<TKey, TValue>(Activity activity, DeliveryResult<TKey, TValue> deliveryResult, IKafkaProducerOptions<TKey, TValue> options);
+        void Enrich<TKey, TValue>(
+            Activity activity,
+            DeliveryResult<TKey, TValue> deliveryResult,
+            IKafkaProducerOptions<TKey, TValue> options);
     }
 }
