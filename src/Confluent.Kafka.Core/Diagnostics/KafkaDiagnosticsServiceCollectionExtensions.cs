@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using Confluent.Kafka.Core.Diagnostics;
+﻿using Confluent.Kafka.Core.Diagnostics;
 using Confluent.Kafka.Core.Diagnostics.Internal;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using System;
+using System.Collections.Generic;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
