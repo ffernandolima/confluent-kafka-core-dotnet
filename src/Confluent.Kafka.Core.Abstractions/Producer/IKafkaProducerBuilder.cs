@@ -29,8 +29,7 @@ namespace Confluent.Kafka.Core.Producer
 
         IKafkaProducerBuilder<TKey, TValue> WithLogHandler(Action<IProducer<TKey, TValue>, LogMessage> logHandler);
 
-        IKafkaProducerBuilder<TKey, TValue> WithOAuthBearerTokenRefreshHandler(
-            Action<IProducer<TKey, TValue>, string> oAuthBearerTokenRefreshHandler);
+        IKafkaProducerBuilder<TKey, TValue> WithOAuthBearerTokenRefreshHandler(Action<IProducer<TKey, TValue>, string> oAuthBearerTokenRefreshHandler);
 
         IKafkaProducerBuilder<TKey, TValue> WithKeySerializer(ISerializer<TKey> serializer);
 
@@ -42,19 +41,19 @@ namespace Confluent.Kafka.Core.Producer
 
         IKafkaProducerBuilder<TKey, TValue> WithProducerType(Type producerType);
 
+        IKafkaProducerBuilder<TKey, TValue> WithProducerKey(object producerKey);
+
         IKafkaProducerBuilder<TKey, TValue> WithLoggerFactory(ILoggerFactory loggerFactory);
 
         IKafkaProducerBuilder<TKey, TValue> WithServiceProvider(IServiceProvider serviceProvider);
-
-        IKafkaProducerBuilder<TKey, TValue> WithProducerIdHandler(Func<IKafkaProducer<TKey, TValue>, object> producerIdHandler);
 
         IKafkaProducerBuilder<TKey, TValue> WithMessageIdHandler(Func<TValue, object> messageIdHandler);
 
         IKafkaProducerBuilder<TKey, TValue> WithRetryHandler(IRetryHandler<TKey, TValue> retryHandler);
 
-        IKafkaProducerBuilder<TKey, TValue> WithInterceptors(IEnumerable<IKafkaProducerInterceptor<TKey, TValue>> interceptors);
-
         IKafkaProducerBuilder<TKey, TValue> WithHandlerFactory(IKafkaProducerHandlerFactory<TKey, TValue> handlerFactory);
+
+        IKafkaProducerBuilder<TKey, TValue> WithInterceptors(IEnumerable<IKafkaProducerInterceptor<TKey, TValue>> interceptors);
 
         IKafkaProducerBuilder<TKey, TValue> WithConfigureProducer(Action<IServiceProvider, IKafkaProducerConfigBuilder> configureProducer);
 

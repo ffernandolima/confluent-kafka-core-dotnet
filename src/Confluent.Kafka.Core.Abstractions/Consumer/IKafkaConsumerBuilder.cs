@@ -25,8 +25,7 @@ namespace Confluent.Kafka.Core.Consumer
 
         IKafkaConsumerBuilder<TKey, TValue> WithLogHandler(Action<IConsumer<TKey, TValue>, LogMessage> logHandler);
 
-        IKafkaConsumerBuilder<TKey, TValue> WithOAuthBearerTokenRefreshHandler(
-            Action<IConsumer<TKey, TValue>, string> oAuthBearerTokenRefreshHandler);
+        IKafkaConsumerBuilder<TKey, TValue> WithOAuthBearerTokenRefreshHandler(Action<IConsumer<TKey, TValue>, string> oAuthBearerTokenRefreshHandler);
 
         IKafkaConsumerBuilder<TKey, TValue> WithKeyDeserializer(IDeserializer<TKey> deserializer);
 
@@ -36,42 +35,35 @@ namespace Confluent.Kafka.Core.Consumer
 
         IKafkaConsumerBuilder<TKey, TValue> WithValueDeserializer(IAsyncDeserializer<TValue> deserializer);
 
-        IKafkaConsumerBuilder<TKey, TValue> WithPartitionsAssignedHandler(
-            Func<IConsumer<TKey, TValue>, List<TopicPartition>, IEnumerable<TopicPartitionOffset>> partitionsAssignedHandler);
+        IKafkaConsumerBuilder<TKey, TValue> WithPartitionsAssignedHandler(Func<IConsumer<TKey, TValue>, List<TopicPartition>, IEnumerable<TopicPartitionOffset>> partitionsAssignedHandler);
 
-        IKafkaConsumerBuilder<TKey, TValue> WithPartitionsAssignedHandler(
-            Action<IConsumer<TKey, TValue>, List<TopicPartition>> partitionAssignmentHandler);
+        IKafkaConsumerBuilder<TKey, TValue> WithPartitionsAssignedHandler(Action<IConsumer<TKey, TValue>, List<TopicPartition>> partitionAssignmentHandler);
 
-        IKafkaConsumerBuilder<TKey, TValue> WithPartitionsRevokedHandler(
-            Func<IConsumer<TKey, TValue>, List<TopicPartitionOffset>, IEnumerable<TopicPartitionOffset>> partitionsRevokedHandler);
+        IKafkaConsumerBuilder<TKey, TValue> WithPartitionsRevokedHandler(Func<IConsumer<TKey, TValue>, List<TopicPartitionOffset>, IEnumerable<TopicPartitionOffset>> partitionsRevokedHandler);
 
-        IKafkaConsumerBuilder<TKey, TValue> WithPartitionsRevokedHandler(
-            Action<IConsumer<TKey, TValue>, List<TopicPartitionOffset>> partitionsRevokedHandler);
+        IKafkaConsumerBuilder<TKey, TValue> WithPartitionsRevokedHandler(Action<IConsumer<TKey, TValue>, List<TopicPartitionOffset>> partitionsRevokedHandler);
 
-        IKafkaConsumerBuilder<TKey, TValue> WithPartitionsLostHandler(
-            Func<IConsumer<TKey, TValue>, List<TopicPartitionOffset>, IEnumerable<TopicPartitionOffset>> partitionsLostHandler);
+        IKafkaConsumerBuilder<TKey, TValue> WithPartitionsLostHandler(Func<IConsumer<TKey, TValue>, List<TopicPartitionOffset>, IEnumerable<TopicPartitionOffset>> partitionsLostHandler);
 
-        IKafkaConsumerBuilder<TKey, TValue> WithPartitionsLostHandler(
-            Action<IConsumer<TKey, TValue>, List<TopicPartitionOffset>> partitionsLostHandler);
+        IKafkaConsumerBuilder<TKey, TValue> WithPartitionsLostHandler(Action<IConsumer<TKey, TValue>, List<TopicPartitionOffset>> partitionsLostHandler);
 
-        IKafkaConsumerBuilder<TKey, TValue> WithOffsetsCommittedHandler(
-            Action<IConsumer<TKey, TValue>, CommittedOffsets> offsetsCommittedHandler);
+        IKafkaConsumerBuilder<TKey, TValue> WithOffsetsCommittedHandler(Action<IConsumer<TKey, TValue>, CommittedOffsets> offsetsCommittedHandler);
 
         IKafkaConsumerBuilder<TKey, TValue> WithConsumerType(Type consumerType);
+
+        IKafkaConsumerBuilder<TKey, TValue> WithConsumerKey(object consumerKey);
 
         IKafkaConsumerBuilder<TKey, TValue> WithLoggerFactory(ILoggerFactory loggerFactory);
 
         IKafkaConsumerBuilder<TKey, TValue> WithServiceProvider(IServiceProvider serviceProvider);
 
-        IKafkaConsumerBuilder<TKey, TValue> WithConsumerIdHandler(Func<IKafkaConsumer<TKey, TValue>, object> consumerIdHandler);
-
         IKafkaConsumerBuilder<TKey, TValue> WithMessageIdHandler(Func<TValue, object> messageIdHandler);
 
         IKafkaConsumerBuilder<TKey, TValue> WithRetryHandler(IRetryHandler<TKey, TValue> retryHandler);
 
-        IKafkaConsumerBuilder<TKey, TValue> WithInterceptors(IEnumerable<IKafkaConsumerInterceptor<TKey, TValue>> interceptors);
-
         IKafkaConsumerBuilder<TKey, TValue> WithHandlerFactory(IKafkaConsumerHandlerFactory<TKey, TValue> handlerFactory);
+
+        IKafkaConsumerBuilder<TKey, TValue> WithInterceptors(IEnumerable<IKafkaConsumerInterceptor<TKey, TValue>> interceptors);
 
         IKafkaConsumerBuilder<TKey, TValue> WithConfigureConsumer(Action<IServiceProvider, IKafkaConsumerConfigBuilder> configureConsumer);
 
