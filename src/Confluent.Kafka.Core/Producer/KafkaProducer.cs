@@ -14,9 +14,6 @@ namespace Confluent.Kafka.Core.Producer
         private readonly IProducer<TKey, TValue> _producer;
         private readonly IKafkaProducerOptions<TKey, TValue> _options;
 
-        private object _id;
-        public object Id => _id ??= _options.ProducerIdHandler?.Invoke(this);
-
         public Handle Handle => _producer.Handle;
         public string Name => _producer.Name;
 

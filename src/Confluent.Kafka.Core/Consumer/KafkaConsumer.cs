@@ -1,5 +1,4 @@
-﻿using Confluent.Kafka.Core.Consumer.Internal;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -14,9 +13,6 @@ namespace Confluent.Kafka.Core.Consumer
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly IConsumer<TKey, TValue> _consumer;
         private readonly IKafkaConsumerOptions<TKey, TValue> _options;
-
-        private object _id;
-        public object Id => _id ??= _options.ConsumerIdHandler?.Invoke(this);
 
         public Handle Handle => _consumer.Handle;
         public string Name => _consumer.Name;

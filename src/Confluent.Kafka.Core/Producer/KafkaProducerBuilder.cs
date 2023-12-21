@@ -20,12 +20,13 @@ namespace Confluent.Kafka.Core.Producer
         #region Private Fields
 
         private static readonly Type DefaultProducerType = typeof(KafkaProducer<TKey, TValue>);
+
         private Type _producerType;
+        private object _producerKey;
         private Func<TValue, object> _messageIdHandler;
-        private IDiagnosticsManager _diagnosticsManager;
         private IRetryHandler<TKey, TValue> _retryHandler;
+        private IDiagnosticsManager _diagnosticsManager;
         private IKafkaProducerHandlerFactory<TKey, TValue> _handlerFactory;
-        private Func<IKafkaProducer<TKey, TValue>, object> _producerIdHandler;
         private IEnumerable<IKafkaProducerInterceptor<TKey, TValue>> _interceptors;
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -79,7 +80,6 @@ namespace Confluent.Kafka.Core.Producer
                 DiagnosticsManager = _diagnosticsManager,
                 KeySerializer = KeySerializer,
                 ValueSerializer = ValueSerializer,
-                ProducerIdHandler = _producerIdHandler,
                 MessageIdHandler = _messageIdHandler,
                 RetryHandler = _retryHandler,
                 Interceptors = _interceptors
@@ -126,8 +126,7 @@ namespace Confluent.Kafka.Core.Producer
             return this;
         }
 
-        public IKafkaProducerBuilder<TKey, TValue> WithOAuthBearerTokenRefreshHandler(
-            Action<IProducer<TKey, TValue>, string> oAuthBearerTokenRefreshHandler)
+        public IKafkaProducerBuilder<TKey, TValue> WithOAuthBearerTokenRefreshHandler(Action<IProducer<TKey, TValue>, string> oAuthBearerTokenRefreshHandler)
         {
             SetOAuthBearerTokenRefreshHandler(oAuthBearerTokenRefreshHandler);
             return this;
@@ -163,6 +162,12 @@ namespace Confluent.Kafka.Core.Producer
             return this;
         }
 
+        public IKafkaProducerBuilder<TKey, TValue> WithProducerKey(object producerKey)
+        {
+            _producerKey = producerKey;
+            return this;
+        }
+
         public IKafkaProducerBuilder<TKey, TValue> WithLoggerFactory(ILoggerFactory loggerFactory)
         {
             LoggerFactory = loggerFactory;
@@ -172,12 +177,6 @@ namespace Confluent.Kafka.Core.Producer
         public IKafkaProducerBuilder<TKey, TValue> WithServiceProvider(IServiceProvider serviceProvider)
         {
             ServiceProvider = serviceProvider;
-            return this;
-        }
-
-        public IKafkaProducerBuilder<TKey, TValue> WithProducerIdHandler(Func<IKafkaProducer<TKey, TValue>, object> producerIdHandler)
-        {
-            _producerIdHandler = producerIdHandler;
             return this;
         }
 
@@ -252,7 +251,11 @@ namespace Confluent.Kafka.Core.Producer
                 }
             }
 
-            _handlerFactory ??= ServiceProvider?.GetService<IKafkaProducerHandlerFactory<TKey, TValue>>();
+            _handlerFactory ??= KafkaProducerHandlerFactory.GetOrCreateHandlerFactory<TKey, TValue>(
+                ServiceProvider,
+                LoggerFactory,
+                (_, builder) => builder.WithEnableLogging(ProducerConfig.EnableLogging),
+                _producerKey);
 
             if (_handlerFactory is not null)
             {
@@ -270,8 +273,6 @@ namespace Confluent.Kafka.Core.Producer
                 {
                     SetLogHandler(_handlerFactory.CreateLogHandler());
                 }
-
-                _producerIdHandler ??= _handlerFactory.CreateProducerIdHandler();
 
                 _messageIdHandler ??= _handlerFactory.CreateMessageIdHandler();
             }

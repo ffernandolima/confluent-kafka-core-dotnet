@@ -24,8 +24,6 @@ namespace Confluent.Kafka.Core.Producer.Internal
 
         public IRetryHandler<TKey, TValue> RetryHandler { get; init; }
 
-        public Func<IKafkaProducer<TKey, TValue>, object> ProducerIdHandler { get; init; }
-
         public IEnumerable<IKafkaProducerInterceptor<TKey, TValue>> Interceptors { get; init; }
     }
 }

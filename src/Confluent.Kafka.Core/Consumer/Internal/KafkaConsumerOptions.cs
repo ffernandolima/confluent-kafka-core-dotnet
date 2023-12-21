@@ -24,8 +24,6 @@ namespace Confluent.Kafka.Core.Consumer.Internal
 
         public IRetryHandler<TKey, TValue> RetryHandler { get; init; }
 
-        public Func<IKafkaConsumer<TKey, TValue>, object> ConsumerIdHandler { get; init; }
-
         public IEnumerable<IKafkaConsumerInterceptor<TKey, TValue>> Interceptors { get; init; }
     }
 }

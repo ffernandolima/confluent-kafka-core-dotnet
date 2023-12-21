@@ -20,12 +20,13 @@ namespace Confluent.Kafka.Core.Consumer
         #region Private Fields
 
         private static readonly Type DefaultConsumerType = typeof(KafkaConsumer<TKey, TValue>);
+
         private Type _consumerType;
+        private object _consumerKey;
         private Func<TValue, object> _messageIdHandler;
-        private IDiagnosticsManager _diagnosticsManager;
         private IRetryHandler<TKey, TValue> _retryHandler;
+        private IDiagnosticsManager _diagnosticsManager;
         private IKafkaConsumerHandlerFactory<TKey, TValue> _handlerFactory;
-        private Func<IKafkaConsumer<TKey, TValue>, object> _consumerIdHandler;
         private IEnumerable<IKafkaConsumerInterceptor<TKey, TValue>> _interceptors;
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -79,7 +80,6 @@ namespace Confluent.Kafka.Core.Consumer
                 DiagnosticsManager = _diagnosticsManager,
                 KeyDeserializer = KeyDeserializer,
                 ValueDeserializer = ValueDeserializer,
-                ConsumerIdHandler = _consumerIdHandler,
                 MessageIdHandler = _messageIdHandler,
                 RetryHandler = _retryHandler,
                 Interceptors = _interceptors
@@ -114,8 +114,7 @@ namespace Confluent.Kafka.Core.Consumer
             return this;
         }
 
-        public IKafkaConsumerBuilder<TKey, TValue> WithOAuthBearerTokenRefreshHandler(
-            Action<IConsumer<TKey, TValue>, string> oAuthBearerTokenRefreshHandler)
+        public IKafkaConsumerBuilder<TKey, TValue> WithOAuthBearerTokenRefreshHandler(Action<IConsumer<TKey, TValue>, string> oAuthBearerTokenRefreshHandler)
         {
             SetOAuthBearerTokenRefreshHandler(oAuthBearerTokenRefreshHandler);
             return this;
@@ -145,50 +144,43 @@ namespace Confluent.Kafka.Core.Consumer
             return this;
         }
 
-        public IKafkaConsumerBuilder<TKey, TValue> WithPartitionsAssignedHandler(
-            Func<IConsumer<TKey, TValue>, List<TopicPartition>, IEnumerable<TopicPartitionOffset>> partitionsAssignedHandler)
+        public IKafkaConsumerBuilder<TKey, TValue> WithPartitionsAssignedHandler(Func<IConsumer<TKey, TValue>, List<TopicPartition>, IEnumerable<TopicPartitionOffset>> partitionsAssignedHandler)
         {
             SetPartitionsAssignedHandler(partitionsAssignedHandler);
             return this;
         }
 
-        public IKafkaConsumerBuilder<TKey, TValue> WithPartitionsAssignedHandler(
-            Action<IConsumer<TKey, TValue>, List<TopicPartition>> partitionAssignmentHandler)
+        public IKafkaConsumerBuilder<TKey, TValue> WithPartitionsAssignedHandler(Action<IConsumer<TKey, TValue>, List<TopicPartition>> partitionAssignmentHandler)
         {
             SetPartitionsAssignedHandler(partitionAssignmentHandler);
             return this;
         }
 
-        public IKafkaConsumerBuilder<TKey, TValue> WithPartitionsRevokedHandler(
-            Func<IConsumer<TKey, TValue>, List<TopicPartitionOffset>, IEnumerable<TopicPartitionOffset>> partitionsRevokedHandler)
+        public IKafkaConsumerBuilder<TKey, TValue> WithPartitionsRevokedHandler(Func<IConsumer<TKey, TValue>, List<TopicPartitionOffset>, IEnumerable<TopicPartitionOffset>> partitionsRevokedHandler)
         {
             SetPartitionsRevokedHandler(partitionsRevokedHandler);
             return this;
         }
 
-        public IKafkaConsumerBuilder<TKey, TValue> WithPartitionsRevokedHandler(
-            Action<IConsumer<TKey, TValue>, List<TopicPartitionOffset>> partitionsRevokedHandler)
+        public IKafkaConsumerBuilder<TKey, TValue> WithPartitionsRevokedHandler(Action<IConsumer<TKey, TValue>, List<TopicPartitionOffset>> partitionsRevokedHandler)
         {
             SetPartitionsRevokedHandler(partitionsRevokedHandler);
             return this;
         }
 
-        public IKafkaConsumerBuilder<TKey, TValue> WithPartitionsLostHandler(
-            Func<IConsumer<TKey, TValue>, List<TopicPartitionOffset>, IEnumerable<TopicPartitionOffset>> partitionsLostHandler)
+        public IKafkaConsumerBuilder<TKey, TValue> WithPartitionsLostHandler(Func<IConsumer<TKey, TValue>, List<TopicPartitionOffset>, IEnumerable<TopicPartitionOffset>> partitionsLostHandler)
         {
             SetPartitionsLostHandler(partitionsLostHandler);
             return this;
         }
 
-        public IKafkaConsumerBuilder<TKey, TValue> WithPartitionsLostHandler(
-            Action<IConsumer<TKey, TValue>, List<TopicPartitionOffset>> partitionsLostHandler)
+        public IKafkaConsumerBuilder<TKey, TValue> WithPartitionsLostHandler(Action<IConsumer<TKey, TValue>, List<TopicPartitionOffset>> partitionsLostHandler)
         {
             SetPartitionsLostHandler(partitionsLostHandler);
             return this;
         }
 
-        public IKafkaConsumerBuilder<TKey, TValue> WithOffsetsCommittedHandler(
-            Action<IConsumer<TKey, TValue>, CommittedOffsets> offsetsCommittedHandler)
+        public IKafkaConsumerBuilder<TKey, TValue> WithOffsetsCommittedHandler(Action<IConsumer<TKey, TValue>, CommittedOffsets> offsetsCommittedHandler)
         {
             SetOffsetsCommittedHandler(offsetsCommittedHandler);
             return this;
@@ -197,6 +189,12 @@ namespace Confluent.Kafka.Core.Consumer
         public IKafkaConsumerBuilder<TKey, TValue> WithConsumerType(Type consumerType)
         {
             _consumerType = consumerType;
+            return this;
+        }
+
+        public IKafkaConsumerBuilder<TKey, TValue> WithConsumerKey(object consumerKey)
+        {
+            _consumerKey = consumerKey;
             return this;
         }
 
@@ -209,12 +207,6 @@ namespace Confluent.Kafka.Core.Consumer
         public IKafkaConsumerBuilder<TKey, TValue> WithServiceProvider(IServiceProvider serviceProvider)
         {
             ServiceProvider = serviceProvider;
-            return this;
-        }
-
-        public IKafkaConsumerBuilder<TKey, TValue> WithConsumerIdHandler(Func<IKafkaConsumer<TKey, TValue>, object> consumerIdHandler)
-        {
-            _consumerIdHandler = consumerIdHandler;
             return this;
         }
 
@@ -289,7 +281,11 @@ namespace Confluent.Kafka.Core.Consumer
                 }
             }
 
-            _handlerFactory ??= ServiceProvider?.GetService<IKafkaConsumerHandlerFactory<TKey, TValue>>();
+            _handlerFactory ??= KafkaConsumerHandlerFactory.GetOrCreateHandlerFactory<TKey, TValue>(
+                ServiceProvider,
+                LoggerFactory,
+                (_, builder) => builder.WithEnableLogging(ConsumerConfig.EnableLogging),
+                _consumerKey);
 
             if (_handlerFactory is not null)
             {
@@ -322,8 +318,6 @@ namespace Confluent.Kafka.Core.Consumer
                 {
                     SetPartitionsLostHandler(_handlerFactory.CreatePartitionsLostHandler());
                 }
-
-                _consumerIdHandler ??= _handlerFactory.CreateConsumerIdHandler();
 
                 _messageIdHandler ??= _handlerFactory.CreateMessageIdHandler();
             }
