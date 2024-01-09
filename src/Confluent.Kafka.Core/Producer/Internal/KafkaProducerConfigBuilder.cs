@@ -620,6 +620,12 @@ namespace Confluent.Kafka.Core.Producer.Internal
 
         #region IKafkaProducerConfigBuilder Members
 
+        public IKafkaProducerConfigBuilder WithDefaultTopic(string defaultTopic)
+        {
+            AppendAction(config => config.DefaultTopic = defaultTopic);
+            return this;
+        }
+
         public IKafkaProducerConfigBuilder WithDefaultTimeout(TimeSpan defaultTimeout)
         {
             AppendAction(config => config.DefaultTimeout = defaultTimeout);

@@ -5,6 +5,8 @@ namespace Confluent.Kafka.Core.Producer
 {
     public interface IKafkaProducerConfig : IProducerConfig, IValidatableObject
     {
+        string DefaultTopic { get; }
+
         TimeSpan DefaultTimeout { get; }
 
         bool EnableLogging { get; }

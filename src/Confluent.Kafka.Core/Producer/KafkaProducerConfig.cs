@@ -41,6 +41,7 @@ namespace Confluent.Kafka.Core.Producer
 
         #region IKafkaProducerConfig Members
 
+        public string DefaultTopic { get; set; }
         public TimeSpan DefaultTimeout { get; set; } = TimeSpan.Zero;
         public bool EnableLogging { get; set; } = true;
         public bool EnableDiagnostics { get; set; } = true;
