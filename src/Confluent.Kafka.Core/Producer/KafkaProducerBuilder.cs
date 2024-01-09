@@ -221,11 +221,13 @@ namespace Confluent.Kafka.Core.Producer
                 return _builtProducer;
             }
 
+            const string RetryHandler = "RetryHandler";
+
             ProducerConfig.ValidateAndThrow<KafkaProducerConfigException>(
-               new ValidationContext(ProducerConfig, new Dictionary<object, object>
-               {
-                   ["RetryHandler"] = _retryHandler
-               }));
+                new ValidationContext(ProducerConfig, new Dictionary<object, object>
+                {
+                    [RetryHandler] = _retryHandler
+                }));
 
             _producerType ??= DefaultProducerType;
 
