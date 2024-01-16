@@ -7,8 +7,6 @@ namespace Confluent.Kafka.Core.Diagnostics.Internal
 {
     internal static class ActivityExtensions
     {
-        private const string IdKey = "Id";
-
         public static ActivityContext GetContextOrDefault(this Activity activity)
         {
             var activityContext = activity?.Context ?? default;
@@ -36,25 +34,7 @@ namespace Confluent.Kafka.Core.Diagnostics.Internal
             return activity;
         }
 
-        public static Activity AddEvent(this Activity activity, string name, object id)
-        {
-            ActivityTagsCollection tags = null;
-
-            if (id is not null)
-            {
-                tags = new ActivityTagsCollection
-                {
-                    [IdKey] = id
-                };
-            }
-
-            activity?.AddEvent(name, tags: tags);
-
-            return activity;
-        }
-
-        public static Activity AddEvent(this Activity activity, string name, DateTimeOffset timestamp = default,
-            ActivityTagsCollection tags = null)
+        public static Activity AddEvent(this Activity activity, string name, DateTimeOffset timestamp = default, ActivityTagsCollection tags = null)
         {
             if (!string.IsNullOrWhiteSpace(name))
             {
