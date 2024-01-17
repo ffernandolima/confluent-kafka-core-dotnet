@@ -12,7 +12,7 @@ namespace Confluent.Kafka.Core.Diagnostics.Internal
     {
         private static readonly ConcurrentDictionary<Type, object> Serializers = new();
 
-        public override void Enrich(Activity activity, ConsumeException consumeException, IConsumerConfig consumerConfig, Func<byte[], object> messageIdHandler = null)
+        public override void Enrich(Activity activity, ConsumeException consumeException, IConsumerConfig consumerConfig)
         {
             if (activity is null)
             {
@@ -48,8 +48,7 @@ namespace Confluent.Kafka.Core.Diagnostics.Internal
 
             if (consumerRecord.Message is not null)
             {
-                builder.WithMessageId(messageIdHandler?.Invoke(consumerRecord.Message.Value))
-                       .WithMessageKey(consumerRecord.Message.Key)
+                builder.WithMessageKey(consumerRecord.Message.Key)
                        .WithMessageValue(consumerRecord.Message.Value)
                        .WithMessageBody(consumerRecord.Message.Value);
             }
@@ -246,28 +245,28 @@ namespace Confluent.Kafka.Core.Diagnostics.Internal
                 return messageBody;
             }
 
-            var serializer = (ISerializer<TValue>)Serializers.GetOrAdd(typeof(TValue), key =>
-            {
-                if (configuredSerializer is ISerializer<TValue>)
-                {
-                    return configuredSerializer;
-                }
-
-                if (configuredSerializer is SyncOverAsyncDeserializer<TValue> synDeserializer)
-                {
-                    var innerDeserializer = synDeserializer.GetInnerDeserializer();
-
-                    if (innerDeserializer is IAsyncSerializer<TValue> asyncSerializer)
-                    {
-                        return asyncSerializer.AsSyncOverAsync();
-                    }
-                }
-
-                return KafkaSerialization.TryGetSerializer(key);
-            });
-
             try
             {
+                var serializer = (ISerializer<TValue>)Serializers.GetOrAdd(typeof(TValue), key =>
+                {
+                    if (configuredSerializer is ISerializer<TValue>)
+                    {
+                        return configuredSerializer;
+                    }
+
+                    if (configuredSerializer is SyncOverAsyncDeserializer<TValue> synDeserializer)
+                    {
+                        var innerDeserializer = synDeserializer.GetInnerDeserializer();
+
+                        if (innerDeserializer is IAsyncSerializer<TValue> asyncSerializer)
+                        {
+                            return asyncSerializer.AsSyncOverAsync();
+                        }
+                    }
+
+                    return KafkaSerialization.TryGetSerializer(key);
+                });
+
                 messageBody = serializer?.Serialize(messageValue, contextFactory.Invoke());
             }
             catch

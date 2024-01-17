@@ -60,9 +60,9 @@ namespace Confluent.Kafka.Core.Diagnostics.Internal
             return propagationContext;
         }
 
-        public void Enrich(Activity activity, ConsumeException consumeException, IConsumerConfig consumerConfig, Func<byte[], object> messageIdHandler = null)
+        public void Enrich(Activity activity, ConsumeException consumeException, IConsumerConfig consumerConfig)
         {
-            ActivityEnricher?.Enrich(activity, consumeException, consumerConfig, messageIdHandler);
+            ActivityEnricher?.Enrich(activity, consumeException, consumerConfig);
         }
 
         public void Enrich<TKey, TValue>(Activity activity, ConsumeResult<TKey, TValue> consumeResult, IKafkaConsumerOptions<TKey, TValue> options)
