@@ -1,4 +1,6 @@
-﻿using Confluent.Kafka.Core.Retry;
+﻿using Confluent.Kafka.Core.Models;
+using Confluent.Kafka.Core.Producer;
+using Confluent.Kafka.Core.Retry;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -62,6 +64,8 @@ namespace Confluent.Kafka.Core.Consumer
         IKafkaConsumerBuilder<TKey, TValue> WithRetryHandler(IRetryHandler<TKey, TValue> retryHandler);
 
         IKafkaConsumerBuilder<TKey, TValue> WithHandlerFactory(IKafkaConsumerHandlerFactory<TKey, TValue> handlerFactory);
+
+        IKafkaConsumerBuilder<TKey, TValue> WithDeadLetterProducer(IKafkaProducer<byte[], KafkaMetadataMessage> deadLetterProducer);
 
         IKafkaConsumerBuilder<TKey, TValue> WithInterceptors(IEnumerable<IKafkaConsumerInterceptor<TKey, TValue>> interceptors);
 

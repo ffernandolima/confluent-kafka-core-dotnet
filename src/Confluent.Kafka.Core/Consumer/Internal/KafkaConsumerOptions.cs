@@ -1,4 +1,6 @@
 ﻿using Confluent.Kafka.Core.Diagnostics;
+using Confluent.Kafka.Core.Models;
+using Confluent.Kafka.Core.Producer;
 using Confluent.Kafka.Core.Retry;
 using Microsoft.Extensions.Logging;
 using System;
@@ -23,6 +25,8 @@ namespace Confluent.Kafka.Core.Consumer.Internal
         public Func<TValue, object> MessageIdHandler { get; init; }
 
         public IRetryHandler<TKey, TValue> RetryHandler { get; init; }
+
+        public IKafkaProducer<byte[], KafkaMetadataMessage> DeadLetterProducer { get; init; }
 
         public IEnumerable<IKafkaConsumerInterceptor<TKey, TValue>> Interceptors { get; init; }
     }

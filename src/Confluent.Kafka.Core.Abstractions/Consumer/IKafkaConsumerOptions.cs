@@ -26,6 +26,8 @@ namespace Confluent.Kafka.Core.Consumer
 
         IRetryHandler<TKey, TValue> RetryHandler { get; }
 
+        IKafkaProducer<byte[], KafkaMetadataMessage> DeadLetterProducer { get; }
+
         IEnumerable<IKafkaConsumerInterceptor<TKey, TValue>> Interceptors { get; }
     }
 }

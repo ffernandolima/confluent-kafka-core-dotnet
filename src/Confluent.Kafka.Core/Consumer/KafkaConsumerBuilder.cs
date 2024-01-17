@@ -2,6 +2,9 @@
 using Confluent.Kafka.Core.Diagnostics;
 using Confluent.Kafka.Core.Diagnostics.Internal;
 using Confluent.Kafka.Core.Internal;
+using Confluent.Kafka.Core.Models;
+using Confluent.Kafka.Core.Producer;
+using Confluent.Kafka.Core.Producer.Internal;
 using Confluent.Kafka.Core.Retry;
 using Confluent.Kafka.Core.Serialization.Internal;
 using Confluent.Kafka.SyncOverAsync;
@@ -27,6 +30,7 @@ namespace Confluent.Kafka.Core.Consumer
         private IRetryHandler<TKey, TValue> _retryHandler;
         private IDiagnosticsManager _diagnosticsManager;
         private IKafkaConsumerHandlerFactory<TKey, TValue> _handlerFactory;
+        private IKafkaProducer<byte[], KafkaMetadataMessage> _deadLetterProducer;
         private IEnumerable<IKafkaConsumerInterceptor<TKey, TValue>> _interceptors;
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -82,6 +86,7 @@ namespace Confluent.Kafka.Core.Consumer
                 ValueDeserializer = ValueDeserializer,
                 MessageIdHandler = _messageIdHandler,
                 RetryHandler = _retryHandler,
+                DeadLetterProducer = _deadLetterProducer,
                 Interceptors = _interceptors
             };
 
@@ -228,6 +233,13 @@ namespace Confluent.Kafka.Core.Consumer
             return this;
         }
 
+        public IKafkaConsumerBuilder<TKey, TValue> WithDeadLetterProducer(IKafkaProducer<byte[], KafkaMetadataMessage> deadLetterProducer)
+        {
+            _deadLetterProducer = deadLetterProducer;
+            _deadLetterProducer?.ValidateTopicSuffix(KafkaProducerConstants.DeadLetterTopicSuffix);
+            return this;
+        }
+
         public IKafkaConsumerBuilder<TKey, TValue> WithInterceptors(IEnumerable<IKafkaConsumerInterceptor<TKey, TValue>> interceptors)
         {
             if (interceptors is not null && interceptors.Any(interceptor => interceptor is not null))
@@ -254,6 +266,7 @@ namespace Confluent.Kafka.Core.Consumer
             ConsumerConfig.ValidateAndThrow<KafkaConsumerConfigException>(
                 new ValidationContext(ConsumerConfig, new Dictionary<object, object>
                 {
+                    [KafkaProducerConstants.DeadLetterProducer] = _deadLetterProducer,
                     ["RetryHandler"] = _retryHandler
                 }));
 

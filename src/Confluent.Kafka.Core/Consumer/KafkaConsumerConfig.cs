@@ -1,4 +1,5 @@
 ﻿using Confluent.Kafka.Core.Consumer.Internal;
+using Confluent.Kafka.Core.Producer.Internal;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -116,6 +117,15 @@ namespace Confluent.Kafka.Core.Consumer
 
             if (validationContext?.Items is not null)
             {
+                if (consumerConfig.EnableDeadLetterTopic &&
+                    validationContext.Items.TryGetValue(KafkaProducerConstants.DeadLetterProducer, out object deadLetterProducer) &&
+                    deadLetterProducer is null)
+                {
+                    yield return new ValidationResult(
+                        $"{KafkaProducerConstants.DeadLetterProducer} cannot be null when {nameof(consumerConfig.EnableDeadLetterTopic)} is enabled.",
+                        new[] { KafkaProducerConstants.DeadLetterProducer, nameof(consumerConfig.EnableDeadLetterTopic) });
+                }
+
                 const string RetryHandler = "RetryHandler";
 
                 if (consumerConfig.EnableRetryOnFailure &&
