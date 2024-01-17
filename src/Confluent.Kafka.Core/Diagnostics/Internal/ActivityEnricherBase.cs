@@ -1,6 +1,5 @@
 ﻿using Confluent.Kafka.Core.Consumer;
 using Confluent.Kafka.Core.Producer;
-using System;
 using System.Diagnostics;
 
 namespace Confluent.Kafka.Core.Diagnostics.Internal
