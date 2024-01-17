@@ -87,6 +87,6 @@ namespace Confluent.Kafka.Core.Retry.Polly.Internal
         }
 
         private void OnRetry(Exception exception, TimeSpan _, int retryAttempt)
-           => _logger.LogRetryExecutionFailed(exception, retryAttempt);
+           => _logger.LogRetryExecutionFailure(exception, retryAttempt);
     }
 }

@@ -10,6 +10,7 @@ namespace Confluent.Kafka.Core.Idempotency.Redis.Internal
     internal sealed class RedisIdempotencyHandler<TKey, TValue> : IRedisIdempotencyHandler<TKey, TValue>
     {
         private static readonly Type DefaultIdempotencyHandlerType = typeof(RedisIdempotencyHandler<TKey, TValue>);
+        private static readonly string MessageValueTypeName = typeof(TValue).ExtractTypeName();
 
         private readonly ILogger _logger;
         private readonly IConnectionMultiplexer _multiplexer;
@@ -45,7 +46,7 @@ namespace Confluent.Kafka.Core.Idempotency.Redis.Internal
 
             if (string.IsNullOrWhiteSpace(messageId))
             {
-                _logger.LogMessageIdentifierNotFound();
+                _logger.LogMessageIdNotFound(Key, MessageValueTypeName);
 
                 return true;
             }
@@ -62,7 +63,7 @@ namespace Confluent.Kafka.Core.Idempotency.Redis.Internal
             }
             catch (RedisException ex)
             {
-                _logger.LogIdempotencyHandlingFailed(ex, Key);
+                _logger.LogIdempotencyHandlingFailure(ex, Key);
 
                 return true;
             }
