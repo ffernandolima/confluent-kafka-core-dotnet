@@ -16,6 +16,7 @@ namespace Confluent.Kafka.Core.Producer
 
         public Handle Handle => _producer.Handle;
         public string Name => _producer.Name;
+        public IKafkaProducerOptions<TKey, TValue> Options => _options;
 
         public KafkaProducer(IKafkaProducerBuilder<TKey, TValue> builder)
         {

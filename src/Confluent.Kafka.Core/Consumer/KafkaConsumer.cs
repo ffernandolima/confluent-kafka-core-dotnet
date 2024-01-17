@@ -20,6 +20,7 @@ namespace Confluent.Kafka.Core.Consumer
         public List<string> Subscription => _consumer.Subscription;
         public List<TopicPartition> Assignment => _consumer.Assignment;
         public IConsumerGroupMetadata ConsumerGroupMetadata => _consumer.ConsumerGroupMetadata;
+        public IKafkaConsumerOptions<TKey, TValue> Options => _options;
 
         public KafkaConsumer(IKafkaConsumerBuilder<TKey, TValue> builder)
         {
