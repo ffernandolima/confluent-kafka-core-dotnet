@@ -1,5 +1,6 @@
 ﻿using Confluent.Kafka.Core.Consumer.Internal;
 using Confluent.Kafka.Core.Producer.Internal;
+using Confluent.Kafka.Core.Retry;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -126,15 +127,13 @@ namespace Confluent.Kafka.Core.Consumer
                         new[] { KafkaProducerConstants.DeadLetterProducer, nameof(consumerConfig.EnableDeadLetterTopic) });
                 }
 
-                const string RetryHandler = "RetryHandler";
-
                 if (consumerConfig.EnableRetryOnFailure &&
-                    validationContext.Items.TryGetValue(RetryHandler, out object retryHandler) &&
+                    validationContext.Items.TryGetValue(KafkaRetryConstants.RetryHandler, out object retryHandler) &&
                     retryHandler is null)
                 {
                     yield return new ValidationResult(
-                        $"{RetryHandler} cannot be null when {nameof(consumerConfig.EnableRetryOnFailure)} is enabled.",
-                        new[] { RetryHandler, nameof(consumerConfig.EnableRetryOnFailure) });
+                        $"{KafkaRetryConstants.RetryHandler} cannot be null when {nameof(consumerConfig.EnableRetryOnFailure)} is enabled.",
+                        new[] { KafkaRetryConstants.RetryHandler, nameof(consumerConfig.EnableRetryOnFailure) });
                 }
             }
         }

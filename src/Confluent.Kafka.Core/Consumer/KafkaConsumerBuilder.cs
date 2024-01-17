@@ -267,7 +267,7 @@ namespace Confluent.Kafka.Core.Consumer
                 new ValidationContext(ConsumerConfig, new Dictionary<object, object>
                 {
                     [KafkaProducerConstants.DeadLetterProducer] = _deadLetterProducer,
-                    ["RetryHandler"] = _retryHandler
+                    [KafkaRetryConstants.RetryHandler] = _retryHandler
                 }));
 
             _consumerType ??= DefaultConsumerType;

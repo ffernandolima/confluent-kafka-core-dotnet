@@ -1,4 +1,5 @@
 ﻿using Confluent.Kafka.Core.Producer.Internal;
+using Confluent.Kafka.Core.Retry;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -78,15 +79,13 @@ namespace Confluent.Kafka.Core.Producer
 
             if (validationContext?.Items is not null)
             {
-                const string RetryHandler = "RetryHandler";
-
                 if (producerConfig.EnableRetryOnFailure &&
-                    validationContext.Items.TryGetValue(RetryHandler, out object retryHandler) &&
+                    validationContext.Items.TryGetValue(KafkaRetryConstants.RetryHandler, out object retryHandler) &&
                     retryHandler is null)
                 {
                     yield return new ValidationResult(
-                        $"{RetryHandler} cannot be null when {nameof(producerConfig.EnableRetryOnFailure)} is enabled.",
-                        new[] { RetryHandler, nameof(producerConfig.EnableRetryOnFailure) });
+                        $"{KafkaRetryConstants.RetryHandler} cannot be null when {nameof(producerConfig.EnableRetryOnFailure)} is enabled.",
+                        new[] { KafkaRetryConstants.RetryHandler, nameof(producerConfig.EnableRetryOnFailure) });
                 }
             }
         }
