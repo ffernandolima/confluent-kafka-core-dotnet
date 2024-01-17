@@ -6,9 +6,6 @@ namespace Confluent.Kafka.Core.Consumer
 {
     public interface IKafkaConsumerConfig : IConsumerConfig, IValidatableObject
     {
-        internal bool HasTopicSubscriptions { get; }
-
-        internal bool HasPartitionAssignments { get; }
 
         IEnumerable<string> TopicSubscriptions { get; }
 

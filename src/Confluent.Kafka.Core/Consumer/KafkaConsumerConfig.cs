@@ -4,7 +4,6 @@ using Confluent.Kafka.Core.Retry;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Threading;
 
 namespace Confluent.Kafka.Core.Consumer
@@ -49,18 +48,6 @@ namespace Confluent.Kafka.Core.Consumer
 
         #endregion Hidden Inherited Members
 
-        #region IKafkaConsumerConfig Explicity Members
-
-        bool IKafkaConsumerConfig.HasTopicSubscriptions
-            => TopicSubscriptions is not null &&
-               TopicSubscriptions.Any(topic => !string.IsNullOrWhiteSpace(topic));
-
-        bool IKafkaConsumerConfig.HasPartitionAssignments
-            => PartitionAssignments is not null &&
-               PartitionAssignments.Any(assignment => assignment is not null);
-
-        #endregion IKafkaConsumerConfig Explicity Members
-
         #region IKafkaConsumerConfig Members
 
         public IEnumerable<string> TopicSubscriptions { get; set; }
@@ -95,7 +82,7 @@ namespace Confluent.Kafka.Core.Consumer
                     new[] { nameof(consumerConfig.BootstrapServers) });
             }
 
-            if (consumerConfig.HasTopicSubscriptions && consumerConfig.HasPartitionAssignments)
+            if (consumerConfig.HasTopicSubscriptions() && consumerConfig.HasPartitionAssignments())
             {
                 yield return new ValidationResult(
                     $"Both {nameof(consumerConfig.TopicSubscriptions)} and {nameof(consumerConfig.PartitionAssignments)} have been set up.",
