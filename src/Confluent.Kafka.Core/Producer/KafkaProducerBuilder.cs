@@ -15,7 +15,10 @@ using System.Linq;
 
 namespace Confluent.Kafka.Core.Producer
 {
-    public class KafkaProducerBuilder<TKey, TValue> : ProducerBuilder<TKey, TValue>, IKafkaProducerBuilder<TKey, TValue>
+    public class KafkaProducerBuilder<TKey, TValue> : ProducerBuilder<TKey, TValue>,
+        IProducerBuilder<TKey, TValue>,
+        IKafkaProducerBuilder<TKey, TValue>,
+        IKafkaProducerOptionsConverter<TKey, TValue>
     {
         #region Private Fields
 
@@ -33,7 +36,7 @@ namespace Confluent.Kafka.Core.Producer
         private IKafkaProducer<TKey, TValue> _builtProducer;
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IProducer<TKey, TValue> _builtInnerProducer;
+        private IProducer<TKey, TValue> _builtUnderlyingProducer;
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private IKafkaProducerOptions<TKey, TValue> _builtOptions;
@@ -54,23 +57,21 @@ namespace Confluent.Kafka.Core.Producer
 
         #endregion Ctors
 
-        #region IKafkaProducerBuilder Explicity Members
+        #region IProducerBuilder Explicity Members
 
-        ILogger IKafkaProducerBuilder<TKey, TValue>.CreateLogger()
+        IProducer<TKey, TValue> IProducerBuilder<TKey, TValue>.Build()
         {
-            var logger = LoggerFactory.CreateLogger(ProducerConfig.EnableLogging, _producerType);
+            _builtUnderlyingProducer ??= base.Build();
 
-            return logger;
+            return _builtUnderlyingProducer;
         }
 
-        IProducer<TKey, TValue> IKafkaProducerBuilder<TKey, TValue>.BuildInnerProducer()
-        {
-            _builtInnerProducer ??= base.Build();
+        #endregion IProducerBuilder Explicity Members
 
-            return _builtInnerProducer;
-        }
 
-        IKafkaProducerOptions<TKey, TValue> IKafkaProducerBuilder<TKey, TValue>.ToOptions()
+        #region IKafkaProducerOptionsConverter Explicity Members
+
+        IKafkaProducerOptions<TKey, TValue> IKafkaProducerOptionsConverter<TKey, TValue>.ToOptions()
         {
             _builtOptions ??= new KafkaProducerOptions<TKey, TValue>
             {
@@ -88,7 +89,7 @@ namespace Confluent.Kafka.Core.Producer
             return _builtOptions;
         }
 
-        #endregion IKafkaProducerBuilder Explicity Members
+        #endregion IKafkaProducerOptionsConverter Explicity Members
 
         #region IKafkaProducerBuilder Members
 

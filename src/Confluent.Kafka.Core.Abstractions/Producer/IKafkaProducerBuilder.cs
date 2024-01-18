@@ -7,12 +7,6 @@ namespace Confluent.Kafka.Core.Producer
 {
     public interface IKafkaProducerBuilder<TKey, TValue>
     {
-        internal ILogger CreateLogger();
-
-        internal IProducer<TKey, TValue> BuildInnerProducer();
-
-        internal IKafkaProducerOptions<TKey, TValue> ToOptions();
-
         ILoggerFactory LoggerFactory { get; }
 
         IServiceProvider ServiceProvider { get; }

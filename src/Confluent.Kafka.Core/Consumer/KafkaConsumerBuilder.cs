@@ -18,7 +18,10 @@ using System.Linq;
 
 namespace Confluent.Kafka.Core.Consumer
 {
-    public class KafkaConsumerBuilder<TKey, TValue> : ConsumerBuilder<TKey, TValue>, IKafkaConsumerBuilder<TKey, TValue>
+    public class KafkaConsumerBuilder<TKey, TValue> : ConsumerBuilder<TKey, TValue>,
+        IConsumerBuilder<TKey, TValue>,
+        IKafkaConsumerBuilder<TKey, TValue>,
+        IKafkaConsumerOptionsConverter<TKey, TValue>
     {
         #region Private Fields
 
@@ -37,7 +40,7 @@ namespace Confluent.Kafka.Core.Consumer
         private IKafkaConsumer<TKey, TValue> _builtConsumer;
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IConsumer<TKey, TValue> _builtInnerConsumer;
+        private IConsumer<TKey, TValue> _builtUnderlyingConsumer;
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private IKafkaConsumerOptions<TKey, TValue> _builtOptions;
@@ -58,23 +61,21 @@ namespace Confluent.Kafka.Core.Consumer
 
         #endregion Ctors
 
-        #region IKafkaConsumerBuilder Explicity Members
+        #region IConsumerBuilder Explicity Members
 
-        ILogger IKafkaConsumerBuilder<TKey, TValue>.CreateLogger()
+        IConsumer<TKey, TValue> IConsumerBuilder<TKey, TValue>.Build()
         {
-            var logger = LoggerFactory.CreateLogger(ConsumerConfig.EnableLogging, _consumerType);
+            _builtUnderlyingConsumer ??= base.Build();
 
-            return logger;
+            return _builtUnderlyingConsumer;
         }
 
-        IConsumer<TKey, TValue> IKafkaConsumerBuilder<TKey, TValue>.BuildInnerConsumer()
-        {
-            _builtInnerConsumer ??= base.Build();
+        #endregion IConsumerBuilder Explicity Members
 
-            return _builtInnerConsumer;
-        }
 
-        IKafkaConsumerOptions<TKey, TValue> IKafkaConsumerBuilder<TKey, TValue>.ToOptions()
+        #region IKafkaConsumerOptionsConverter Explicity Members
+
+        IKafkaConsumerOptions<TKey, TValue> IKafkaConsumerOptionsConverter<TKey, TValue>.ToOptions()
         {
             _builtOptions ??= new KafkaConsumerOptions<TKey, TValue>
             {
@@ -93,7 +94,7 @@ namespace Confluent.Kafka.Core.Consumer
             return _builtOptions;
         }
 
-        #endregion IKafkaConsumerBuilder Explicity Members
+        #endregion IKafkaConsumerOptionsConverter Explicity Members
 
         #region IKafkaConsumerBuilder Members
 
@@ -343,12 +344,12 @@ namespace Confluent.Kafka.Core.Consumer
 
             _builtConsumer = (IKafkaConsumer<TKey, TValue>)Activator.CreateInstance(_consumerType, this);
 
-            if (ConsumerConfig.HasTopicSubscriptions)
+            if (ConsumerConfig.HasTopicSubscriptions())
             {
                 _builtConsumer.Subscribe(ConsumerConfig.TopicSubscriptions!.Where(topic => !string.IsNullOrWhiteSpace(topic)));
             }
 
-            if (ConsumerConfig.HasPartitionAssignments)
+            if (ConsumerConfig.HasPartitionAssignments())
             {
                 _builtConsumer.Assign(ConsumerConfig.PartitionAssignments!.Where(partition => partition is not null));
             }

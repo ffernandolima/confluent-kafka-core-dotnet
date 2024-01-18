@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Confluent.Kafka.Core.Internal;
+using Confluent.Kafka.Core.Producer.Internal;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -12,6 +14,7 @@ namespace Confluent.Kafka.Core.Producer
         private readonly ILogger _logger;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly IProducer<TKey, TValue> _producer;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly IKafkaProducerOptions<TKey, TValue> _options;
 
         public Handle Handle => _producer.Handle;
@@ -25,9 +28,11 @@ namespace Confluent.Kafka.Core.Producer
                 throw new ArgumentNullException(nameof(builder), $"{nameof(builder)} cannot be null.");
             }
 
-            _logger = builder.CreateLogger();
-            _producer = builder.BuildInnerProducer();
-            _options = builder.ToOptions();
+            var options = builder.ToOptions();
+
+            _logger = options.LoggerFactory.CreateLogger(options.ProducerConfig!.EnableLogging, options.ProducerType);
+            _producer = builder.BuildUnderlyingProducer();
+            _options = options;
         }
 
         public void AbortTransaction(TimeSpan timeout)

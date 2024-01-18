@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Confluent.Kafka.Core.Consumer.Internal;
+using Confluent.Kafka.Core.Internal;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -12,6 +14,7 @@ namespace Confluent.Kafka.Core.Consumer
         private readonly ILogger _logger;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly IConsumer<TKey, TValue> _consumer;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly IKafkaConsumerOptions<TKey, TValue> _options;
 
         public Handle Handle => _consumer.Handle;
@@ -29,9 +32,11 @@ namespace Confluent.Kafka.Core.Consumer
                 throw new ArgumentNullException(nameof(builder), $"{nameof(builder)} cannot be null.");
             }
 
-            _logger = builder.CreateLogger();
-            _consumer = builder.BuildInnerConsumer();
-            _options = builder.ToOptions();
+            var options = builder.ToOptions();
+
+            _logger = options.LoggerFactory.CreateLogger(options.ConsumerConfig!.EnableLogging, options.ConsumerType);
+            _consumer = builder.BuildUnderlyingConsumer();
+            _options = options;
         }
 
         public int AddBrokers(string brokers)

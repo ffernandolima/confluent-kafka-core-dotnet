@@ -9,12 +9,6 @@ namespace Confluent.Kafka.Core.Consumer
 {
     public interface IKafkaConsumerBuilder<TKey, TValue>
     {
-        internal ILogger CreateLogger();
-
-        internal IConsumer<TKey, TValue> BuildInnerConsumer();
-
-        internal IKafkaConsumerOptions<TKey, TValue> ToOptions();
-
         ILoggerFactory LoggerFactory { get; }
 
         IServiceProvider ServiceProvider { get; }

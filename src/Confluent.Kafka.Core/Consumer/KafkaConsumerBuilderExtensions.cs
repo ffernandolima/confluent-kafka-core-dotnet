@@ -11,7 +11,7 @@ namespace Confluent.Kafka.Core.Consumer
 {
     using Confluent.Kafka.Core.Internal;
 
-    public static class KafkaConsumerBuilderExtensions
+    public static partial class KafkaConsumerBuilderExtensions
     {
         public static IKafkaConsumerBuilder<TKey, TValue> WithHandlerFactory<TKey, TValue>(
             this IKafkaConsumerBuilder<TKey, TValue> consumerBuilder,

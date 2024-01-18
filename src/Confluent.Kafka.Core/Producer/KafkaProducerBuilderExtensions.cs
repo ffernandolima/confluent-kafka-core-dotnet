@@ -6,7 +6,7 @@ using System.Reflection;
 
 namespace Confluent.Kafka.Core.Producer
 {
-    public static class KafkaProducerBuilderExtensions
+    public static partial class KafkaProducerBuilderExtensions
     {
         public static IKafkaProducerBuilder<TKey, TValue> WithHandlerFactory<TKey, TValue>(
             this IKafkaProducerBuilder<TKey, TValue> producerBuilder,
