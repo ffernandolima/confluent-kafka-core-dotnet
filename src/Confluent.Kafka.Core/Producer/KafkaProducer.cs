@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Confluent.Kafka.Core.Producer
 {
-    public class KafkaProducer<TKey, TValue> : IKafkaProducer<TKey, TValue> // TODO: Make this internal sealed?
+    public class KafkaProducer<TKey, TValue> : IKafkaProducer<TKey, TValue>, IProducerAccessor<TKey, TValue> // TODO: Make this internal sealed?
     {
         private readonly ILogger _logger;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -20,6 +20,8 @@ namespace Confluent.Kafka.Core.Producer
         public Handle Handle => _producer.Handle;
         public string Name => _producer.Name;
         public IKafkaProducerOptions<TKey, TValue> Options => _options;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IProducer<TKey, TValue> IProducerAccessor<TKey, TValue>.UnderlyingProducer => _producer;
 
         public KafkaProducer(IKafkaProducerBuilder<TKey, TValue> builder)
         {

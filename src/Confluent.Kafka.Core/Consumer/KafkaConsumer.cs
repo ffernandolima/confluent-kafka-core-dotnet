@@ -9,7 +9,7 @@ using System.Threading;
 
 namespace Confluent.Kafka.Core.Consumer
 {
-    public class KafkaConsumer<TKey, TValue> : IKafkaConsumer<TKey, TValue> // TODO: Make this internal sealed?
+    public class KafkaConsumer<TKey, TValue> : IKafkaConsumer<TKey, TValue>, IConsumerAccessor<TKey, TValue> // TODO: Make this internal sealed?
     {
         private readonly ILogger _logger;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -24,6 +24,8 @@ namespace Confluent.Kafka.Core.Consumer
         public List<TopicPartition> Assignment => _consumer.Assignment;
         public IConsumerGroupMetadata ConsumerGroupMetadata => _consumer.ConsumerGroupMetadata;
         public IKafkaConsumerOptions<TKey, TValue> Options => _options;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IConsumer<TKey, TValue> IConsumerAccessor<TKey, TValue>.UnderlyingConsumer => _consumer;
 
         public KafkaConsumer(IKafkaConsumerBuilder<TKey, TValue> builder)
         {
