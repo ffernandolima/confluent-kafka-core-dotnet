@@ -1,4 +1,4 @@
-﻿namespace Confluent.Kafka.Core.Consumer
+﻿namespace Confluent.Kafka.Core.Consumer.Internal
 {
     public sealed class KafkaConsumerHandlerFactoryOptions
     {

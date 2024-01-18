@@ -1,4 +1,4 @@
-﻿namespace Confluent.Kafka.Core.Producer
+﻿namespace Confluent.Kafka.Core.Producer.Internal
 {
     public sealed class KafkaProducerHandlerFactoryOptions
     {
