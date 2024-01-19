@@ -8,7 +8,7 @@ using System.Threading;
 
 namespace Confluent.Kafka.Core.Consumer
 {
-    public class KafkaConsumerConfig : ConsumerConfig, IKafkaConsumerConfig
+    public class KafkaConsumerConfig : ConsumerConfig, IKafkaConsumerConfig, IKafkaConsumerConfigHandler
     {
         #region Ctors
 
@@ -62,6 +62,20 @@ namespace Confluent.Kafka.Core.Consumer
         public bool EnableInterceptorExceptionPropagation { get; set; }
 
         #endregion IKafkaConsumerConfig Members
+
+        #region IKafkaConsumerConfigHandler Explicity Members
+
+        void IKafkaConsumerConfigHandler.UpdateTopicSubscriptions(IEnumerable<string> topicSubscriptions)
+        {
+            TopicSubscriptions = topicSubscriptions;
+        }
+
+        void IKafkaConsumerConfigHandler.UpdatePartitionAssignments(IEnumerable<TopicPartition> partitionAssignments)
+        {
+            PartitionAssignments = partitionAssignments;
+        }
+
+        #endregion IKafkaConsumerConfigHandler Explicity Members
 
         #region Public Methods
 

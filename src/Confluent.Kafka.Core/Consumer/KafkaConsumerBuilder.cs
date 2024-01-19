@@ -346,12 +346,12 @@ namespace Confluent.Kafka.Core.Consumer
 
             if (ConsumerConfig.HasTopicSubscriptions())
             {
-                _builtConsumer.Subscribe(ConsumerConfig.TopicSubscriptions!.Where(topic => !string.IsNullOrWhiteSpace(topic)));
+                _builtConsumer.Subscribe(ConsumerConfig.TopicSubscriptions);
             }
 
             if (ConsumerConfig.HasPartitionAssignments())
             {
-                _builtConsumer.Assign(ConsumerConfig.PartitionAssignments!.Where(partition => partition is not null));
+                _builtConsumer.Assign(ConsumerConfig.PartitionAssignments);
             }
 
             return _builtConsumer;
