@@ -5,8 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="..\Shared\FunctionalBuilder.cs" Link="Internal\FunctionalBuilder.cs" />
-    <Compile Include="..\Shared\IFunctionalBuilder.cs" Link="Internal\IFunctionalBuilder.cs" />
+    <Compile Include="..\Shared\FunctionalBuilder``.cs" Link="Internal\FunctionalBuilder``.cs" />
+    <Compile Include="..\Shared\IFunctionalBuilder``.cs" Link="Internal\IFunctionalBuilder``.cs" />
+    <Compile Include="..\Shared\FunctionalBuilder```.cs" Link="Internal\FunctionalBuilder```.cs" />
+    <Compile Include="..\Shared\IFunctionalBuilder```.cs" Link="Internal\IFunctionalBuilder```.cs" />
     <Compile Include="..\Shared\LoggerFactoryExtensions.cs" Link="Internal\LoggerFactoryExtensions.cs" />
     <Compile Include="..\Shared\TypeExtensions.cs" Link="Internal\TypeExtensions.cs" />
     <Compile Include="..\Shared\ValidatableObjectExtensions.cs" Link="Internal\ValidatableObjectExtensions.cs" />

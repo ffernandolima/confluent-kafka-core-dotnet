@@ -9,8 +9,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{26052A88
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{02239B44-D61B-439A-BC7D-675976067950}"
 	ProjectSection(SolutionItems) = preProject
-		src\Shared\FunctionalBuilder.cs = src\Shared\FunctionalBuilder.cs
-		src\Shared\IFunctionalBuilder.cs = src\Shared\IFunctionalBuilder.cs
+		src\Shared\IFunctionalBuilder``.cs = src\Shared\IFunctionalBuilder``.cs
+		src\Shared\IFunctionalBuilder```.cs = src\Shared\IFunctionalBuilder```.cs
+		src\Shared\FunctionalBuilder``.cs = src\Shared\FunctionalBuilder``.cs
+		src\Shared\FunctionalBuilder```.cs = src\Shared\FunctionalBuilder```.cs
 		src\Shared\LoggerFactoryExtensions.cs = src\Shared\LoggerFactoryExtensions.cs
 		src\Shared\TypeExtensions.cs = src\Shared\TypeExtensions.cs
 		src\Shared\ValidatableObjectExtensions.cs = src\Shared\ValidatableObjectExtensions.cs
