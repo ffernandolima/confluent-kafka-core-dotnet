@@ -12,7 +12,7 @@ namespace Confluent.Kafka.Core.Idempotency.Redis.Internal
             Action<IConfigurationOptionsBuilder> configureOptions)
         {
             RedisOptions = ConfigurationOptionsBuilder.Build(configureOptions);
-            ConnectionMultiplexer.SetFeatureFlag("PreventThreadTheft", enabled: true);
+            ConnectionMultiplexer.SetFeatureFlag(RedisIdempotencyHandlerConstants.PreventThreadTheftFeatureFlag, enabled: true);
             return this;
         }
 

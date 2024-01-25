@@ -7,7 +7,7 @@ namespace Confluent.Kafka.Core.Idempotency.Redis.Internal
 {
     internal static class RedisIdempotencyHandlerFactory
     {
-        public static IRedisIdempotencyHandler<TKey, TValue> CreateIdempotencyHandler<TKey, TValue>(
+        public static IIdempotencyHandler<TKey, TValue> CreateIdempotencyHandler<TKey, TValue>(
             IServiceProvider serviceProvider,
             Action<IRedisIdempotencyHandlerBuilder<TKey, TValue>> configureHandler = null)
         {

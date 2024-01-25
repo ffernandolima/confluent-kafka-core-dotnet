@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Confluent.Kafka.Core.Idempotency.Redis.Internal
 {
-    internal sealed class RedisIdempotencyHandler<TKey, TValue> : IRedisIdempotencyHandler<TKey, TValue>
+    internal sealed class RedisIdempotencyHandler<TKey, TValue> : IIdempotencyHandler<TKey, TValue>
     {
         private static readonly Type DefaultIdempotencyHandlerType = typeof(RedisIdempotencyHandler<TKey, TValue>);
         private static readonly string MessageValueTypeName = typeof(TValue).ExtractTypeName();
