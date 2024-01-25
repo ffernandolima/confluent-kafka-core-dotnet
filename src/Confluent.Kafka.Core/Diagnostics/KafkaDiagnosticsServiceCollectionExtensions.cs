@@ -10,8 +10,8 @@ namespace Microsoft.Extensions.DependencyInjection
     {
         private static readonly Dictionary<string, Func<IServiceProvider, object, IDiagnosticsManager>> _mappings = new()
         {
-            { nameof(KafkaDiagnosticsManager), (_, _) => KafkaDiagnosticsManager.Instance },
-            { nameof(NoopDiagnosticsManager),  (_, _) => NoopDiagnosticsManager.Instance  }
+            { DiagnosticsManagerConstants.KafkaDiagnosticsManager, (_, _) => KafkaDiagnosticsManager.Instance },
+            { DiagnosticsManagerConstants.NoopDiagnosticsManager,  (_, _) => NoopDiagnosticsManager.Instance  }
         };
 
         public static IServiceCollection AddKafkaDiagnostics(this IServiceCollection services)
