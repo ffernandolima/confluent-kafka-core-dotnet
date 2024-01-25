@@ -8,22 +8,24 @@ namespace Confluent.Kafka.Core.Producer
     {
         public static IKafkaProducerBuilder<TKey, TValue> WithNewtonsoftJsonSerializer<TKey, TValue>(
             this IKafkaProducerBuilder<TKey, TValue> builder,
-            Action<IJsonSerializerSettingsBuilder> configureSettings = null)
+            Action<IJsonSerializerSettingsBuilder> configureSettings = null,
+            object serializerKey = null)
         {
             if (builder is null)
             {
                 throw new ArgumentNullException(nameof(builder), $"{nameof(builder)} cannot be null.");
             }
 
-            builder.WithNewtonsoftJsonKeySerializer(configureSettings);
-            builder.WithNewtonsoftJsonValueSerializer(configureSettings);
+            builder.WithNewtonsoftJsonKeySerializer(configureSettings, serializerKey);
+            builder.WithNewtonsoftJsonValueSerializer(configureSettings, serializerKey);
 
             return builder;
         }
 
         public static IKafkaProducerBuilder<TKey, TValue> WithNewtonsoftJsonKeySerializer<TKey, TValue>(
             this IKafkaProducerBuilder<TKey, TValue> builder,
-            Action<IJsonSerializerSettingsBuilder> configureSettings = null)
+            Action<IJsonSerializerSettingsBuilder> configureSettings = null,
+            object serializerKey = null)
         {
             if (builder is null)
             {
@@ -32,7 +34,8 @@ namespace Confluent.Kafka.Core.Producer
 
             var keySerializer = NewtonsoftJsonSerializerFactory.GetOrCreateSerializer<TKey>(
                 builder.ServiceProvider,
-                configureSettings);
+                configureSettings,
+                serializerKey);
 
             builder.WithKeySerializer(keySerializer);
 
@@ -41,7 +44,8 @@ namespace Confluent.Kafka.Core.Producer
 
         public static IKafkaProducerBuilder<TKey, TValue> WithNewtonsoftJsonValueSerializer<TKey, TValue>(
             this IKafkaProducerBuilder<TKey, TValue> builder,
-            Action<IJsonSerializerSettingsBuilder> configureSettings = null)
+            Action<IJsonSerializerSettingsBuilder> configureSettings = null,
+            object serializerKey = null)
         {
             if (builder is null)
             {
@@ -50,7 +54,8 @@ namespace Confluent.Kafka.Core.Producer
 
             var valueSerializer = NewtonsoftJsonSerializerFactory.GetOrCreateSerializer<TValue>(
                 builder.ServiceProvider,
-                configureSettings);
+                configureSettings,
+                serializerKey);
 
             builder.WithValueSerializer(valueSerializer);
 

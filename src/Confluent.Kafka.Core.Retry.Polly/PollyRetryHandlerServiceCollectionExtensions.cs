@@ -9,21 +9,24 @@ namespace Microsoft.Extensions.DependencyInjection
     {
         public static IServiceCollection AddPollyMessageRetryHandler<TKey, TValue>(
             this IServiceCollection services,
-            Action<IPollyRetryHandlerOptionsBuilder> configureOptions = null)
+            Action<IPollyRetryHandlerOptionsBuilder> configureOptions = null,
+            object handlerKey = null)
         {
             if (services is null)
             {
                 throw new ArgumentNullException(nameof(services), $"{nameof(services)} cannot be null.");
             }
 
-            services.TryAddKeyedSingleton(PollyRetryHandlerConstants.PollyRetryHandlerKey, (serviceProvider, _) =>
-            {
-                var retryHandler = PollyRetryHandlerFactory.CreateRetryHandler<TKey, TValue>(
-                    serviceProvider,
-                    configureOptions: configureOptions);
+            services.TryAddKeyedSingleton(
+                handlerKey ?? PollyRetryHandlerConstants.PollyRetryHandlerKey,
+                (serviceProvider, _) =>
+                {
+                    var retryHandler = PollyRetryHandlerFactory.CreateRetryHandler<TKey, TValue>(
+                        serviceProvider,
+                        configureOptions: configureOptions);
 
-                return retryHandler;
-            });
+                    return retryHandler;
+                });
 
             return services;
         }

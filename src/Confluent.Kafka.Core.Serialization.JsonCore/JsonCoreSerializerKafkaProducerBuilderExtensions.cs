@@ -8,22 +8,24 @@ namespace Confluent.Kafka.Core.Producer
     {
         public static IKafkaProducerBuilder<TKey, TValue> WithJsonCoreSerializer<TKey, TValue>(
             this IKafkaProducerBuilder<TKey, TValue> builder,
-            Action<IJsonSerializerOptionsBuilder> configureOptions = null)
+            Action<IJsonSerializerOptionsBuilder> configureOptions = null,
+            object serializerKey = null)
         {
             if (builder is null)
             {
                 throw new ArgumentNullException(nameof(builder), $"{nameof(builder)} cannot be null.");
             }
 
-            builder.WithJsonCoreKeySerializer(configureOptions);
-            builder.WithJsonCoreValueSerializer(configureOptions);
+            builder.WithJsonCoreKeySerializer(configureOptions, serializerKey);
+            builder.WithJsonCoreValueSerializer(configureOptions, serializerKey);
 
             return builder;
         }
 
         public static IKafkaProducerBuilder<TKey, TValue> WithJsonCoreKeySerializer<TKey, TValue>(
             this IKafkaProducerBuilder<TKey, TValue> builder,
-            Action<IJsonSerializerOptionsBuilder> configureOptions = null)
+            Action<IJsonSerializerOptionsBuilder> configureOptions = null,
+            object serializerKey = null)
         {
             if (builder is null)
             {
@@ -32,7 +34,8 @@ namespace Confluent.Kafka.Core.Producer
 
             var keySerializer = JsonCoreSerializerFactory.GetOrCreateSerializer<TKey>(
                 builder.ServiceProvider,
-                configureOptions);
+                configureOptions,
+                serializerKey);
 
             builder.WithKeySerializer(keySerializer);
 
@@ -41,7 +44,8 @@ namespace Confluent.Kafka.Core.Producer
 
         public static IKafkaProducerBuilder<TKey, TValue> WithJsonCoreValueSerializer<TKey, TValue>(
             this IKafkaProducerBuilder<TKey, TValue> builder,
-            Action<IJsonSerializerOptionsBuilder> configureOptions = null)
+            Action<IJsonSerializerOptionsBuilder> configureOptions = null,
+            object serializerKey = null)
         {
             if (builder is null)
             {
@@ -50,7 +54,8 @@ namespace Confluent.Kafka.Core.Producer
 
             var valueSerializer = JsonCoreSerializerFactory.GetOrCreateSerializer<TValue>(
                 builder.ServiceProvider,
-                configureOptions);
+                configureOptions,
+                serializerKey);
 
             builder.WithValueSerializer(valueSerializer);
 

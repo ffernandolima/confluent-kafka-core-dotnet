@@ -8,7 +8,8 @@ namespace Confluent.Kafka.Core.Consumer
     {
         public static IKafkaConsumerBuilder<TKey, TValue> WithPollyRetryHandler<TKey, TValue>(
             this IKafkaConsumerBuilder<TKey, TValue> builder,
-            Action<IPollyRetryHandlerOptionsBuilder> configureOptions = null)
+            Action<IPollyRetryHandlerOptionsBuilder> configureOptions = null,
+            object handlerKey = null)
         {
             if (builder is null)
             {
@@ -18,7 +19,8 @@ namespace Confluent.Kafka.Core.Consumer
             var retryHandler = PollyRetryHandlerFactory.GetOrCreateRetryHandler<TKey, TValue>(
                 builder.ServiceProvider,
                 builder.LoggerFactory,
-                configureOptions);
+                configureOptions,
+                handlerKey);
 
             builder.WithRetryHandler(retryHandler);
 

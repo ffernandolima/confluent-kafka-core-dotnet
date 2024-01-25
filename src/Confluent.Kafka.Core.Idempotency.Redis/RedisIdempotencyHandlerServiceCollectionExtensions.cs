@@ -9,21 +9,24 @@ namespace Microsoft.Extensions.DependencyInjection
     {
         public static IServiceCollection AddRedisIdempotencyHandler<TKey, TValue>(
             this IServiceCollection services,
-            Action<IRedisIdempotencyHandlerBuilder<TKey, TValue>> configureHandler = null)
+            Action<IRedisIdempotencyHandlerBuilder<TKey, TValue>> configureHandler = null,
+            object handlerKey = null)
         {
             if (services is null)
             {
                 throw new ArgumentNullException(nameof(services), $"{nameof(services)} cannot be null.");
             }
 
-            services.TryAddKeyedSingleton(RedisIdempotencyHandlerConstants.RedisIdempotencyHandlerKey, (serviceProvider, _) =>
-            {
-                var idempotencyHandler = RedisIdempotencyHandlerFactory.CreateIdempotencyHandler(
-                    serviceProvider,
-                    configureHandler);
+            services.TryAddKeyedSingleton(
+                handlerKey ?? RedisIdempotencyHandlerConstants.RedisIdempotencyHandlerKey,
+                (serviceProvider, _) =>
+                {
+                    var idempotencyHandler = RedisIdempotencyHandlerFactory.CreateIdempotencyHandler(
+                        serviceProvider,
+                        configureHandler);
 
-                return idempotencyHandler;
-            });
+                    return idempotencyHandler;
+                });
 
             return services;
         }
