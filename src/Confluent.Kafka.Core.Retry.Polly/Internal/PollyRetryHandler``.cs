@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Confluent.Kafka.Core.Retry.Polly.Internal
 {
-    internal sealed class PollyRetryHandler<TKey, TValue> : IPollyRetryHandler<TKey, TValue>
+    internal sealed class PollyRetryHandler<TKey, TValue> : IRetryHandler<TKey, TValue>
     {
         private static readonly Type DefaultRetryHandlerType = typeof(PollyRetryHandler<TKey, TValue>);
 
