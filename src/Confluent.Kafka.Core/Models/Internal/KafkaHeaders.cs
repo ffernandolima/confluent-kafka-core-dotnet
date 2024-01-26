@@ -36,11 +36,9 @@ namespace Confluent.Kafka.Core.Models.Internal
                        .ToList()
                        .AsReadOnly();
 
-        public int Count
-            => _headers.Count;
+        public int Count => _headers.Count;
 
-        public bool IsReadOnly
-            => false;
+        public bool IsReadOnly => false;
 
         public KafkaHeaders(Headers headers, Encoding encoding = null)
         {
@@ -49,10 +47,14 @@ namespace Confluent.Kafka.Core.Models.Internal
         }
 
         public void Add(string key, string value)
-            => _headers.Add(key, _encoding.GetBytes(value));
+        {
+            _headers.Add(key, _encoding.GetBytes(value));
+        }
 
         public void Add(KeyValuePair<string, string> item)
-            => _headers.Add(new Header(item.Key, _encoding.GetBytes(item.Value)));
+        {
+            _headers.Add(new Header(item.Key, _encoding.GetBytes(item.Value)));
+        }
 
         public void Clear()
         {
@@ -63,10 +65,18 @@ namespace Confluent.Kafka.Core.Models.Internal
         }
 
         public bool Contains(KeyValuePair<string, string> item)
-            => _headers.Any(header => header.Key == item.Key && _encoding.GetString(header.GetValueBytes()) == item.Value);
+        {
+            var containsItem = _headers.Any(header => header.Key == item.Key && header.GetStringValue(_encoding) == item.Value);
+
+            return containsItem;
+        }
 
         public bool ContainsKey(string key)
-            => _headers.Any(header => header.Key == key);
+        {
+            var containsKey = _headers.Any(header => header.Key == key);
+
+            return containsKey;
+        }
 
         public void CopyTo(KeyValuePair<string, string>[] array, int arrayIndex)
         {
@@ -91,13 +101,17 @@ namespace Confluent.Kafka.Core.Models.Internal
             for (var idx = arrayIndex; idx < _headers.Count; idx++)
             {
                 var header = _headers[idx];
-                array[idx - arrayIndex] = new KeyValuePair<string, string>(header.Key, _encoding.GetString(header.GetValueBytes()));
+                array[idx - arrayIndex] = new KeyValuePair<string, string>(header.Key, header.GetStringValue(_encoding));
             }
         }
 
         public IEnumerator<KeyValuePair<string, string>> GetEnumerator()
-            => _headers.Select(header => new KeyValuePair<string, string>(header.Key, _encoding.GetString(header.GetValueBytes())))
-                       .GetEnumerator();
+        {
+            var enumerator = _headers.Select(header => new KeyValuePair<string, string>(header.Key, header.GetStringValue(_encoding)))
+                                     .GetEnumerator();
+
+            return enumerator;
+        }
 
         public bool Remove(string key)
         {
@@ -112,14 +126,12 @@ namespace Confluent.Kafka.Core.Models.Internal
 
         public bool Remove(KeyValuePair<string, string> item)
         {
-            if (!_headers.Any(header => header.Key == item.Key &&
-                _encoding.GetString(header.GetValueBytes()) == item.Value))
+            if (!_headers.Any(header => header.Key == item.Key && header.GetStringValue(_encoding) == item.Value))
             {
                 return false;
             }
 
-            var headers = _headers.Where(header => header.Key == item.Key &&
-                _encoding.GetString(header.GetValueBytes()) != item.Value).ToList();
+            var headers = _headers.Where(header => header.Key == item.Key && header.GetStringValue(_encoding) != item.Value).ToList();
 
             _headers.Remove(item.Key);
 
@@ -143,7 +155,6 @@ namespace Confluent.Kafka.Core.Models.Internal
             return false;
         }
 
-        IEnumerator IEnumerable.GetEnumerator()
-            => GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 }
