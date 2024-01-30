@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -37,35 +38,32 @@ namespace Confluent.Kafka.Core.Producer
             _options = options;
         }
 
-        public void AbortTransaction(TimeSpan timeout)
-            => _producer.AbortTransaction(timeout);
-
-        public void AbortTransaction()
-            => _producer.AbortTransaction();
-
         public int AddBrokers(string brokers)
-            => _producer.AddBrokers(brokers);
+        {
+            if (string.IsNullOrWhiteSpace(brokers))
+            {
+                throw new ArgumentException($"{nameof(brokers)} cannot be null or whitespace.", nameof(brokers));
+            }
 
-        public void BeginTransaction()
-            => _producer.BeginTransaction();
+            var brokersResult = _producer.AddBrokers(brokers);
 
-        public void CommitTransaction(TimeSpan timeout)
-            => _producer.CommitTransaction(timeout);
+            return brokersResult;
+        }
 
-        public void CommitTransaction()
-            => _producer.CommitTransaction();
+        public void SetSaslCredentials(string username, string password)
+        {
+            if (string.IsNullOrWhiteSpace(username))
+            {
+                throw new ArgumentException($"{nameof(username)} cannot be null or whitespace.", nameof(username));
+            }
 
-        public int Flush(TimeSpan timeout)
-            => _producer.Flush(timeout);
+            if (string.IsNullOrWhiteSpace(password))
+            {
+                throw new ArgumentException($"{nameof(password)} cannot be null or whitespace.", nameof(password));
+            }
 
-        public void Flush(CancellationToken cancellationToken = default)
-            => _producer.Flush(cancellationToken);
-
-        public void InitTransactions(TimeSpan timeout)
-            => _producer.InitTransactions(timeout);
-
-        public int Poll(TimeSpan timeout)
-            => _producer.Poll(timeout);
+            _producer.SetSaslCredentials(username, password);
+        }
 
         public void Produce(string topic, Message<TKey, TValue> message, Action<DeliveryReport<TKey, TValue>> deliveryHandler = null)
             => _producer.Produce(topic, message, deliveryHandler);
@@ -79,11 +77,106 @@ namespace Confluent.Kafka.Core.Producer
         public Task<DeliveryResult<TKey, TValue>> ProduceAsync(TopicPartition topicPartition, Message<TKey, TValue> message, CancellationToken cancellationToken = default)
             => _producer.ProduceAsync(topicPartition, message, cancellationToken);
 
-        public void SendOffsetsToTransaction(IEnumerable<TopicPartitionOffset> offsets, IConsumerGroupMetadata groupMetadata, TimeSpan timeout)
-            => _producer.SendOffsetsToTransaction(offsets, groupMetadata, timeout);
+        public int Poll(TimeSpan timeout)
+        {
+            if (timeout == Timeout.InfiniteTimeSpan)
+            {
+                throw new ArgumentException($"{nameof(timeout)} cannot be infinite.", nameof(timeout));
+            }
 
-        public void SetSaslCredentials(string username, string password)
-            => _producer.SetSaslCredentials(username, password);
+            var pollResult = _producer.Poll(timeout);
+
+            return pollResult;
+        }
+
+        public int Flush(TimeSpan timeout)
+        {
+            if (timeout == Timeout.InfiniteTimeSpan)
+            {
+                throw new ArgumentException($"{nameof(timeout)} cannot be infinite.", nameof(timeout));
+            }
+
+            var flushResult = _producer.Flush(timeout);
+
+            return flushResult;
+        }
+
+        public void Flush(CancellationToken cancellationToken = default)
+        {
+            if (!cancellationToken.CanBeCanceled)
+            {
+                throw new ArgumentException($"{nameof(cancellationToken)} should be capable of being canceled.", nameof(cancellationToken));
+            }
+
+            _producer.Flush(cancellationToken);
+        }
+
+        public void InitTransactions(TimeSpan timeout)
+        {
+            if (timeout == Timeout.InfiniteTimeSpan)
+            {
+                throw new ArgumentException($"{nameof(timeout)} cannot be infinite.", nameof(timeout));
+            }
+
+            _producer.InitTransactions(timeout);
+        }
+
+        public void BeginTransaction()
+        {
+            _producer.BeginTransaction();
+        }
+
+        public void CommitTransaction(TimeSpan timeout)
+        {
+            if (timeout == Timeout.InfiniteTimeSpan)
+            {
+                throw new ArgumentException($"{nameof(timeout)} cannot be infinite.", nameof(timeout));
+            }
+
+            _producer.CommitTransaction(timeout);
+        }
+
+        public void CommitTransaction()
+        {
+            _producer.CommitTransaction();
+        }
+
+        public void AbortTransaction(TimeSpan timeout)
+        {
+            if (timeout == Timeout.InfiniteTimeSpan)
+            {
+                throw new ArgumentException($"{nameof(timeout)} cannot be infinite.", nameof(timeout));
+            }
+
+            _producer.AbortTransaction(timeout);
+        }
+
+        public void AbortTransaction()
+        {
+            _producer.AbortTransaction();
+        }
+
+        public void SendOffsetsToTransaction(IEnumerable<TopicPartitionOffset> offsets, IConsumerGroupMetadata groupMetadata, TimeSpan timeout)
+        {
+            if (offsets is null || !offsets.Any(offset => offset is not null))
+            {
+                throw new ArgumentException($"{nameof(offsets)} cannot be null, empty, or contain null values.", nameof(offsets));
+            }
+
+            if (groupMetadata is null)
+            {
+                throw new ArgumentNullException(nameof(groupMetadata), $"{nameof(groupMetadata)} cannot be null.");
+            }
+
+            if (timeout == Timeout.InfiniteTimeSpan)
+            {
+                throw new ArgumentException($"{nameof(timeout)} cannot be infinite.", nameof(timeout));
+            }
+
+            var transactionOffsets = offsets.Where(offset => offset is not null).Distinct();
+
+            _producer.SendOffsetsToTransaction(transactionOffsets, groupMetadata, timeout);
+        }
 
         #region IDisposable Members
 
