@@ -2,13 +2,9 @@
 {
     public interface IKafkaProducerInterceptorContext<TKey, TValue>
     {
-        TKey Key { get; }
-
-        TValue Value { get; }
-
-        Headers Headers { get; }
-
         TopicPartition TopicPartition { get; }
+
+        Message<TKey, TValue> Message { get; }
 
         IKafkaProducerConfig ProducerConfig { get; }
     }
