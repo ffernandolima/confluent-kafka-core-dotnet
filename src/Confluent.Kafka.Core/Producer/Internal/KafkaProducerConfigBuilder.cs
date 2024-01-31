@@ -626,15 +626,21 @@ namespace Confluent.Kafka.Core.Producer.Internal
             return this;
         }
 
-        public IKafkaProducerConfigBuilder WithPollAfterProducing(bool pollAfterProducing)
+        public IKafkaProducerConfigBuilder WithDefaultPartition(Partition defaultPartition)
         {
-            AppendAction(config => config.PollAfterProducing = pollAfterProducing);
+            AppendAction(config => config.DefaultPartition = defaultPartition);
             return this;
         }
 
         public IKafkaProducerConfigBuilder WithDefaultTimeout(TimeSpan defaultTimeout)
         {
             AppendAction(config => config.DefaultTimeout = defaultTimeout);
+            return this;
+        }
+
+        public IKafkaProducerConfigBuilder WithPollAfterProducing(bool pollAfterProducing)
+        {
+            AppendAction(config => config.PollAfterProducing = pollAfterProducing);
             return this;
         }
 

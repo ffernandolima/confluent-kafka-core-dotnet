@@ -7,9 +7,11 @@ namespace Confluent.Kafka.Core.Producer
     {
         string DefaultTopic { get; }
 
-        bool PollAfterProducing { get; }
+        Partition DefaultPartition { get; }
 
         TimeSpan DefaultTimeout { get; }
+
+        bool PollAfterProducing { get; }
 
         bool EnableLogging { get; }
 

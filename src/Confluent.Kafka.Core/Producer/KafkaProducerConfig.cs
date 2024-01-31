@@ -43,8 +43,9 @@ namespace Confluent.Kafka.Core.Producer
         #region IKafkaProducerConfig Members
 
         public string DefaultTopic { get; set; }
-        public bool PollAfterProducing { get; set; }
+        public Partition DefaultPartition { get; set; } = Partition.Any;
         public TimeSpan DefaultTimeout { get; set; } = TimeSpan.Zero;
+        public bool PollAfterProducing { get; set; }
         public bool EnableLogging { get; set; } = true;
         public bool EnableDiagnostics { get; set; } = true;
         public bool EnableRetryOnFailure { get; set; }

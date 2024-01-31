@@ -6,9 +6,11 @@ namespace Confluent.Kafka.Core.Producer
     {
         IKafkaProducerConfigBuilder WithDefaultTopic(string defaultTopic);
 
-        IKafkaProducerConfigBuilder WithPollAfterProducing(bool pollAfterProducing);
+        IKafkaProducerConfigBuilder WithDefaultPartition(Partition defaultPartition);
 
         IKafkaProducerConfigBuilder WithDefaultTimeout(TimeSpan defaultTimeout);
+
+        IKafkaProducerConfigBuilder WithPollAfterProducing(bool pollAfterProducing);
 
         IKafkaProducerConfigBuilder WithEnableLogging(bool enableLogging);
 
