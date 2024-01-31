@@ -696,9 +696,7 @@ namespace Confluent.Kafka.Core.Consumer
             }
             else
             {
-                using var activity = StartActivity(
-                    consumeResult.Topic,
-                    consumeResult.Message!.Headers?.ToDictionary());
+                using var activity = StartActivity(consumeResult.Topic, consumeResult.Message!.Headers?.ToDictionary());
 
                 if (_options.ConsumerConfig!.CommitAfterConsuming)
                 {
