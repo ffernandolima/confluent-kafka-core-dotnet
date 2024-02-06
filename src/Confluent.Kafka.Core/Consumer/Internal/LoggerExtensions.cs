@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
 
 namespace Confluent.Kafka.Core.Consumer.Internal
 {
@@ -22,8 +23,8 @@ namespace Confluent.Kafka.Core.Consumer.Internal
 
         [LoggerMessage(
             Level = LogLevel.Error,
-            Message = "An exception has occurred during the retry attempt {RetryAttempt} while consuming a message.")]
-        public static partial void LogMessageConsumptionRetryFailure(this ILogger logger, Exception exception, int retryAttempt);
+            Message = "An exception has occurred during the retry attempt {RetryAttempt} while consuming a message from the topic(s) '{Topics}'.")]
+        public static partial void LogMessageConsumptionRetryFailure(this ILogger logger, Exception exception, int retryAttempt, IEnumerable<string> topics);
 
         [LoggerMessage(
             Level = LogLevel.Error,
@@ -38,6 +39,6 @@ namespace Confluent.Kafka.Core.Consumer.Internal
         [LoggerMessage(
             Level = LogLevel.Error,
             Message = "An error has occurred while committing a message from the topic '{Topic}', partition [{Partition}] and offset @{Offset}.")]
-        public static partial void LogMessageCommitmentFailure(this ILogger logger, Exception exception, string topic, Partition partition, Offset offset);
+        public static partial void LogMessageCommitFailure(this ILogger logger, Exception exception, string topic, Partition partition, Offset offset);
     }
 }

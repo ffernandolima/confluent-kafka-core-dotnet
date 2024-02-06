@@ -98,7 +98,8 @@ namespace Confluent.Kafka.Core.Consumer
                 {
                     _options.RetryHandler!.TryHandle(
                         executeAction: _ => consumeResult = ConsumeInternal(millisecondsTimeout),
-                        onRetryAction: (exception, _, retryAttempt) => _logger.LogMessageConsumptionRetryFailure(exception, retryAttempt));
+                        onRetryAction: (exception, _, retryAttempt) =>
+                            _logger.LogMessageConsumptionRetryFailure(exception, retryAttempt, _options.ConsumerConfig!.CurrentTopics));
                 }
             }
             catch (ConsumeException ex)
@@ -129,7 +130,8 @@ namespace Confluent.Kafka.Core.Consumer
                 {
                     _options.RetryHandler!.TryHandle(
                         executeAction: _ => consumeResult = ConsumeInternal(timeout),
-                        onRetryAction: (exception, _, retryAttempt) => _logger.LogMessageConsumptionRetryFailure(exception, retryAttempt));
+                        onRetryAction: (exception, _, retryAttempt) =>
+                            _logger.LogMessageConsumptionRetryFailure(exception, retryAttempt, _options.ConsumerConfig!.CurrentTopics));
                 }
             }
             catch (ConsumeException ex)
@@ -161,7 +163,8 @@ namespace Confluent.Kafka.Core.Consumer
                     _options.RetryHandler!.TryHandle(
                         executeAction: cancellationToken => consumeResult = ConsumeInternal(cancellationToken),
                         cancellationToken: cancellationToken,
-                        onRetryAction: (exception, _, retryAttempt) => _logger.LogMessageConsumptionRetryFailure(exception, retryAttempt));
+                        onRetryAction: (exception, _, retryAttempt) =>
+                            _logger.LogMessageConsumptionRetryFailure(exception, retryAttempt, _options.ConsumerConfig!.CurrentTopics));
                 }
             }
             catch (ConsumeException ex)
@@ -422,9 +425,9 @@ namespace Confluent.Kafka.Core.Consumer
                 return result;
             });
 
-            var commitments = offsets.Where(offset => offset is not null).Distinct().OrderBy(offset => offset, comparer);
+            var commitOffsets = offsets.Where(offset => offset is not null).Distinct().OrderBy(offset => offset, comparer);
 
-            _consumer.Commit(commitments);
+            _consumer.Commit(commitOffsets);
         }
 
         public void Commit(ConsumeResult<TKey, TValue> consumeResult)
@@ -706,7 +709,7 @@ namespace Confluent.Kafka.Core.Consumer
                     }
                     catch (Exception ex)
                     {
-                        _logger.LogMessageCommitmentFailure(ex, consumeResult.Topic, consumeResult.Partition, consumeResult.Offset);
+                        _logger.LogMessageCommitFailure(ex, consumeResult.Topic, consumeResult.Partition, consumeResult.Offset);
                     }
                 }
 
@@ -819,7 +822,7 @@ namespace Confluent.Kafka.Core.Consumer
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogMessageCommitmentFailure(ex, consumeResult.Topic, consumeResult.Partition, consumeResult.Offset);
+                    _logger.LogMessageCommitFailure(ex, consumeResult.Topic, consumeResult.Partition, consumeResult.Offset);
                 }
             }
         }
