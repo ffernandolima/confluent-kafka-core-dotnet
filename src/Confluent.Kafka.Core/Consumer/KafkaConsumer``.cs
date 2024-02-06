@@ -98,8 +98,14 @@ namespace Confluent.Kafka.Core.Consumer
                 {
                     _options.RetryHandler!.TryHandle(
                         executeAction: _ => consumeResult = ConsumeInternal(millisecondsTimeout),
-                        onRetryAction: (exception, _, retryAttempt) =>
-                            _logger.LogMessageConsumptionRetryFailure(exception, retryAttempt, _options.ConsumerConfig!.CurrentTopics));
+                        onRetryAction: (exception, _, retryAttempt) => _logger.LogMessageConsumptionRetryFailure(
+                            exception,
+                            retryAttempt,
+                            exception switch
+                            {
+                                ConsumeException consumeException => new[] { consumeException.ConsumerRecord!.Topic },
+                                _ => _options.ConsumerConfig!.GetCurrentTopics(),
+                            }));
                 }
             }
             catch (ConsumeException ex)
@@ -130,8 +136,14 @@ namespace Confluent.Kafka.Core.Consumer
                 {
                     _options.RetryHandler!.TryHandle(
                         executeAction: _ => consumeResult = ConsumeInternal(timeout),
-                        onRetryAction: (exception, _, retryAttempt) =>
-                            _logger.LogMessageConsumptionRetryFailure(exception, retryAttempt, _options.ConsumerConfig!.CurrentTopics));
+                        onRetryAction: (exception, _, retryAttempt) => _logger.LogMessageConsumptionRetryFailure(
+                            exception,
+                            retryAttempt,
+                            exception switch
+                            {
+                                ConsumeException consumeException => new[] { consumeException.ConsumerRecord!.Topic },
+                                _ => _options.ConsumerConfig!.GetCurrentTopics(),
+                            }));
                 }
             }
             catch (ConsumeException ex)
@@ -163,8 +175,14 @@ namespace Confluent.Kafka.Core.Consumer
                     _options.RetryHandler!.TryHandle(
                         executeAction: cancellationToken => consumeResult = ConsumeInternal(cancellationToken),
                         cancellationToken: cancellationToken,
-                        onRetryAction: (exception, _, retryAttempt) =>
-                            _logger.LogMessageConsumptionRetryFailure(exception, retryAttempt, _options.ConsumerConfig!.CurrentTopics));
+                        onRetryAction: (exception, _, retryAttempt) => _logger.LogMessageConsumptionRetryFailure(
+                            exception,
+                            retryAttempt,
+                            exception switch
+                            {
+                                ConsumeException consumeException => new[] { consumeException.ConsumerRecord!.Topic },
+                                _ => _options.ConsumerConfig!.GetCurrentTopics(),
+                            }));
                 }
             }
             catch (ConsumeException ex)

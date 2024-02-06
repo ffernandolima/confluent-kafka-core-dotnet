@@ -51,7 +51,6 @@ namespace Confluent.Kafka.Core.Consumer
 
         #region IKafkaConsumerConfig Members
 
-        public IEnumerable<string> CurrentTopics => GetCurrentTopics();
         public IEnumerable<string> TopicSubscriptions { get; set; }
         public IEnumerable<TopicPartition> PartitionAssignments { get; set; }
         public bool CommitAfterConsuming { get; set; }
@@ -62,16 +61,6 @@ namespace Confluent.Kafka.Core.Consumer
         public bool EnableDeadLetterTopic { get; set; }
         public bool EnableRetryOnFailure { get; set; }
         public bool EnableInterceptorExceptionPropagation { get; set; }
-
-        private IEnumerable<string> GetCurrentTopics()
-        {
-            var currentTopics = (TopicSubscriptions ?? Enumerable.Empty<string>())
-                .Concat(PartitionAssignments?.Select(partition => partition?.Topic) ?? Enumerable.Empty<string>())
-                .Where(topic => !string.IsNullOrWhiteSpace(topic))
-                .Distinct(StringComparer.Ordinal);
-
-            return currentTopics;
-        }
 
         #endregion IKafkaConsumerConfig Members
 

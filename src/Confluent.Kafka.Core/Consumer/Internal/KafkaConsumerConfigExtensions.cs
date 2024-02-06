@@ -24,6 +24,16 @@ namespace Confluent.Kafka.Core.Consumer.Internal
             return hasPartitionAssignments;
         }
 
+        public static IEnumerable<string> GetCurrentTopics(this IKafkaConsumerConfig consumerConfig)
+        {
+            var currentTopics = (consumerConfig?.TopicSubscriptions ?? Enumerable.Empty<string>())
+                .Concat(consumerConfig?.PartitionAssignments?.Select(partition => partition?.Topic) ?? Enumerable.Empty<string>())
+                .Where(topic => !string.IsNullOrWhiteSpace(topic))
+                .Distinct(StringComparer.Ordinal);
+
+            return currentTopics;
+        }
+
         public static void OnSubscriptionsOrAssignmentsChanged(
             this IKafkaConsumerConfig consumerConfig,
             IEnumerable<string> topicSubscriptions,
