@@ -49,7 +49,7 @@ namespace Confluent.Kafka.Core.Retry.Polly.Internal
                 .Execute(executeAction, cancellationToken);
         }
         public async Task TryHandleAsync(
-        Func<CancellationToken, Task> executeAction,
+            Func<CancellationToken, Task> executeAction,
             Action<Exception, TimeSpan, int> onRetryAction = null,
             CancellationToken cancellationToken = default)
         {
