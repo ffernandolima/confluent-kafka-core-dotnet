@@ -33,7 +33,7 @@ namespace Confluent.Kafka.Core.Consumer.Internal
 
         [LoggerMessage(
             Level = LogLevel.Error,
-             Message = "An error has occurred while executing the interceptor 'OnConsume' for the topic '{Topic}', partition [{Partition}] and offset @{Offset}.")]
+            Message = "An error has occurred while executing the interceptor 'OnConsume' for the topic '{Topic}', partition [{Partition}] and offset @{Offset}.")]
         public static partial void LogMessageConsumptionInterceptionFailure(this ILogger logger, Exception exception, string topic, Partition partition, Offset offset);
 
         [LoggerMessage(
