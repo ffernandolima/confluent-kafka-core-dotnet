@@ -98,14 +98,30 @@ namespace Confluent.Kafka.Core.Consumer
                 {
                     _options.RetryHandler!.TryHandle(
                         executeAction: _ => consumeResult = ConsumeInternal(millisecondsTimeout),
-                        onRetryAction: (exception, _, retryAttempt) => _logger.LogMessageConsumptionRetryFailure(
-                            exception,
-                            retryAttempt,
-                            exception switch
+                        onRetryAction: (exception, _, retryAttempt) =>
+                        {
+                            switch (exception)
                             {
-                                ConsumeException consumeException => new[] { consumeException.ConsumerRecord!.Topic },
-                                _ => _options.ConsumerConfig!.GetCurrentTopics(),
-                            }));
+                                case ConsumeException consumeException:
+                                    {
+                                        _logger.LogMessageConsumptionRetryFailure(
+                                            exception,
+                                            retryAttempt,
+                                            consumeException.ConsumerRecord!.Topic,
+                                            consumeException.ConsumerRecord!.Partition,
+                                            consumeException.ConsumerRecord!.Offset);
+                                    }
+                                    break;
+                                default:
+                                    {
+                                        _logger.LogMessageConsumptionRetryFailure(
+                                            exception,
+                                            retryAttempt,
+                                            _options.ConsumerConfig!.GetCurrentTopics());
+                                    }
+                                    break;
+                            }
+                        });
                 }
             }
             catch (ConsumeException ex)
@@ -136,14 +152,30 @@ namespace Confluent.Kafka.Core.Consumer
                 {
                     _options.RetryHandler!.TryHandle(
                         executeAction: _ => consumeResult = ConsumeInternal(timeout),
-                        onRetryAction: (exception, _, retryAttempt) => _logger.LogMessageConsumptionRetryFailure(
-                            exception,
-                            retryAttempt,
-                            exception switch
+                        onRetryAction: (exception, _, retryAttempt) =>
+                        {
+                            switch (exception)
                             {
-                                ConsumeException consumeException => new[] { consumeException.ConsumerRecord!.Topic },
-                                _ => _options.ConsumerConfig!.GetCurrentTopics(),
-                            }));
+                                case ConsumeException consumeException:
+                                    {
+                                        _logger.LogMessageConsumptionRetryFailure(
+                                            exception,
+                                            retryAttempt,
+                                            consumeException.ConsumerRecord!.Topic,
+                                            consumeException.ConsumerRecord!.Partition,
+                                            consumeException.ConsumerRecord!.Offset);
+                                    }
+                                    break;
+                                default:
+                                    {
+                                        _logger.LogMessageConsumptionRetryFailure(
+                                            exception,
+                                            retryAttempt,
+                                            _options.ConsumerConfig!.GetCurrentTopics());
+                                    }
+                                    break;
+                            }
+                        });
                 }
             }
             catch (ConsumeException ex)
@@ -175,14 +207,30 @@ namespace Confluent.Kafka.Core.Consumer
                     _options.RetryHandler!.TryHandle(
                         executeAction: cancellationToken => consumeResult = ConsumeInternal(cancellationToken),
                         cancellationToken: cancellationToken,
-                        onRetryAction: (exception, _, retryAttempt) => _logger.LogMessageConsumptionRetryFailure(
-                            exception,
-                            retryAttempt,
-                            exception switch
+                        onRetryAction: (exception, _, retryAttempt) =>
+                        {
+                            switch (exception)
                             {
-                                ConsumeException consumeException => new[] { consumeException.ConsumerRecord!.Topic },
-                                _ => _options.ConsumerConfig!.GetCurrentTopics(),
-                            }));
+                                case ConsumeException consumeException:
+                                    {
+                                        _logger.LogMessageConsumptionRetryFailure(
+                                            exception,
+                                            retryAttempt,
+                                            consumeException.ConsumerRecord!.Topic,
+                                            consumeException.ConsumerRecord!.Partition,
+                                            consumeException.ConsumerRecord!.Offset);
+                                    }
+                                    break;
+                                default:
+                                    {
+                                        _logger.LogMessageConsumptionRetryFailure(
+                                            exception,
+                                            retryAttempt,
+                                            _options.ConsumerConfig!.GetCurrentTopics());
+                                    }
+                                    break;
+                            }
+                        });
                 }
             }
             catch (ConsumeException ex)
@@ -719,6 +767,8 @@ namespace Confluent.Kafka.Core.Consumer
             {
                 using var activity = StartActivity(consumeResult.Topic, consumeResult.Message!.Headers?.ToDictionary());
 
+                var messageId = _options.MessageIdHandler?.Invoke(consumeResult.Message!.Value);
+
                 if (_options.ConsumerConfig!.CommitAfterConsuming)
                 {
                     try
@@ -727,13 +777,11 @@ namespace Confluent.Kafka.Core.Consumer
                     }
                     catch (Exception ex)
                     {
-                        _logger.LogMessageCommitFailure(ex, consumeResult.Topic, consumeResult.Partition, consumeResult.Offset);
+                        _logger.LogMessageCommitFailure(ex, messageId, consumeResult.Topic, consumeResult.Partition, consumeResult.Offset);
                     }
                 }
 
-                var messageId = _options.MessageIdHandler?.Invoke(consumeResult.Message!.Value);
-
-                _logger.LogMessageConsumptionSuccess(messageId);
+                _logger.LogMessageConsumptionSuccess(messageId, consumeResult.Topic, consumeResult.Partition, consumeResult.Offset);
 
                 activity?.SetStatus(ActivityStatusCode.Ok);
 
@@ -831,16 +879,28 @@ namespace Confluent.Kafka.Core.Consumer
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogDeadLetterProductionFailure(ex, deadLetterTopic);
+                    _logger.LogDeadLetterProductionFailure(
+                        ex,
+                        consumeResult.Topic,
+                        consumeResult.Partition,
+                        consumeResult.Offset,
+                        deadLetterTopic);
                 }
 
                 try
                 {
-                    _consumer.Commit(new[] { new TopicPartitionOffset(consumeResult.TopicPartition, consumeResult.Offset + 1) });
+                    _consumer.Commit(new[]
+                    {
+                        new TopicPartitionOffset(consumeResult.TopicPartition, consumeResult.Offset + 1)
+                    });
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogMessageCommitFailure(ex, consumeResult.Topic, consumeResult.Partition, consumeResult.Offset);
+                    _logger.LogMessageCommitFailure(
+                        ex,
+                        consumeResult.Topic,
+                        consumeResult.Partition,
+                        consumeResult.Offset);
                 }
             }
         }
