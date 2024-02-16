@@ -772,11 +772,10 @@ namespace Confluent.Kafka.Core.Consumer
                 {
                     var messageId = consumeResult.Message?.GetId(_options.MessageIdHandler);
 
-                    if (messageId is not null)
+                    if (messageId is null)
                     {
                         _logger.LogMessageConsumptionInterceptionFailure(
                             ex,
-                            messageId,
                             consumeResult.Topic,
                             consumeResult.Partition,
                             consumeResult.Offset);
@@ -785,6 +784,7 @@ namespace Confluent.Kafka.Core.Consumer
                     {
                         _logger.LogMessageConsumptionInterceptionFailure(
                             ex,
+                            messageId,
                             consumeResult.Topic,
                             consumeResult.Partition,
                             consumeResult.Offset);
