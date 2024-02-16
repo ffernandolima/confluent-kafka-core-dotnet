@@ -1,4 +1,6 @@
-﻿using Confluent.Kafka.Core.Internal;
+﻿using Confluent.Kafka.Core.Diagnostics.Internal;
+using Confluent.Kafka.Core.Internal;
+using Confluent.Kafka.Core.Models.Internal;
 using Confluent.Kafka.Core.Producer.Internal;
 using Microsoft.Extensions.Logging;
 using System;
@@ -65,17 +67,105 @@ namespace Confluent.Kafka.Core.Producer
             _producer.SetSaslCredentials(username, password);
         }
 
-        public void Produce(string topic, Message<TKey, TValue> message, Action<DeliveryReport<TKey, TValue>> deliveryHandler = null)
-            => _producer.Produce(topic, message, deliveryHandler);
+        public void Produce(
+            string topic,
+            Message<TKey, TValue> message,
+            Action<DeliveryReport<TKey, TValue>> deliveryHandler = null)
+        {
+            if (string.IsNullOrWhiteSpace(topic))
+            {
+                throw new ArgumentException($"{nameof(topic)} cannot be null or whitespace.", nameof(topic));
+            }
 
-        public void Produce(TopicPartition topicPartition, Message<TKey, TValue> message, Action<DeliveryReport<TKey, TValue>> deliveryHandler = null)
-            => _producer.Produce(topicPartition, message, deliveryHandler);
+            Produce(new TopicPartition(topic, _options.ProducerConfig!.DefaultPartition), message, deliveryHandler);
+        }
 
-        public Task<DeliveryResult<TKey, TValue>> ProduceAsync(string topic, Message<TKey, TValue> message, CancellationToken cancellationToken = default)
-            => _producer.ProduceAsync(topic, message, cancellationToken);
+        public void Produce(
+            TopicPartition topicPartition,
+            Message<TKey, TValue> message,
+            Action<DeliveryReport<TKey, TValue>> deliveryHandler = null)
+        {
+            if (topicPartition is null)
+            {
+                throw new ArgumentNullException(nameof(topicPartition), $"{nameof(topicPartition)} cannot be null.");
+            }
 
-        public Task<DeliveryResult<TKey, TValue>> ProduceAsync(TopicPartition topicPartition, Message<TKey, TValue> message, CancellationToken cancellationToken = default)
-            => _producer.ProduceAsync(topicPartition, message, cancellationToken);
+            if (message is null)
+            {
+                throw new ArgumentNullException(nameof(message), $"{nameof(message)} cannot be null.");
+            }
+
+            if (!_options.ProducerConfig!.EnableRetryOnFailure)
+            {
+                ProduceInternal(topicPartition, message, deliveryHandler);
+            }
+            else
+            {
+                _options.RetryHandler!.TryHandle(
+                    executeAction: _ => ProduceInternal(topicPartition, message, deliveryHandler),
+                    onRetryAction: (exception, _, retryAttempt) => OnProduceRetry(topicPartition, message, exception, retryAttempt));
+            }
+        }
+
+        public async Task<DeliveryResult<TKey, TValue>> ProduceAsync(
+            string topic,
+            Message<TKey, TValue> message,
+            CancellationToken cancellationToken = default)
+        {
+            if (string.IsNullOrWhiteSpace(topic))
+            {
+                throw new ArgumentException($"{nameof(topic)} cannot be null or whitespace.", nameof(topic));
+            }
+
+            var deliveryResult = await ProduceAsync(
+                    new TopicPartition(topic, _options.ProducerConfig!.DefaultPartition),
+                    message,
+                    cancellationToken)
+                .ConfigureAwait(continueOnCapturedContext: false);
+
+            return deliveryResult;
+        }
+
+        public async Task<DeliveryResult<TKey, TValue>> ProduceAsync(
+            TopicPartition topicPartition,
+            Message<TKey, TValue> message,
+            CancellationToken cancellationToken = default)
+        {
+            if (topicPartition is null)
+            {
+                throw new ArgumentNullException(nameof(topicPartition), $"{nameof(topicPartition)} cannot be null.");
+            }
+
+            if (message is null)
+            {
+                throw new ArgumentNullException(nameof(message), $"{nameof(message)} cannot be null.");
+            }
+
+            if (!cancellationToken.CanBeCanceled)
+            {
+                throw new ArgumentException($"{nameof(cancellationToken)} should be capable of being canceled.", nameof(cancellationToken));
+            }
+
+            DeliveryResult<TKey, TValue> deliveryResult = null;
+
+            if (!_options.ProducerConfig!.EnableRetryOnFailure)
+            {
+                deliveryResult = await ProduceInternalAsync(topicPartition, message, cancellationToken)
+                    .ConfigureAwait(continueOnCapturedContext: false);
+            }
+            else
+            {
+                await _options.RetryHandler!.TryHandleAsync(
+                    executeAction: async cancellationToken =>
+                        deliveryResult = await ProduceInternalAsync(topicPartition, message, cancellationToken)
+                            .ConfigureAwait(continueOnCapturedContext: false),
+                    cancellationToken: cancellationToken,
+                    onRetryAction: (exception, _, retryAttempt) => OnProduceRetry(topicPartition, message, exception, retryAttempt))
+                .ConfigureAwait(continueOnCapturedContext: false);
+            }
+
+            return deliveryResult;
+        }
 
         public int Poll(TimeSpan timeout)
         {
@@ -156,7 +246,10 @@ namespace Confluent.Kafka.Core.Producer
             _producer.AbortTransaction();
         }
 
-        public void SendOffsetsToTransaction(IEnumerable<TopicPartitionOffset> offsets, IConsumerGroupMetadata groupMetadata, TimeSpan timeout)
+        public void SendOffsetsToTransaction(
+            IEnumerable<TopicPartitionOffset> offsets,
+            IConsumerGroupMetadata groupMetadata,
+            TimeSpan timeout)
         {
             if (offsets is null || !offsets.Any(offset => offset is not null))
             {
@@ -176,6 +269,228 @@ namespace Confluent.Kafka.Core.Producer
             var transactionOffsets = offsets.Where(offset => offset is not null).Distinct();
 
             _producer.SendOffsetsToTransaction(transactionOffsets, groupMetadata, timeout);
+        }
+
+        private void ProduceInternal(
+            TopicPartition topicPartition,
+            Message<TKey, TValue> message,
+            Action<DeliveryReport<TKey, TValue>> deliveryHandler)
+        {
+            Intercept(topicPartition, message);
+
+            message.EnsureDefaultMetadata();
+
+            var messageId = message.GetId(_options.MessageIdHandler);
+
+            var produceResult = new ProduceResult<TKey, TValue>(topicPartition, message);
+
+            using var activity = StartActivity(topicPartition.Topic, message.Headers!.ToDictionary());
+
+            _logger.LogProducingNewMessage(messageId, topicPartition.Topic, topicPartition.Partition);
+
+            try
+            {
+                if (_options.ProducerConfig!.EnableDeliveryReports.GetValueOrDefault(defaultValue: true))
+                {
+                    _producer.Produce(topicPartition, message, deliveryReport =>
+                    {
+                        _logger.LogCallbackEventsServed(messageId);
+
+                        produceResult.Complete(deliveryReport);
+
+                        deliveryHandler?.Invoke(deliveryReport);
+                    });
+
+                    if (_options.ProducerConfig!.PollAfterProducing)
+                    {
+                        try
+                        {
+                            _producer.Poll(_options.ProducerConfig!.DefaultTimeout);
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger.LogPollFailure(ex);
+                        }
+                    }
+                }
+                else
+                {
+                    _producer.Produce(topicPartition, message);
+                }
+
+                if (!produceResult.DeliveryHandled)
+                {
+                    if (_options.ProducerConfig!.EnableDeliveryReports.GetValueOrDefault(defaultValue: true))
+                    {
+                        _logger.LogCallbackEventsNotServed(messageId);
+                    }
+                    else
+                    {
+                        _logger.LogDeliveryReportsDisabled(messageId);
+                    }
+
+                    activity?.SetStatus(ActivityStatusCode.Ok);
+                }
+                else if (!produceResult.Faulted)
+                {
+                    _logger.LogMessageProductionSuccess(
+                        messageId,
+                        produceResult.DeliveryReport!.Topic,
+                        produceResult.DeliveryReport!.Partition,
+                        produceResult.DeliveryReport!.Offset);
+
+                    activity?.SetStatus(ActivityStatusCode.Ok);
+                }
+                else
+                {
+                    _logger.LogMessageProductionFailure(
+                        messageId,
+                        produceResult.DeliveryReport!.Topic,
+                        produceResult.DeliveryReport!.Partition,
+                        produceResult.DeliveryReport!.Error);
+
+                    activity?.SetStatus(ActivityStatusCode.Error);
+                }
+
+                _options.DiagnosticsManager!.Enrich(activity, produceResult.DeliveryReport, _options);
+            }
+            catch (ProduceException<TKey, TValue> ex)
+            {
+                HandleProduceException(ex, activity, messageId);
+
+                throw;
+            }
+        }
+
+        private async Task<DeliveryResult<TKey, TValue>> ProduceInternalAsync(
+            TopicPartition topicPartition,
+            Message<TKey, TValue> message,
+            CancellationToken cancellationToken)
+        {
+            Intercept(topicPartition, message);
+
+            message.EnsureDefaultMetadata();
+
+            var messageId = message.GetId(_options.MessageIdHandler);
+
+            using var activity = StartActivity(topicPartition.Topic, message.Headers!.ToDictionary());
+
+            _logger.LogProducingNewMessage(messageId, topicPartition.Topic, topicPartition.Partition);
+
+            try
+            {
+                var deliveryResult = await _producer.ProduceAsync(topicPartition, message, cancellationToken)
+                    .ConfigureAwait(continueOnCapturedContext: false);
+
+                _logger.LogMessageProductionSuccess(
+                    messageId,
+                    deliveryResult.Topic,
+                    deliveryResult.Partition,
+                    deliveryResult.Offset);
+
+                activity?.SetStatus(ActivityStatusCode.Ok);
+
+                _options.DiagnosticsManager!.Enrich(activity, deliveryResult, _options);
+
+                return deliveryResult;
+            }
+            catch (ProduceException<TKey, TValue> ex)
+            {
+                HandleProduceException(ex, activity, messageId);
+
+                throw;
+            }
+        }
+
+        private void Intercept(TopicPartition topicPartition, Message<TKey, TValue> message)
+        {
+            if (!_options.Interceptors!.Any())
+            {
+                return;
+            }
+
+            var context = new KafkaProducerInterceptorContext<TKey, TValue>
+            {
+                Message = message,
+                TopicPartition = topicPartition,
+                ProducerConfig = _options.ProducerConfig
+            };
+
+            foreach (var interceptor in _options.Interceptors)
+            {
+                try
+                {
+                    interceptor.OnProduce(context);
+                }
+                catch (Exception ex)
+                {
+                    var messageId = message.GetId(_options.MessageIdHandler);
+
+                    _logger.LogMessageProductionInterceptionFailure(
+                        ex,
+                        messageId,
+                        topicPartition.Topic,
+                        topicPartition.Partition);
+
+                    if (_options.ProducerConfig!.EnableInterceptorExceptionPropagation)
+                    {
+                        throw;
+                    }
+                }
+            }
+        }
+
+        private void OnProduceRetry(TopicPartition topicPartition, Message<TKey, TValue> message, Exception exception, int retryAttempt)
+        {
+            var messageId = message.GetId(_options.MessageIdHandler);
+
+            switch (exception)
+            {
+                case ProduceException<TKey, TValue> produceException:
+                    {
+                        _logger.LogMessageProductionRetryFailure(
+                            exception,
+                            retryAttempt,
+                            messageId,
+                            produceException.DeliveryResult!.Topic,
+                            produceException.DeliveryResult!.Partition,
+                            produceException.Error);
+                    }
+                    break;
+                default:
+                    {
+                        _logger.LogMessageProductionRetryFailure(
+                            exception,
+                            retryAttempt,
+                            messageId,
+                            topicPartition.Topic,
+                            topicPartition.Partition);
+                    }
+                    break;
+            }
+        }
+
+        private void HandleProduceException(ProduceException<TKey, TValue> produceException, Activity activity, object messageId)
+        {
+            _logger.LogMessageProductionFailure(
+                produceException,
+                messageId,
+                produceException.DeliveryResult!.Topic,
+                produceException.DeliveryResult!.Partition,
+                produceException.Error);
+
+            activity?.SetStatus(ActivityStatusCode.Error);
+
+            _options.DiagnosticsManager!.Enrich(activity, produceException, _options);
+        }
+
+        private Activity StartActivity(string topic, IDictionary<string, string> headers)
+        {
+            var activityName = $"{topic} {OperationNames.PublishOperation}";
+
+            var activity = _options.DiagnosticsManager!.StartProducerActivity(activityName, headers);
+
+            return activity;
         }
 
         #region IDisposable Members
