@@ -68,16 +68,35 @@ namespace Confluent.Kafka.Core.Producer
         }
 
         public void Produce(
+            Message<TKey, TValue> message,
+            Action<DeliveryReport<TKey, TValue>> deliveryHandler = null)
+        {
+            Produce(_options.ProducerConfig!.DefaultTopic, _options.ProducerConfig!.DefaultPartition, message, deliveryHandler);
+        }
+
+        public void Produce(
             string topic,
             Message<TKey, TValue> message,
             Action<DeliveryReport<TKey, TValue>> deliveryHandler = null)
         {
-            if (string.IsNullOrWhiteSpace(topic))
-            {
-                throw new ArgumentException($"{nameof(topic)} cannot be null or whitespace.", nameof(topic));
-            }
+            Produce(topic, _options.ProducerConfig!.DefaultPartition, message, deliveryHandler);
+        }
 
-            Produce(new TopicPartition(topic, _options.ProducerConfig!.DefaultPartition), message, deliveryHandler);
+        public void Produce(
+            Partition partition,
+            Message<TKey, TValue> message,
+            Action<DeliveryReport<TKey, TValue>> deliveryHandler = null)
+        {
+            Produce(_options.ProducerConfig!.DefaultTopic, partition, message, deliveryHandler);
+        }
+
+        public void Produce(
+            string topic,
+            Partition partition,
+            Message<TKey, TValue> message,
+            Action<DeliveryReport<TKey, TValue>> deliveryHandler = null)
+        {
+            Produce(new TopicPartition(topic, partition), message, deliveryHandler);
         }
 
         public void Produce(
@@ -85,10 +104,7 @@ namespace Confluent.Kafka.Core.Producer
             Message<TKey, TValue> message,
             Action<DeliveryReport<TKey, TValue>> deliveryHandler = null)
         {
-            if (topicPartition is null)
-            {
-                throw new ArgumentNullException(nameof(topicPartition), $"{nameof(topicPartition)} cannot be null.");
-            }
+            topicPartition.ValidateState();
 
             if (message is null)
             {
@@ -108,19 +124,44 @@ namespace Confluent.Kafka.Core.Producer
         }
 
         public async Task<DeliveryResult<TKey, TValue>> ProduceAsync(
+            Message<TKey, TValue> message,
+            CancellationToken cancellationToken = default)
+        {
+            var deliveryResult = await ProduceAsync(_options.ProducerConfig!.DefaultTopic, _options.ProducerConfig!.DefaultPartition, message, cancellationToken)
+                .ConfigureAwait(continueOnCapturedContext: false);
+
+            return deliveryResult;
+        }
+
+        public async Task<DeliveryResult<TKey, TValue>> ProduceAsync(
             string topic,
             Message<TKey, TValue> message,
             CancellationToken cancellationToken = default)
         {
-            if (string.IsNullOrWhiteSpace(topic))
-            {
-                throw new ArgumentException($"{nameof(topic)} cannot be null or whitespace.", nameof(topic));
-            }
+            var deliveryResult = await ProduceAsync(topic, _options.ProducerConfig!.DefaultPartition, message, cancellationToken)
+                .ConfigureAwait(continueOnCapturedContext: false);
 
-            var deliveryResult = await ProduceAsync(
-                    new TopicPartition(topic, _options.ProducerConfig!.DefaultPartition),
-                    message,
-                    cancellationToken)
+            return deliveryResult;
+        }
+
+        public async Task<DeliveryResult<TKey, TValue>> ProduceAsync(
+           Partition partition,
+           Message<TKey, TValue> message,
+           CancellationToken cancellationToken = default)
+        {
+            var deliveryResult = await ProduceAsync(_options.ProducerConfig!.DefaultTopic, partition, message, cancellationToken)
+                .ConfigureAwait(continueOnCapturedContext: false);
+
+            return deliveryResult;
+        }
+
+        public async Task<DeliveryResult<TKey, TValue>> ProduceAsync(
+            string topic,
+            Partition partition,
+            Message<TKey, TValue> message,
+            CancellationToken cancellationToken = default)
+        {
+            var deliveryResult = await ProduceAsync(new TopicPartition(topic, partition), message, cancellationToken)
                 .ConfigureAwait(continueOnCapturedContext: false);
 
             return deliveryResult;
@@ -131,10 +172,7 @@ namespace Confluent.Kafka.Core.Producer
             Message<TKey, TValue> message,
             CancellationToken cancellationToken = default)
         {
-            if (topicPartition is null)
-            {
-                throw new ArgumentNullException(nameof(topicPartition), $"{nameof(topicPartition)} cannot be null.");
-            }
+            topicPartition.ValidateState();
 
             if (message is null)
             {
