@@ -4,7 +4,6 @@ using Confluent.Kafka.Core.Retry;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Threading;
 
 namespace Confluent.Kafka.Core.Consumer
