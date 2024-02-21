@@ -104,7 +104,7 @@ namespace Confluent.Kafka.Core.Producer
             Message<TKey, TValue> message,
             Action<DeliveryReport<TKey, TValue>> deliveryHandler = null)
         {
-            topicPartition.ValidateState();
+            topicPartition.ValidateAndThrow();
 
             if (message is null)
             {
@@ -172,7 +172,7 @@ namespace Confluent.Kafka.Core.Producer
             Message<TKey, TValue> message,
             CancellationToken cancellationToken = default)
         {
-            topicPartition.ValidateState();
+            topicPartition.ValidateAndThrow();
 
             if (message is null)
             {

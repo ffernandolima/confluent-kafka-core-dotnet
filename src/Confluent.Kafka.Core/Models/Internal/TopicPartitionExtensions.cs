@@ -1,36 +1,43 @@
 ﻿using System;
-using System.Text;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Confluent.Kafka.Core.Models.Internal
 {
     internal static class TopicPartitionExtensions
     {
-        public static void ValidateState(this TopicPartition topicPartition)
+        public static void ValidateAndThrow(this TopicPartition topicPartition)
         {
             if (topicPartition is null)
             {
                 throw new ArgumentNullException(nameof(topicPartition), $"{nameof(topicPartition)} cannot be null.");
             }
 
-            const string Message = "Invalid Topic/Partition state: ";
-
-            StringBuilder builder = null;
+            List<ValidationResult> validationResults = null;
 
             if (string.IsNullOrWhiteSpace(topicPartition.Topic))
             {
-                builder ??= new StringBuilder(Message);
-                builder.AppendLine("- Topic cannot be null or whitespace.");
+                validationResults ??= new List<ValidationResult>();
+
+                validationResults.Add(
+                    new ValidationResult(
+                        $"{nameof(topicPartition.Topic)} cannot be null or whitespace.",
+                        new[] { nameof(topicPartition.Topic) }));
             }
 
             if (topicPartition.Partition < Partition.Any)
             {
-                builder ??= new StringBuilder(Message);
-                builder.AppendLine($"- Partition cannot be lower than {Partition.Any.Value}.");
+                validationResults ??= new List<ValidationResult>();
+
+                validationResults.Add(
+                    new ValidationResult(
+                        $"{nameof(topicPartition.Partition)} cannot be lower than {Partition.Any.Value}.",
+                        new[] { nameof(topicPartition.Partition) }));
             }
 
-            if (builder is not null)
+            if (validationResults is not null && validationResults.Count > 0)
             {
-                throw new InvalidOperationException(builder.ToString());
+                throw new TopicPartitionException(validationResults);
             }
         }
     }
