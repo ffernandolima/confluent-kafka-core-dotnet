@@ -770,9 +770,7 @@ namespace Confluent.Kafka.Core.Consumer
                 }
                 catch (Exception ex)
                 {
-                    var messageId = consumeResult.Message?.GetId(_options.MessageIdHandler);
-
-                    if (messageId is null)
+                    if (consumeResult.Message is null)
                     {
                         _logger.LogMessageConsumptionInterceptionFailure(
                             ex,
@@ -782,6 +780,8 @@ namespace Confluent.Kafka.Core.Consumer
                     }
                     else
                     {
+                        var messageId = consumeResult.Message!.GetId(_options.MessageIdHandler);
+
                         _logger.LogMessageConsumptionInterceptionFailure(
                             ex,
                             messageId,
