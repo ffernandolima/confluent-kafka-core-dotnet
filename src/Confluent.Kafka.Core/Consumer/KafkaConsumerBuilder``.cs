@@ -301,40 +301,37 @@ namespace Confluent.Kafka.Core.Consumer
                 (_, builder) => builder.WithEnableLogging(ConsumerConfig.EnableLogging),
                 _consumerKey);
 
-            if (_handlerFactory is not null)
+            if (StatisticsHandler is null)
             {
-                if (StatisticsHandler is null)
-                {
-                    SetStatisticsHandler(_handlerFactory.CreateStatisticsHandler());
-                }
-
-                if (ErrorHandler is null)
-                {
-                    SetErrorHandler(_handlerFactory.CreateErrorHandler());
-                }
-
-                if (LogHandler is null)
-                {
-                    SetLogHandler(_handlerFactory.CreateLogHandler());
-                }
-
-                if (PartitionsAssignedHandler is null)
-                {
-                    SetPartitionsAssignedHandler(_handlerFactory.CreatePartitionsAssignedHandler());
-                }
-
-                if (PartitionsRevokedHandler is null)
-                {
-                    SetPartitionsRevokedHandler(_handlerFactory.CreatePartitionsRevokedHandler());
-                }
-
-                if (PartitionsLostHandler is null)
-                {
-                    SetPartitionsLostHandler(_handlerFactory.CreatePartitionsLostHandler());
-                }
-
-                _messageIdHandler ??= _handlerFactory.CreateMessageIdHandler();
+                SetStatisticsHandler(_handlerFactory.CreateStatisticsHandler());
             }
+
+            if (ErrorHandler is null)
+            {
+                SetErrorHandler(_handlerFactory.CreateErrorHandler());
+            }
+
+            if (LogHandler is null)
+            {
+                SetLogHandler(_handlerFactory.CreateLogHandler());
+            }
+
+            if (PartitionsAssignedHandler is null)
+            {
+                SetPartitionsAssignedHandler(_handlerFactory.CreatePartitionsAssignedHandler());
+            }
+
+            if (PartitionsRevokedHandler is null)
+            {
+                SetPartitionsRevokedHandler(_handlerFactory.CreatePartitionsRevokedHandler());
+            }
+
+            if (PartitionsLostHandler is null)
+            {
+                SetPartitionsLostHandler(_handlerFactory.CreatePartitionsLostHandler());
+            }
+
+            _messageIdHandler ??= _handlerFactory.CreateMessageIdHandler();
 
             _interceptors ??= Enumerable.Empty<IKafkaConsumerInterceptor<TKey, TValue>>();
 

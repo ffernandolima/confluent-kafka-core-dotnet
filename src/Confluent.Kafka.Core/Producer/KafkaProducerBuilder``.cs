@@ -258,25 +258,22 @@ namespace Confluent.Kafka.Core.Producer
                 (_, builder) => builder.WithEnableLogging(ProducerConfig.EnableLogging),
                 _producerKey);
 
-            if (_handlerFactory is not null)
+            if (StatisticsHandler is null)
             {
-                if (StatisticsHandler is null)
-                {
-                    SetStatisticsHandler(_handlerFactory.CreateStatisticsHandler());
-                }
-
-                if (ErrorHandler is null)
-                {
-                    SetErrorHandler(_handlerFactory.CreateErrorHandler());
-                }
-
-                if (LogHandler is null)
-                {
-                    SetLogHandler(_handlerFactory.CreateLogHandler());
-                }
-
-                _messageIdHandler ??= _handlerFactory.CreateMessageIdHandler();
+                SetStatisticsHandler(_handlerFactory.CreateStatisticsHandler());
             }
+
+            if (ErrorHandler is null)
+            {
+                SetErrorHandler(_handlerFactory.CreateErrorHandler());
+            }
+
+            if (LogHandler is null)
+            {
+                SetLogHandler(_handlerFactory.CreateLogHandler());
+            }
+
+            _messageIdHandler ??= _handlerFactory.CreateMessageIdHandler();
 
             _interceptors ??= Enumerable.Empty<IKafkaProducerInterceptor<TKey, TValue>>();
 
