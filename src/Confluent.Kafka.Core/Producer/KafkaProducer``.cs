@@ -326,9 +326,11 @@ namespace Confluent.Kafka.Core.Producer
 
             _logger.LogProducingNewMessage(messageId, topicPartition.Topic, topicPartition.Partition);
 
+            var enableDeliveryReports = _options.ProducerConfig!.EnableDeliveryReports.GetValueOrDefault(defaultValue: true);
+
             try
             {
-                if (_options.ProducerConfig!.EnableDeliveryReports.GetValueOrDefault(defaultValue: true))
+                if (enableDeliveryReports)
                 {
                     _producer.Produce(topicPartition, message, deliveryReport =>
                     {
@@ -358,7 +360,7 @@ namespace Confluent.Kafka.Core.Producer
 
                 if (!produceResult.DeliveryHandled)
                 {
-                    if (_options.ProducerConfig!.EnableDeliveryReports.GetValueOrDefault(defaultValue: true))
+                    if (enableDeliveryReports)
                     {
                         _logger.LogCallbackEventsNotServed(messageId);
                     }
