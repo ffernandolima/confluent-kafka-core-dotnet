@@ -27,7 +27,6 @@ namespace Confluent.Kafka.Core.Consumer
 
         private static readonly Type DefaultConsumerType = typeof(KafkaConsumer<TKey, TValue>);
 
-        private Type _consumerType;
         private object _consumerKey;
         private Func<TValue, object> _messageIdHandler;
         private IRetryHandler<TKey, TValue> _retryHandler;
@@ -79,7 +78,7 @@ namespace Confluent.Kafka.Core.Consumer
         {
             _builtOptions ??= new KafkaConsumerOptions<TKey, TValue>
             {
-                ConsumerType = _consumerType,
+                ConsumerType = DefaultConsumerType,
                 LoggerFactory = LoggerFactory,
                 ConsumerConfig = ConsumerConfig,
                 DiagnosticsManager = _diagnosticsManager,
@@ -192,12 +191,6 @@ namespace Confluent.Kafka.Core.Consumer
             return this;
         }
 
-        public IKafkaConsumerBuilder<TKey, TValue> WithConsumerType(Type consumerType)
-        {
-            _consumerType = consumerType;
-            return this;
-        }
-
         public IKafkaConsumerBuilder<TKey, TValue> WithConsumerKey(object consumerKey)
         {
             _consumerKey = consumerKey;
@@ -271,8 +264,6 @@ namespace Confluent.Kafka.Core.Consumer
                     [KafkaRetryConstants.RetryHandler] = _retryHandler
                 }));
 
-            _consumerType ??= DefaultConsumerType;
-
             LoggerFactory ??= ServiceProvider?.GetService<ILoggerFactory>();
 
             if (KeyDeserializer is null)
@@ -339,7 +330,7 @@ namespace Confluent.Kafka.Core.Consumer
                 ServiceProvider,
                 ConsumerConfig.EnableDiagnostics);
 
-            _builtConsumer = (IKafkaConsumer<TKey, TValue>)Activator.CreateInstance(_consumerType, this);
+            _builtConsumer = (IKafkaConsumer<TKey, TValue>)Activator.CreateInstance(DefaultConsumerType, this);
 
             if (ConsumerConfig.HasTopicSubscriptions())
             {

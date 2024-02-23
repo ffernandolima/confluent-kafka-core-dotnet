@@ -1,7 +1,6 @@
 ﻿using Confluent.Kafka.Core.Diagnostics.Internal;
 using Confluent.Kafka.Core.Internal;
 using Confluent.Kafka.Core.Models.Internal;
-using Confluent.Kafka.Core.Producer.Internal;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -10,9 +9,9 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Confluent.Kafka.Core.Producer
+namespace Confluent.Kafka.Core.Producer.Internal
 {
-    public class KafkaProducer<TKey, TValue> : IKafkaProducer<TKey, TValue>, IProducerAccessor<TKey, TValue> // TODO: Make this internal sealed?
+    internal sealed class KafkaProducer<TKey, TValue> : IKafkaProducer<TKey, TValue>, IProducerAccessor<TKey, TValue>
     {
         private readonly ILogger _logger;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -537,7 +536,7 @@ namespace Confluent.Kafka.Core.Producer
 
         private bool _disposed;
 
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (!_disposed)
             {

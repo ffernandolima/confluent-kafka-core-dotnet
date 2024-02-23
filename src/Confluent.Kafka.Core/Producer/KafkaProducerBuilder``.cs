@@ -24,7 +24,6 @@ namespace Confluent.Kafka.Core.Producer
 
         private static readonly Type DefaultProducerType = typeof(KafkaProducer<TKey, TValue>);
 
-        private Type _producerType;
         private object _producerKey;
         private Func<TValue, object> _messageIdHandler;
         private IRetryHandler<TKey, TValue> _retryHandler;
@@ -75,7 +74,7 @@ namespace Confluent.Kafka.Core.Producer
         {
             _builtOptions ??= new KafkaProducerOptions<TKey, TValue>
             {
-                ProducerType = _producerType,
+                ProducerType = DefaultProducerType,
                 LoggerFactory = LoggerFactory,
                 ProducerConfig = ProducerConfig,
                 DiagnosticsManager = _diagnosticsManager,
@@ -157,12 +156,6 @@ namespace Confluent.Kafka.Core.Producer
             return this;
         }
 
-        public IKafkaProducerBuilder<TKey, TValue> WithProducerType(Type producerType)
-        {
-            _producerType = producerType;
-            return this;
-        }
-
         public IKafkaProducerBuilder<TKey, TValue> WithProducerKey(object producerKey)
         {
             _producerKey = producerKey;
@@ -228,8 +221,6 @@ namespace Confluent.Kafka.Core.Producer
                     [KafkaRetryConstants.RetryHandler] = _retryHandler
                 }));
 
-            _producerType ??= DefaultProducerType;
-
             LoggerFactory ??= ServiceProvider?.GetService<ILoggerFactory>();
 
             if (KeySerializer is null)
@@ -281,7 +272,7 @@ namespace Confluent.Kafka.Core.Producer
                 ServiceProvider,
                 ProducerConfig.EnableDiagnostics);
 
-            _builtProducer = (IKafkaProducer<TKey, TValue>)Activator.CreateInstance(_producerType, this);
+            _builtProducer = (IKafkaProducer<TKey, TValue>)Activator.CreateInstance(DefaultProducerType, this);
 
             return _builtProducer;
         }

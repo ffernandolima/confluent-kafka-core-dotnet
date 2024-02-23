@@ -45,8 +45,6 @@ namespace Confluent.Kafka.Core.Consumer
 
         IKafkaConsumerBuilder<TKey, TValue> WithOffsetsCommittedHandler(Action<IConsumer<TKey, TValue>, CommittedOffsets> offsetsCommittedHandler);
 
-        IKafkaConsumerBuilder<TKey, TValue> WithConsumerType(Type consumerType);
-
         IKafkaConsumerBuilder<TKey, TValue> WithConsumerKey(object consumerKey);
 
         IKafkaConsumerBuilder<TKey, TValue> WithLoggerFactory(ILoggerFactory loggerFactory);

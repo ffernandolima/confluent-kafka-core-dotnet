@@ -33,8 +33,6 @@ namespace Confluent.Kafka.Core.Producer
 
         IKafkaProducerBuilder<TKey, TValue> WithValueSerializer(IAsyncSerializer<TValue> serializer);
 
-        IKafkaProducerBuilder<TKey, TValue> WithProducerType(Type producerType);
-
         IKafkaProducerBuilder<TKey, TValue> WithProducerKey(object producerKey);
 
         IKafkaProducerBuilder<TKey, TValue> WithLoggerFactory(ILoggerFactory loggerFactory);

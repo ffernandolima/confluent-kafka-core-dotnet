@@ -1,5 +1,4 @@
-﻿using Confluent.Kafka.Core.Consumer.Internal;
-using Confluent.Kafka.Core.Diagnostics.Internal;
+﻿using Confluent.Kafka.Core.Diagnostics.Internal;
 using Confluent.Kafka.Core.Internal;
 using Confluent.Kafka.Core.Models.Internal;
 using Confluent.Kafka.Core.Models;
@@ -11,9 +10,9 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 
-namespace Confluent.Kafka.Core.Consumer
+namespace Confluent.Kafka.Core.Consumer.Internal
 {
-    public class KafkaConsumer<TKey, TValue> : IKafkaConsumer<TKey, TValue>, IConsumerAccessor<TKey, TValue> // TODO: Make this internal sealed?
+    internal sealed class KafkaConsumer<TKey, TValue> : IKafkaConsumer<TKey, TValue>, IConsumerAccessor<TKey, TValue>
     {
         private readonly ILogger _logger;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -934,7 +933,7 @@ namespace Confluent.Kafka.Core.Consumer
 
         private bool _disposed;
 
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (!_disposed)
             {
