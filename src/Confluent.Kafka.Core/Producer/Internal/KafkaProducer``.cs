@@ -19,11 +19,46 @@ namespace Confluent.Kafka.Core.Producer.Internal
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly IKafkaProducerOptions<TKey, TValue> _options;
 
-        public Handle Handle => _producer.Handle;
-        public string Name => _producer.Name;
-        public IKafkaProducerOptions<TKey, TValue> Options => _options;
+        public Handle Handle
+        {
+            get
+            {
+                CheckDisposed();
+
+                return _producer.Handle;
+            }
+        }
+
+        public string Name
+        {
+            get
+            {
+                CheckDisposed();
+
+                return _producer.Name;
+            }
+        }
+
+        public IKafkaProducerOptions<TKey, TValue> Options
+        {
+            get
+            {
+                CheckDisposed();
+
+                return _options;
+            }
+        }
+
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IProducer<TKey, TValue> IProducerAccessor<TKey, TValue>.UnderlyingProducer => _producer;
+        IProducer<TKey, TValue> IProducerAccessor<TKey, TValue>.UnderlyingProducer
+        {
+            get
+            {
+                CheckDisposed();
+
+                return _producer;
+            }
+        }
 
         public KafkaProducer(IKafkaProducerBuilder<TKey, TValue> builder)
         {
@@ -41,6 +76,8 @@ namespace Confluent.Kafka.Core.Producer.Internal
 
         public int AddBrokers(string brokers)
         {
+            CheckDisposed();
+
             if (string.IsNullOrWhiteSpace(brokers))
             {
                 throw new ArgumentException($"{nameof(brokers)} cannot be null or whitespace.", nameof(brokers));
@@ -53,6 +90,8 @@ namespace Confluent.Kafka.Core.Producer.Internal
 
         public void SetSaslCredentials(string username, string password)
         {
+            CheckDisposed();
+
             if (string.IsNullOrWhiteSpace(username))
             {
                 throw new ArgumentException($"{nameof(username)} cannot be null or whitespace.", nameof(username));
@@ -70,6 +109,8 @@ namespace Confluent.Kafka.Core.Producer.Internal
             Message<TKey, TValue> message,
             Action<DeliveryReport<TKey, TValue>> deliveryHandler = null)
         {
+            CheckDisposed();
+
             Produce(_options.ProducerConfig!.DefaultTopic, _options.ProducerConfig!.DefaultPartition, message, deliveryHandler);
         }
 
@@ -78,6 +119,8 @@ namespace Confluent.Kafka.Core.Producer.Internal
             Message<TKey, TValue> message,
             Action<DeliveryReport<TKey, TValue>> deliveryHandler = null)
         {
+            CheckDisposed();
+
             Produce(topic, _options.ProducerConfig!.DefaultPartition, message, deliveryHandler);
         }
 
@@ -86,6 +129,8 @@ namespace Confluent.Kafka.Core.Producer.Internal
             Message<TKey, TValue> message,
             Action<DeliveryReport<TKey, TValue>> deliveryHandler = null)
         {
+            CheckDisposed();
+
             Produce(_options.ProducerConfig!.DefaultTopic, partition, message, deliveryHandler);
         }
 
@@ -95,6 +140,8 @@ namespace Confluent.Kafka.Core.Producer.Internal
             Message<TKey, TValue> message,
             Action<DeliveryReport<TKey, TValue>> deliveryHandler = null)
         {
+            CheckDisposed();
+
             Produce(new TopicPartition(topic, partition), message, deliveryHandler);
         }
 
@@ -103,6 +150,8 @@ namespace Confluent.Kafka.Core.Producer.Internal
             Message<TKey, TValue> message,
             Action<DeliveryReport<TKey, TValue>> deliveryHandler = null)
         {
+            CheckDisposed();
+
             topicPartition.ValidateAndThrow();
 
             if (message is null)
@@ -126,6 +175,8 @@ namespace Confluent.Kafka.Core.Producer.Internal
             Message<TKey, TValue> message,
             CancellationToken cancellationToken = default)
         {
+            CheckDisposed();
+
             var deliveryResult = await ProduceAsync(_options.ProducerConfig!.DefaultTopic, _options.ProducerConfig!.DefaultPartition, message, cancellationToken)
                 .ConfigureAwait(continueOnCapturedContext: false);
 
@@ -137,6 +188,8 @@ namespace Confluent.Kafka.Core.Producer.Internal
             Message<TKey, TValue> message,
             CancellationToken cancellationToken = default)
         {
+            CheckDisposed();
+
             var deliveryResult = await ProduceAsync(topic, _options.ProducerConfig!.DefaultPartition, message, cancellationToken)
                 .ConfigureAwait(continueOnCapturedContext: false);
 
@@ -148,6 +201,8 @@ namespace Confluent.Kafka.Core.Producer.Internal
            Message<TKey, TValue> message,
            CancellationToken cancellationToken = default)
         {
+            CheckDisposed();
+
             var deliveryResult = await ProduceAsync(_options.ProducerConfig!.DefaultTopic, partition, message, cancellationToken)
                 .ConfigureAwait(continueOnCapturedContext: false);
 
@@ -160,6 +215,8 @@ namespace Confluent.Kafka.Core.Producer.Internal
             Message<TKey, TValue> message,
             CancellationToken cancellationToken = default)
         {
+            CheckDisposed();
+
             var deliveryResult = await ProduceAsync(new TopicPartition(topic, partition), message, cancellationToken)
                 .ConfigureAwait(continueOnCapturedContext: false);
 
@@ -171,6 +228,8 @@ namespace Confluent.Kafka.Core.Producer.Internal
             Message<TKey, TValue> message,
             CancellationToken cancellationToken = default)
         {
+            CheckDisposed();
+
             topicPartition.ValidateAndThrow();
 
             if (message is null)
@@ -206,6 +265,8 @@ namespace Confluent.Kafka.Core.Producer.Internal
 
         public int Poll(TimeSpan timeout)
         {
+            CheckDisposed();
+
             if (timeout == Timeout.InfiniteTimeSpan)
             {
                 throw new ArgumentException($"{nameof(timeout)} cannot be infinite.", nameof(timeout));
@@ -218,6 +279,8 @@ namespace Confluent.Kafka.Core.Producer.Internal
 
         public int Flush(TimeSpan timeout)
         {
+            CheckDisposed();
+
             if (timeout == Timeout.InfiniteTimeSpan)
             {
                 throw new ArgumentException($"{nameof(timeout)} cannot be infinite.", nameof(timeout));
@@ -230,6 +293,8 @@ namespace Confluent.Kafka.Core.Producer.Internal
 
         public void Flush(CancellationToken cancellationToken = default)
         {
+            CheckDisposed();
+
             if (!cancellationToken.CanBeCanceled)
             {
                 throw new ArgumentException($"{nameof(cancellationToken)} should be capable of being canceled.", nameof(cancellationToken));
@@ -240,6 +305,8 @@ namespace Confluent.Kafka.Core.Producer.Internal
 
         public void InitTransactions(TimeSpan timeout)
         {
+            CheckDisposed();
+
             if (timeout == Timeout.InfiniteTimeSpan)
             {
                 throw new ArgumentException($"{nameof(timeout)} cannot be infinite.", nameof(timeout));
@@ -250,11 +317,15 @@ namespace Confluent.Kafka.Core.Producer.Internal
 
         public void BeginTransaction()
         {
+            CheckDisposed();
+
             _producer.BeginTransaction();
         }
 
         public void CommitTransaction(TimeSpan timeout)
         {
+            CheckDisposed();
+
             if (timeout == Timeout.InfiniteTimeSpan)
             {
                 throw new ArgumentException($"{nameof(timeout)} cannot be infinite.", nameof(timeout));
@@ -265,11 +336,15 @@ namespace Confluent.Kafka.Core.Producer.Internal
 
         public void CommitTransaction()
         {
+            CheckDisposed();
+
             _producer.CommitTransaction();
         }
 
         public void AbortTransaction(TimeSpan timeout)
         {
+            CheckDisposed();
+
             if (timeout == Timeout.InfiniteTimeSpan)
             {
                 throw new ArgumentException($"{nameof(timeout)} cannot be infinite.", nameof(timeout));
@@ -280,6 +355,8 @@ namespace Confluent.Kafka.Core.Producer.Internal
 
         public void AbortTransaction()
         {
+            CheckDisposed();
+
             _producer.AbortTransaction();
         }
 
@@ -288,6 +365,8 @@ namespace Confluent.Kafka.Core.Producer.Internal
             IConsumerGroupMetadata groupMetadata,
             TimeSpan timeout)
         {
+            CheckDisposed();
+
             if (offsets is null || !offsets.Any(offset => offset is not null))
             {
                 throw new ArgumentException($"{nameof(offsets)} cannot be null, empty, or contain null values.", nameof(offsets));
@@ -530,6 +609,16 @@ namespace Confluent.Kafka.Core.Producer.Internal
             var activity = _options.DiagnosticsManager!.StartProducerActivity(activityName, headers);
 
             return activity;
+        }
+
+        private void CheckDisposed()
+        {
+            if (!_disposed)
+            {
+                return;
+            }
+
+            throw new ObjectDisposedException(_options.ProducerType!.FullName);
         }
 
         #region IDisposable Members

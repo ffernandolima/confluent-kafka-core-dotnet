@@ -20,15 +20,87 @@ namespace Confluent.Kafka.Core.Consumer.Internal
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly IKafkaConsumerOptions<TKey, TValue> _options;
 
-        public Handle Handle => _consumer.Handle;
-        public string Name => _consumer.Name;
-        public string MemberId => _consumer.MemberId;
-        public List<string> Subscription => _consumer.Subscription;
-        public List<TopicPartition> Assignment => _consumer.Assignment;
-        public IConsumerGroupMetadata ConsumerGroupMetadata => _consumer.ConsumerGroupMetadata;
-        public IKafkaConsumerOptions<TKey, TValue> Options => _options;
+        public Handle Handle
+        {
+            get
+            {
+                CheckDisposed();
+
+                return _consumer.Handle;
+            }
+        }
+
+        public string Name
+        {
+            get
+            {
+                CheckDisposed();
+
+                return _consumer.Name;
+            }
+        }
+
+        public string MemberId
+        {
+            get
+            {
+                CheckDisposed();
+
+                return _consumer.MemberId;
+            }
+        }
+
+        public List<string> Subscription
+        {
+            get
+            {
+                CheckDisposed();
+
+                return _consumer.Subscription;
+            }
+        }
+
+        public List<TopicPartition> Assignment
+        {
+            get
+            {
+                CheckDisposed();
+
+                return _consumer.Assignment;
+            }
+        }
+
+        public IConsumerGroupMetadata ConsumerGroupMetadata
+        {
+            get
+            {
+                CheckDisposed();
+
+                return _consumer.ConsumerGroupMetadata;
+            }
+        }
+
+        public IKafkaConsumerOptions<TKey, TValue> Options
+        {
+            get
+            {
+                CheckDisposed();
+
+                return _options;
+            }
+        }
+
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IConsumer<TKey, TValue> IConsumerAccessor<TKey, TValue>.UnderlyingConsumer => _consumer;
+        IConsumer<TKey, TValue> IConsumerAccessor<TKey, TValue>.UnderlyingConsumer
+        {
+            get
+            {
+                CheckDisposed();
+
+                return _consumer;
+            }
+        }
+
 
         public KafkaConsumer(IKafkaConsumerBuilder<TKey, TValue> builder)
         {
@@ -46,6 +118,8 @@ namespace Confluent.Kafka.Core.Consumer.Internal
 
         public int AddBrokers(string brokers)
         {
+            CheckDisposed();
+
             if (string.IsNullOrWhiteSpace(brokers))
             {
                 throw new ArgumentException($"{nameof(brokers)} cannot be null or whitespace.", nameof(brokers));
@@ -58,6 +132,8 @@ namespace Confluent.Kafka.Core.Consumer.Internal
 
         public void SetSaslCredentials(string username, string password)
         {
+            CheckDisposed();
+
             if (string.IsNullOrWhiteSpace(username))
             {
                 throw new ArgumentException($"{nameof(username)} cannot be null or whitespace.", nameof(username));
@@ -73,6 +149,8 @@ namespace Confluent.Kafka.Core.Consumer.Internal
 
         public ConsumeResult<TKey, TValue> Consume()
         {
+            CheckDisposed();
+
             var consumeResult = Consume(_options.ConsumerConfig!.DefaultTimeout);
 
             return consumeResult;
@@ -80,6 +158,8 @@ namespace Confluent.Kafka.Core.Consumer.Internal
 
         public ConsumeResult<TKey, TValue> Consume(int millisecondsTimeout)
         {
+            CheckDisposed();
+
             if (millisecondsTimeout == Timeout.Infinite)
             {
                 throw new ArgumentException($"{nameof(millisecondsTimeout)} cannot be infinite.", nameof(millisecondsTimeout));
@@ -111,6 +191,8 @@ namespace Confluent.Kafka.Core.Consumer.Internal
 
         public ConsumeResult<TKey, TValue> Consume(TimeSpan timeout)
         {
+            CheckDisposed();
+
             if (timeout == Timeout.InfiniteTimeSpan)
             {
                 throw new ArgumentException($"{nameof(timeout)} cannot be infinite.", nameof(timeout));
@@ -142,6 +224,8 @@ namespace Confluent.Kafka.Core.Consumer.Internal
 
         public ConsumeResult<TKey, TValue> Consume(CancellationToken cancellationToken = default)
         {
+            CheckDisposed();
+
             if (!cancellationToken.CanBeCanceled)
             {
                 throw new ArgumentException($"{nameof(cancellationToken)} should be capable of being canceled.", nameof(cancellationToken));
@@ -174,6 +258,8 @@ namespace Confluent.Kafka.Core.Consumer.Internal
 
         public IEnumerable<ConsumeResult<TKey, TValue>> ConsumeBatch()
         {
+            CheckDisposed();
+
             var consumeResults = ConsumeBatch(_options.ConsumerConfig!.DefaultBatchSize, _options.ConsumerConfig!.DefaultTimeout);
 
             return consumeResults;
@@ -181,6 +267,8 @@ namespace Confluent.Kafka.Core.Consumer.Internal
 
         public IEnumerable<ConsumeResult<TKey, TValue>> ConsumeBatch(int batchSize)
         {
+            CheckDisposed();
+
             var consumeResults = ConsumeBatch(batchSize, _options.ConsumerConfig!.DefaultTimeout);
 
             return consumeResults;
@@ -188,6 +276,8 @@ namespace Confluent.Kafka.Core.Consumer.Internal
 
         public IEnumerable<ConsumeResult<TKey, TValue>> ConsumeBatch(TimeSpan timeout)
         {
+            CheckDisposed();
+
             var consumeResults = ConsumeBatch(_options.ConsumerConfig!.DefaultBatchSize, timeout);
 
             return consumeResults;
@@ -195,6 +285,8 @@ namespace Confluent.Kafka.Core.Consumer.Internal
 
         public IEnumerable<ConsumeResult<TKey, TValue>> ConsumeBatch(int batchSize, TimeSpan timeout)
         {
+            CheckDisposed();
+
             if (timeout == Timeout.InfiniteTimeSpan)
             {
                 throw new ArgumentException($"{nameof(timeout)} cannot be infinite.", nameof(timeout));
@@ -209,6 +301,8 @@ namespace Confluent.Kafka.Core.Consumer.Internal
 
         public IEnumerable<ConsumeResult<TKey, TValue>> ConsumeBatch(CancellationToken cancellationToken)
         {
+            CheckDisposed();
+
             var consumeResults = ConsumeBatch(_options.ConsumerConfig!.DefaultBatchSize, cancellationToken);
 
             return consumeResults;
@@ -216,6 +310,8 @@ namespace Confluent.Kafka.Core.Consumer.Internal
 
         public IEnumerable<ConsumeResult<TKey, TValue>> ConsumeBatch(int batchSize, CancellationToken cancellationToken)
         {
+            CheckDisposed();
+
             if (batchSize <= 0)
             {
                 throw new ArgumentException($"{nameof(batchSize)} cannot be less than or equal to zero.", $"{nameof(batchSize)}");
@@ -243,6 +339,8 @@ namespace Confluent.Kafka.Core.Consumer.Internal
 
         public void Subscribe(string topic)
         {
+            CheckDisposed();
+
             if (string.IsNullOrWhiteSpace(topic))
             {
                 throw new ArgumentException($"{nameof(topic)} cannot be null or whitespace.", nameof(topic));
@@ -255,6 +353,8 @@ namespace Confluent.Kafka.Core.Consumer.Internal
 
         public void Subscribe(IEnumerable<string> topics)
         {
+            CheckDisposed();
+
             if (topics is null || !topics.Any(topic => !string.IsNullOrWhiteSpace(topic)))
             {
                 throw new ArgumentException($"{nameof(topics)} cannot be null, empty, or contain null values.", nameof(topics));
@@ -269,6 +369,8 @@ namespace Confluent.Kafka.Core.Consumer.Internal
 
         public void Unsubscribe()
         {
+            CheckDisposed();
+
             _consumer.Unsubscribe();
 
             OnSubscriptionsOrAssignmentsChanged();
@@ -276,6 +378,8 @@ namespace Confluent.Kafka.Core.Consumer.Internal
 
         public void Assign(TopicPartition partition)
         {
+            CheckDisposed();
+
             if (partition is null)
             {
                 throw new ArgumentNullException(nameof(partition), $"{nameof(partition)} cannot be null.");
@@ -288,6 +392,8 @@ namespace Confluent.Kafka.Core.Consumer.Internal
 
         public void Assign(TopicPartitionOffset offset)
         {
+            CheckDisposed();
+
             if (offset is null)
             {
                 throw new ArgumentNullException(nameof(offset), $"{nameof(offset)} cannot be null.");
@@ -300,6 +406,8 @@ namespace Confluent.Kafka.Core.Consumer.Internal
 
         public void Assign(IEnumerable<TopicPartition> partitions)
         {
+            CheckDisposed();
+
             if (partitions is null || !partitions.Any(partition => partition is not null))
             {
                 throw new ArgumentException($"{nameof(partitions)} cannot be null, empty, or contain null values.", nameof(partitions));
@@ -314,6 +422,8 @@ namespace Confluent.Kafka.Core.Consumer.Internal
 
         public void Assign(IEnumerable<TopicPartitionOffset> offsets)
         {
+            CheckDisposed();
+
             if (offsets is null || !offsets.Any(offset => offset is not null))
             {
                 throw new ArgumentException($"{nameof(offsets)} cannot be null, empty, or contain null values.", nameof(offsets));
@@ -328,6 +438,8 @@ namespace Confluent.Kafka.Core.Consumer.Internal
 
         public void IncrementalAssign(IEnumerable<TopicPartition> partitions)
         {
+            CheckDisposed();
+
             if (partitions is null || !partitions.Any(partition => partition is not null))
             {
                 throw new ArgumentException($"{nameof(partitions)} cannot be null, empty, or contain null values.", nameof(partitions));
@@ -342,6 +454,8 @@ namespace Confluent.Kafka.Core.Consumer.Internal
 
         public void IncrementalAssign(IEnumerable<TopicPartitionOffset> offsets)
         {
+            CheckDisposed();
+
             if (offsets is null || !offsets.Any(offset => offset is not null))
             {
                 throw new ArgumentException($"{nameof(offsets)} cannot be null, empty, or contain null values.", nameof(offsets));
@@ -356,6 +470,8 @@ namespace Confluent.Kafka.Core.Consumer.Internal
 
         public void IncrementalUnassign(IEnumerable<TopicPartition> partitions)
         {
+            CheckDisposed();
+
             if (partitions is null || !partitions.Any(partition => partition is not null))
             {
                 throw new ArgumentException($"{nameof(partitions)} cannot be null, empty, or contain null values.", nameof(partitions));
@@ -370,6 +486,8 @@ namespace Confluent.Kafka.Core.Consumer.Internal
 
         public void Unassign()
         {
+            CheckDisposed();
+
             _consumer.Unassign();
 
             OnSubscriptionsOrAssignmentsChanged();
@@ -377,6 +495,8 @@ namespace Confluent.Kafka.Core.Consumer.Internal
 
         public void StoreOffset(ConsumeResult<TKey, TValue> consumeResult)
         {
+            CheckDisposed();
+
             if (consumeResult is null)
             {
                 throw new ArgumentNullException(nameof(consumeResult), $"{nameof(consumeResult)} cannot be null.");
@@ -387,6 +507,8 @@ namespace Confluent.Kafka.Core.Consumer.Internal
 
         public void StoreOffset(TopicPartitionOffset offset)
         {
+            CheckDisposed();
+
             if (offset is null)
             {
                 throw new ArgumentNullException(nameof(offset), $"{nameof(offset)} cannot be null.");
@@ -397,6 +519,8 @@ namespace Confluent.Kafka.Core.Consumer.Internal
 
         public List<TopicPartitionOffset> Commit()
         {
+            CheckDisposed();
+
             var offsets = _consumer.Commit();
 
             return offsets;
@@ -404,6 +528,8 @@ namespace Confluent.Kafka.Core.Consumer.Internal
 
         public void Commit(IEnumerable<TopicPartitionOffset> offsets)
         {
+            CheckDisposed();
+
             if (offsets is null || !offsets.Any(offset => offset is not null))
             {
                 throw new ArgumentException($"{nameof(offsets)} cannot be null, empty, or contain null values.", nameof(offsets));
@@ -428,6 +554,8 @@ namespace Confluent.Kafka.Core.Consumer.Internal
 
         public void Commit(ConsumeResult<TKey, TValue> consumeResult)
         {
+            CheckDisposed();
+
             if (consumeResult is null)
             {
                 throw new ArgumentNullException(nameof(consumeResult), $"{nameof(consumeResult)} cannot be null.");
@@ -438,6 +566,8 @@ namespace Confluent.Kafka.Core.Consumer.Internal
 
         public List<TopicPartitionOffset> Committed(TimeSpan timeout)
         {
+            CheckDisposed();
+
             if (timeout == Timeout.InfiniteTimeSpan)
             {
                 throw new ArgumentException($"{nameof(timeout)} cannot be infinite.", nameof(timeout));
@@ -450,6 +580,8 @@ namespace Confluent.Kafka.Core.Consumer.Internal
 
         public List<TopicPartitionOffset> Committed(IEnumerable<TopicPartition> partitions, TimeSpan timeout)
         {
+            CheckDisposed();
+
             if (partitions is null || !partitions.Any(partition => partition is not null))
             {
                 throw new ArgumentException($"{nameof(partitions)} cannot be null, empty, or contain null values.", nameof(partitions));
@@ -469,6 +601,8 @@ namespace Confluent.Kafka.Core.Consumer.Internal
 
         public void Seek(TopicPartitionOffset offset)
         {
+            CheckDisposed();
+
             if (offset is null)
             {
                 throw new ArgumentNullException(nameof(offset), $"{nameof(offset)} cannot be null.");
@@ -479,6 +613,8 @@ namespace Confluent.Kafka.Core.Consumer.Internal
 
         public IEnumerable<TopicPartitionOffset> SeekBatch(IEnumerable<ConsumeResult<TKey, TValue>> consumeResults)
         {
+            CheckDisposed();
+
             if (consumeResults is null || !consumeResults.Any(result => result is not null))
             {
                 throw new ArgumentException($"{nameof(consumeResults)} cannot be null, empty, or contain null values.", nameof(consumeResults));
@@ -499,6 +635,8 @@ namespace Confluent.Kafka.Core.Consumer.Internal
 
         public void Pause(IEnumerable<TopicPartition> partitions)
         {
+            CheckDisposed();
+
             if (partitions is null || !partitions.Any(partition => partition is not null))
             {
                 throw new ArgumentException($"{nameof(partitions)} cannot be null, empty, or contain null values.", nameof(partitions));
@@ -511,6 +649,8 @@ namespace Confluent.Kafka.Core.Consumer.Internal
 
         public void Resume(IEnumerable<TopicPartition> partitions)
         {
+            CheckDisposed();
+
             if (partitions is null || !partitions.Any(partition => partition is not null))
             {
                 throw new ArgumentException($"{nameof(partitions)} cannot be null, empty or contain null values.", nameof(partitions));
@@ -523,6 +663,8 @@ namespace Confluent.Kafka.Core.Consumer.Internal
 
         public Offset Position(TopicPartition partition)
         {
+            CheckDisposed();
+
             if (partition is null)
             {
                 throw new ArgumentNullException(nameof(partition), $"{nameof(partition)} cannot be null.");
@@ -535,6 +677,8 @@ namespace Confluent.Kafka.Core.Consumer.Internal
 
         public List<TopicPartitionOffset> OffsetsForTimes(IEnumerable<TopicPartitionTimestamp> timestamps, TimeSpan timeout)
         {
+            CheckDisposed();
+
             if (timestamps is null || !timestamps.Any(timestamp => timestamp is not null))
             {
                 throw new ArgumentException($"{nameof(timestamps)} cannot be null, empty, or contain null values.", nameof(timestamps));
@@ -549,6 +693,8 @@ namespace Confluent.Kafka.Core.Consumer.Internal
 
         public WatermarkOffsets GetWatermarkOffsets(TopicPartition partition)
         {
+            CheckDisposed();
+
             if (partition is null)
             {
                 throw new ArgumentNullException(nameof(partition), $"{nameof(partition)} cannot be null.");
@@ -561,6 +707,8 @@ namespace Confluent.Kafka.Core.Consumer.Internal
 
         public WatermarkOffsets QueryWatermarkOffsets(TopicPartition partition, TimeSpan timeout)
         {
+            CheckDisposed();
+
             if (partition is null)
             {
                 throw new ArgumentNullException(nameof(partition), $"{nameof(partition)} cannot be null.");
@@ -578,6 +726,8 @@ namespace Confluent.Kafka.Core.Consumer.Internal
 
         public IEnumerable<KafkaTopicPartitionLag> Lag()
         {
+            CheckDisposed();
+
             var lags = _consumer.Assignment!.Select(
                 assignment =>
                 {
@@ -612,6 +762,8 @@ namespace Confluent.Kafka.Core.Consumer.Internal
 
         public void Close()
         {
+            CheckDisposed();
+
             _consumer.Close();
         }
 
@@ -927,6 +1079,16 @@ namespace Confluent.Kafka.Core.Consumer.Internal
             var activity = _options.DiagnosticsManager!.StartConsumerActivity(activityName, headers);
 
             return activity;
+        }
+
+        private void CheckDisposed()
+        {
+            if (!_disposed)
+            {
+                return;
+            }
+
+            throw new ObjectDisposedException(_options.ConsumerType!.FullName);
         }
 
         #region IDisposable Members
