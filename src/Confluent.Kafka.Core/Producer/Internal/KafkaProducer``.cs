@@ -109,8 +109,6 @@ namespace Confluent.Kafka.Core.Producer.Internal
             Message<TKey, TValue> message,
             Action<DeliveryReport<TKey, TValue>> deliveryHandler = null)
         {
-            CheckDisposed();
-
             Produce(_options.ProducerConfig!.DefaultTopic, _options.ProducerConfig!.DefaultPartition, message, deliveryHandler);
         }
 
@@ -119,8 +117,6 @@ namespace Confluent.Kafka.Core.Producer.Internal
             Message<TKey, TValue> message,
             Action<DeliveryReport<TKey, TValue>> deliveryHandler = null)
         {
-            CheckDisposed();
-
             Produce(topic, _options.ProducerConfig!.DefaultPartition, message, deliveryHandler);
         }
 
@@ -129,8 +125,6 @@ namespace Confluent.Kafka.Core.Producer.Internal
             Message<TKey, TValue> message,
             Action<DeliveryReport<TKey, TValue>> deliveryHandler = null)
         {
-            CheckDisposed();
-
             Produce(_options.ProducerConfig!.DefaultTopic, partition, message, deliveryHandler);
         }
 
@@ -140,8 +134,6 @@ namespace Confluent.Kafka.Core.Producer.Internal
             Message<TKey, TValue> message,
             Action<DeliveryReport<TKey, TValue>> deliveryHandler = null)
         {
-            CheckDisposed();
-
             Produce(new TopicPartition(topic, partition), message, deliveryHandler);
         }
 
@@ -175,8 +167,6 @@ namespace Confluent.Kafka.Core.Producer.Internal
             Message<TKey, TValue> message,
             CancellationToken cancellationToken = default)
         {
-            CheckDisposed();
-
             var deliveryResult = await ProduceAsync(_options.ProducerConfig!.DefaultTopic, _options.ProducerConfig!.DefaultPartition, message, cancellationToken)
                 .ConfigureAwait(continueOnCapturedContext: false);
 
@@ -188,8 +178,6 @@ namespace Confluent.Kafka.Core.Producer.Internal
             Message<TKey, TValue> message,
             CancellationToken cancellationToken = default)
         {
-            CheckDisposed();
-
             var deliveryResult = await ProduceAsync(topic, _options.ProducerConfig!.DefaultPartition, message, cancellationToken)
                 .ConfigureAwait(continueOnCapturedContext: false);
 
@@ -201,8 +189,6 @@ namespace Confluent.Kafka.Core.Producer.Internal
            Message<TKey, TValue> message,
            CancellationToken cancellationToken = default)
         {
-            CheckDisposed();
-
             var deliveryResult = await ProduceAsync(_options.ProducerConfig!.DefaultTopic, partition, message, cancellationToken)
                 .ConfigureAwait(continueOnCapturedContext: false);
 
@@ -215,10 +201,8 @@ namespace Confluent.Kafka.Core.Producer.Internal
             Message<TKey, TValue> message,
             CancellationToken cancellationToken = default)
         {
-            CheckDisposed();
-
             var deliveryResult = await ProduceAsync(new TopicPartition(topic, partition), message, cancellationToken)
-                .ConfigureAwait(continueOnCapturedContext: false);
+               .ConfigureAwait(continueOnCapturedContext: false);
 
             return deliveryResult;
         }

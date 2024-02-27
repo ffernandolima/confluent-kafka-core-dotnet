@@ -149,8 +149,6 @@ namespace Confluent.Kafka.Core.Consumer.Internal
 
         public ConsumeResult<TKey, TValue> Consume()
         {
-            CheckDisposed();
-
             var consumeResult = Consume(_options.ConsumerConfig!.DefaultTimeout);
 
             return consumeResult;
@@ -258,8 +256,6 @@ namespace Confluent.Kafka.Core.Consumer.Internal
 
         public IEnumerable<ConsumeResult<TKey, TValue>> ConsumeBatch()
         {
-            CheckDisposed();
-
             var consumeResults = ConsumeBatch(_options.ConsumerConfig!.DefaultBatchSize, _options.ConsumerConfig!.DefaultTimeout);
 
             return consumeResults;
@@ -267,8 +263,6 @@ namespace Confluent.Kafka.Core.Consumer.Internal
 
         public IEnumerable<ConsumeResult<TKey, TValue>> ConsumeBatch(int batchSize)
         {
-            CheckDisposed();
-
             var consumeResults = ConsumeBatch(batchSize, _options.ConsumerConfig!.DefaultTimeout);
 
             return consumeResults;
@@ -276,8 +270,6 @@ namespace Confluent.Kafka.Core.Consumer.Internal
 
         public IEnumerable<ConsumeResult<TKey, TValue>> ConsumeBatch(TimeSpan timeout)
         {
-            CheckDisposed();
-
             var consumeResults = ConsumeBatch(_options.ConsumerConfig!.DefaultBatchSize, timeout);
 
             return consumeResults;
@@ -285,8 +277,6 @@ namespace Confluent.Kafka.Core.Consumer.Internal
 
         public IEnumerable<ConsumeResult<TKey, TValue>> ConsumeBatch(int batchSize, TimeSpan timeout)
         {
-            CheckDisposed();
-
             if (timeout == Timeout.InfiniteTimeSpan)
             {
                 throw new ArgumentException($"{nameof(timeout)} cannot be infinite.", nameof(timeout));
@@ -301,8 +291,6 @@ namespace Confluent.Kafka.Core.Consumer.Internal
 
         public IEnumerable<ConsumeResult<TKey, TValue>> ConsumeBatch(CancellationToken cancellationToken)
         {
-            CheckDisposed();
-
             var consumeResults = ConsumeBatch(_options.ConsumerConfig!.DefaultBatchSize, cancellationToken);
 
             return consumeResults;
