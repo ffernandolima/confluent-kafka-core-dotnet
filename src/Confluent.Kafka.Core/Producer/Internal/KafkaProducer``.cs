@@ -202,7 +202,7 @@ namespace Confluent.Kafka.Core.Producer.Internal
             CancellationToken cancellationToken = default)
         {
             var deliveryResult = await ProduceAsync(new TopicPartition(topic, partition), message, cancellationToken)
-               .ConfigureAwait(continueOnCapturedContext: false);
+                .ConfigureAwait(continueOnCapturedContext: false);
 
             return deliveryResult;
         }
