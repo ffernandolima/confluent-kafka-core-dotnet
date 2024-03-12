@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Confluent.Kafka.Core.Serialization.ProtobufNet.Internal
 {
-    public sealed class ProtobufNetSerializer<T> : ISerializer<T>, IDeserializer<T>
+    internal sealed class ProtobufNetSerializer<T> : ISerializer<T>, IDeserializer<T>
     {
         private readonly ProtobufNetSerializerOptions _options;
 
