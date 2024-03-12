@@ -2,7 +2,7 @@
 {
     public static class TracerProviderBuilderExtensions
     {
-        public static TracerProviderBuilder AddKafkaInstrumentation(this TracerProviderBuilder builder)
+        public static TracerProviderBuilder AddKafkaCoreInstrumentation(this TracerProviderBuilder builder)
             => builder.AddSource("Confluent.Kafka.Core");
     }
 }
