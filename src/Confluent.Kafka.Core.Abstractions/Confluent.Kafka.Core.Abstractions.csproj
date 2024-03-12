@@ -15,8 +15,4 @@
     <InternalsVisibleTo Include="Confluent.Kafka.Core" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Confluent.Kafka.Core.OpenTelemetry\Confluent.Kafka.Core.OpenTelemetry.csproj" />
-  </ItemGroup>
-
 </Project>
