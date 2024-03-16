@@ -13,7 +13,7 @@ namespace Confluent.Kafka.Core.Producer.Internal
             return this;
         }
 
-        internal static KafkaProducerHandlerFactoryOptions Build(
+        public static KafkaProducerHandlerFactoryOptions Build(
             IServiceProvider serviceProvider,
             Action<IServiceProvider, IKafkaProducerHandlerFactoryOptionsBuilder> configureOptions)
         {

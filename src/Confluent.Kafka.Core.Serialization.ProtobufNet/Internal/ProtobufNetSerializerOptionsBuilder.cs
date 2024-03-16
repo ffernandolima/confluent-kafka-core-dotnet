@@ -13,7 +13,7 @@ namespace Confluent.Kafka.Core.Serialization.ProtobufNet.Internal
             return this;
         }
 
-        internal static ProtobufNetSerializerOptions Build(Action<IProtobufNetSerializerOptionsBuilder> configureOptions)
+        public static ProtobufNetSerializerOptions Build(Action<IProtobufNetSerializerOptionsBuilder> configureOptions)
         {
             using var builder = new ProtobufNetSerializerOptionsBuilder();
 

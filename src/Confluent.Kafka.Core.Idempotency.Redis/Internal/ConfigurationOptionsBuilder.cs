@@ -296,7 +296,7 @@ namespace Confluent.Kafka.Core.Idempotency.Redis.Internal
             return this;
         }
 
-        internal static ConfigurationOptions Build(Action<IConfigurationOptionsBuilder> configureOptions)
+        public static ConfigurationOptions Build(Action<IConfigurationOptionsBuilder> configureOptions)
         {
             using var builder = new ConfigurationOptionsBuilder();
 

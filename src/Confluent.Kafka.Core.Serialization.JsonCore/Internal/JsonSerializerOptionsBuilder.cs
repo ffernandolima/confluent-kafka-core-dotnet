@@ -174,7 +174,7 @@ namespace Confluent.Kafka.Core.Serialization.JsonCore.Internal
             return this;
         }
 
-        internal static JsonSerializerOptions Build(Action<IJsonSerializerOptionsBuilder> configureOptions)
+        public static JsonSerializerOptions Build(Action<IJsonSerializerOptionsBuilder> configureOptions)
         {
             using var builder = new JsonSerializerOptionsBuilder();
 
