@@ -7,7 +7,7 @@ namespace Microsoft.Extensions.DependencyInjection
 {
     public static class PollyRetryHandlerServiceCollectionExtensions
     {
-        public static IServiceCollection AddPollyMessageRetryHandler<TKey, TValue>(
+        public static IServiceCollection AddPollyRetryHandler<TKey, TValue>(
             this IServiceCollection services,
             Action<IPollyRetryHandlerOptionsBuilder> configureOptions = null,
             object handlerKey = null)
