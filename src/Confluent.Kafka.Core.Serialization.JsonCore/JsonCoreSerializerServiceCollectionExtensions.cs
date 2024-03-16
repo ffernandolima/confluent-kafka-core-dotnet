@@ -18,12 +18,19 @@ namespace Microsoft.Extensions.DependencyInjection
                 throw new ArgumentNullException(nameof(services), $"{nameof(services)} cannot be null.");
             }
 
-            var serializer = JsonCoreSerializerFactory.CreateSerializer<T>(configureOptions);
             var serviceKey = serializerKey ?? JsonCoreSerializerConstants.JsonCoreSerializerKey;
 
-            services.TryAddKeyedSingleton(serviceKey, serializer);
-            services.TryAddKeyedSingleton<ISerializer<T>>(serviceKey, serializer);
-            services.TryAddKeyedSingleton<IDeserializer<T>>(serviceKey, serializer);
+            services.TryAddKeyedSingleton(
+                serviceKey,
+                (_, _) => JsonCoreSerializerFactory.CreateSerializer<T>(configureOptions));
+
+            services.TryAddKeyedSingleton<ISerializer<T>>(
+                serviceKey,
+                (serviceProvider, _) => serviceProvider.GetRequiredKeyedService<JsonCoreSerializer<T>>(serviceKey));
+
+            services.TryAddKeyedSingleton<IDeserializer<T>>(
+                serviceKey,
+                (serviceProvider, _) => serviceProvider.GetRequiredKeyedService<JsonCoreSerializer<T>>(serviceKey));
 
             return services;
         }

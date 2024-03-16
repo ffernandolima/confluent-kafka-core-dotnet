@@ -18,12 +18,19 @@ namespace Microsoft.Extensions.DependencyInjection
                 throw new ArgumentNullException(nameof(services), $"{nameof(services)} cannot be null.");
             }
 
-            var serializer = ProtobufNetSerializerFactory.CreateSerializer<T>(configureOptions);
             var serviceKey = serializerKey ?? ProtobufNetSerializerConstants.ProtobufNetSerializerKey;
 
-            services.TryAddKeyedSingleton(serviceKey, serializer);
-            services.TryAddKeyedSingleton<ISerializer<T>>(serviceKey, serializer);
-            services.TryAddKeyedSingleton<IDeserializer<T>>(serviceKey, serializer);
+            services.TryAddKeyedSingleton(
+                serviceKey,
+                (_, _) => ProtobufNetSerializerFactory.CreateSerializer<T>(configureOptions));
+
+            services.TryAddKeyedSingleton<ISerializer<T>>(
+                serviceKey,
+                (serviceProvider, _) => serviceProvider.GetRequiredKeyedService<ProtobufNetSerializer<T>>(serviceKey));
+
+            services.TryAddKeyedSingleton<IDeserializer<T>>(
+                serviceKey,
+                (serviceProvider, _) => serviceProvider.GetRequiredKeyedService<ProtobufNetSerializer<T>>(serviceKey));
 
             return services;
         }
