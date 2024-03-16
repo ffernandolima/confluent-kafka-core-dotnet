@@ -9,12 +9,17 @@ namespace Microsoft.Extensions.DependencyInjection
     {
         public static IServiceCollection AddRedisIdempotencyHandler<TKey, TValue>(
             this IServiceCollection services,
-            Action<IRedisIdempotencyHandlerBuilder<TKey, TValue>> configureHandler = null,
+            Action<IRedisIdempotencyHandlerBuilder<TKey, TValue>> configureHandler,
             object handlerKey = null)
         {
             if (services is null)
             {
                 throw new ArgumentNullException(nameof(services), $"{nameof(services)} cannot be null.");
+            }
+
+            if (configureHandler is null)
+            {
+                throw new ArgumentNullException(nameof(configureHandler), $"{nameof(configureHandler)} cannot be null.");
             }
 
             services.TryAddKeyedSingleton(
