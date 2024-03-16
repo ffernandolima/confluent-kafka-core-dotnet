@@ -713,6 +713,5 @@ namespace Confluent.Kafka.Core.Consumer.Internal
         }
 
         #endregion IKafkaConsumerConfigBuilder Members
-
     }
 }
