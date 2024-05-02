@@ -67,7 +67,6 @@ namespace Confluent.Kafka.Core.Producer
 
         #endregion IProducerBuilder Explicity Members
 
-
         #region IKafkaProducerOptionsConverter Explicity Members
 
         IKafkaProducerOptions<TKey, TValue> IKafkaProducerOptionsConverter<TKey, TValue>.ToOptions()

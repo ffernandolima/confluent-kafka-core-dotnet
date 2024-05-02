@@ -71,7 +71,6 @@ namespace Confluent.Kafka.Core.Consumer
 
         #endregion IConsumerBuilder Explicity Members
 
-
         #region IKafkaConsumerOptionsConverter Explicity Members
 
         IKafkaConsumerOptions<TKey, TValue> IKafkaConsumerOptionsConverter<TKey, TValue>.ToOptions()
