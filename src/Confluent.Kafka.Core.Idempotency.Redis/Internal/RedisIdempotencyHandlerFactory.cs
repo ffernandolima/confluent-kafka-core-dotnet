@@ -11,9 +11,12 @@ namespace Confluent.Kafka.Core.Idempotency.Redis.Internal
             IServiceProvider serviceProvider,
             Action<IRedisIdempotencyHandlerBuilder<TKey, TValue>> configureHandler)
         {
-            var builder = new RedisIdempotencyHandlerBuilder<TKey, TValue>();
+            if (configureHandler is null)
+            {
+                throw new ArgumentNullException(nameof(configureHandler), $"{nameof(configureHandler)} cannot be null.");
+            }
 
-            configureHandler?.Invoke(builder);
+            var builder = RedisIdempotencyHandlerBuilder<TKey, TValue>.Configure(configureHandler);
 
             var loggerFactory = serviceProvider?.GetService<ILoggerFactory>();
 

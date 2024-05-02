@@ -12,7 +12,6 @@ namespace Confluent.Kafka.Core.Idempotency.Redis.Internal
             Action<IConfigurationOptionsBuilder> configureOptions)
         {
             RedisOptions = ConfigurationOptionsBuilder.Build(configureOptions);
-            ConnectionMultiplexer.SetFeatureFlag(RedisIdempotencyHandlerConstants.PreventThreadTheftFeatureFlag, enabled: true);
             return this;
         }
 
@@ -21,6 +20,16 @@ namespace Confluent.Kafka.Core.Idempotency.Redis.Internal
         {
             HandlerOptions = RedisIdempotencyHandlerOptionsBuilder<TKey, TValue>.Build(configureOptions);
             return this;
+        }
+
+        public static RedisIdempotencyHandlerBuilder<TKey, TValue> Configure(
+            Action<IRedisIdempotencyHandlerBuilder<TKey, TValue>> configureHandler)
+        {
+            var builder = new RedisIdempotencyHandlerBuilder<TKey, TValue>();
+
+            configureHandler?.Invoke(builder);
+
+            return builder;
         }
     }
 }

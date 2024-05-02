@@ -15,6 +15,14 @@ namespace Confluent.Kafka.Core.Idempotency.Redis.Internal
         FunctionalBuilder<ConfigurationOptions, ConfigurationOptionsBuilder>,
         IConfigurationOptionsBuilder
     {
+        public ConfigurationOptionsBuilder(ConfigurationOptions seedSubject = null)
+            : base(seedSubject)
+        {
+            ConnectionMultiplexer.SetFeatureFlag(
+                RedisIdempotencyHandlerConstants.PreventThreadTheftFeatureFlag,
+                enabled: true);
+        }
+
         protected override ConfigurationOptions CreateSubject() => new()
         {
             AbortOnConnectFail = false
