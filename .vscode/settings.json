@@ -1,0 +1,4 @@
+{
+    "omnisharp.organizeImportsOnFormat": true,
+    "prettyxml.settings.preserveWhiteSpacesInComment": true
+}
