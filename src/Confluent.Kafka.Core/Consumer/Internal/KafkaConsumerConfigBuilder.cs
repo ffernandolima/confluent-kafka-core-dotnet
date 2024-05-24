@@ -14,8 +14,8 @@ namespace Confluent.Kafka.Core.Consumer.Internal
             GroupId = $"{Guid.NewGuid()}"
         };
 
-        public KafkaConsumerConfigBuilder(IKafkaConsumerConfig seedSubject = null)
-            : base(seedSubject)
+        public KafkaConsumerConfigBuilder(IKafkaConsumerConfig seedSubjectAbs = null)
+            : base(seedSubjectAbs)
         { }
 
         #region IConfigBuilder Members

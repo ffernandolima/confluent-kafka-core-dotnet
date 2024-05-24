@@ -8,8 +8,8 @@ namespace Confluent.Kafka.Core.Producer.Internal
         FunctionalBuilder<KafkaProducerConfig, IKafkaProducerConfig, KafkaProducerConfigBuilder>,
         IKafkaProducerConfigBuilder
     {
-        public KafkaProducerConfigBuilder(IKafkaProducerConfig seedSubject = null)
-            : base(seedSubject)
+        public KafkaProducerConfigBuilder(IKafkaProducerConfig seedSubjectAbs = null)
+            : base(seedSubjectAbs)
         { }
 
         #region IConfigBuilder Members
