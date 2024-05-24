@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 
 namespace Confluent.Kafka.Core.Internal
 {
@@ -25,6 +26,8 @@ namespace Confluent.Kafka.Core.Internal
             { typeof(ulong),   "ulong"   },
             { typeof(ushort),  "ushort"  }
         };
+
+        private static Dictionary<Type, object> DefaultValueTypes = new();
 
         public static string ExtractTypeName(this Type sourceType)
         {
@@ -53,6 +56,33 @@ namespace Confluent.Kafka.Core.Internal
             }
 
             return sourceType.Name;
+        }
+
+        public static object GetDefaultValue(this Type sourceType)
+        {
+            if (!sourceType.IsValueType)
+            {
+                return null;
+            }
+
+            if (DefaultValueTypes.TryGetValue(sourceType, out var defaultValue))
+            {
+                return defaultValue;
+            }
+
+            defaultValue = Activator.CreateInstance(sourceType);
+
+            Dictionary<Type, object> snapshot, newCache;
+
+            do
+            {
+                snapshot = DefaultValueTypes;
+
+                newCache = new Dictionary<Type, object>(DefaultValueTypes) { [sourceType] = defaultValue };
+
+            } while (!ReferenceEquals(Interlocked.CompareExchange(ref DefaultValueTypes, newCache, snapshot), snapshot));
+
+            return defaultValue;
         }
     }
 }
