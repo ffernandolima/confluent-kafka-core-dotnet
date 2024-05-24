@@ -5,24 +5,43 @@ using System.Linq;
 
 namespace Confluent.Kafka.Core.Internal
 {
-    internal abstract class FunctionalBuilder<TSubject, TSubjectAbs, TSelf> : IFunctionalBuilder<TSubject, TSubjectAbs, TSelf>
-        where TSubject : class, TSubjectAbs, new()
-        where TSubjectAbs : class
-        where TSelf : FunctionalBuilder<TSubject, TSubjectAbs, TSelf>
+    internal abstract class FunctionalBuilder<TSubject, TSubjectAbs, TSelf> :
+        IFunctionalBuilder<TSubject, TSubjectAbs, TSelf>
+            where TSubject : class, TSubjectAbs
+            where TSubjectAbs : class
+            where TSelf : FunctionalBuilder<TSubject, TSubjectAbs, TSelf>
     {
         private readonly TSubject _seedSubject;
-        private readonly Func<TSubject> _defaultSubjectFactory = () => new();
+        private readonly Func<TSubject> _defaultFactory;
+        private readonly Dictionary<int, object> _parameters = new();
         private readonly List<Func<TSubject, TSubject>> _functions = new();
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private TSubject _builtSubject;
 
-        public FunctionalBuilder(TSubjectAbs seedSubject = null)
+        public FunctionalBuilder(TSubject seedSubject = null)
         {
-            _seedSubject = (TSubject)seedSubject;
+            _seedSubject = seedSubject;
+
+            _defaultFactory = () => _parameters.Count > 0
+                ? (TSubject)Activator.CreateInstance(
+                    typeof(TSubject),
+                    _parameters.OrderBy(x => x.Key).Select(x => x.Value).ToArray())
+                : Activator.CreateInstance<TSubject>();
         }
 
-        protected virtual TSubject CreateSubject() => _defaultSubjectFactory.Invoke();
+        public FunctionalBuilder(TSubjectAbs seedSubjectAbs = null)
+            : this((TSubject)seedSubjectAbs)
+        { }
+
+        protected virtual TSubject CreateSubject() => _defaultFactory.Invoke();
+
+        protected virtual TSelf AppendParameter(Action<IDictionary<int, object>> action)
+        {
+            action?.Invoke(_parameters);
+
+            return this as TSelf;
+        }
 
         protected virtual TSelf AppendAction(Action<TSubject> action)
         {
@@ -40,6 +59,7 @@ namespace Confluent.Kafka.Core.Internal
 
         public virtual TSelf Clear()
         {
+            CheckDisposed();
             ClearInternal();
 
             return this as TSelf;
@@ -47,8 +67,10 @@ namespace Confluent.Kafka.Core.Internal
 
         public virtual TSubjectAbs Build()
         {
+            CheckDisposed();
+
             _builtSubject ??= _functions.Aggregate(
-                _seedSubject ?? CreateSubject() ?? _defaultSubjectFactory.Invoke(),
+                _seedSubject ?? CreateSubject() ?? _defaultFactory.Invoke(),
                 (subject, function) => function.Invoke(subject));
 
             return _builtSubject;
@@ -57,8 +79,11 @@ namespace Confluent.Kafka.Core.Internal
         private void ClearInternal()
         {
             _functions.Clear();
+            _parameters.Clear();
             _builtSubject = null;
         }
+
+        private void CheckDisposed() => ObjectDisposedException.ThrowIf(_disposed, this);
 
         #region IDisposable Members
 
