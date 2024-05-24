@@ -8,11 +8,35 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{26052A88-8DD7-49D7-A91A-EA596096C853}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{02239B44-D61B-439A-BC7D-675976067950}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Builders", "Builders", "{986033CA-A9ED-4121-89D4-381A32278C41}"
 	ProjectSection(SolutionItems) = preProject
-		src\Shared\IFunctionalBuilder``.cs = src\Shared\IFunctionalBuilder``.cs
-		src\Shared\IFunctionalBuilder```.cs = src\Shared\IFunctionalBuilder```.cs
 		src\Shared\FunctionalBuilder``.cs = src\Shared\FunctionalBuilder``.cs
 		src\Shared\FunctionalBuilder```.cs = src\Shared\FunctionalBuilder```.cs
+		src\Shared\IFunctionalBuilder``.cs = src\Shared\IFunctionalBuilder``.cs
+		src\Shared\IFunctionalBuilder```.cs = src\Shared\IFunctionalBuilder```.cs
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SchemaRegistry", "SchemaRegistry", "{FCD55A40-E3FF-4762-8EDE-743B50590B74}"
+	ProjectSection(SolutionItems) = preProject
+		src\Shared\IRegisteredSchemaBuilder.cs = src\Shared\IRegisteredSchemaBuilder.cs
+		src\Shared\ISchemaBuilder.cs = src\Shared\ISchemaBuilder.cs
+		src\Shared\ISchemaBuilder`.cs = src\Shared\ISchemaBuilder`.cs
+		src\Shared\ISchemaRegistryClientBuilder.cs = src\Shared\ISchemaRegistryClientBuilder.cs
+		src\Shared\ISchemaRegistryConfigBuilder.cs = src\Shared\ISchemaRegistryConfigBuilder.cs
+		src\Shared\IUnregisteredSchemaBuilder.cs = src\Shared\IUnregisteredSchemaBuilder.cs
+		src\Shared\RegisteredSchemaBuilder.cs = src\Shared\RegisteredSchemaBuilder.cs
+		src\Shared\SchemaBuilder.cs = src\Shared\SchemaBuilder.cs
+		src\Shared\SchemaRegistryClientBuilder.cs = src\Shared\SchemaRegistryClientBuilder.cs
+		src\Shared\SchemaRegistryClientConstants.cs = src\Shared\SchemaRegistryClientConstants.cs
+		src\Shared\SchemaRegistryClientFactory.cs = src\Shared\SchemaRegistryClientFactory.cs
+		src\Shared\SchemaRegistryClientServiceCollectionExtensions.cs = src\Shared\SchemaRegistryClientServiceCollectionExtensions.cs
+		src\Shared\SchemaRegistryConfigBuilder.cs = src\Shared\SchemaRegistryConfigBuilder.cs
+		src\Shared\UnregisteredSchemaBuilder.cs = src\Shared\UnregisteredSchemaBuilder.cs
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Extensions", "Extensions", "{DB727559-4041-4073-95BC-829910973C08}"
+	ProjectSection(SolutionItems) = preProject
 		src\Shared\LoggerFactoryExtensions.cs = src\Shared\LoggerFactoryExtensions.cs
 		src\Shared\TypeExtensions.cs = src\Shared\TypeExtensions.cs
 		src\Shared\ValidatableObjectExtensions.cs = src\Shared\ValidatableObjectExtensions.cs
@@ -42,6 +66,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Confluent.Kafka.Core.OpenTelemetry", "src\Confluent.Kafka.Core.OpenTelemetry\Confluent.Kafka.Core.OpenTelemetry.csproj", "{E6140573-0313-452C-95CA-2F6F920CA966}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Confluent.Kafka.Core.Idempotency.Redis", "src\Confluent.Kafka.Core.Idempotency.Redis\Confluent.Kafka.Core.Idempotency.Redis.csproj", "{0C47AD3D-28F8-4412-AB18-6C7522EFF08D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Confluent.Kafka.Core.Serialization.SchemaRegistry.Json", "src\Confluent.Kafka.Core.Serialization.SchemaRegistry.Json\Confluent.Kafka.Core.Serialization.SchemaRegistry.Json.csproj", "{77F83638-A9BD-40CB-8B4D-B3FEE0C2EAC2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -85,12 +111,19 @@ Global
 		{0C47AD3D-28F8-4412-AB18-6C7522EFF08D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0C47AD3D-28F8-4412-AB18-6C7522EFF08D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0C47AD3D-28F8-4412-AB18-6C7522EFF08D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{77F83638-A9BD-40CB-8B4D-B3FEE0C2EAC2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{77F83638-A9BD-40CB-8B4D-B3FEE0C2EAC2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{77F83638-A9BD-40CB-8B4D-B3FEE0C2EAC2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{77F83638-A9BD-40CB-8B4D-B3FEE0C2EAC2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{02239B44-D61B-439A-BC7D-675976067950} = {AEA90923-B126-43B0-B8EC-DD994B2D645F}
+		{986033CA-A9ED-4121-89D4-381A32278C41} = {02239B44-D61B-439A-BC7D-675976067950}
+		{FCD55A40-E3FF-4762-8EDE-743B50590B74} = {02239B44-D61B-439A-BC7D-675976067950}
+		{DB727559-4041-4073-95BC-829910973C08} = {02239B44-D61B-439A-BC7D-675976067950}
 		{16EEEF2A-7549-47AA-B4B1-57579B6A3ACB} = {AEA90923-B126-43B0-B8EC-DD994B2D645F}
 		{CE8DB9B5-C53A-4DCE-BF2C-1309D5947264} = {AEA90923-B126-43B0-B8EC-DD994B2D645F}
 		{278AB0C3-14EA-4980-9EE3-B914E96D8A75} = {AEA90923-B126-43B0-B8EC-DD994B2D645F}
@@ -100,6 +133,7 @@ Global
 		{98D1F5A7-5443-4FE3-BDD8-24028D247DAD} = {AEA90923-B126-43B0-B8EC-DD994B2D645F}
 		{E6140573-0313-452C-95CA-2F6F920CA966} = {AEA90923-B126-43B0-B8EC-DD994B2D645F}
 		{0C47AD3D-28F8-4412-AB18-6C7522EFF08D} = {AEA90923-B126-43B0-B8EC-DD994B2D645F}
+		{77F83638-A9BD-40CB-8B4D-B3FEE0C2EAC2} = {AEA90923-B126-43B0-B8EC-DD994B2D645F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8D4D3665-5C02-47B5-A7EA-A9BAF680BF28}
