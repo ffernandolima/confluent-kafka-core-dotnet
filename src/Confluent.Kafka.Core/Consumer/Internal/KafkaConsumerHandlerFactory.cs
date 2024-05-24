@@ -13,10 +13,7 @@ namespace Confluent.Kafka.Core.Consumer.Internal
             object consumerKey = null)
         {
             var handlerFactory = serviceProvider?.GetKeyedService<IKafkaConsumerHandlerFactory<TKey, TValue>>(consumerKey) ??
-                CreateHandlerFactory<TKey, TValue>(
-                    serviceProvider,
-                    loggerFactory,
-                    configureOptions);
+                CreateHandlerFactory<TKey, TValue>(serviceProvider, loggerFactory, configureOptions);
 
             return handlerFactory;
         }

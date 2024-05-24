@@ -13,10 +13,7 @@ namespace Confluent.Kafka.Core.Producer.Internal
             object producerKey = null)
         {
             var handlerFactory = serviceProvider?.GetKeyedService<IKafkaProducerHandlerFactory<TKey, TValue>>(producerKey) ??
-                CreateHandlerFactory<TKey, TValue>(
-                    serviceProvider,
-                    loggerFactory,
-                    configureOptions);
+                CreateHandlerFactory<TKey, TValue>(serviceProvider, loggerFactory, configureOptions);
 
             return handlerFactory;
         }
