@@ -11,6 +11,8 @@ namespace Confluent.Kafka.Core.Idempotency.Redis.Internal
             IServiceProvider serviceProvider,
             Action<IRedisIdempotencyHandlerBuilder<TKey, TValue>> configureHandler)
         {
+            // TODO: Throw exceptions in case the required actions are null?
+
             if (configureHandler is null)
             {
                 throw new ArgumentNullException(nameof(configureHandler), $"{nameof(configureHandler)} cannot be null.");
