@@ -14,35 +14,35 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{02239B
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Builders", "Builders", "{986033CA-A9ED-4121-89D4-381A32278C41}"
 	ProjectSection(SolutionItems) = preProject
-		src\Shared\FunctionalBuilder``.cs = src\Shared\FunctionalBuilder``.cs
-		src\Shared\FunctionalBuilder```.cs = src\Shared\FunctionalBuilder```.cs
-		src\Shared\IFunctionalBuilder``.cs = src\Shared\IFunctionalBuilder``.cs
-		src\Shared\IFunctionalBuilder```.cs = src\Shared\IFunctionalBuilder```.cs
+		src\Shared\Builders\FunctionalBuilder``.cs = src\Shared\Builders\FunctionalBuilder``.cs
+		src\Shared\Builders\FunctionalBuilder```.cs = src\Shared\Builders\FunctionalBuilder```.cs
+		src\Shared\Builders\IFunctionalBuilder``.cs = src\Shared\Builders\IFunctionalBuilder``.cs
+		src\Shared\Builders\IFunctionalBuilder```.cs = src\Shared\Builders\IFunctionalBuilder```.cs
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SchemaRegistry", "SchemaRegistry", "{FCD55A40-E3FF-4762-8EDE-743B50590B74}"
 	ProjectSection(SolutionItems) = preProject
-		src\Shared\IRegisteredSchemaBuilder.cs = src\Shared\IRegisteredSchemaBuilder.cs
-		src\Shared\ISchemaBuilder.cs = src\Shared\ISchemaBuilder.cs
-		src\Shared\ISchemaBuilder`.cs = src\Shared\ISchemaBuilder`.cs
-		src\Shared\ISchemaRegistryClientBuilder.cs = src\Shared\ISchemaRegistryClientBuilder.cs
-		src\Shared\ISchemaRegistryConfigBuilder.cs = src\Shared\ISchemaRegistryConfigBuilder.cs
-		src\Shared\IUnregisteredSchemaBuilder.cs = src\Shared\IUnregisteredSchemaBuilder.cs
-		src\Shared\RegisteredSchemaBuilder.cs = src\Shared\RegisteredSchemaBuilder.cs
-		src\Shared\SchemaBuilder.cs = src\Shared\SchemaBuilder.cs
-		src\Shared\SchemaRegistryClientBuilder.cs = src\Shared\SchemaRegistryClientBuilder.cs
-		src\Shared\SchemaRegistryClientConstants.cs = src\Shared\SchemaRegistryClientConstants.cs
-		src\Shared\SchemaRegistryClientFactory.cs = src\Shared\SchemaRegistryClientFactory.cs
-		src\Shared\SchemaRegistryClientServiceCollectionExtensions.cs = src\Shared\SchemaRegistryClientServiceCollectionExtensions.cs
-		src\Shared\SchemaRegistryConfigBuilder.cs = src\Shared\SchemaRegistryConfigBuilder.cs
-		src\Shared\UnregisteredSchemaBuilder.cs = src\Shared\UnregisteredSchemaBuilder.cs
+		src\Shared\SchemaRegistry\IRegisteredSchemaBuilder.cs = src\Shared\SchemaRegistry\IRegisteredSchemaBuilder.cs
+		src\Shared\SchemaRegistry\ISchemaBuilder.cs = src\Shared\SchemaRegistry\ISchemaBuilder.cs
+		src\Shared\SchemaRegistry\ISchemaBuilder`.cs = src\Shared\SchemaRegistry\ISchemaBuilder`.cs
+		src\Shared\SchemaRegistry\ISchemaRegistryClientBuilder.cs = src\Shared\SchemaRegistry\ISchemaRegistryClientBuilder.cs
+		src\Shared\SchemaRegistry\ISchemaRegistryConfigBuilder.cs = src\Shared\SchemaRegistry\ISchemaRegistryConfigBuilder.cs
+		src\Shared\SchemaRegistry\IUnregisteredSchemaBuilder.cs = src\Shared\SchemaRegistry\IUnregisteredSchemaBuilder.cs
+		src\Shared\SchemaRegistry\RegisteredSchemaBuilder.cs = src\Shared\SchemaRegistry\RegisteredSchemaBuilder.cs
+		src\Shared\SchemaRegistry\SchemaBuilder.cs = src\Shared\SchemaRegistry\SchemaBuilder.cs
+		src\Shared\SchemaRegistry\SchemaRegistryClientBuilder.cs = src\Shared\SchemaRegistry\SchemaRegistryClientBuilder.cs
+		src\Shared\SchemaRegistry\SchemaRegistryClientConstants.cs = src\Shared\SchemaRegistry\SchemaRegistryClientConstants.cs
+		src\Shared\SchemaRegistry\SchemaRegistryClientFactory.cs = src\Shared\SchemaRegistry\SchemaRegistryClientFactory.cs
+		src\Shared\SchemaRegistry\SchemaRegistryClientServiceCollectionExtensions.cs = src\Shared\SchemaRegistry\SchemaRegistryClientServiceCollectionExtensions.cs
+		src\Shared\SchemaRegistry\SchemaRegistryConfigBuilder.cs = src\Shared\SchemaRegistry\SchemaRegistryConfigBuilder.cs
+		src\Shared\SchemaRegistry\UnregisteredSchemaBuilder.cs = src\Shared\SchemaRegistry\UnregisteredSchemaBuilder.cs
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Extensions", "Extensions", "{DB727559-4041-4073-95BC-829910973C08}"
 	ProjectSection(SolutionItems) = preProject
-		src\Shared\LoggerFactoryExtensions.cs = src\Shared\LoggerFactoryExtensions.cs
-		src\Shared\TypeExtensions.cs = src\Shared\TypeExtensions.cs
-		src\Shared\ValidatableObjectExtensions.cs = src\Shared\ValidatableObjectExtensions.cs
+		src\Shared\Extensions\LoggerFactoryExtensions.cs = src\Shared\Extensions\LoggerFactoryExtensions.cs
+		src\Shared\Extensions\TypeExtensions.cs = src\Shared\Extensions\TypeExtensions.cs
+		src\Shared\Extensions\ValidatableObjectExtensions.cs = src\Shared\Extensions\ValidatableObjectExtensions.cs
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{47B996F0-E478-41D6-BF78-13B5B17644F0}"

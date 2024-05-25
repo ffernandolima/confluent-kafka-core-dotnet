@@ -6,25 +6,25 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<Compile Include="..\Shared\FunctionalBuilder``.cs" Link="Internal\FunctionalBuilder``.cs" />
-		<Compile Include="..\Shared\IFunctionalBuilder``.cs" Link="Internal\IFunctionalBuilder``.cs" />
-		<Compile Include="..\Shared\FunctionalBuilder```.cs" Link="Internal\FunctionalBuilder```.cs" />
-		<Compile Include="..\Shared\IFunctionalBuilder```.cs" Link="Internal\IFunctionalBuilder```.cs" />
-		<Compile Include="..\Shared\TypeExtensions.cs" Link="Internal\TypeExtensions.cs" />
-		<Compile Include="..\Shared\RegisteredSchemaBuilder.cs" Link="Internal\RegisteredSchemaBuilder.cs" />
-		<Compile Include="..\Shared\SchemaBuilder.cs" Link="Internal\SchemaBuilder.cs" />
-		<Compile Include="..\Shared\SchemaRegistryClientBuilder.cs" Link="Internal\SchemaRegistryClientBuilder.cs" />
-		<Compile Include="..\Shared\SchemaRegistryClientConstants.cs" Link="Internal\SchemaRegistryClientConstants.cs" />
-		<Compile Include="..\Shared\SchemaRegistryClientFactory.cs" Link="Internal\SchemaRegistryClientFactory.cs" />
-		<Compile Include="..\Shared\SchemaRegistryConfigBuilder.cs" Link="Internal\SchemaRegistryConfigBuilder.cs" />
-		<Compile Include="..\Shared\UnregisteredSchemaBuilder.cs" Link="Internal\UnregisteredSchemaBuilder.cs" />
-		<Compile Include="..\Shared\IRegisteredSchemaBuilder.cs" Link="IRegisteredSchemaBuilder.cs" />
-		<Compile Include="..\Shared\ISchemaBuilder.cs" Link="ISchemaBuilder.cs" />
-		<Compile Include="..\Shared\ISchemaBuilder`.cs" Link="ISchemaBuilder`.cs" />
-		<Compile Include="..\Shared\ISchemaRegistryClientBuilder.cs" Link="ISchemaRegistryClientBuilder.cs" />
-		<Compile Include="..\Shared\ISchemaRegistryConfigBuilder.cs" Link="ISchemaRegistryConfigBuilder.cs" />
-		<Compile Include="..\Shared\IUnregisteredSchemaBuilder.cs" Link="IUnregisteredSchemaBuilder.cs" />
-		<Compile Include="..\Shared\SchemaRegistryClientServiceCollectionExtensions.cs" Link="SchemaRegistryClientServiceCollectionExtensions.cs" />
+		<Compile Include="..\Shared\Builders\FunctionalBuilder``.cs" Link="Internal\FunctionalBuilder``.cs" />
+		<Compile Include="..\Shared\Builders\IFunctionalBuilder``.cs" Link="Internal\IFunctionalBuilder``.cs" />
+		<Compile Include="..\Shared\Builders\FunctionalBuilder```.cs" Link="Internal\FunctionalBuilder```.cs" />
+		<Compile Include="..\Shared\Builders\IFunctionalBuilder```.cs" Link="Internal\IFunctionalBuilder```.cs" />
+		<Compile Include="..\Shared\Extensions\TypeExtensions.cs" Link="Internal\TypeExtensions.cs" />
+		<Compile Include="..\Shared\SchemaRegistry\RegisteredSchemaBuilder.cs" Link="Internal\RegisteredSchemaBuilder.cs" />
+		<Compile Include="..\Shared\SchemaRegistry\SchemaBuilder.cs" Link="Internal\SchemaBuilder.cs" />
+		<Compile Include="..\Shared\SchemaRegistry\SchemaRegistryClientBuilder.cs" Link="Internal\SchemaRegistryClientBuilder.cs" />
+		<Compile Include="..\Shared\SchemaRegistry\SchemaRegistryClientConstants.cs" Link="Internal\SchemaRegistryClientConstants.cs" />
+		<Compile Include="..\Shared\SchemaRegistry\SchemaRegistryClientFactory.cs" Link="Internal\SchemaRegistryClientFactory.cs" />
+		<Compile Include="..\Shared\SchemaRegistry\SchemaRegistryConfigBuilder.cs" Link="Internal\SchemaRegistryConfigBuilder.cs" />
+		<Compile Include="..\Shared\SchemaRegistry\UnregisteredSchemaBuilder.cs" Link="Internal\UnregisteredSchemaBuilder.cs" />
+		<Compile Include="..\Shared\SchemaRegistry\IRegisteredSchemaBuilder.cs" Link="IRegisteredSchemaBuilder.cs" />
+		<Compile Include="..\Shared\SchemaRegistry\ISchemaBuilder.cs" Link="ISchemaBuilder.cs" />
+		<Compile Include="..\Shared\SchemaRegistry\ISchemaBuilder`.cs" Link="ISchemaBuilder`.cs" />
+		<Compile Include="..\Shared\SchemaRegistry\ISchemaRegistryClientBuilder.cs" Link="ISchemaRegistryClientBuilder.cs" />
+		<Compile Include="..\Shared\SchemaRegistry\ISchemaRegistryConfigBuilder.cs" Link="ISchemaRegistryConfigBuilder.cs" />
+		<Compile Include="..\Shared\SchemaRegistry\IUnregisteredSchemaBuilder.cs" Link="IUnregisteredSchemaBuilder.cs" />
+		<Compile Include="..\Shared\SchemaRegistry\SchemaRegistryClientServiceCollectionExtensions.cs" Link="SchemaRegistryClientServiceCollectionExtensions.cs" />
 	</ItemGroup>
 
 	<ItemGroup>

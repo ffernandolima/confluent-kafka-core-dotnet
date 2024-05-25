@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFrameworks>netstandard2.0;netstandard2.1;net6.0;net8.0</TargetFrameworks>
@@ -6,13 +6,13 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<Compile Include="..\Shared\FunctionalBuilder``.cs" Link="Internal\FunctionalBuilder``.cs" />
-		<Compile Include="..\Shared\IFunctionalBuilder``.cs" Link="Internal\IFunctionalBuilder``.cs" />
-		<Compile Include="..\Shared\FunctionalBuilder```.cs" Link="Internal\FunctionalBuilder```.cs" />
-		<Compile Include="..\Shared\IFunctionalBuilder```.cs" Link="Internal\IFunctionalBuilder```.cs" />
-		<Compile Include="..\Shared\LoggerFactoryExtensions.cs" Link="Internal\LoggerFactoryExtensions.cs" />
-		<Compile Include="..\Shared\TypeExtensions.cs" Link="Internal\TypeExtensions.cs" />
-		<Compile Include="..\Shared\ValidatableObjectExtensions.cs" Link="Internal\ValidatableObjectExtensions.cs" />
+		<Compile Include="..\Shared\Builders\FunctionalBuilder``.cs" Link="Internal\FunctionalBuilder``.cs" />
+		<Compile Include="..\Shared\Builders\IFunctionalBuilder``.cs" Link="Internal\IFunctionalBuilder``.cs" />
+		<Compile Include="..\Shared\Builders\FunctionalBuilder```.cs" Link="Internal\FunctionalBuilder```.cs" />
+		<Compile Include="..\Shared\Builders\IFunctionalBuilder```.cs" Link="Internal\IFunctionalBuilder```.cs" />
+		<Compile Include="..\Shared\Extensions\LoggerFactoryExtensions.cs" Link="Internal\LoggerFactoryExtensions.cs" />
+		<Compile Include="..\Shared\Extensions\TypeExtensions.cs" Link="Internal\TypeExtensions.cs" />
+		<Compile Include="..\Shared\Extensions\ValidatableObjectExtensions.cs" Link="Internal\ValidatableObjectExtensions.cs" />
 	</ItemGroup>
 
 	<ItemGroup>
