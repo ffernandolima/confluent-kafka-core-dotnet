@@ -207,7 +207,11 @@ namespace Confluent.Kafka.Core.Producer
             return this;
         }
 
+#if NETSTANDARD2_0_OR_GREATER
+        public override IProducer<TKey, TValue> Build()
+#else
         public override IKafkaProducer<TKey, TValue> Build()
+#endif
         {
             if (_builtProducer is not null)
             {

@@ -83,7 +83,13 @@ namespace Confluent.Kafka.Core.Internal
             _builtSubject = null;
         }
 
-        private void CheckDisposed() => ObjectDisposedException.ThrowIf(_disposed, this);
+        private void CheckDisposed()
+        {
+            if (_disposed)
+            {
+                throw new ObjectDisposedException(GetType().ExtractTypeName());
+            }
+        }
 
         #region IDisposable Members
 

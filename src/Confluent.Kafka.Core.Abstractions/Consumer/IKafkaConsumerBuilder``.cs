@@ -63,6 +63,10 @@ namespace Confluent.Kafka.Core.Consumer
 
         IKafkaConsumerBuilder<TKey, TValue> WithConfigureConsumer(Action<IServiceProvider, IKafkaConsumerConfigBuilder> configureConsumer);
 
+#if NETSTANDARD2_0_OR_GREATER
+        IConsumer<TKey, TValue> Build();
+#else
         IKafkaConsumer<TKey, TValue> Build();
+#endif
     }
 }

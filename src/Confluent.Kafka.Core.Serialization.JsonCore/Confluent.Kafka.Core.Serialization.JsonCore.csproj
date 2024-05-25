@@ -1,22 +1,24 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFrameworks>netstandard2.0;netstandard2.1;net6.0;net8.0</TargetFrameworks>
+		<LangVersion>latest</LangVersion>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <Compile Include="..\Shared\FunctionalBuilder``.cs" Link="Internal\FunctionalBuilder``.cs" />
-    <Compile Include="..\Shared\IFunctionalBuilder``.cs" Link="Internal\IFunctionalBuilder``.cs" />
-    <Compile Include="..\Shared\FunctionalBuilder```.cs" Link="Internal\FunctionalBuilder```.cs" />
-    <Compile Include="..\Shared\IFunctionalBuilder```.cs" Link="Internal\IFunctionalBuilder```.cs" />
-  </ItemGroup>
+	<ItemGroup>
+		<Compile Include="..\Shared\FunctionalBuilder``.cs" Link="Internal\FunctionalBuilder``.cs" />
+		<Compile Include="..\Shared\IFunctionalBuilder``.cs" Link="Internal\IFunctionalBuilder``.cs" />
+		<Compile Include="..\Shared\FunctionalBuilder```.cs" Link="Internal\FunctionalBuilder```.cs" />
+		<Compile Include="..\Shared\IFunctionalBuilder```.cs" Link="Internal\IFunctionalBuilder```.cs" />
+		<Compile Include="..\Shared\TypeExtensions.cs" Link="Internal\TypeExtensions.cs" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Confluent.Kafka.Core.Abstractions\Confluent.Kafka.Core.Abstractions.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\Confluent.Kafka.Core.Abstractions\Confluent.Kafka.Core.Abstractions.csproj" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="System.Text.Json" Version="8.0.1" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="System.Text.Json" Version="8.0.1" />
+	</ItemGroup>
 
 </Project>

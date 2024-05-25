@@ -249,7 +249,11 @@ namespace Confluent.Kafka.Core.Consumer
             return this;
         }
 
+#if NETSTANDARD2_0_OR_GREATER
+        public override IConsumer<TKey, TValue> Build()
+#else
         public override IKafkaConsumer<TKey, TValue> Build()
+#endif
         {
             if (_builtConsumer is not null)
             {

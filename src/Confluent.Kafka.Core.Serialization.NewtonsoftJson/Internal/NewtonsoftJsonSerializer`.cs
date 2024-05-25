@@ -14,7 +14,7 @@ namespace Confluent.Kafka.Core.Serialization.NewtonsoftJson.Internal
         public NewtonsoftJsonSerializer(JsonSerializerSettings settings)
         {
             _settings = settings ?? throw new ArgumentNullException(nameof(settings), $"{nameof(settings)} cannot be null.");
-            _encoding = IEncodingFactory.Create();
+            _encoding = EncodingFactory.CreateDefault();
         }
 
         public byte[] Serialize(T data, SerializationContext context)
@@ -38,8 +38,11 @@ namespace Confluent.Kafka.Core.Serialization.NewtonsoftJson.Internal
                 return default;
             }
 
+#if NETSTANDARD2_0
+            var json = _encoding.GetString(data.ToArray());
+#else
             var json = _encoding.GetString(data);
-
+#endif
             var result = JsonConvert.DeserializeObject<T>(json, _settings);
 
             return result;

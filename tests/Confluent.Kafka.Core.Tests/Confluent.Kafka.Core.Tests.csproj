@@ -1,22 +1,23 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <OutputType>Exe</OutputType>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFrameworks>netstandard2.0;netstandard2.1;net6.0;net8.0</TargetFrameworks>
+		<OutputType>Exe</OutputType>
+		<LangVersion>latest</LangVersion>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\src\Confluent.Kafka.Core.Idempotency.Redis\Confluent.Kafka.Core.Idempotency.Redis.csproj" />
-    <ProjectReference Include="..\..\src\Confluent.Kafka.Core.OpenTelemetry\Confluent.Kafka.Core.OpenTelemetry.csproj" />
-    <ProjectReference Include="..\..\src\Confluent.Kafka.Core.Retry.Polly\Confluent.Kafka.Core.Retry.Polly.csproj" />
-    <ProjectReference Include="..\..\src\Confluent.Kafka.Core.Serialization.JsonCore\Confluent.Kafka.Core.Serialization.JsonCore.csproj" />
-    <ProjectReference Include="..\..\src\Confluent.Kafka.Core.Serialization.NewtonsoftJson\Confluent.Kafka.Core.Serialization.NewtonsoftJson.csproj" />
-    <ProjectReference Include="..\..\src\Confluent.Kafka.Core.Serialization.ProtobufNet\Confluent.Kafka.Core.Serialization.ProtobufNet.csproj" />
-    <ProjectReference Include="..\..\src\Confluent.Kafka.Core\Confluent.Kafka.Core.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\..\src\Confluent.Kafka.Core.Idempotency.Redis\Confluent.Kafka.Core.Idempotency.Redis.csproj" />
+		<ProjectReference Include="..\..\src\Confluent.Kafka.Core.OpenTelemetry\Confluent.Kafka.Core.OpenTelemetry.csproj" />
+		<ProjectReference Include="..\..\src\Confluent.Kafka.Core.Retry.Polly\Confluent.Kafka.Core.Retry.Polly.csproj" />
+		<ProjectReference Include="..\..\src\Confluent.Kafka.Core.Serialization.JsonCore\Confluent.Kafka.Core.Serialization.JsonCore.csproj" />
+		<ProjectReference Include="..\..\src\Confluent.Kafka.Core.Serialization.NewtonsoftJson\Confluent.Kafka.Core.Serialization.NewtonsoftJson.csproj" />
+		<ProjectReference Include="..\..\src\Confluent.Kafka.Core.Serialization.ProtobufNet\Confluent.Kafka.Core.Serialization.ProtobufNet.csproj" />
+		<ProjectReference Include="..\..\src\Confluent.Kafka.Core\Confluent.Kafka.Core.csproj" />
+	</ItemGroup>
 
 </Project>

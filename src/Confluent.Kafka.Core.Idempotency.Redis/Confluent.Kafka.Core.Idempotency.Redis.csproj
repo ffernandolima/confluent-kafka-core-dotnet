@@ -1,25 +1,26 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFrameworks>netstandard2.0;netstandard2.1;net6.0;net8.0</TargetFrameworks>
+		<LangVersion>latest</LangVersion>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <Compile Include="..\Shared\FunctionalBuilder``.cs" Link="Internal\FunctionalBuilder``.cs" />
-    <Compile Include="..\Shared\IFunctionalBuilder``.cs" Link="Internal\IFunctionalBuilder``.cs" />
-    <Compile Include="..\Shared\FunctionalBuilder```.cs" Link="Internal\FunctionalBuilder```.cs" />
-    <Compile Include="..\Shared\IFunctionalBuilder```.cs" Link="Internal\IFunctionalBuilder```.cs" />
-    <Compile Include="..\Shared\LoggerFactoryExtensions.cs" Link="Internal\LoggerFactoryExtensions.cs" />
-    <Compile Include="..\Shared\TypeExtensions.cs" Link="Internal\TypeExtensions.cs" />
-    <Compile Include="..\Shared\ValidatableObjectExtensions.cs" Link="Internal\ValidatableObjectExtensions.cs" />
-  </ItemGroup>
+	<ItemGroup>
+		<Compile Include="..\Shared\FunctionalBuilder``.cs" Link="Internal\FunctionalBuilder``.cs" />
+		<Compile Include="..\Shared\IFunctionalBuilder``.cs" Link="Internal\IFunctionalBuilder``.cs" />
+		<Compile Include="..\Shared\FunctionalBuilder```.cs" Link="Internal\FunctionalBuilder```.cs" />
+		<Compile Include="..\Shared\IFunctionalBuilder```.cs" Link="Internal\IFunctionalBuilder```.cs" />
+		<Compile Include="..\Shared\LoggerFactoryExtensions.cs" Link="Internal\LoggerFactoryExtensions.cs" />
+		<Compile Include="..\Shared\TypeExtensions.cs" Link="Internal\TypeExtensions.cs" />
+		<Compile Include="..\Shared\ValidatableObjectExtensions.cs" Link="Internal\ValidatableObjectExtensions.cs" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Confluent.Kafka.Core.Abstractions\Confluent.Kafka.Core.Abstractions.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\Confluent.Kafka.Core.Abstractions\Confluent.Kafka.Core.Abstractions.csproj" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="StackExchange.Redis" Version="2.7.17" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="StackExchange.Redis" Version="2.7.17" />
+	</ItemGroup>
 
 </Project>

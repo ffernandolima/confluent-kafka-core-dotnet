@@ -1,6 +1,7 @@
 ﻿using Confluent.Kafka.Core.Consumer.Internal;
 using Confluent.Kafka.Core.Models;
 using Confluent.Kafka.Core.Producer;
+using Confluent.Kafka.Core.Producer.Internal;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
@@ -54,8 +55,11 @@ namespace Confluent.Kafka.Core.Consumer
 
             configureProducer?.Invoke(consumerBuilder.ServiceProvider, producerbuilder);
 
+#if NETSTANDARD2_0_OR_GREATER
+            consumerBuilder.WithDeadLetterProducer(producerbuilder.Build().ToKafkaProducer());
+#else
             consumerBuilder.WithDeadLetterProducer(producerbuilder.Build());
-
+#endif
             return consumerBuilder;
         }
 
