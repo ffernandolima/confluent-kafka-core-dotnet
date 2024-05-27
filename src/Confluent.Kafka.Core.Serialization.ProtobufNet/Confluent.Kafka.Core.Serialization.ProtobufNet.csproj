@@ -5,11 +5,14 @@
 		<LangVersion>latest</LangVersion>
 	</PropertyGroup>
 
-	<ItemGroup>
-		<Compile Include="..\Shared\Builders\FunctionalBuilder``.cs" Link="Internal\FunctionalBuilder``.cs" />
-		<Compile Include="..\Shared\Builders\IFunctionalBuilder``.cs" Link="Internal\IFunctionalBuilder``.cs" />
-		<Compile Include="..\Shared\Builders\FunctionalBuilder```.cs" Link="Internal\FunctionalBuilder```.cs" />
+	<ItemGroup Label="Builders">
+		<Compile Include="..\Shared\Builders\FunctionalBuilder``.cs"   Link="Internal\FunctionalBuilder``.cs" />
+		<Compile Include="..\Shared\Builders\IFunctionalBuilder``.cs"  Link="Internal\IFunctionalBuilder``.cs" />
+		<Compile Include="..\Shared\Builders\FunctionalBuilder```.cs"  Link="Internal\FunctionalBuilder```.cs" />
 		<Compile Include="..\Shared\Builders\IFunctionalBuilder```.cs" Link="Internal\IFunctionalBuilder```.cs" />
+	</ItemGroup>
+
+	<ItemGroup Label="Extensions">
 		<Compile Include="..\Shared\Extensions\TypeExtensions.cs" Link="Internal\TypeExtensions.cs" />
 	</ItemGroup>
 

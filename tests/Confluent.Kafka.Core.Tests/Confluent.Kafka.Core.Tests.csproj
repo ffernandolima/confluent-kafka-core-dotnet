@@ -11,6 +11,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\..\src\Confluent.Kafka.Core\Confluent.Kafka.Core.csproj" />
 		<ProjectReference Include="..\..\src\Confluent.Kafka.Core.Idempotency.Redis\Confluent.Kafka.Core.Idempotency.Redis.csproj" />
 		<ProjectReference Include="..\..\src\Confluent.Kafka.Core.OpenTelemetry\Confluent.Kafka.Core.OpenTelemetry.csproj" />
 		<ProjectReference Include="..\..\src\Confluent.Kafka.Core.Retry.Polly\Confluent.Kafka.Core.Retry.Polly.csproj" />
@@ -18,7 +19,6 @@
 		<ProjectReference Include="..\..\src\Confluent.Kafka.Core.Serialization.NewtonsoftJson\Confluent.Kafka.Core.Serialization.NewtonsoftJson.csproj" />
 		<ProjectReference Include="..\..\src\Confluent.Kafka.Core.Serialization.ProtobufNet\Confluent.Kafka.Core.Serialization.ProtobufNet.csproj" />
 		<ProjectReference Include="..\..\src\Confluent.Kafka.Core.Serialization.SchemaRegistry.Json\Confluent.Kafka.Core.Serialization.SchemaRegistry.Json.csproj" />
-		<ProjectReference Include="..\..\src\Confluent.Kafka.Core\Confluent.Kafka.Core.csproj" />
 	</ItemGroup>
 
 </Project>

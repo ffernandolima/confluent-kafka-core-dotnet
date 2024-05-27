@@ -20,6 +20,24 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Builders", "Builders", "{98
 		src\Shared\Builders\IFunctionalBuilder```.cs = src\Shared\Builders\IFunctionalBuilder```.cs
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Extensions", "Extensions", "{DB727559-4041-4073-95BC-829910973C08}"
+	ProjectSection(SolutionItems) = preProject
+		src\Shared\Extensions\LoggerFactoryExtensions.cs = src\Shared\Extensions\LoggerFactoryExtensions.cs
+		src\Shared\Extensions\TypeExtensions.cs = src\Shared\Extensions\TypeExtensions.cs
+		src\Shared\Extensions\ValidatableObjectExtensions.cs = src\Shared\Extensions\ValidatableObjectExtensions.cs
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Internal", "Internal", "{C5BEBCA1-8A0D-4DB6-A676-3DF3257BC7C2}"
+	ProjectSection(SolutionItems) = preProject
+		src\Shared\SchemaRegistry\Internal\RegisteredSchemaBuilder.cs = src\Shared\SchemaRegistry\Internal\RegisteredSchemaBuilder.cs
+		src\Shared\SchemaRegistry\Internal\SchemaBuilder.cs = src\Shared\SchemaRegistry\Internal\SchemaBuilder.cs
+		src\Shared\SchemaRegistry\Internal\SchemaRegistryClientBuilder.cs = src\Shared\SchemaRegistry\Internal\SchemaRegistryClientBuilder.cs
+		src\Shared\SchemaRegistry\Internal\SchemaRegistryClientConstants.cs = src\Shared\SchemaRegistry\Internal\SchemaRegistryClientConstants.cs
+		src\Shared\SchemaRegistry\Internal\SchemaRegistryClientFactory.cs = src\Shared\SchemaRegistry\Internal\SchemaRegistryClientFactory.cs
+		src\Shared\SchemaRegistry\Internal\SchemaRegistryConfigBuilder.cs = src\Shared\SchemaRegistry\Internal\SchemaRegistryConfigBuilder.cs
+		src\Shared\SchemaRegistry\Internal\UnregisteredSchemaBuilder.cs = src\Shared\SchemaRegistry\Internal\UnregisteredSchemaBuilder.cs
+	EndProjectSection
+EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SchemaRegistry", "SchemaRegistry", "{FCD55A40-E3FF-4762-8EDE-743B50590B74}"
 	ProjectSection(SolutionItems) = preProject
 		src\Shared\SchemaRegistry\IRegisteredSchemaBuilder.cs = src\Shared\SchemaRegistry\IRegisteredSchemaBuilder.cs
@@ -28,21 +46,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SchemaRegistry", "SchemaReg
 		src\Shared\SchemaRegistry\ISchemaRegistryClientBuilder.cs = src\Shared\SchemaRegistry\ISchemaRegistryClientBuilder.cs
 		src\Shared\SchemaRegistry\ISchemaRegistryConfigBuilder.cs = src\Shared\SchemaRegistry\ISchemaRegistryConfigBuilder.cs
 		src\Shared\SchemaRegistry\IUnregisteredSchemaBuilder.cs = src\Shared\SchemaRegistry\IUnregisteredSchemaBuilder.cs
-		src\Shared\SchemaRegistry\RegisteredSchemaBuilder.cs = src\Shared\SchemaRegistry\RegisteredSchemaBuilder.cs
-		src\Shared\SchemaRegistry\SchemaBuilder.cs = src\Shared\SchemaRegistry\SchemaBuilder.cs
-		src\Shared\SchemaRegistry\SchemaRegistryClientBuilder.cs = src\Shared\SchemaRegistry\SchemaRegistryClientBuilder.cs
-		src\Shared\SchemaRegistry\SchemaRegistryClientConstants.cs = src\Shared\SchemaRegistry\SchemaRegistryClientConstants.cs
-		src\Shared\SchemaRegistry\SchemaRegistryClientFactory.cs = src\Shared\SchemaRegistry\SchemaRegistryClientFactory.cs
 		src\Shared\SchemaRegistry\SchemaRegistryClientServiceCollectionExtensions.cs = src\Shared\SchemaRegistry\SchemaRegistryClientServiceCollectionExtensions.cs
-		src\Shared\SchemaRegistry\SchemaRegistryConfigBuilder.cs = src\Shared\SchemaRegistry\SchemaRegistryConfigBuilder.cs
-		src\Shared\SchemaRegistry\UnregisteredSchemaBuilder.cs = src\Shared\SchemaRegistry\UnregisteredSchemaBuilder.cs
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Extensions", "Extensions", "{DB727559-4041-4073-95BC-829910973C08}"
-	ProjectSection(SolutionItems) = preProject
-		src\Shared\Extensions\LoggerFactoryExtensions.cs = src\Shared\Extensions\LoggerFactoryExtensions.cs
-		src\Shared\Extensions\TypeExtensions.cs = src\Shared\Extensions\TypeExtensions.cs
-		src\Shared\Extensions\ValidatableObjectExtensions.cs = src\Shared\Extensions\ValidatableObjectExtensions.cs
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{47B996F0-E478-41D6-BF78-13B5B17644F0}"
@@ -138,6 +142,7 @@ Global
 		{E6140573-0313-452C-95CA-2F6F920CA966} = {AEA90923-B126-43B0-B8EC-DD994B2D645F}
 		{0C47AD3D-28F8-4412-AB18-6C7522EFF08D} = {AEA90923-B126-43B0-B8EC-DD994B2D645F}
 		{77F83638-A9BD-40CB-8B4D-B3FEE0C2EAC2} = {AEA90923-B126-43B0-B8EC-DD994B2D645F}
+		{C5BEBCA1-8A0D-4DB6-A676-3DF3257BC7C2} = {FCD55A40-E3FF-4762-8EDE-743B50590B74}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8D4D3665-5C02-47B5-A7EA-A9BAF680BF28}
