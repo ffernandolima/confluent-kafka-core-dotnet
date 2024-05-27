@@ -254,9 +254,9 @@ namespace Confluent.Kafka.Core.Diagnostics.Internal
                         return configuredSerializer;
                     }
 
-                    if (configuredSerializer is SyncOverAsyncDeserializer<TValue> synDeserializer)
+                    if (configuredSerializer is SyncOverAsyncDeserializer<TValue> syncDeserializer)
                     {
-                        var innerDeserializer = synDeserializer.GetInnerDeserializer();
+                        var innerDeserializer = syncDeserializer.GetInnerDeserializer();
 
                         if (innerDeserializer is IAsyncSerializer<TValue> asyncSerializer)
                         {
