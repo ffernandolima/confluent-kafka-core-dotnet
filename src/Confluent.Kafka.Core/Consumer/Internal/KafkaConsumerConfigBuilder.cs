@@ -544,6 +544,18 @@ namespace Confluent.Kafka.Core.Consumer.Internal
             return this;
         }
 
+        public IKafkaConsumerConfigBuilder WithGroupProtocol(GroupProtocol? groupProtocol)
+        {
+            AppendAction(config => config.GroupProtocol = groupProtocol);
+            return this;
+        }
+
+        public IKafkaConsumerConfigBuilder WithGroupRemoteAssignor(string groupRemoteAssignor)
+        {
+            AppendAction(config => config.GroupRemoteAssignor = groupRemoteAssignor);
+            return this;
+        }
+
         public IKafkaConsumerConfigBuilder WithCoordinatorQueryIntervalMs(int? coordinatorQueryIntervalMs)
         {
             AppendAction(config => config.CoordinatorQueryIntervalMs = coordinatorQueryIntervalMs);

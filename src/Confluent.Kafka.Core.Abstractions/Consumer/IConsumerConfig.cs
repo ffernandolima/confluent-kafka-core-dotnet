@@ -20,6 +20,10 @@ namespace Confluent.Kafka.Core.Consumer
 
         string GroupProtocolType { get; }
 
+        GroupProtocol? GroupProtocol { get; }
+
+        string GroupRemoteAssignor { get; }
+
         int? CoordinatorQueryIntervalMs { get; }
 
         int? MaxPollIntervalMs { get; }

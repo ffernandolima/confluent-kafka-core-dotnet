@@ -22,6 +22,10 @@ namespace Confluent.Kafka.Core.Consumer
 
         TBuilder WithGroupProtocolType(string groupProtocolType);
 
+        TBuilder WithGroupProtocol(GroupProtocol? groupProtocol);
+
+        TBuilder WithGroupRemoteAssignor(string groupRemoteAssignor);
+
         TBuilder WithCoordinatorQueryIntervalMs(int? coordinatorQueryIntervalMs);
 
         TBuilder WithMaxPollIntervalMs(int? maxPollIntervalMs);

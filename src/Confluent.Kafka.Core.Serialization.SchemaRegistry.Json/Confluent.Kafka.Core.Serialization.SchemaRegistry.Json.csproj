@@ -38,7 +38,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Confluent.SchemaRegistry.Serdes.Json" Version="2.3.0" />
+		<PackageReference Include="Confluent.SchemaRegistry.Serdes.Json" Version="2.4.0" />
 	</ItemGroup>
 
 </Project>
