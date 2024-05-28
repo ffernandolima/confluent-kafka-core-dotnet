@@ -25,7 +25,6 @@ namespace Confluent.Kafka.Core.Consumer.Internal
             get
             {
                 CheckDisposed();
-
                 return _consumer.Handle;
             }
         }
@@ -35,7 +34,6 @@ namespace Confluent.Kafka.Core.Consumer.Internal
             get
             {
                 CheckDisposed();
-
                 return _consumer.Name;
             }
         }
@@ -45,7 +43,6 @@ namespace Confluent.Kafka.Core.Consumer.Internal
             get
             {
                 CheckDisposed();
-
                 return _consumer.MemberId;
             }
         }
@@ -55,7 +52,6 @@ namespace Confluent.Kafka.Core.Consumer.Internal
             get
             {
                 CheckDisposed();
-
                 return _consumer.Subscription;
             }
         }
@@ -65,7 +61,6 @@ namespace Confluent.Kafka.Core.Consumer.Internal
             get
             {
                 CheckDisposed();
-
                 return _consumer.Assignment;
             }
         }
@@ -75,7 +70,6 @@ namespace Confluent.Kafka.Core.Consumer.Internal
             get
             {
                 CheckDisposed();
-
                 return _consumer.ConsumerGroupMetadata;
             }
         }
@@ -85,7 +79,6 @@ namespace Confluent.Kafka.Core.Consumer.Internal
             get
             {
                 CheckDisposed();
-
                 return _options;
             }
         }
@@ -96,11 +89,9 @@ namespace Confluent.Kafka.Core.Consumer.Internal
             get
             {
                 CheckDisposed();
-
                 return _consumer;
             }
         }
-
 
         public KafkaConsumer(IKafkaConsumerBuilder<TKey, TValue> builder)
         {

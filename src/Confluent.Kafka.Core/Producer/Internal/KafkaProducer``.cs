@@ -24,7 +24,6 @@ namespace Confluent.Kafka.Core.Producer.Internal
             get
             {
                 CheckDisposed();
-
                 return _producer.Handle;
             }
         }
@@ -34,7 +33,6 @@ namespace Confluent.Kafka.Core.Producer.Internal
             get
             {
                 CheckDisposed();
-
                 return _producer.Name;
             }
         }
@@ -44,7 +42,6 @@ namespace Confluent.Kafka.Core.Producer.Internal
             get
             {
                 CheckDisposed();
-
                 return _options;
             }
         }
@@ -55,7 +52,6 @@ namespace Confluent.Kafka.Core.Producer.Internal
             get
             {
                 CheckDisposed();
-
                 return _producer;
             }
         }
