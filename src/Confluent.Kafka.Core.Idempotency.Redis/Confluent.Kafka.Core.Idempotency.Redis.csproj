@@ -2,6 +2,22 @@
 
 	<PropertyGroup>
 		<TargetFrameworks>netstandard2.0;netstandard2.1;net6.0;net8.0</TargetFrameworks>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<NoWarn>1701;1702;1705;1591</NoWarn>
+		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+		<AssemblyName>Confluent.Kafka.Core.Idempotency.Redis</AssemblyName>
+		<PackageId>Confluent.Kafka.Core.Idempotency.Redis</PackageId>
+		<Authors>Lima Technology Services;Fernando Luiz de Lima</Authors>
+		<Copyright>Copyright © Lima Technology Services;Fernando Luiz de Lima</Copyright>
+		<Description>Provides idempotency implementation through Redis for Apache Kafka .NET client.</Description>
+		<PackageProjectUrl>https://github.com/ffernandolima/confluent-kafka-core-dotnet</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/ffernandolima/confluent-kafka-core-dotnet</RepositoryUrl>
+		<PackageLicenseUrl>https://github.com/ffernandolima/confluent-kafka-core-dotnet/blob/main/LICENSE</PackageLicenseUrl>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<RepositoryType>git</RepositoryType>
+		<PackageTags>Apache;Kafka;Confluent;librdkafka;Idempotency;Redis</PackageTags>
+		<Version>1.0.0</Version>
 		<LangVersion>latest</LangVersion>
 	</PropertyGroup>
 
