@@ -13,7 +13,7 @@ namespace Confluent.Kafka.Core.Models
         public TopicPartitionException(IEnumerable<ValidationResult> results)
             : base(ExceptionMessage)
         {
-            Results = results ?? Enumerable.Empty<ValidationResult>();
+            Results = results ?? [];
         }
     }
 }

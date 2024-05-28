@@ -34,14 +34,14 @@ namespace Confluent.Kafka.Core.Retry.Polly
             {
                 yield return new ValidationResult(
                     $"{nameof(options.RetryCount)} cannot be less than zero.",
-                    new[] { nameof(options.RetryCount) });
+                    [nameof(options.RetryCount)]);
             }
 
             if (options.RetryDelay == Timeout.InfiniteTimeSpan)
             {
                 yield return new ValidationResult(
                     $"{nameof(options.RetryDelay)} cannot be infinite.",
-                    new[] { nameof(options.RetryDelay) });
+                    [nameof(options.RetryDelay)]);
             }
 
             switch (options.DelayProvider, options.Delays)
@@ -50,7 +50,7 @@ namespace Confluent.Kafka.Core.Retry.Polly
                     {
                         yield return new ValidationResult(
                             $"Neither {nameof(options.DelayProvider)} nor {nameof(options.Delays)} has been set up.",
-                            new[] { nameof(options.DelayProvider), nameof(options.Delays) });
+                            [nameof(options.DelayProvider), nameof(options.Delays)]);
                     }
                     break;
 
@@ -58,7 +58,7 @@ namespace Confluent.Kafka.Core.Retry.Polly
                     {
                         yield return new ValidationResult(
                             $"Both {nameof(options.DelayProvider)} and {nameof(options.Delays)} have been set up.",
-                            new[] { nameof(options.DelayProvider), nameof(options.Delays) });
+                            [nameof(options.DelayProvider), nameof(options.Delays)]);
                     }
                     break;
             }
@@ -67,7 +67,7 @@ namespace Confluent.Kafka.Core.Retry.Polly
             {
                 yield return new ValidationResult(
                     $"{nameof(options.Delays)} cannot contain any infinite delay.",
-                    new[] { nameof(options.Delays) });
+                    [nameof(options.Delays)]);
             }
         }
 

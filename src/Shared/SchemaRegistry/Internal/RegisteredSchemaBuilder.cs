@@ -87,10 +87,7 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Internal
 
         public IRegisteredSchemaBuilder WithSchemaReferences(List<SchemaReference> schemaReferences)
         {
-            AppendParameter(parameters =>
-            {
-                parameters[(int)RegisteredSchemaParameter.SchemaReferences] = schemaReferences ?? new List<SchemaReference>();
-            });
+            AppendParameter(parameters => parameters[(int)RegisteredSchemaParameter.SchemaReferences] = schemaReferences ?? []);
             return this;
         }
 

@@ -11,7 +11,7 @@ namespace Confluent.Kafka.Core.Models.Internal
                 throw new ArgumentNullException(nameof(message), $"{nameof(message)} cannot be null.");
             }
 
-            message.Headers ??= new Headers();
+            message.Headers ??= [];
 
             if (message.Timestamp == Timestamp.Default)
             {

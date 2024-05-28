@@ -195,7 +195,7 @@ namespace Confluent.Kafka.Core.Producer
         {
             if (interceptors is not null && interceptors.Any(interceptor => interceptor is not null))
             {
-                _interceptors = (_interceptors ?? Enumerable.Empty<IKafkaProducerInterceptor<TKey, TValue>>())
+                _interceptors = (_interceptors ?? [])
                     .Union(interceptors.Where(interceptor => interceptor is not null));
             }
             return this;
@@ -269,7 +269,7 @@ namespace Confluent.Kafka.Core.Producer
 
             _messageIdHandler ??= _handlerFactory.CreateMessageIdHandler();
 
-            _interceptors ??= Enumerable.Empty<IKafkaProducerInterceptor<TKey, TValue>>();
+            _interceptors ??= [];
 
             _diagnosticsManager ??= DiagnosticsManagerFactory.GetDiagnosticsManager(
                 ServiceProvider,

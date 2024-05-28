@@ -656,7 +656,7 @@ namespace Confluent.Kafka.Core.Consumer.Internal
             {
                 if (topicSubscriptions is not null && topicSubscriptions.Any(topic => !string.IsNullOrWhiteSpace(topic)))
                 {
-                    config.TopicSubscriptions = (config.TopicSubscriptions ?? Enumerable.Empty<string>())
+                    config.TopicSubscriptions = (config.TopicSubscriptions ?? [])
                         .Union(topicSubscriptions.Where(topic => !string.IsNullOrWhiteSpace(topic)));
                 }
             });
@@ -669,7 +669,7 @@ namespace Confluent.Kafka.Core.Consumer.Internal
             {
                 if (partitionAssignments is not null && partitionAssignments.Any(partition => partition is not null))
                 {
-                    config.PartitionAssignments = (config.PartitionAssignments ?? Enumerable.Empty<TopicPartition>())
+                    config.PartitionAssignments = (config.PartitionAssignments ?? [])
                         .Union(partitionAssignments.Where(partition => partition is not null));
                 }
             });

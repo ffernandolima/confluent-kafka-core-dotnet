@@ -9,8 +9,8 @@ namespace Confluent.Kafka.Core.Models.Internal
     {
         private const char PortSeparator = ':';
         private const string JoinSeparator = ",";
-        private static readonly char[] SplitSeparators = new[] { ',' };
-        private static readonly ConcurrentDictionary<string, KafkaServersInfo> ServersInfo = new();
+        private static readonly char[] SplitSeparators = [','];
+        private static readonly ConcurrentDictionary<string, KafkaServersInfo> ServersInfo = [];
 
         public string ServerHostnames { get; }
         public string ServerIpAddresses { get; }
@@ -79,7 +79,7 @@ namespace Confluent.Kafka.Core.Models.Internal
             var hostEntry = GetHostEntry(bootstrapServer);
 
             var ipAddresses = hostEntry?.AddressList?.Select(ipAddress => ipAddress.ToString())
-                ?? Enumerable.Empty<string>();
+                ?? [];
 
             return string.Join(JoinSeparator, ipAddresses);
         }

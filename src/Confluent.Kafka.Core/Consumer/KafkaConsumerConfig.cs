@@ -93,28 +93,28 @@ namespace Confluent.Kafka.Core.Consumer
             {
                 yield return new ValidationResult(
                     $"{nameof(consumerConfig.BootstrapServers)} cannot be null or whitespace.",
-                    new[] { nameof(consumerConfig.BootstrapServers) });
+                    [nameof(consumerConfig.BootstrapServers)]);
             }
 
             if (consumerConfig.HasTopicSubscriptions() && consumerConfig.HasPartitionAssignments())
             {
                 yield return new ValidationResult(
                     $"Both {nameof(consumerConfig.TopicSubscriptions)} and {nameof(consumerConfig.PartitionAssignments)} have been set up.",
-                    new[] { nameof(consumerConfig.TopicSubscriptions), nameof(consumerConfig.PartitionAssignments) });
+                    [nameof(consumerConfig.TopicSubscriptions), nameof(consumerConfig.PartitionAssignments)]);
             }
 
             if (string.IsNullOrWhiteSpace(consumerConfig.GroupId))
             {
                 yield return new ValidationResult(
                     $"{nameof(consumerConfig.GroupId)} cannot be null or whitespace.",
-                    new[] { nameof(consumerConfig.GroupId) });
+                    [nameof(consumerConfig.GroupId)]);
             }
 
             if (consumerConfig.DefaultTimeout == Timeout.InfiniteTimeSpan)
             {
                 yield return new ValidationResult(
                     $"{nameof(consumerConfig.DefaultTimeout)} cannot be infinite.",
-                    new[] { nameof(consumerConfig.DefaultTimeout) });
+                    [nameof(consumerConfig.DefaultTimeout)]);
             }
 
             if (validationContext?.Items is not null)
@@ -125,7 +125,7 @@ namespace Confluent.Kafka.Core.Consumer
                 {
                     yield return new ValidationResult(
                         $"{KafkaProducerConstants.DeadLetterProducer} cannot be null when {nameof(consumerConfig.EnableDeadLetterTopic)} is enabled.",
-                        new[] { KafkaProducerConstants.DeadLetterProducer, nameof(consumerConfig.EnableDeadLetterTopic) });
+                        [KafkaProducerConstants.DeadLetterProducer, nameof(consumerConfig.EnableDeadLetterTopic)]);
                 }
 
                 if (consumerConfig.EnableRetryOnFailure &&
@@ -134,7 +134,7 @@ namespace Confluent.Kafka.Core.Consumer
                 {
                     yield return new ValidationResult(
                         $"{KafkaRetryConstants.RetryHandler} cannot be null when {nameof(consumerConfig.EnableRetryOnFailure)} is enabled.",
-                        new[] { KafkaRetryConstants.RetryHandler, nameof(consumerConfig.EnableRetryOnFailure) });
+                        [KafkaRetryConstants.RetryHandler, nameof(consumerConfig.EnableRetryOnFailure)]);
                 }
             }
         }

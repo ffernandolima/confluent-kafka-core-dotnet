@@ -15,6 +15,6 @@ namespace Confluent.Kafka.Core.Diagnostics.Internal
             Baggage = baggage ?? EmptyBaggage();
         }
 
-        private static IEnumerable<KeyValuePair<string, string>> EmptyBaggage() => Enumerable.Empty<KeyValuePair<string, string>>();
+        private static IEnumerable<KeyValuePair<string, string>> EmptyBaggage() => [];
     }
 }

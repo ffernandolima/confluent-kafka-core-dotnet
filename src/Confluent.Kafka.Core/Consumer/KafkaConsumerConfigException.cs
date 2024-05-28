@@ -13,7 +13,7 @@ namespace Confluent.Kafka.Core.Consumer
         public KafkaConsumerConfigException(IEnumerable<ValidationResult> results)
             : base(ExceptionMessage)
         {
-            Results = results ?? Enumerable.Empty<ValidationResult>();
+            Results = results ?? [];
         }
     }
 }

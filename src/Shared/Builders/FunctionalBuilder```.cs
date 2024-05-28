@@ -13,8 +13,8 @@ namespace Confluent.Kafka.Core.Internal
     {
         private readonly TSubject _seedSubject;
         private readonly Func<TSubject> _defaultFactory;
-        private readonly Dictionary<int, object> _parameters = new();
-        private readonly List<Func<TSubject, TSubject>> _functions = new();
+        private readonly Dictionary<int, object> _parameters = [];
+        private readonly List<Func<TSubject, TSubject>> _functions = [];
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private TSubject _builtSubject;

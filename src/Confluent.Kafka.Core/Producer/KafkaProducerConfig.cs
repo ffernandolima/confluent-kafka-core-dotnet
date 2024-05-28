@@ -69,14 +69,14 @@ namespace Confluent.Kafka.Core.Producer
             {
                 yield return new ValidationResult(
                     $"{nameof(producerConfig.BootstrapServers)} cannot be null or whitespace.",
-                    new[] { nameof(producerConfig.BootstrapServers) });
+                    [nameof(producerConfig.BootstrapServers)]);
             }
 
             if (producerConfig.DefaultTimeout == Timeout.InfiniteTimeSpan)
             {
                 yield return new ValidationResult(
                     $"{nameof(producerConfig.DefaultTimeout)} cannot be infinite.",
-                    new[] { nameof(producerConfig.DefaultTimeout) });
+                    [nameof(producerConfig.DefaultTimeout)]);
             }
 
             if (validationContext?.Items is not null)
@@ -87,7 +87,7 @@ namespace Confluent.Kafka.Core.Producer
                 {
                     yield return new ValidationResult(
                         $"{KafkaRetryConstants.RetryHandler} cannot be null when {nameof(producerConfig.EnableRetryOnFailure)} is enabled.",
-                        new[] { KafkaRetryConstants.RetryHandler, nameof(producerConfig.EnableRetryOnFailure) });
+                        [KafkaRetryConstants.RetryHandler, nameof(producerConfig.EnableRetryOnFailure)]);
                 }
             }
         }

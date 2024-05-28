@@ -16,7 +16,7 @@ namespace Confluent.Kafka.Core.Retry.Polly
         public RedisIdempotencyHandlerOptionsException(IEnumerable<ValidationResult> results)
             : base(ExceptionMessage)
         {
-            Results = results ?? Enumerable.Empty<ValidationResult>();
+            Results = results ?? [];
         }
     }
 }

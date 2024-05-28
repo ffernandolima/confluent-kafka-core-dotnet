@@ -59,7 +59,7 @@ namespace Confluent.Kafka.Core.Serialization.NewtonsoftJson.Internal
         {
             AppendAction(settings =>
             {
-                settings.Converters ??= new List<JsonConverter>();
+                settings.Converters ??= [];
 
                 if (converters is not null && converters.Any(converter => converter is not null))
                 {

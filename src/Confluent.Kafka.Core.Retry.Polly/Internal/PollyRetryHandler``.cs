@@ -71,7 +71,7 @@ namespace Confluent.Kafka.Core.Retry.Polly.Internal
                 : _options.ExceptionFilter;
 
             _cachedExceptionTypeFilters ??= _options.ExceptionTypeFilters is null
-                ? Enumerable.Empty<Type>()
+                ? []
                 : _options.ExceptionTypeFilters
                           .Select(typeName => Type.GetType(typeName, throwOnError: false, ignoreCase: true))
                           .Where(type => type is not null);

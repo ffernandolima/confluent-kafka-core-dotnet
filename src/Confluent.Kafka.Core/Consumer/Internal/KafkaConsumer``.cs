@@ -1027,10 +1027,10 @@ namespace Confluent.Kafka.Core.Consumer.Internal
 
                 try
                 {
-                    _consumer.Commit(new[]
-                    {
+                    _consumer.Commit(
+                    [
                         new TopicPartitionOffset(consumeResult.TopicPartition, consumeResult.Offset + 1)
-                    });
+                    ]);
                 }
                 catch (Exception ex)
                 {

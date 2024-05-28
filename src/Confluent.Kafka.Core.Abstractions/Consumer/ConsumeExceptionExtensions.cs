@@ -5,11 +5,11 @@ namespace Confluent.Kafka.Core.Consumer
 {
     public static class ConsumeExceptionExtensions
     {
-        private static readonly ErrorCode[] DeserializationCodes = new[]
-        {
+        private static readonly ErrorCode[] DeserializationCodes =
+        [
             ErrorCode.Local_KeyDeserialization,
             ErrorCode.Local_ValueDeserialization
-        };
+        ];
 
         public static bool IsDeserializationException(this ConsumeException consumeException)
         {

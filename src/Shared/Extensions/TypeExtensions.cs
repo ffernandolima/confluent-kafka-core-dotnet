@@ -27,7 +27,7 @@ namespace Confluent.Kafka.Core.Internal
             { typeof(ushort),  "ushort"  }
         };
 
-        private static Dictionary<Type, object> DefaultValueTypes = new();
+        private static Dictionary<Type, object> DefaultValueTypes = [];
 
         public static string ExtractTypeName(this Type sourceType)
         {

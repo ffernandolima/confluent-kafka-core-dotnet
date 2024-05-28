@@ -17,22 +17,22 @@ namespace Confluent.Kafka.Core.Models.Internal
 
             if (string.IsNullOrWhiteSpace(topicPartition.Topic))
             {
-                validationResults ??= new List<ValidationResult>();
+                validationResults ??= [];
 
                 validationResults.Add(
                     new ValidationResult(
                         $"{nameof(topicPartition.Topic)} cannot be null or whitespace.",
-                        new[] { nameof(topicPartition.Topic) }));
+                        [nameof(topicPartition.Topic)]));
             }
 
             if (topicPartition.Partition < Partition.Any)
             {
-                validationResults ??= new List<ValidationResult>();
+                validationResults ??= [];
 
                 validationResults.Add(
                     new ValidationResult(
                         $"{nameof(topicPartition.Partition)} cannot be lower than {Partition.Any.Value}.",
-                        new[] { nameof(topicPartition.Partition) }));
+                        [nameof(topicPartition.Partition)]));
             }
 
             if (validationResults is not null && validationResults.Count > 0)

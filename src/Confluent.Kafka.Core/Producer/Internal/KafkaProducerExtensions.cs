@@ -24,12 +24,11 @@ namespace Confluent.Kafka.Core.Producer.Internal
                 !producerConfig!.DefaultTopic.EndsWith(suffix))
             {
                 throw new KafkaProducerConfigException(
-                    new[]
-                    {
+                    [
                         new ValidationResult(
                             $"{nameof(producerConfig.DefaultTopic)} must end with '{suffix}' suffix.",
-                            new[] { nameof(producerConfig.DefaultTopic) })
-                    });
+                            [nameof(producerConfig.DefaultTopic)])
+                    ]);
             }
         }
     }

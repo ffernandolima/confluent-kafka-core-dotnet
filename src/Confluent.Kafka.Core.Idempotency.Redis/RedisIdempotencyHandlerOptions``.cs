@@ -23,28 +23,28 @@ namespace Confluent.Kafka.Core.Idempotency.Redis
             {
                 yield return new ValidationResult(
                     $"{nameof(options.GroupId)} cannot be null or whitespace.",
-                    new[] { nameof(options.GroupId) });
+                    [nameof(options.GroupId)]);
             }
 
             if (string.IsNullOrWhiteSpace(options.ConsumerName))
             {
                 yield return new ValidationResult(
                     $"{nameof(options.ConsumerName)} cannot be null or whitespace.",
-                    new[] { nameof(options.ConsumerName) });
+                    [nameof(options.ConsumerName)]);
             }
 
             if (options.ExpirationInterval == Timeout.InfiniteTimeSpan)
             {
                 yield return new ValidationResult(
                     $"{nameof(options.ExpirationInterval)} cannot be infinite.",
-                    new[] { nameof(options.ExpirationInterval) });
+                    [nameof(options.ExpirationInterval)]);
             }
 
             if (options.MessageIdHandler is null)
             {
                 yield return new ValidationResult(
                     $"{nameof(options.MessageIdHandler)} cannot be null.",
-                    new[] { nameof(options.MessageIdHandler) });
+                    [nameof(options.MessageIdHandler)]);
             }
         }
 

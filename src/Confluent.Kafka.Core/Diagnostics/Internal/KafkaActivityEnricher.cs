@@ -10,7 +10,7 @@ namespace Confluent.Kafka.Core.Diagnostics.Internal
 {
     internal sealed class KafkaActivityEnricher : ActivityEnricherBase
     {
-        private static readonly ConcurrentDictionary<Type, object> Serializers = new();
+        private static readonly ConcurrentDictionary<Type, object> Serializers = [];
 
         public override void Enrich(Activity activity, ConsumeException consumeException, IConsumerConfig consumerConfig)
         {
