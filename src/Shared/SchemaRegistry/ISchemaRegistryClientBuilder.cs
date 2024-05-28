@@ -5,7 +5,7 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry
 {
     public interface ISchemaRegistryClientBuilder
     {
-        ISchemaRegistryClientBuilder WithConfigureSchemaRegistry(
+        ISchemaRegistryClientBuilder WithSchemaRegistryConfiguration(
             Action<ISchemaRegistryConfigBuilder> configureSchemaRegistry);
 
         ISchemaRegistryClientBuilder WithAuthenticationHeaderValueProvider(

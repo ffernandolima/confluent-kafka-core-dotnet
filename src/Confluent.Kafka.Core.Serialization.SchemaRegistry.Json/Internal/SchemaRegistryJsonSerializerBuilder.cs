@@ -11,7 +11,7 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Json.Internal
         public Action<IJsonDeserializerConfigBuilder> ConfigureDeserializer { get; private set; }
         public Action<IJsonSchemaGeneratorSettingsBuilder> ConfigureSchemaGenerator { get; private set; }
 
-        public ISchemaRegistryJsonSerializerBuilder WithConfigureSchemaRegistryClient(
+        public ISchemaRegistryJsonSerializerBuilder WithSchemaRegistryClientConfiguration(
             Action<ISchemaRegistryClientBuilder> configureClient,
             object clientKey = null)
         {
@@ -20,28 +20,28 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Json.Internal
             return this;
         }
 
-        public ISchemaRegistryJsonSerializerBuilder WithConfigureSchema(
+        public ISchemaRegistryJsonSerializerBuilder WithSchemaConfiguration(
             Action<ISchemaBuilder> configureSchema)
         {
             ConfigureSchema = configureSchema;
             return this;
         }
 
-        public ISchemaRegistryJsonSerializerBuilder WithConfigureJsonSerializer(
+        public ISchemaRegistryJsonSerializerBuilder WithJsonSerializerConfiguration(
             Action<IJsonSerializerConfigBuilder> configureSerializer)
         {
             ConfigureSerializer = configureSerializer;
             return this;
         }
 
-        public ISchemaRegistryJsonSerializerBuilder WithConfigureJsonDeserializer(
+        public ISchemaRegistryJsonSerializerBuilder WithJsonDeserializerConfiguration(
             Action<IJsonDeserializerConfigBuilder> configureDeserializer)
         {
             ConfigureDeserializer = configureDeserializer;
             return this;
         }
 
-        public ISchemaRegistryJsonSerializerBuilder WithConfigureJsonSchemaGenerator(
+        public ISchemaRegistryJsonSerializerBuilder WithJsonSchemaGeneratorConfiguration(
             Action<IJsonSchemaGeneratorSettingsBuilder> configureSchemaGenerator)
         {
             ConfigureSchemaGenerator = configureSchemaGenerator;

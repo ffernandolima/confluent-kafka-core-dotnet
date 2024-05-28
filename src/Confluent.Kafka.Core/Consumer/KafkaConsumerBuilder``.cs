@@ -243,7 +243,7 @@ namespace Confluent.Kafka.Core.Consumer
             return this;
         }
 
-        public IKafkaConsumerBuilder<TKey, TValue> WithConfigureConsumer(Action<IServiceProvider, IKafkaConsumerConfigBuilder> configureConsumer)
+        public IKafkaConsumerBuilder<TKey, TValue> WithConsumerConfiguration(Action<IServiceProvider, IKafkaConsumerConfigBuilder> configureConsumer)
         {
             BuildConfig(ServiceProvider, ConsumerConfig, configureConsumer);
             return this;

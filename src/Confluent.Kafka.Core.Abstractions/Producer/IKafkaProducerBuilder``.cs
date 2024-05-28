@@ -47,7 +47,7 @@ namespace Confluent.Kafka.Core.Producer
 
         IKafkaProducerBuilder<TKey, TValue> WithInterceptors(IEnumerable<IKafkaProducerInterceptor<TKey, TValue>> interceptors);
 
-        IKafkaProducerBuilder<TKey, TValue> WithConfigureProducer(Action<IServiceProvider, IKafkaProducerConfigBuilder> configureProducer);
+        IKafkaProducerBuilder<TKey, TValue> WithProducerConfiguration(Action<IServiceProvider, IKafkaProducerConfigBuilder> configureProducer);
 
 #if NETSTANDARD2_0_OR_GREATER
         IProducer<TKey, TValue> Build();

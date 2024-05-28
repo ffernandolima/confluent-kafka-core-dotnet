@@ -8,7 +8,7 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Internal
         public SchemaRegistryConfig SchemaRegistryConfig { get; private set; }
         public IAuthenticationHeaderValueProvider AuthenticationHeaderValueProvider { get; private set; }
 
-        public ISchemaRegistryClientBuilder WithConfigureSchemaRegistry(
+        public ISchemaRegistryClientBuilder WithSchemaRegistryConfiguration(
             Action<ISchemaRegistryConfigBuilder> configureSchemaRegistry)
         {
             SchemaRegistryConfig = SchemaRegistryConfigBuilder.Build(configureSchemaRegistry);

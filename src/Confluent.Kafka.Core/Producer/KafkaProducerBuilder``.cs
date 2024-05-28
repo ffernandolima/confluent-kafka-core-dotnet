@@ -201,7 +201,7 @@ namespace Confluent.Kafka.Core.Producer
             return this;
         }
 
-        public IKafkaProducerBuilder<TKey, TValue> WithConfigureProducer(Action<IServiceProvider, IKafkaProducerConfigBuilder> configureProducer)
+        public IKafkaProducerBuilder<TKey, TValue> WithProducerConfiguration(Action<IServiceProvider, IKafkaProducerConfigBuilder> configureProducer)
         {
             BuildConfig(ServiceProvider, ProducerConfig, configureProducer);
             return this;

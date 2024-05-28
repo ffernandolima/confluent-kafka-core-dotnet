@@ -4,10 +4,10 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry
 {
     public interface ISchemaBuilder
     {
-        ISchemaBuilder WithConfigureRegisteredSchema(
+        ISchemaBuilder WithRegisteredSchemaConfiguration(
             Action<IRegisteredSchemaBuilder> configureRegisteredSchema);
 
-        ISchemaBuilder WithConfigureUnregisteredSchema(
+        ISchemaBuilder WithUnregisteredSchemaConfiguration(
             Action<IUnregisteredSchemaBuilder> configureUnregisteredSchema);
     }
 }
