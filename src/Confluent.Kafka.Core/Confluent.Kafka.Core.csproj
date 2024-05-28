@@ -13,7 +13,6 @@
 		<Description>Provides implementation for Apache Kafka .NET client.</Description>
 		<PackageProjectUrl>https://github.com/ffernandolima/confluent-kafka-core-dotnet</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/ffernandolima/confluent-kafka-core-dotnet</RepositoryUrl>
-		<PackageLicenseUrl>https://github.com/ffernandolima/confluent-kafka-core-dotnet/blob/main/LICENSE</PackageLicenseUrl>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<RepositoryType>git</RepositoryType>
 		<PackageTags>Apache;Kafka;Confluent;librdkafka;Implementation</PackageTags>

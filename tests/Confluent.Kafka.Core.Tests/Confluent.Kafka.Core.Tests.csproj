@@ -19,7 +19,9 @@
 		<ProjectReference Include="..\..\src\Confluent.Kafka.Core.Serialization.JsonCore\Confluent.Kafka.Core.Serialization.JsonCore.csproj" />
 		<ProjectReference Include="..\..\src\Confluent.Kafka.Core.Serialization.NewtonsoftJson\Confluent.Kafka.Core.Serialization.NewtonsoftJson.csproj" />
 		<ProjectReference Include="..\..\src\Confluent.Kafka.Core.Serialization.ProtobufNet\Confluent.Kafka.Core.Serialization.ProtobufNet.csproj" />
+		<ProjectReference Include="..\..\src\Confluent.Kafka.Core.Serialization.SchemaRegistry.Avro\Confluent.Kafka.Core.Serialization.SchemaRegistry.Avro.csproj" />
 		<ProjectReference Include="..\..\src\Confluent.Kafka.Core.Serialization.SchemaRegistry.Json\Confluent.Kafka.Core.Serialization.SchemaRegistry.Json.csproj" />
+		<ProjectReference Include="..\..\src\Confluent.Kafka.Core.Serialization.SchemaRegistry.Protobuf\Confluent.Kafka.Core.Serialization.SchemaRegistry.Protobuf.csproj" />
 	</ItemGroup>
 
 </Project>
