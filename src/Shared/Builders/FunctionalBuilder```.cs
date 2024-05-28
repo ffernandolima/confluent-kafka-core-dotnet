@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace Confluent.Kafka.Core.Internal
@@ -83,6 +84,10 @@ namespace Confluent.Kafka.Core.Internal
             _builtSubject = null;
         }
 
+        [SuppressMessage(
+            "Maintainability",
+            "CA1513:Use ObjectDisposedException throw helper",
+            Justification = "ObjectDisposedException.ThrowIf was introduced in .NET 7 and it's not available in older versions.")]
         private void CheckDisposed()
         {
             if (_disposed)
