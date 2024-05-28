@@ -602,7 +602,7 @@ namespace Confluent.Kafka.Core.Producer.Internal
                 return;
             }
 
-            throw new ObjectDisposedException(_options.ProducerType!.FullName);
+            throw new ObjectDisposedException(_options.ProducerType!.ExtractTypeName());
         }
 
         #region IDisposable Members

@@ -92,7 +92,7 @@ namespace Confluent.Kafka.Core.Internal
 
             var builderType = GetType();
 
-            throw new ObjectDisposedException(builderType.FullName);
+            throw new ObjectDisposedException(builderType.ExtractTypeName());
         }
 
         #region IDisposable Members

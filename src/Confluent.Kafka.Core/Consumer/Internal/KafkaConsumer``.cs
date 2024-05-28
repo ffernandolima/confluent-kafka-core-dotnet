@@ -1076,7 +1076,7 @@ namespace Confluent.Kafka.Core.Consumer.Internal
                 return;
             }
 
-            throw new ObjectDisposedException(_options.ConsumerType!.FullName);
+            throw new ObjectDisposedException(_options.ConsumerType!.ExtractTypeName());
         }
 
         #region IDisposable Members
