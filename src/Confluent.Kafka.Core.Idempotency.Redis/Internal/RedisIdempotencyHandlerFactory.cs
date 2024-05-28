@@ -11,8 +11,6 @@ namespace Confluent.Kafka.Core.Idempotency.Redis.Internal
             IServiceProvider serviceProvider,
             Action<IRedisIdempotencyHandlerBuilder<TKey, TValue>> configureHandler)
         {
-            // TODO: Throw exceptions in case the required actions are null?
-
             if (configureHandler is null)
             {
                 throw new ArgumentNullException(nameof(configureHandler), $"{nameof(configureHandler)} cannot be null.");
@@ -20,14 +18,28 @@ namespace Confluent.Kafka.Core.Idempotency.Redis.Internal
 
             var builder = RedisIdempotencyHandlerBuilder<TKey, TValue>.Configure(configureHandler);
 
+            var redisOptions = builder.RedisOptions;
+
+            if (redisOptions is null)
+            {
+                throw new InvalidOperationException($"{nameof(redisOptions)} cannot be null.");
+            }
+
+            var handlerOptions = builder.HandlerOptions;
+
+            if (handlerOptions is null)
+            {
+                throw new InvalidOperationException($"{nameof(handlerOptions)} cannot be null.");
+            }
+
             var loggerFactory = serviceProvider?.GetService<ILoggerFactory>();
 
-            var multiplexer = ConnectionMultiplexer.Connect(builder.RedisOptions);
+            var multiplexer = ConnectionMultiplexer.Connect(redisOptions);
 
             var idempotencyHandler = new RedisIdempotencyHandler<TKey, TValue>(
                 loggerFactory,
                 multiplexer,
-                builder.HandlerOptions);
+                handlerOptions);
 
             return idempotencyHandler;
         }

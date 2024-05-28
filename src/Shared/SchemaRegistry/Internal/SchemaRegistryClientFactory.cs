@@ -21,8 +21,6 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Internal
         public static ISchemaRegistryClient CreateSchemaRegistryClient(
             Action<ISchemaRegistryClientBuilder> configureClient)
         {
-            // TODO: Throw exceptions in case the required actions are null?
-
             if (configureClient is null)
             {
                 throw new ArgumentNullException(nameof(configureClient), $"{nameof(configureClient)} cannot be null.");
@@ -30,8 +28,15 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Internal
 
             var builder = SchemaRegistryClientBuilder.Configure(configureClient);
 
+            var schemaRegistryConfig = builder.SchemaRegistryConfig;
+
+            if (schemaRegistryConfig is null)
+            {
+                throw new InvalidOperationException($"{nameof(schemaRegistryConfig)} cannot be null.");
+            }
+
             var schemaRegistryClient = new CachedSchemaRegistryClient(
-                builder.SchemaRegistryConfig,
+                schemaRegistryConfig,
                 builder.AuthenticationHeaderValueProvider);
 
             return schemaRegistryClient;

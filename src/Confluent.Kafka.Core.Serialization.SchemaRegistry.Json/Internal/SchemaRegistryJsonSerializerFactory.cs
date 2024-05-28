@@ -24,8 +24,6 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Json.Internal
            SchemaRegistryJsonSerializerBuilder builder)
                 where T : class
         {
-            // TODO: Throw exceptions in case the required actions are null?
-
             if (builder is null)
             {
                 throw new ArgumentNullException(nameof(builder), $"{nameof(builder)} cannot be null.");
