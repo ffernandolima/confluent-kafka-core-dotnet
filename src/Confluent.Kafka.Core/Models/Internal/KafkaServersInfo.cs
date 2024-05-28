@@ -92,7 +92,11 @@ namespace Confluent.Kafka.Core.Models.Internal
 
             if (delimiterIndex > 0)
             {
+#if NETSTANDARD2_0
                 bootstrapServerSpan = bootstrapServerSpan.Slice(0, delimiterIndex);
+#else
+                bootstrapServerSpan = bootstrapServerSpan[..delimiterIndex];
+#endif
             }
 
             var hostNameOrAddress = bootstrapServerSpan.ToString();
