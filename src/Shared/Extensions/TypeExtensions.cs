@@ -60,6 +60,11 @@ namespace Confluent.Kafka.Core.Internal
 
         public static object GetDefaultValue(this Type sourceType)
         {
+            if (sourceType is null)
+            {
+                throw new ArgumentNullException(nameof(sourceType), $"{nameof(sourceType)} cannot be null.");
+            }
+
             if (!sourceType.IsValueType)
             {
                 return null;
