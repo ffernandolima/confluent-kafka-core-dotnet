@@ -16,7 +16,7 @@
 		<PackageLicenseUrl>https://github.com/ffernandolima/confluent-kafka-core-dotnet/blob/main/LICENSE</PackageLicenseUrl>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<RepositoryType>git</RepositoryType>
-		<PackageTags>Apache;Kafka;Confluent;librdkafka;Serialization;Confluent.SchemaRegistry.Serdes.Json</PackageTags>
+		<PackageTags>Apache;Kafka;Confluent;librdkafka;Serialization;SchemaRegistry;Confluent.SchemaRegistry.Serdes.Json</PackageTags>
 		<Version>1.0.0</Version>
 		<LangVersion>latest</LangVersion>
 	</PropertyGroup>
