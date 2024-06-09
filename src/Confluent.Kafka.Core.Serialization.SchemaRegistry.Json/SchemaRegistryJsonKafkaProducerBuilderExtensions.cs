@@ -1,8 +1,7 @@
-﻿using Confluent.Kafka.Core.Producer;
 using Confluent.Kafka.Core.Serialization.SchemaRegistry.Json.Internal;
 using System;
 
-namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Json
+namespace Confluent.Kafka.Core.Producer
 {
     public static class SchemaRegistryJsonKafkaProducerBuilderExtensions
     {
