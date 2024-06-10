@@ -1,3 +1,4 @@
+using Confluent.Kafka.Core.Serialization.SchemaRegistry.Json;
 using Confluent.Kafka.Core.Serialization.SchemaRegistry.Json.Internal;
 using System;
 
