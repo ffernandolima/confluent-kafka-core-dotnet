@@ -28,11 +28,6 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Protobuf.Internal
 
         public async Task<byte[]> SerializeAsync(T data, SerializationContext context)
         {
-            if (data is null)
-            {
-                return null;
-            }
-
             var result = await _serializer.SerializeAsync(data, context)
                 .ConfigureAwait(continueOnCapturedContext: false);
 
@@ -41,11 +36,6 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Protobuf.Internal
 
         public async Task<T> DeserializeAsync(ReadOnlyMemory<byte> data, bool isNull, SerializationContext context)
         {
-            if (isNull)
-            {
-                return null;
-            }
-
             var result = await _deserializer.DeserializeAsync(data, isNull, context)
                 .ConfigureAwait(continueOnCapturedContext: false);
 
