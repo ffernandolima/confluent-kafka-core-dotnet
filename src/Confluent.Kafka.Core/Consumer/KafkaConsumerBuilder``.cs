@@ -229,7 +229,7 @@ namespace Confluent.Kafka.Core.Consumer
         public IKafkaConsumerBuilder<TKey, TValue> WithDeadLetterProducer(IKafkaProducer<byte[], KafkaMetadataMessage> deadLetterProducer)
         {
             _deadLetterProducer = deadLetterProducer;
-            _deadLetterProducer?.ValidateTopicSuffix(KafkaProducerConstants.DeadLetterTopicSuffix);
+            _deadLetterProducer?.ValidateAndThrow(KafkaProducerConstants.DeadLetterTopicSuffix);
             return this;
         }
 

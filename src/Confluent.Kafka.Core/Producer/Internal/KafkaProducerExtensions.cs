@@ -6,7 +6,7 @@ namespace Confluent.Kafka.Core.Producer.Internal
 {
     internal static class KafkaProducerExtensions
     {
-        public static void ValidateTopicSuffix(this IKafkaProducer<byte[], KafkaMetadataMessage> producer, string suffix)
+        public static void ValidateAndThrow(this IKafkaProducer<byte[], KafkaMetadataMessage> producer, string suffix)
         {
             if (producer is null)
             {
