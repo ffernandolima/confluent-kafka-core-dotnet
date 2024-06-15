@@ -1,6 +1,7 @@
 ﻿using Confluent.Kafka.Core.Consumer;
 using Confluent.Kafka.Core.Consumer.Internal;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Logging;
 using System;
 
 namespace Microsoft.Extensions.DependencyInjection
@@ -21,7 +22,8 @@ namespace Microsoft.Extensions.DependencyInjection
             {
                 var handlerFactory = KafkaConsumerHandlerFactory.CreateHandlerFactory<TKey, TValue>(
                     serviceProvider,
-                    configureOptions: configureOptions);
+                    serviceProvider.GetService<ILoggerFactory>(),
+                    configureOptions);
 
                 return handlerFactory;
             },

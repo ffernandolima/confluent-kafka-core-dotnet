@@ -1,6 +1,7 @@
 ﻿using Confluent.Kafka.Core.Retry.Polly;
 using Confluent.Kafka.Core.Retry.Polly.Internal;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Logging;
 using System;
 
 namespace Microsoft.Extensions.DependencyInjection
@@ -23,7 +24,8 @@ namespace Microsoft.Extensions.DependencyInjection
                 {
                     var retryHandler = PollyRetryHandlerFactory.CreateRetryHandler<TKey, TValue>(
                         serviceProvider,
-                        configureOptions: configureOptions);
+                        serviceProvider.GetService<ILoggerFactory>(),
+                        configureOptions);
 
                     return retryHandler;
                 });
