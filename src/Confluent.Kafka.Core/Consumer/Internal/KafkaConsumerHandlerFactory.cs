@@ -8,9 +8,9 @@ namespace Confluent.Kafka.Core.Consumer.Internal
     {
         public static IKafkaConsumerHandlerFactory<TKey, TValue> GetOrCreateHandlerFactory<TKey, TValue>(
             IServiceProvider serviceProvider,
-            ILoggerFactory loggerFactory = null,
-            Action<IServiceProvider, IKafkaConsumerHandlerFactoryOptionsBuilder> configureOptions = null,
-            object consumerKey = null)
+            ILoggerFactory loggerFactory,
+            Action<IServiceProvider, IKafkaConsumerHandlerFactoryOptionsBuilder> configureOptions,
+            object consumerKey)
         {
             var handlerFactory = serviceProvider?.GetKeyedService<IKafkaConsumerHandlerFactory<TKey, TValue>>(consumerKey) ??
                 CreateHandlerFactory<TKey, TValue>(serviceProvider, loggerFactory, configureOptions);
@@ -20,8 +20,8 @@ namespace Confluent.Kafka.Core.Consumer.Internal
 
         public static IKafkaConsumerHandlerFactory<TKey, TValue> CreateHandlerFactory<TKey, TValue>(
             IServiceProvider serviceProvider,
-            ILoggerFactory loggerFactory = null,
-            Action<IServiceProvider, IKafkaConsumerHandlerFactoryOptionsBuilder> configureOptions = null)
+            ILoggerFactory loggerFactory,
+            Action<IServiceProvider, IKafkaConsumerHandlerFactoryOptionsBuilder> configureOptions)
         {
             var options = KafkaConsumerHandlerFactoryOptionsBuilder.Build(
                 serviceProvider,

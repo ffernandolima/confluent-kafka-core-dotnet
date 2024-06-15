@@ -7,8 +7,8 @@ namespace Confluent.Kafka.Core.Serialization.ProtobufNet.Internal
     {
         public static ProtobufNetSerializer<T> GetOrCreateSerializer<T>(
             IServiceProvider serviceProvider,
-            Action<IProtobufNetSerializerOptionsBuilder> configureOptions = null,
-            object serializerKey = null)
+            Action<IProtobufNetSerializerOptionsBuilder> configureOptions,
+            object serializerKey)
         {
             var serializer = serviceProvider?.GetKeyedService<ProtobufNetSerializer<T>>(
                 serializerKey ?? ProtobufNetSerializerConstants.ProtobufNetSerializerKey) ??
@@ -18,7 +18,7 @@ namespace Confluent.Kafka.Core.Serialization.ProtobufNet.Internal
         }
 
         public static ProtobufNetSerializer<T> CreateSerializer<T>(
-            Action<IProtobufNetSerializerOptionsBuilder> configureOptions = null)
+            Action<IProtobufNetSerializerOptionsBuilder> configureOptions)
         {
             var options = ProtobufNetSerializerOptionsBuilder.Build(configureOptions);
 

@@ -10,7 +10,7 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Protobuf.Internal
         public static SchemaRegistryProtobufSerializer<T> GetOrCreateSerializer<T>(
             IServiceProvider serviceProvider,
             SchemaRegistryProtobufSerializerBuilder builder,
-            object serializerKey = null)
+            object serializerKey)
                 where T : class, IMessage<T>, new()
         {
             var serializer = serviceProvider?.GetKeyedService<SchemaRegistryProtobufSerializer<T>>(

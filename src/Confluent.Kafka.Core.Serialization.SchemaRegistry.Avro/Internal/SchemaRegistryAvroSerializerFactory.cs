@@ -9,7 +9,7 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Avro.Internal
         public static SchemaRegistryAvroSerializer<T> GetOrCreateSerializer<T>(
            IServiceProvider serviceProvider,
            SchemaRegistryAvroSerializerBuilder builder,
-           object serializerKey = null)
+           object serializerKey)
         {
             var serializer = serviceProvider?.GetKeyedService<SchemaRegistryAvroSerializer<T>>(
                 serializerKey ?? SchemaRegistryAvroSerializerConstants.SchemaRegistryAvroSerializerKey) ??

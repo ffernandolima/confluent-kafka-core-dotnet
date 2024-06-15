@@ -7,8 +7,8 @@ namespace Confluent.Kafka.Core.Serialization.JsonCore.Internal
     {
         public static JsonCoreSerializer<T> GetOrCreateSerializer<T>(
             IServiceProvider serviceProvider,
-            Action<IJsonSerializerOptionsBuilder> configureOptions = null,
-            object serializerKey = null)
+            Action<IJsonSerializerOptionsBuilder> configureOptions,
+            object serializerKey)
         {
             var serializer = serviceProvider?.GetKeyedService<JsonCoreSerializer<T>>(
                 serializerKey ?? JsonCoreSerializerConstants.JsonCoreSerializerKey) ??
@@ -18,7 +18,7 @@ namespace Confluent.Kafka.Core.Serialization.JsonCore.Internal
         }
 
         public static JsonCoreSerializer<T> CreateSerializer<T>(
-            Action<IJsonSerializerOptionsBuilder> configureOptions = null)
+            Action<IJsonSerializerOptionsBuilder> configureOptions)
         {
             var settings = JsonSerializerOptionsBuilder.Build(configureOptions);
 

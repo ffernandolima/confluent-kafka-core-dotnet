@@ -7,8 +7,8 @@ namespace Confluent.Kafka.Core.Serialization.NewtonsoftJson.Internal
     {
         public static NewtonsoftJsonSerializer<T> GetOrCreateSerializer<T>(
             IServiceProvider serviceProvider,
-            Action<IJsonSerializerSettingsBuilder> configureSettings = null,
-            object serializerKey = null)
+            Action<IJsonSerializerSettingsBuilder> configureSettings,
+            object serializerKey)
         {
             var serializer = serviceProvider?.GetKeyedService<NewtonsoftJsonSerializer<T>>(
                 serializerKey ?? NewtonsoftJsonSerializerConstants.NewtonsoftJsonSerializerKey) ??
@@ -18,7 +18,7 @@ namespace Confluent.Kafka.Core.Serialization.NewtonsoftJson.Internal
         }
 
         public static NewtonsoftJsonSerializer<T> CreateSerializer<T>(
-            Action<IJsonSerializerSettingsBuilder> configureSettings = null)
+            Action<IJsonSerializerSettingsBuilder> configureSettings)
         {
             var settings = JsonSerializerSettingsBuilder.Build(configureSettings);
 

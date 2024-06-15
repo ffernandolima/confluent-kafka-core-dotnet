@@ -9,7 +9,7 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Internal
         public static ISchemaRegistryClient GetOrCreateSchemaRegistryClient(
             IServiceProvider serviceProvider,
             Action<ISchemaRegistryClientBuilder> configureClient,
-            object clientKey = null)
+            object clientKey)
         {
             var schemaRegistryClient = serviceProvider?.GetKeyedService<ISchemaRegistryClient>(
                 clientKey ?? SchemaRegistryClientConstants.ConfluentSchemaRegistryClientKey) ??

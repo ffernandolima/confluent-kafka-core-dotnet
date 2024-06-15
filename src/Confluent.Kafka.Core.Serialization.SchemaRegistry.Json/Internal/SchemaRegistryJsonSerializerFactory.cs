@@ -9,7 +9,7 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Json.Internal
         public static SchemaRegistryJsonSerializer<T> GetOrCreateSerializer<T>(
             IServiceProvider serviceProvider,
             SchemaRegistryJsonSerializerBuilder builder,
-            object serializerKey = null)
+            object serializerKey)
                 where T : class
         {
             var serializer = serviceProvider?.GetKeyedService<SchemaRegistryJsonSerializer<T>>(
