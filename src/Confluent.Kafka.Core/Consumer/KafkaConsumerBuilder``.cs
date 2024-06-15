@@ -28,9 +28,9 @@ namespace Confluent.Kafka.Core.Consumer
         private static readonly Type DefaultConsumerType = typeof(KafkaConsumer<TKey, TValue>);
 
         private object _consumerKey;
+        private IDiagnosticsManager _diagnosticsManager;
         private Func<TValue, object> _messageIdHandler;
         private IRetryHandler<TKey, TValue> _retryHandler;
-        private IDiagnosticsManager _diagnosticsManager;
         private IKafkaConsumerHandlerFactory<TKey, TValue> _handlerFactory;
         private IKafkaProducer<byte[], KafkaMetadataMessage> _deadLetterProducer;
         private IEnumerable<IKafkaConsumerInterceptor<TKey, TValue>> _interceptors;
@@ -192,53 +192,101 @@ namespace Confluent.Kafka.Core.Consumer
 
         public IKafkaConsumerBuilder<TKey, TValue> WithConsumerKey(object consumerKey)
         {
+            if (_consumerKey is not null)
+            {
+                throw new InvalidOperationException("Consumer key may not be specified more than once.");
+            }
+
             _consumerKey = consumerKey;
             return this;
         }
 
         public IKafkaConsumerBuilder<TKey, TValue> WithLoggerFactory(ILoggerFactory loggerFactory)
         {
+            if (LoggerFactory is not null)
+            {
+                throw new InvalidOperationException("Logger factory may not be specified more than once.");
+            }
+
             LoggerFactory = loggerFactory;
             return this;
         }
 
         public IKafkaConsumerBuilder<TKey, TValue> WithServiceProvider(IServiceProvider serviceProvider)
         {
+            if (ServiceProvider is not null)
+            {
+                throw new InvalidOperationException("Service provider may not be specified more than once.");
+            }
+
             ServiceProvider = serviceProvider;
             return this;
         }
 
         public IKafkaConsumerBuilder<TKey, TValue> WithMessageIdHandler(Func<TValue, object> messageIdHandler)
         {
+            if (_messageIdHandler is not null)
+            {
+                throw new InvalidOperationException("Message id handler may not be specified more than once.");
+            }
+
             _messageIdHandler = messageIdHandler;
             return this;
         }
 
         public IKafkaConsumerBuilder<TKey, TValue> WithRetryHandler(IRetryHandler<TKey, TValue> retryHandler)
         {
+            if (_retryHandler is not null)
+            {
+                throw new InvalidOperationException("Retry handler may not be specified more than once.");
+            }
+
             _retryHandler = retryHandler;
             return this;
         }
 
         public IKafkaConsumerBuilder<TKey, TValue> WithHandlerFactory(IKafkaConsumerHandlerFactory<TKey, TValue> handlerFactory)
         {
+            if (_handlerFactory is not null)
+            {
+                throw new InvalidOperationException("Handler factory may not be specified more than once.");
+            }
+
             _handlerFactory = handlerFactory;
             return this;
         }
 
         public IKafkaConsumerBuilder<TKey, TValue> WithDeadLetterProducer(IKafkaProducer<byte[], KafkaMetadataMessage> deadLetterProducer)
         {
+            if (_deadLetterProducer is not null)
+            {
+                throw new InvalidOperationException("Dead letter producer may not be specified more than once.");
+            }
+
             _deadLetterProducer = deadLetterProducer;
             _deadLetterProducer?.ValidateAndThrow(KafkaProducerConstants.DeadLetterTopicSuffix);
             return this;
         }
 
+        public IKafkaConsumerBuilder<TKey, TValue> WithInterceptor(IKafkaConsumerInterceptor<TKey, TValue> interceptor)
+        {
+            if (interceptor is not null)
+            {
+                _interceptors = (_interceptors ?? []).Union([interceptor]);
+            }
+            return this;
+        }
+
         public IKafkaConsumerBuilder<TKey, TValue> WithInterceptors(IEnumerable<IKafkaConsumerInterceptor<TKey, TValue>> interceptors)
         {
+            if (_interceptors is not null)
+            {
+                throw new InvalidOperationException("Interceptors may not be specified more than once.");
+            }
+
             if (interceptors is not null && interceptors.Any(interceptor => interceptor is not null))
             {
-                _interceptors = (_interceptors ?? [])
-                    .Union(interceptors.Where(interceptor => interceptor is not null));
+                _interceptors = interceptors.Where(interceptor => interceptor is not null);
             }
             return this;
         }

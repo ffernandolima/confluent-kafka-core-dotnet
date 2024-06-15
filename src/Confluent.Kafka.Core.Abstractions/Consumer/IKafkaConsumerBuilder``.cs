@@ -59,6 +59,8 @@ namespace Confluent.Kafka.Core.Consumer
 
         IKafkaConsumerBuilder<TKey, TValue> WithDeadLetterProducer(IKafkaProducer<byte[], KafkaMetadataMessage> deadLetterProducer);
 
+        IKafkaConsumerBuilder<TKey, TValue> WithInterceptor(IKafkaConsumerInterceptor<TKey, TValue> interceptor);
+
         IKafkaConsumerBuilder<TKey, TValue> WithInterceptors(IEnumerable<IKafkaConsumerInterceptor<TKey, TValue>> interceptors);
 
         IKafkaConsumerBuilder<TKey, TValue> WithConsumerConfiguration(Action<IServiceProvider, IKafkaConsumerConfigBuilder> configureConsumer);

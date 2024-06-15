@@ -157,46 +157,89 @@ namespace Confluent.Kafka.Core.Producer
 
         public IKafkaProducerBuilder<TKey, TValue> WithProducerKey(object producerKey)
         {
+            if (_producerKey is not null)
+            {
+                throw new InvalidOperationException("Producer key may not be specified more than once.");
+            }
+
             _producerKey = producerKey;
             return this;
         }
 
         public IKafkaProducerBuilder<TKey, TValue> WithLoggerFactory(ILoggerFactory loggerFactory)
         {
+            if (LoggerFactory is not null)
+            {
+                throw new InvalidOperationException("Logger factory may not be specified more than once.");
+            }
+
             LoggerFactory = loggerFactory;
             return this;
         }
 
         public IKafkaProducerBuilder<TKey, TValue> WithServiceProvider(IServiceProvider serviceProvider)
         {
+            if (ServiceProvider is not null)
+            {
+                throw new InvalidOperationException("Service provider may not be specified more than once.");
+            }
+
             ServiceProvider = serviceProvider;
             return this;
         }
 
         public IKafkaProducerBuilder<TKey, TValue> WithMessageIdHandler(Func<TValue, object> messageIdHandler)
         {
+            if (_messageIdHandler is not null)
+            {
+                throw new InvalidOperationException("Message id handler may not be specified more than once.");
+            }
+
             _messageIdHandler = messageIdHandler;
             return this;
         }
 
         public IKafkaProducerBuilder<TKey, TValue> WithRetryHandler(IRetryHandler<TKey, TValue> retryHandler)
         {
+            if (_retryHandler is not null)
+            {
+                throw new InvalidOperationException("Retry handler may not be specified more than once.");
+            }
+
             _retryHandler = retryHandler;
             return this;
         }
 
         public IKafkaProducerBuilder<TKey, TValue> WithHandlerFactory(IKafkaProducerHandlerFactory<TKey, TValue> handlerFactory)
         {
+            if (_handlerFactory is not null)
+            {
+                throw new InvalidOperationException("Handler factory may not be specified more than once.");
+            }
+
             _handlerFactory = handlerFactory;
+            return this;
+        }
+
+        public IKafkaProducerBuilder<TKey, TValue> WithInterceptor(IKafkaProducerInterceptor<TKey, TValue> interceptor)
+        {
+            if (interceptor is not null)
+            {
+                _interceptors = (_interceptors ?? []).Union([interceptor]);
+            }
             return this;
         }
 
         public IKafkaProducerBuilder<TKey, TValue> WithInterceptors(IEnumerable<IKafkaProducerInterceptor<TKey, TValue>> interceptors)
         {
+            if (_interceptors is not null)
+            {
+                throw new InvalidOperationException("Interceptors may not be specified more than once.");
+            }
+
             if (interceptors is not null && interceptors.Any(interceptor => interceptor is not null))
             {
-                _interceptors = (_interceptors ?? [])
-                    .Union(interceptors.Where(interceptor => interceptor is not null));
+                _interceptors = interceptors.Where(interceptor => interceptor is not null);
             }
             return this;
         }

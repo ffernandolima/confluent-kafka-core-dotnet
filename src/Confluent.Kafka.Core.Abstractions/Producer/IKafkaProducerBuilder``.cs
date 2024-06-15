@@ -45,6 +45,8 @@ namespace Confluent.Kafka.Core.Producer
 
         IKafkaProducerBuilder<TKey, TValue> WithHandlerFactory(IKafkaProducerHandlerFactory<TKey, TValue> handlerFactory);
 
+        IKafkaProducerBuilder<TKey, TValue> WithInterceptor(IKafkaProducerInterceptor<TKey, TValue> interceptor);
+
         IKafkaProducerBuilder<TKey, TValue> WithInterceptors(IEnumerable<IKafkaProducerInterceptor<TKey, TValue>> interceptors);
 
         IKafkaProducerBuilder<TKey, TValue> WithProducerConfiguration(Action<IServiceProvider, IKafkaProducerConfigBuilder> configureProducer);
