@@ -7,8 +7,22 @@ namespace Confluent.Kafka.Core.Idempotency.Redis.Internal
 {
     internal static class RedisIdempotencyHandlerFactory
     {
+        public static IIdempotencyHandler<TKey, TValue> GetOrCreateIdempotencyHandler<TKey, TValue>(
+            IServiceProvider serviceProvider,
+            ILoggerFactory loggerFactory,
+            Action<IRedisIdempotencyHandlerBuilder<TKey, TValue>> configureHandler,
+            object handlerKey)
+        {
+            var idempotencyHandler = serviceProvider?.GetKeyedService<IIdempotencyHandler<TKey, TValue>>(
+                handlerKey ?? RedisIdempotencyHandlerConstants.RedisIdempotencyHandlerKey) ??
+                CreateIdempotencyHandler(serviceProvider, loggerFactory, configureHandler);
+
+            return idempotencyHandler;
+        }
+
         public static IIdempotencyHandler<TKey, TValue> CreateIdempotencyHandler<TKey, TValue>(
             IServiceProvider serviceProvider,
+            ILoggerFactory loggerFactory,
             Action<IRedisIdempotencyHandlerBuilder<TKey, TValue>> configureHandler)
         {
             if (configureHandler is null)
@@ -32,12 +46,10 @@ namespace Confluent.Kafka.Core.Idempotency.Redis.Internal
                 throw new InvalidOperationException($"{nameof(handlerOptions)} cannot be null.");
             }
 
-            var loggerFactory = serviceProvider?.GetService<ILoggerFactory>();
-
             var multiplexer = ConnectionMultiplexer.Connect(redisOptions);
 
             var idempotencyHandler = new RedisIdempotencyHandler<TKey, TValue>(
-                loggerFactory,
+                loggerFactory ?? serviceProvider?.GetService<ILoggerFactory>(),
                 multiplexer,
                 handlerOptions);
 
