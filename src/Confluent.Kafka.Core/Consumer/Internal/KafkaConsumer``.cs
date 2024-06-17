@@ -1,7 +1,7 @@
 ﻿using Confluent.Kafka.Core.Diagnostics.Internal;
 using Confluent.Kafka.Core.Internal;
-using Confluent.Kafka.Core.Models.Internal;
 using Confluent.Kafka.Core.Models;
+using Confluent.Kafka.Core.Models.Internal;
 using Confluent.Kafka.Core.Producer.Internal;
 using Microsoft.Extensions.Logging;
 using System;

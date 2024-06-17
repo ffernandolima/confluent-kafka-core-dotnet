@@ -1,5 +1,5 @@
-﻿using System;
-using Confluent.Kafka.Core.Internal;
+﻿using Confluent.Kafka.Core.Internal;
+using System;
 
 namespace Confluent.Kafka.Core.Consumer.Internal
 {
