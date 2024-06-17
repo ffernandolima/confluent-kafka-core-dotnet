@@ -2,8 +2,6 @@
 using Confluent.Kafka.Core.Models;
 using Confluent.Kafka.Core.Producer;
 using Confluent.Kafka.Core.Producer.Internal;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
 using System.Reflection;
@@ -45,21 +43,14 @@ namespace Confluent.Kafka.Core.Consumer
                 throw new ArgumentNullException(nameof(consumerBuilder), $"{nameof(consumerBuilder)} cannot be null.");
             }
 
-            var producerbuilder = consumerBuilder.ServiceProvider?.GetKeyedService<IKafkaProducerBuilder<byte[], KafkaMetadataMessage>>(producerKey) ??
-                new KafkaProducerBuilder<byte[], KafkaMetadataMessage>()
-                    .WithProducerKey(producerKey)
-                    .WithLoggerFactory(
-                        consumerBuilder.LoggerFactory ??
-                        consumerBuilder.ServiceProvider?.GetService<ILoggerFactory>())
-                     .WithServiceProvider(consumerBuilder.ServiceProvider);
+            var deadLetterProducer = KafkaProducerFactory.GetOrCreateProducer(
+                consumerBuilder.ServiceProvider,
+                consumerBuilder.LoggerFactory,
+                configureProducer,
+                producerKey);
 
-            configureProducer?.Invoke(consumerBuilder.ServiceProvider, producerbuilder);
+            consumerBuilder.WithDeadLetterProducer(deadLetterProducer);
 
-#if NETSTANDARD2_0_OR_GREATER
-            consumerBuilder.WithDeadLetterProducer(producerbuilder.Build().ToKafkaProducer());
-#else
-            consumerBuilder.WithDeadLetterProducer(producerbuilder.Build());
-#endif
             return consumerBuilder;
         }
 
