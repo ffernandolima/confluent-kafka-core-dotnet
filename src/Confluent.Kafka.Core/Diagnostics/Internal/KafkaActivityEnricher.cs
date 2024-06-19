@@ -29,12 +29,7 @@ namespace Confluent.Kafka.Core.Diagnostics.Internal
                 throw new ArgumentNullException(nameof(consumerConfig), $"{nameof(consumerConfig)} cannot be null.");
             }
 
-            var consumerRecord = consumeException.ConsumerRecord;
-
-            if (consumerRecord is null)
-            {
-                throw new InvalidOperationException($"{nameof(consumerRecord)} cannot be null.");
-            }
+            var consumerRecord = consumeException.ConsumerRecord ?? throw new InvalidOperationException("Consumer record cannot be null.");
 
             using var builder = new KafkaActivityAttributesBuilder()
                 .WithException(consumeException)
@@ -117,12 +112,7 @@ namespace Confluent.Kafka.Core.Diagnostics.Internal
                 throw new ArgumentNullException(nameof(options), $"{nameof(options)} cannot be null.");
             }
 
-            var deliveryResult = produceException.DeliveryResult;
-
-            if (deliveryResult is null)
-            {
-                throw new InvalidOperationException($"{nameof(deliveryResult)} cannot be null.");
-            }
+            var deliveryResult = produceException.DeliveryResult ?? throw new InvalidOperationException("Delivery result cannot be null.");
 
             using var builder = new KafkaActivityAttributesBuilder()
                 .WithException(produceException)

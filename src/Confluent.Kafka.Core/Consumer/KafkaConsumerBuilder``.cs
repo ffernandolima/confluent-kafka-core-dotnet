@@ -28,6 +28,7 @@ namespace Confluent.Kafka.Core.Consumer
         private static readonly Type DefaultConsumerType = typeof(KafkaConsumer<TKey, TValue>);
 
         private object _consumerKey;
+        private bool _consumerConfigured;
         private IDiagnosticsManager _diagnosticsManager;
         private Func<TValue, object> _messageIdHandler;
         private IRetryHandler<TKey, TValue> _retryHandler;
@@ -293,7 +294,15 @@ namespace Confluent.Kafka.Core.Consumer
 
         public IKafkaConsumerBuilder<TKey, TValue> WithConsumerConfiguration(Action<IKafkaConsumerConfigBuilder> configureConsumer)
         {
+            if (_consumerConfigured)
+            {
+                throw new InvalidOperationException("Consumer may not be configured more than once.");
+            }
+
             BuildConfig(ConsumerConfig, configureConsumer);
+
+            _consumerConfigured = true;
+
             return this;
         }
 

@@ -87,7 +87,7 @@ namespace Confluent.Kafka.Core.Retry.Polly
 
                     if (delay == Timeout.InfiniteTimeSpan)
                     {
-                        throw new InvalidOperationException($"{nameof(delay)} cannot be infinite.");
+                        throw new InvalidOperationException("Delay cannot be infinite.");
                     }
 
                     return delay;

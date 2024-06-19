@@ -12,7 +12,7 @@ namespace Confluent.Kafka.Core.Models
             {
                 if (!_id.Equals(Guid.Empty))
                 {
-                    throw new InvalidOperationException($"{nameof(Id)} has already been assigned.");
+                    throw new InvalidOperationException("Id has already been assigned.");
                 }
                 _id = value;
             }

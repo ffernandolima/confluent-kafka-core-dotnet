@@ -25,6 +25,7 @@ namespace Confluent.Kafka.Core.Producer
         private static readonly Type DefaultProducerType = typeof(KafkaProducer<TKey, TValue>);
 
         private object _producerKey;
+        private bool _producerConfigured;
         private Func<TValue, object> _messageIdHandler;
         private IRetryHandler<TKey, TValue> _retryHandler;
         private IDiagnosticsManager _diagnosticsManager;
@@ -246,7 +247,15 @@ namespace Confluent.Kafka.Core.Producer
 
         public IKafkaProducerBuilder<TKey, TValue> WithProducerConfiguration(Action<IKafkaProducerConfigBuilder> configureProducer)
         {
+            if (_producerConfigured)
+            {
+                throw new InvalidOperationException("Producer may not be configured more than once.");
+            }
+
             BuildConfig(ProducerConfig, configureProducer);
+
+            _producerConfigured = true;
+
             return this;
         }
 
