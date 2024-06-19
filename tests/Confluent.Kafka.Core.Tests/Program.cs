@@ -11,7 +11,7 @@ namespace Confluent.Kafka.Core.Tests
 
             var services = new ServiceCollection()
                 .AddKafkaConsumer<string, object>((_, builder) =>
-                    builder.WithConsumerConfiguration((_, builder) => builder.WithBootstrapServers("localhost:9092"))
+                    builder.WithConsumerConfiguration(builder => builder.WithBootstrapServers("localhost:9092"))
                            .WithJsonCoreValueDeserializer());
 
             using var serviceProvider = services.BuildServiceProvider();

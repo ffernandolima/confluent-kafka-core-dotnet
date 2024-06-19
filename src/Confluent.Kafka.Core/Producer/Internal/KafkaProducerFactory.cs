@@ -9,7 +9,7 @@ namespace Confluent.Kafka.Core.Producer.Internal
         public static IKafkaProducer<TKey, TValue> GetOrCreateProducer<TKey, TValue>(
             IServiceProvider serviceProvider,
             ILoggerFactory loggerFactory,
-            Action<IServiceProvider, IKafkaProducerBuilder<TKey, TValue>> configureProducer,
+            Action<IKafkaProducerBuilder<TKey, TValue>> configureProducer,
             object producerKey)
         {
             var producerbuilder = serviceProvider?.GetKeyedService<IKafkaProducerBuilder<TKey, TValue>>(producerKey) ??
@@ -20,7 +20,7 @@ namespace Confluent.Kafka.Core.Producer.Internal
                         serviceProvider?.GetService<ILoggerFactory>())
                     .WithServiceProvider(serviceProvider);
 
-            configureProducer?.Invoke(serviceProvider, producerbuilder);
+            configureProducer?.Invoke(producerbuilder);
 
 #if NETSTANDARD2_0_OR_GREATER
             var producer = producerbuilder.Build().ToKafkaProducer();

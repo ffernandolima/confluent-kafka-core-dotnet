@@ -1,59 +1,78 @@
-﻿using System;
+﻿using Confluent.Kafka.Core.Serialization.SchemaRegistry.Internal;
+using Confluent.SchemaRegistry;
+using Confluent.SchemaRegistry.Serdes;
+using NJsonSchema.Generation;
+using System;
 
 namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Json.Internal
 {
     internal sealed class SchemaRegistryJsonSerializerBuilder : ISchemaRegistryJsonSerializerBuilder
     {
-        public object ClientKey { get; private set; }
-        public Action<ISchemaRegistryClientBuilder> ConfigureClient { get; private set; }
-        public Action<ISchemaBuilder> ConfigureSchema { get; private set; }
-        public Action<IJsonSerializerConfigBuilder> ConfigureSerializer { get; private set; }
-        public Action<IJsonDeserializerConfigBuilder> ConfigureDeserializer { get; private set; }
-        public Action<IJsonSchemaGeneratorSettingsBuilder> ConfigureSchemaGenerator { get; private set; }
+        private readonly IServiceProvider _serviceProvider;
+
+        public ISchemaRegistryClient SchemaRegistryClient { get; private set; }
+        public Schema UnregisteredSchema { get; private set; }
+        public RegisteredSchema RegisteredSchema { get; private set; }
+        public JsonSerializerConfig SerializerConfig { get; private set; }
+        public JsonDeserializerConfig DeserializerConfig { get; private set; }
+        public JsonSchemaGeneratorSettings SchemaGeneratorSettings { get; private set; }
+
+        public SchemaRegistryJsonSerializerBuilder(IServiceProvider serviceProvider)
+        {
+            _serviceProvider = serviceProvider;
+        }
 
         public ISchemaRegistryJsonSerializerBuilder WithSchemaRegistryClientConfiguration(
             Action<ISchemaRegistryClientBuilder> configureClient,
             object clientKey = null)
         {
-            ConfigureClient = configureClient;
-            ClientKey = clientKey;
+            SchemaRegistryClient = SchemaRegistryClientFactory.GetOrCreateSchemaRegistryClient(
+                _serviceProvider,
+                configureClient,
+                clientKey);
+
             return this;
         }
 
         public ISchemaRegistryJsonSerializerBuilder WithSchemaConfiguration(
             Action<ISchemaBuilder> configureSchema)
         {
-            ConfigureSchema = configureSchema;
+            var builder = SchemaBuilder.Configure(configureSchema);
+
+            UnregisteredSchema = builder.UnregisteredSchema;
+            RegisteredSchema = builder.RegisteredSchema;
+
             return this;
         }
 
         public ISchemaRegistryJsonSerializerBuilder WithJsonSerializerConfiguration(
             Action<IJsonSerializerConfigBuilder> configureSerializer)
         {
-            ConfigureSerializer = configureSerializer;
+            SerializerConfig = JsonSerializerConfigBuilder.Build(configureSerializer);
             return this;
         }
 
         public ISchemaRegistryJsonSerializerBuilder WithJsonDeserializerConfiguration(
             Action<IJsonDeserializerConfigBuilder> configureDeserializer)
         {
-            ConfigureDeserializer = configureDeserializer;
+            DeserializerConfig = JsonDeserializerConfigBuilder.Build(configureDeserializer);
             return this;
         }
 
         public ISchemaRegistryJsonSerializerBuilder WithJsonSchemaGeneratorConfiguration(
             Action<IJsonSchemaGeneratorSettingsBuilder> configureSchemaGenerator)
         {
-            ConfigureSchemaGenerator = configureSchemaGenerator;
+            SchemaGeneratorSettings = JsonSchemaGeneratorSettingsBuilder.Build(configureSchemaGenerator);
             return this;
         }
 
         public static SchemaRegistryJsonSerializerBuilder Configure(
-            Action<ISchemaRegistryJsonSerializerBuilder> configureSerializer)
+            IServiceProvider serviceProvider,
+            Action<IServiceProvider, ISchemaRegistryJsonSerializerBuilder> configureSerializer)
         {
-            var builder = new SchemaRegistryJsonSerializerBuilder();
+            var builder = new SchemaRegistryJsonSerializerBuilder(serviceProvider);
 
-            configureSerializer?.Invoke(builder);
+            configureSerializer?.Invoke(serviceProvider, builder);
 
             return builder;
         }

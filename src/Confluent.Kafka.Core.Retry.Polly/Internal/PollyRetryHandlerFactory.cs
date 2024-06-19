@@ -14,7 +14,7 @@ namespace Confluent.Kafka.Core.Retry.Polly.Internal
         {
             var retryHandler = serviceProvider?.GetKeyedService<IRetryHandler<TKey, TValue>>(
                 handlerKey ?? PollyRetryHandlerConstants.PollyRetryHandlerKey) ??
-                CreateRetryHandler<TKey, TValue>(serviceProvider, loggerFactory, configureOptions);
+                CreateRetryHandler<TKey, TValue>(serviceProvider, loggerFactory, (_, builder) => configureOptions?.Invoke(builder));
 
             return retryHandler;
         }
@@ -22,9 +22,9 @@ namespace Confluent.Kafka.Core.Retry.Polly.Internal
         public static IRetryHandler<TKey, TValue> CreateRetryHandler<TKey, TValue>(
             IServiceProvider serviceProvider,
             ILoggerFactory loggerFactory,
-            Action<IPollyRetryHandlerOptionsBuilder> configureOptions)
+            Action<IServiceProvider, IPollyRetryHandlerOptionsBuilder> configureOptions)
         {
-            var options = PollyRetryHandlerOptionsBuilder.Build(configureOptions);
+            var options = PollyRetryHandlerOptionsBuilder.Build(serviceProvider, configureOptions);
 
             var retryHandler = new PollyRetryHandler<TKey, TValue>(
                 loggerFactory ?? serviceProvider?.GetService<ILoggerFactory>(),

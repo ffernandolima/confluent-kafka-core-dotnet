@@ -213,11 +213,13 @@ namespace Confluent.Kafka.Core.Serialization.NewtonsoftJson.Internal
             return this;
         }
 
-        public static JsonSerializerSettings Build(Action<IJsonSerializerSettingsBuilder> configureSettings)
+        public static JsonSerializerSettings Build(
+            IServiceProvider serviceProvider,
+            Action<IServiceProvider, IJsonSerializerSettingsBuilder> configureSettings)
         {
             using var builder = new JsonSerializerSettingsBuilder();
 
-            configureSettings?.Invoke(builder);
+            configureSettings?.Invoke(serviceProvider, builder);
 
             var settings = builder.Build();
 

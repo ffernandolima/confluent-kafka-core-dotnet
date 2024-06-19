@@ -22,11 +22,13 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Internal
             return this;
         }
 
-        public static SchemaRegistryClientBuilder Configure(Action<ISchemaRegistryClientBuilder> configureClient)
+        public static SchemaRegistryClientBuilder Configure(
+            IServiceProvider serviceProvider,
+            Action<IServiceProvider, ISchemaRegistryClientBuilder> configureClient)
         {
             var builder = new SchemaRegistryClientBuilder();
 
-            configureClient?.Invoke(builder);
+            configureClient?.Invoke(serviceProvider, builder);
 
             return builder;
         }

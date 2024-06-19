@@ -1,5 +1,4 @@
-﻿using Confluent.Kafka.Core.Serialization.SchemaRegistry.Internal;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using System;
 
 namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Json.Internal
@@ -8,46 +7,30 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Json.Internal
     {
         public static SchemaRegistryJsonSerializer<T> GetOrCreateSerializer<T>(
             IServiceProvider serviceProvider,
-            SchemaRegistryJsonSerializerBuilder builder,
+            Action<ISchemaRegistryJsonSerializerBuilder> configureSerializer,
             object serializerKey)
                 where T : class
         {
             var serializer = serviceProvider?.GetKeyedService<SchemaRegistryJsonSerializer<T>>(
                 serializerKey ?? SchemaRegistryJsonSerializerConstants.SchemaRegistryJsonSerializerKey) ??
-                CreateSerializer<T>(serviceProvider, builder);
+                CreateSerializer<T>(serviceProvider, (_, builder) => configureSerializer?.Invoke(builder));
 
             return serializer;
         }
 
         public static SchemaRegistryJsonSerializer<T> CreateSerializer<T>(
            IServiceProvider serviceProvider,
-           SchemaRegistryJsonSerializerBuilder builder)
+           Action<IServiceProvider, ISchemaRegistryJsonSerializerBuilder> configureSerializer)
                 where T : class
         {
-            if (builder is null)
-            {
-                throw new ArgumentNullException(nameof(builder), $"{nameof(builder)} cannot be null.");
-            }
-
-            var schemaRegistryClient = SchemaRegistryClientFactory.GetOrCreateSchemaRegistryClient(
-                serviceProvider,
-                builder.ConfigureClient,
-                builder.ClientKey);
-
-            var schemaBuilder = SchemaBuilder.Configure(builder.ConfigureSchema);
-
-            var serializerConfig = JsonSerializerConfigBuilder.Build(builder.ConfigureSerializer);
-
-            var deserializerConfig = JsonDeserializerConfigBuilder.Build(builder.ConfigureDeserializer);
-
-            var schemaGeneratorSettings = JsonSchemaGeneratorSettingsBuilder.Build(builder.ConfigureSchemaGenerator);
+            var builder = SchemaRegistryJsonSerializerBuilder.Configure(serviceProvider, configureSerializer);
 
             var serializer = new SchemaRegistryJsonSerializer<T>(
-                schemaRegistryClient,
-                schemaBuilder.RegisteredSchema ?? schemaBuilder.UnregisteredSchema,
-                serializerConfig,
-                deserializerConfig,
-                schemaGeneratorSettings);
+                builder.SchemaRegistryClient,
+                builder.RegisteredSchema ?? builder.UnregisteredSchema,
+                builder.SerializerConfig,
+                builder.DeserializerConfig,
+                builder.SchemaGeneratorSettings);
 
             return serializer;
         }

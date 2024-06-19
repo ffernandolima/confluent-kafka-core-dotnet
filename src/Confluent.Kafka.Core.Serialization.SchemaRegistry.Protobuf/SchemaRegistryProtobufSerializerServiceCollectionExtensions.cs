@@ -11,7 +11,7 @@ namespace Microsoft.Extensions.DependencyInjection
     {
         public static IServiceCollection AddSchemaRegistryProtobufSerializer<T>(
             this IServiceCollection services,
-            Action<ISchemaRegistryProtobufSerializerBuilder> configureSerializer,
+            Action<IServiceProvider, ISchemaRegistryProtobufSerializerBuilder> configureSerializer,
             object serializerKey = null)
                 where T : class, IMessage<T>, new()
         {
@@ -25,15 +25,11 @@ namespace Microsoft.Extensions.DependencyInjection
                 throw new ArgumentNullException(nameof(configureSerializer), $"{nameof(configureSerializer)} cannot be null.");
             }
 
-            var builder = SchemaRegistryProtobufSerializerBuilder.Configure(configureSerializer);
-
-            services.AddSchemaRegistryClient(builder.ConfigureClient, builder.ClientKey);
-
             var serviceKey = serializerKey ?? SchemaRegistryProtobufSerializerConstants.SchemaRegistryProtobufSerializerKey;
 
             services.TryAddKeyedSingleton(
                 serviceKey,
-                (serviceProvider, _) => SchemaRegistryProtobufSerializerFactory.CreateSerializer<T>(serviceProvider, builder));
+                (serviceProvider, _) => SchemaRegistryProtobufSerializerFactory.CreateSerializer<T>(serviceProvider, configureSerializer));
 
             services.TryAddKeyedSingleton<IAsyncSerializer<T>>(
                 serviceKey,

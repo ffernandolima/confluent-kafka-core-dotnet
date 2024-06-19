@@ -10,7 +10,7 @@ namespace Microsoft.Extensions.DependencyInjection
     {
         public static IServiceCollection AddProtobufNetSerializer<T>(
             this IServiceCollection services,
-            Action<IProtobufNetSerializerOptionsBuilder> configureOptions = null,
+            Action<IServiceProvider, IProtobufNetSerializerOptionsBuilder> configureOptions = null,
             object serializerKey = null)
         {
             if (services is null)
@@ -22,7 +22,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.TryAddKeyedSingleton(
                 serviceKey,
-                (_, _) => ProtobufNetSerializerFactory.CreateSerializer<T>(configureOptions));
+                (serviceProvider, _) => ProtobufNetSerializerFactory.CreateSerializer<T>(serviceProvider, configureOptions));
 
             services.TryAddKeyedSingleton<ISerializer<T>>(
                 serviceKey,

@@ -14,7 +14,7 @@ namespace Confluent.Kafka.Core.Consumer
     {
         public static IKafkaConsumerBuilder<TKey, TValue> WithHandlerFactory<TKey, TValue>(
             this IKafkaConsumerBuilder<TKey, TValue> consumerBuilder,
-            Action<IServiceProvider, IKafkaConsumerHandlerFactoryOptionsBuilder> configureOptions = null,
+            Action<IKafkaConsumerHandlerFactoryOptionsBuilder> configureOptions = null,
             object consumerKey = null)
         {
             if (consumerBuilder is null)
@@ -35,7 +35,7 @@ namespace Confluent.Kafka.Core.Consumer
 
         public static IKafkaConsumerBuilder<TKey, TValue> WithDeadLetterProducer<TKey, TValue>(
             this IKafkaConsumerBuilder<TKey, TValue> consumerBuilder,
-            Action<IServiceProvider, IKafkaProducerBuilder<byte[], KafkaMetadataMessage>> configureProducer = null,
+            Action<IKafkaProducerBuilder<byte[], KafkaMetadataMessage>> configureProducer = null,
             object producerKey = null)
         {
             if (consumerBuilder is null)

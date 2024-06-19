@@ -12,17 +12,18 @@ namespace Confluent.Kafka.Core.Serialization.JsonCore.Internal
         {
             var serializer = serviceProvider?.GetKeyedService<JsonCoreSerializer<T>>(
                 serializerKey ?? JsonCoreSerializerConstants.JsonCoreSerializerKey) ??
-                CreateSerializer<T>(configureOptions);
+                CreateSerializer<T>(serviceProvider, (_, builder) => configureOptions?.Invoke(builder));
 
             return serializer;
         }
 
         public static JsonCoreSerializer<T> CreateSerializer<T>(
-            Action<IJsonSerializerOptionsBuilder> configureOptions)
+            IServiceProvider serviceProvider,
+            Action<IServiceProvider, IJsonSerializerOptionsBuilder> configureOptions)
         {
-            var settings = JsonSerializerOptionsBuilder.Build(configureOptions);
+            var options = JsonSerializerOptionsBuilder.Build(serviceProvider, configureOptions);
 
-            var serializer = new JsonCoreSerializer<T>(settings);
+            var serializer = new JsonCoreSerializer<T>(options);
 
             return serializer;
         }

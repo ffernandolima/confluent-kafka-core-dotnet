@@ -9,7 +9,7 @@ namespace Microsoft.Extensions.DependencyInjection
     {
         public static IServiceCollection AddSchemaRegistryClient(
             this IServiceCollection services,
-            Action<ISchemaRegistryClientBuilder> configureClient,
+            Action<IServiceProvider, ISchemaRegistryClientBuilder> configureClient,
             object clientKey = null)
         {
             if (services is null)
@@ -27,6 +27,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 (serviceProvider, _) =>
                 {
                     var schemaRegistryClient = SchemaRegistryClientFactory.CreateSchemaRegistryClient(
+                        serviceProvider,
                         configureClient);
 
                     return schemaRegistryClient;

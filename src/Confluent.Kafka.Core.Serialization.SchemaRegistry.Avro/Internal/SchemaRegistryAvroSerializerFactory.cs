@@ -1,5 +1,4 @@
-﻿using Confluent.Kafka.Core.Serialization.SchemaRegistry.Internal;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using System;
 
 namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Avro.Internal
@@ -8,38 +7,26 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Avro.Internal
     {
         public static SchemaRegistryAvroSerializer<T> GetOrCreateSerializer<T>(
            IServiceProvider serviceProvider,
-           SchemaRegistryAvroSerializerBuilder builder,
+           Action<ISchemaRegistryAvroSerializerBuilder> configureSerializer,
            object serializerKey)
         {
             var serializer = serviceProvider?.GetKeyedService<SchemaRegistryAvroSerializer<T>>(
                 serializerKey ?? SchemaRegistryAvroSerializerConstants.SchemaRegistryAvroSerializerKey) ??
-                CreateSerializer<T>(serviceProvider, builder);
+                CreateSerializer<T>(serviceProvider, (_, builder) => configureSerializer?.Invoke(builder));
 
             return serializer;
         }
 
         public static SchemaRegistryAvroSerializer<T> CreateSerializer<T>(
             IServiceProvider serviceProvider,
-            SchemaRegistryAvroSerializerBuilder builder)
+            Action<IServiceProvider, ISchemaRegistryAvroSerializerBuilder> configureSerializer)
         {
-            if (builder is null)
-            {
-                throw new ArgumentNullException(nameof(builder), $"{nameof(builder)} cannot be null.");
-            }
-
-            var schemaRegistryClient = SchemaRegistryClientFactory.GetOrCreateSchemaRegistryClient(
-                serviceProvider,
-                builder.ConfigureClient,
-                builder.ClientKey);
-
-            var serializerConfig = AvroSerializerConfigBuilder.Build(builder.ConfigureSerializer);
-
-            var deserializerConfig = AvroDeserializerConfigBuilder.Build(builder.ConfigureDeserializer);
+            var builder = SchemaRegistryAvroSerializerBuilder.Configure(serviceProvider, configureSerializer);
 
             var serializer = new SchemaRegistryAvroSerializer<T>(
-                schemaRegistryClient,
-                serializerConfig,
-                deserializerConfig);
+                builder.SchemaRegistryClient,
+                builder.SerializerConfig,
+                builder.DeserializerConfig);
 
             return serializer;
         }

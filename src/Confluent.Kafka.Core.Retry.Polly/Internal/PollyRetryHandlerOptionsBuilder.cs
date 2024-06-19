@@ -50,11 +50,13 @@ namespace Confluent.Kafka.Core.Retry.Polly.Internal
             return this;
         }
 
-        public static PollyRetryHandlerOptions Build(Action<IPollyRetryHandlerOptionsBuilder> configureOptions)
+        public static PollyRetryHandlerOptions Build(
+            IServiceProvider serviceProvider,
+            Action<IServiceProvider, IPollyRetryHandlerOptionsBuilder> configureOptions)
         {
             using var builder = new PollyRetryHandlerOptionsBuilder();
 
-            configureOptions?.Invoke(builder);
+            configureOptions?.Invoke(serviceProvider, builder);
 
             var options = builder.Build();
 

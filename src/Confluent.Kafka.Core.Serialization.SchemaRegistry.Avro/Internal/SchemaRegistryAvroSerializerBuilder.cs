@@ -1,43 +1,56 @@
-﻿using System;
+﻿using Confluent.Kafka.Core.Serialization.SchemaRegistry.Internal;
+using Confluent.SchemaRegistry;
+using Confluent.SchemaRegistry.Serdes;
+using System;
 
 namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Avro.Internal
 {
     internal sealed class SchemaRegistryAvroSerializerBuilder : ISchemaRegistryAvroSerializerBuilder
     {
-        public object ClientKey { get; private set; }
-        public Action<ISchemaRegistryClientBuilder> ConfigureClient { get; private set; }
-        public Action<IAvroSerializerConfigBuilder> ConfigureSerializer { get; private set; }
-        public Action<IAvroDeserializerConfigBuilder> ConfigureDeserializer { get; private set; }
+        private readonly IServiceProvider _serviceProvider;
+
+        public ISchemaRegistryClient SchemaRegistryClient { get; private set; }
+        public AvroSerializerConfig SerializerConfig { get; private set; }
+        public AvroDeserializerConfig DeserializerConfig { get; private set; }
+
+        public SchemaRegistryAvroSerializerBuilder(IServiceProvider serviceProvider)
+        {
+            _serviceProvider = serviceProvider;
+        }
 
         public ISchemaRegistryAvroSerializerBuilder WithSchemaRegistryClientConfiguration(
             Action<ISchemaRegistryClientBuilder> configureClient,
             object clientKey = null)
         {
-            ConfigureClient = configureClient;
-            ClientKey = clientKey;
+            SchemaRegistryClient = SchemaRegistryClientFactory.GetOrCreateSchemaRegistryClient(
+                _serviceProvider,
+                configureClient,
+                clientKey);
+
             return this;
         }
 
         public ISchemaRegistryAvroSerializerBuilder WithAvroSerializerConfiguration(
             Action<IAvroSerializerConfigBuilder> configureSerializer)
         {
-            ConfigureSerializer = configureSerializer;
+            SerializerConfig = AvroSerializerConfigBuilder.Build(configureSerializer);
             return this;
         }
 
         public ISchemaRegistryAvroSerializerBuilder WithAvroDeserializerConfiguration(
             Action<IAvroDeserializerConfigBuilder> configureDeserializer)
         {
-            ConfigureDeserializer = configureDeserializer;
+            DeserializerConfig = AvroDeserializerConfigBuilder.Build(configureDeserializer);
             return this;
         }
 
         public static SchemaRegistryAvroSerializerBuilder Configure(
-            Action<ISchemaRegistryAvroSerializerBuilder> configureSerializer)
+            IServiceProvider serviceProvider,
+            Action<IServiceProvider, ISchemaRegistryAvroSerializerBuilder> configureSerializer)
         {
-            var builder = new SchemaRegistryAvroSerializerBuilder();
+            var builder = new SchemaRegistryAvroSerializerBuilder(serviceProvider);
 
-            configureSerializer?.Invoke(builder);
+            configureSerializer?.Invoke(serviceProvider, builder);
 
             return builder;
         }

@@ -291,9 +291,9 @@ namespace Confluent.Kafka.Core.Consumer
             return this;
         }
 
-        public IKafkaConsumerBuilder<TKey, TValue> WithConsumerConfiguration(Action<IServiceProvider, IKafkaConsumerConfigBuilder> configureConsumer)
+        public IKafkaConsumerBuilder<TKey, TValue> WithConsumerConfiguration(Action<IKafkaConsumerConfigBuilder> configureConsumer)
         {
-            BuildConfig(ServiceProvider, ConsumerConfig, configureConsumer);
+            BuildConfig(ConsumerConfig, configureConsumer);
             return this;
         }
 
@@ -340,7 +340,7 @@ namespace Confluent.Kafka.Core.Consumer
             _handlerFactory ??= KafkaConsumerHandlerFactory.GetOrCreateHandlerFactory<TKey, TValue>(
                 ServiceProvider,
                 LoggerFactory,
-                (_, builder) => builder.WithEnableLogging(ConsumerConfig.EnableLogging),
+                builder => builder.WithEnableLogging(ConsumerConfig.EnableLogging),
                 _consumerKey);
 
             if (StatisticsHandler is null)
@@ -408,13 +408,12 @@ namespace Confluent.Kafka.Core.Consumer
         #region Private Methods
 
         private static IKafkaConsumerConfig BuildConfig(
-            IServiceProvider serviceProvider = null,
             IKafkaConsumerConfig consumerConfig = null,
-            Action<IServiceProvider, IKafkaConsumerConfigBuilder> configureConsumer = null)
+            Action<IKafkaConsumerConfigBuilder> configureConsumer = null)
         {
             using var builder = new KafkaConsumerConfigBuilder(consumerConfig);
 
-            configureConsumer?.Invoke(serviceProvider, builder);
+            configureConsumer?.Invoke(builder);
 
             return builder.Build();
         }

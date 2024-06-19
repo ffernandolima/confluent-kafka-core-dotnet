@@ -9,7 +9,7 @@ namespace Confluent.Kafka.Core.Consumer.Internal
         public static IKafkaConsumer<TKey, TValue> GetOrCreateConsumer<TKey, TValue>(
             IServiceProvider serviceProvider,
             ILoggerFactory loggerFactory,
-            Action<IServiceProvider, IKafkaConsumerBuilder<TKey, TValue>> configureConsumer,
+            Action<IKafkaConsumerBuilder<TKey, TValue>> configureConsumer,
             object consumerKey)
         {
             var consumerbuilder = serviceProvider?.GetKeyedService<IKafkaConsumerBuilder<TKey, TValue>>(consumerKey) ??
@@ -20,7 +20,7 @@ namespace Confluent.Kafka.Core.Consumer.Internal
                         serviceProvider?.GetService<ILoggerFactory>())
                     .WithServiceProvider(serviceProvider);
 
-            configureConsumer?.Invoke(serviceProvider, consumerbuilder);
+            configureConsumer?.Invoke(consumerbuilder);
 
 #if NETSTANDARD2_0_OR_GREATER
             var consumer = consumerbuilder.Build().ToKafkaConsumer();

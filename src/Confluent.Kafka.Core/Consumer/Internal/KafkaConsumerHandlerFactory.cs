@@ -9,11 +9,11 @@ namespace Confluent.Kafka.Core.Consumer.Internal
         public static IKafkaConsumerHandlerFactory<TKey, TValue> GetOrCreateHandlerFactory<TKey, TValue>(
             IServiceProvider serviceProvider,
             ILoggerFactory loggerFactory,
-            Action<IServiceProvider, IKafkaConsumerHandlerFactoryOptionsBuilder> configureOptions,
+            Action<IKafkaConsumerHandlerFactoryOptionsBuilder> configureOptions,
             object consumerKey)
         {
             var handlerFactory = serviceProvider?.GetKeyedService<IKafkaConsumerHandlerFactory<TKey, TValue>>(consumerKey) ??
-                CreateHandlerFactory<TKey, TValue>(serviceProvider, loggerFactory, configureOptions);
+                CreateHandlerFactory<TKey, TValue>(serviceProvider, loggerFactory, (_, builder) => configureOptions?.Invoke(builder));
 
             return handlerFactory;
         }

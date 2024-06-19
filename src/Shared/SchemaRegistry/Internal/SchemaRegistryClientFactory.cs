@@ -13,30 +13,19 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Internal
         {
             var schemaRegistryClient = serviceProvider?.GetKeyedService<ISchemaRegistryClient>(
                 clientKey ?? SchemaRegistryClientConstants.ConfluentSchemaRegistryClientKey) ??
-                CreateSchemaRegistryClient(configureClient);
+                CreateSchemaRegistryClient(serviceProvider, (_, builder) => configureClient?.Invoke(builder));
 
             return schemaRegistryClient;
         }
 
         public static ISchemaRegistryClient CreateSchemaRegistryClient(
-            Action<ISchemaRegistryClientBuilder> configureClient)
+            IServiceProvider serviceProvider,
+            Action<IServiceProvider, ISchemaRegistryClientBuilder> configureClient)
         {
-            if (configureClient is null)
-            {
-                throw new ArgumentNullException(nameof(configureClient), $"{nameof(configureClient)} cannot be null.");
-            }
-
-            var builder = SchemaRegistryClientBuilder.Configure(configureClient);
-
-            var schemaRegistryConfig = builder.SchemaRegistryConfig;
-
-            if (schemaRegistryConfig is null)
-            {
-                throw new InvalidOperationException($"{nameof(schemaRegistryConfig)} cannot be null.");
-            }
+            var builder = SchemaRegistryClientBuilder.Configure(serviceProvider, configureClient);
 
             var schemaRegistryClient = new CachedSchemaRegistryClient(
-                schemaRegistryConfig,
+                builder.SchemaRegistryConfig,
                 builder.AuthenticationHeaderValueProvider);
 
             return schemaRegistryClient;

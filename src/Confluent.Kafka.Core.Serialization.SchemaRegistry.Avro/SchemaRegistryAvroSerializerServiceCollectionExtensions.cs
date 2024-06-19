@@ -10,7 +10,7 @@ namespace Microsoft.Extensions.DependencyInjection
     {
         public static IServiceCollection AddSchemaRegistryAvroSerializer<T>(
             this IServiceCollection services,
-            Action<ISchemaRegistryAvroSerializerBuilder> configureSerializer,
+            Action<IServiceProvider, ISchemaRegistryAvroSerializerBuilder> configureSerializer,
             object serializerKey = null)
         {
             if (services is null)
@@ -23,15 +23,11 @@ namespace Microsoft.Extensions.DependencyInjection
                 throw new ArgumentNullException(nameof(configureSerializer), $"{nameof(configureSerializer)} cannot be null.");
             }
 
-            var builder = SchemaRegistryAvroSerializerBuilder.Configure(configureSerializer);
-
-            services.AddSchemaRegistryClient(builder.ConfigureClient, builder.ClientKey);
-
             var serviceKey = serializerKey ?? SchemaRegistryAvroSerializerConstants.SchemaRegistryAvroSerializerKey;
 
             services.TryAddKeyedSingleton(
                 serviceKey,
-                (serviceProvider, _) => SchemaRegistryAvroSerializerFactory.CreateSerializer<T>(serviceProvider, builder));
+                (serviceProvider, _) => SchemaRegistryAvroSerializerFactory.CreateSerializer<T>(serviceProvider, configureSerializer));
 
             services.TryAddKeyedSingleton<IAsyncSerializer<T>>(
                 serviceKey,

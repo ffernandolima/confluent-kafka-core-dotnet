@@ -10,7 +10,7 @@ namespace Confluent.Kafka.Core.Producer
     {
         public static IKafkaProducerBuilder<TKey, TValue> WithHandlerFactory<TKey, TValue>(
             this IKafkaProducerBuilder<TKey, TValue> producerBuilder,
-            Action<IServiceProvider, IKafkaProducerHandlerFactoryOptionsBuilder> configureOptions = null,
+            Action<IKafkaProducerHandlerFactoryOptionsBuilder> configureOptions = null,
             object producerKey = null)
         {
             if (producerBuilder is null)

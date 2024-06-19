@@ -15,7 +15,7 @@ namespace Confluent.Kafka.Core.Idempotency.Redis.Internal
         {
             var idempotencyHandler = serviceProvider?.GetKeyedService<IIdempotencyHandler<TKey, TValue>>(
                 handlerKey ?? RedisIdempotencyHandlerConstants.RedisIdempotencyHandlerKey) ??
-                CreateIdempotencyHandler(serviceProvider, loggerFactory, configureHandler);
+                CreateIdempotencyHandler<TKey, TValue>(serviceProvider, loggerFactory, (_, builder) => configureHandler?.Invoke(builder));
 
             return idempotencyHandler;
         }
@@ -23,35 +23,16 @@ namespace Confluent.Kafka.Core.Idempotency.Redis.Internal
         public static IIdempotencyHandler<TKey, TValue> CreateIdempotencyHandler<TKey, TValue>(
             IServiceProvider serviceProvider,
             ILoggerFactory loggerFactory,
-            Action<IRedisIdempotencyHandlerBuilder<TKey, TValue>> configureHandler)
+            Action<IServiceProvider, IRedisIdempotencyHandlerBuilder<TKey, TValue>> configureHandler)
         {
-            if (configureHandler is null)
-            {
-                throw new ArgumentNullException(nameof(configureHandler), $"{nameof(configureHandler)} cannot be null.");
-            }
+            var builder = RedisIdempotencyHandlerBuilder<TKey, TValue>.Configure(serviceProvider, configureHandler);
 
-            var builder = RedisIdempotencyHandlerBuilder<TKey, TValue>.Configure(configureHandler);
-
-            var redisOptions = builder.RedisOptions;
-
-            if (redisOptions is null)
-            {
-                throw new InvalidOperationException($"{nameof(redisOptions)} cannot be null.");
-            }
-
-            var handlerOptions = builder.HandlerOptions;
-
-            if (handlerOptions is null)
-            {
-                throw new InvalidOperationException($"{nameof(handlerOptions)} cannot be null.");
-            }
-
-            var multiplexer = ConnectionMultiplexer.Connect(redisOptions);
+            var multiplexer = ConnectionMultiplexer.Connect(builder.RedisOptions);
 
             var idempotencyHandler = new RedisIdempotencyHandler<TKey, TValue>(
                 loggerFactory ?? serviceProvider?.GetService<ILoggerFactory>(),
                 multiplexer,
-                handlerOptions);
+                builder.HandlerOptions);
 
             return idempotencyHandler;
         }

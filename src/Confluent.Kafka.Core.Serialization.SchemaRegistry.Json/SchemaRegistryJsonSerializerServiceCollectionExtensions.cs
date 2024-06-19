@@ -10,7 +10,7 @@ namespace Microsoft.Extensions.DependencyInjection
     {
         public static IServiceCollection AddSchemaRegistryJsonSerializer<T>(
             this IServiceCollection services,
-            Action<ISchemaRegistryJsonSerializerBuilder> configureSerializer,
+            Action<IServiceProvider, ISchemaRegistryJsonSerializerBuilder> configureSerializer,
             object serializerKey = null)
                 where T : class
         {
@@ -24,15 +24,11 @@ namespace Microsoft.Extensions.DependencyInjection
                 throw new ArgumentNullException(nameof(configureSerializer), $"{nameof(configureSerializer)} cannot be null.");
             }
 
-            var builder = SchemaRegistryJsonSerializerBuilder.Configure(configureSerializer);
-
-            services.AddSchemaRegistryClient(builder.ConfigureClient, builder.ClientKey);
-
             var serviceKey = serializerKey ?? SchemaRegistryJsonSerializerConstants.SchemaRegistryJsonSerializerKey;
 
             services.TryAddKeyedSingleton(
                 serviceKey,
-                (serviceProvider, _) => SchemaRegistryJsonSerializerFactory.CreateSerializer<T>(serviceProvider, builder));
+                (serviceProvider, _) => SchemaRegistryJsonSerializerFactory.CreateSerializer<T>(serviceProvider, configureSerializer));
 
             services.TryAddKeyedSingleton<IAsyncSerializer<T>>(
                 serviceKey,

@@ -1,5 +1,4 @@
-﻿using Confluent.Kafka.Core.Serialization.SchemaRegistry.Internal;
-using Google.Protobuf;
+﻿using Google.Protobuf;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 
@@ -9,40 +8,28 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Protobuf.Internal
     {
         public static SchemaRegistryProtobufSerializer<T> GetOrCreateSerializer<T>(
             IServiceProvider serviceProvider,
-            SchemaRegistryProtobufSerializerBuilder builder,
+            Action<ISchemaRegistryProtobufSerializerBuilder> configureSerializer,
             object serializerKey)
                 where T : class, IMessage<T>, new()
         {
             var serializer = serviceProvider?.GetKeyedService<SchemaRegistryProtobufSerializer<T>>(
                 serializerKey ?? SchemaRegistryProtobufSerializerConstants.SchemaRegistryProtobufSerializerKey) ??
-                CreateSerializer<T>(serviceProvider, builder);
+                CreateSerializer<T>(serviceProvider, (_, builder) => configureSerializer?.Invoke(builder));
 
             return serializer;
         }
 
         public static SchemaRegistryProtobufSerializer<T> CreateSerializer<T>(
             IServiceProvider serviceProvider,
-            SchemaRegistryProtobufSerializerBuilder builder)
+            Action<IServiceProvider, ISchemaRegistryProtobufSerializerBuilder> configureSerializer)
                 where T : class, IMessage<T>, new()
         {
-            if (builder is null)
-            {
-                throw new ArgumentNullException(nameof(builder), $"{nameof(builder)} cannot be null.");
-            }
-
-            var schemaRegistryClient = SchemaRegistryClientFactory.GetOrCreateSchemaRegistryClient(
-                serviceProvider,
-                builder.ConfigureClient,
-                builder.ClientKey);
-
-            var serializerConfig = ProtobufSerializerConfigBuilder.Build(builder.ConfigureSerializer);
-
-            var deserializerConfig = ProtobufDeserializerConfigBuilder.Build(builder.ConfigureDeserializer);
+            var builder = SchemaRegistryProtobufSerializerBuilder.Configure(serviceProvider, configureSerializer);
 
             var serializer = new SchemaRegistryProtobufSerializer<T>(
-                schemaRegistryClient,
-                serializerConfig,
-                deserializerConfig);
+                builder.SchemaRegistryClient,
+                builder.SerializerConfig,
+                builder.DeserializerConfig);
 
             return serializer;
         }

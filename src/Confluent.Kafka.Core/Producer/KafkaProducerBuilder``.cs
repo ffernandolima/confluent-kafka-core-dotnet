@@ -244,9 +244,9 @@ namespace Confluent.Kafka.Core.Producer
             return this;
         }
 
-        public IKafkaProducerBuilder<TKey, TValue> WithProducerConfiguration(Action<IServiceProvider, IKafkaProducerConfigBuilder> configureProducer)
+        public IKafkaProducerBuilder<TKey, TValue> WithProducerConfiguration(Action<IKafkaProducerConfigBuilder> configureProducer)
         {
-            BuildConfig(ServiceProvider, ProducerConfig, configureProducer);
+            BuildConfig(ProducerConfig, configureProducer);
             return this;
         }
 
@@ -292,7 +292,7 @@ namespace Confluent.Kafka.Core.Producer
             _handlerFactory ??= KafkaProducerHandlerFactory.GetOrCreateHandlerFactory<TKey, TValue>(
                 ServiceProvider,
                 LoggerFactory,
-                (_, builder) => builder.WithEnableLogging(ProducerConfig.EnableLogging),
+                builder => builder.WithEnableLogging(ProducerConfig.EnableLogging),
                 _producerKey);
 
             if (StatisticsHandler is null)
@@ -335,13 +335,12 @@ namespace Confluent.Kafka.Core.Producer
         #region Private Methods
 
         private static IKafkaProducerConfig BuildConfig(
-            IServiceProvider serviceProvider = null,
             IKafkaProducerConfig producerConfig = null,
-            Action<IServiceProvider, IKafkaProducerConfigBuilder> configureProducer = null)
+            Action<IKafkaProducerConfigBuilder> configureProducer = null)
         {
             using var builder = new KafkaProducerConfigBuilder(producerConfig);
 
-            configureProducer?.Invoke(serviceProvider, builder);
+            configureProducer?.Invoke(builder);
 
             return builder.Build();
         }

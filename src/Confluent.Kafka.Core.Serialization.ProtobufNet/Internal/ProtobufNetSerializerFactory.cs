@@ -12,15 +12,16 @@ namespace Confluent.Kafka.Core.Serialization.ProtobufNet.Internal
         {
             var serializer = serviceProvider?.GetKeyedService<ProtobufNetSerializer<T>>(
                 serializerKey ?? ProtobufNetSerializerConstants.ProtobufNetSerializerKey) ??
-                CreateSerializer<T>(configureOptions);
+                CreateSerializer<T>(serviceProvider, (_, builder) => configureOptions?.Invoke(builder));
 
             return serializer;
         }
 
         public static ProtobufNetSerializer<T> CreateSerializer<T>(
-            Action<IProtobufNetSerializerOptionsBuilder> configureOptions)
+            IServiceProvider serviceProvider,
+            Action<IServiceProvider, IProtobufNetSerializerOptionsBuilder> configureOptions)
         {
-            var options = ProtobufNetSerializerOptionsBuilder.Build(configureOptions);
+            var options = ProtobufNetSerializerOptionsBuilder.Build(serviceProvider, configureOptions);
 
             var serializer = new ProtobufNetSerializer<T>(options);
 

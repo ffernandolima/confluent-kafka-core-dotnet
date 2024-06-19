@@ -10,7 +10,7 @@ namespace Microsoft.Extensions.DependencyInjection
     {
         public static IServiceCollection AddNewtonsoftJsonSerializer<T>(
             this IServiceCollection services,
-            Action<IJsonSerializerSettingsBuilder> configureSettings = null,
+            Action<IServiceProvider, IJsonSerializerSettingsBuilder> configureSettings = null,
             object serializerKey = null)
         {
             if (services is null)
@@ -22,7 +22,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.TryAddKeyedSingleton(
                 serviceKey,
-                (_, _) => NewtonsoftJsonSerializerFactory.CreateSerializer<T>(configureSettings));
+                (serviceProvider, _) => NewtonsoftJsonSerializerFactory.CreateSerializer<T>(serviceProvider, configureSettings));
 
             services.TryAddKeyedSingleton<ISerializer<T>>(
                 serviceKey,

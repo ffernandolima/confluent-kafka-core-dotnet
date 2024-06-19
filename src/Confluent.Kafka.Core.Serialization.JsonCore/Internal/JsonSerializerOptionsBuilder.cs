@@ -174,11 +174,13 @@ namespace Confluent.Kafka.Core.Serialization.JsonCore.Internal
             return this;
         }
 
-        public static JsonSerializerOptions Build(Action<IJsonSerializerOptionsBuilder> configureOptions)
+        public static JsonSerializerOptions Build(
+            IServiceProvider serviceProvider,
+            Action<IServiceProvider, IJsonSerializerOptionsBuilder> configureOptions)
         {
             using var builder = new JsonSerializerOptionsBuilder();
 
-            configureOptions?.Invoke(builder);
+            configureOptions?.Invoke(serviceProvider, builder);
 
             var options = builder.Build();
 

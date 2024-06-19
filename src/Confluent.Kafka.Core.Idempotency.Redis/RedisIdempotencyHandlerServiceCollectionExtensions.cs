@@ -10,7 +10,7 @@ namespace Microsoft.Extensions.DependencyInjection
     {
         public static IServiceCollection AddRedisIdempotencyHandler<TKey, TValue>(
             this IServiceCollection services,
-            Action<IRedisIdempotencyHandlerBuilder<TKey, TValue>> configureHandler,
+            Action<IServiceProvider, IRedisIdempotencyHandlerBuilder<TKey, TValue>> configureHandler,
             object handlerKey = null)
         {
             if (services is null)

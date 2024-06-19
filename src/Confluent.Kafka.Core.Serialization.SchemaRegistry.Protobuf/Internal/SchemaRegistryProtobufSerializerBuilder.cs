@@ -1,43 +1,56 @@
-﻿using System;
+﻿using Confluent.Kafka.Core.Serialization.SchemaRegistry.Internal;
+using Confluent.SchemaRegistry;
+using Confluent.SchemaRegistry.Serdes;
+using System;
 
 namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Protobuf.Internal
 {
     internal sealed class SchemaRegistryProtobufSerializerBuilder : ISchemaRegistryProtobufSerializerBuilder
     {
-        public object ClientKey { get; private set; }
-        public Action<ISchemaRegistryClientBuilder> ConfigureClient { get; private set; }
-        public Action<IProtobufSerializerConfigBuilder> ConfigureSerializer { get; private set; }
-        public Action<IProtobufDeserializerConfigBuilder> ConfigureDeserializer { get; private set; }
+        private readonly IServiceProvider _serviceProvider;
+
+        public ISchemaRegistryClient SchemaRegistryClient { get; private set; }
+        public ProtobufSerializerConfig SerializerConfig { get; private set; }
+        public ProtobufDeserializerConfig DeserializerConfig { get; private set; }
+
+        public SchemaRegistryProtobufSerializerBuilder(IServiceProvider serviceProvider)
+        {
+            _serviceProvider = serviceProvider;
+        }
 
         public ISchemaRegistryProtobufSerializerBuilder WithSchemaRegistryClientConfiguration(
             Action<ISchemaRegistryClientBuilder> configureClient,
             object clientKey = null)
         {
-            ConfigureClient = configureClient;
-            ClientKey = clientKey;
+            SchemaRegistryClient = SchemaRegistryClientFactory.GetOrCreateSchemaRegistryClient(
+                _serviceProvider,
+                configureClient,
+                clientKey);
+
             return this;
         }
 
         public ISchemaRegistryProtobufSerializerBuilder WithProtobufSerializerConfiguration(
             Action<IProtobufSerializerConfigBuilder> configureSerializer)
         {
-            ConfigureSerializer = configureSerializer;
+            SerializerConfig = ProtobufSerializerConfigBuilder.Build(configureSerializer);
             return this;
         }
 
         public ISchemaRegistryProtobufSerializerBuilder WithProtobufDeserializerConfiguration(
             Action<IProtobufDeserializerConfigBuilder> configureDeserializer)
         {
-            ConfigureDeserializer = configureDeserializer;
+            DeserializerConfig = ProtobufDeserializerConfigBuilder.Build(configureDeserializer);
             return this;
         }
 
         public static SchemaRegistryProtobufSerializerBuilder Configure(
-            Action<ISchemaRegistryProtobufSerializerBuilder> configureSerializer)
+            IServiceProvider serviceProvider,
+            Action<IServiceProvider, ISchemaRegistryProtobufSerializerBuilder> configureSerializer)
         {
-            var builder = new SchemaRegistryProtobufSerializerBuilder();
+            var builder = new SchemaRegistryProtobufSerializerBuilder(serviceProvider);
 
-            configureSerializer?.Invoke(builder);
+            configureSerializer?.Invoke(serviceProvider, builder);
 
             return builder;
         }
