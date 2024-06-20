@@ -1,4 +1,4 @@
-﻿namespace Confluent.Kafka.Core.Retry
+﻿namespace Confluent.Kafka.Core.Retry.Internal
 {
     internal static class KafkaRetryConstants
     {

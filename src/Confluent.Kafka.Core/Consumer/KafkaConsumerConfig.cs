@@ -1,6 +1,6 @@
 ﻿using Confluent.Kafka.Core.Consumer.Internal;
 using Confluent.Kafka.Core.Producer.Internal;
-using Confluent.Kafka.Core.Retry;
+using Confluent.Kafka.Core.Retry.Internal;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;

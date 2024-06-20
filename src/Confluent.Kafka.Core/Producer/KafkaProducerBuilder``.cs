@@ -3,6 +3,7 @@ using Confluent.Kafka.Core.Diagnostics.Internal;
 using Confluent.Kafka.Core.Internal;
 using Confluent.Kafka.Core.Producer.Internal;
 using Confluent.Kafka.Core.Retry;
+using Confluent.Kafka.Core.Retry.Internal;
 using Confluent.Kafka.Core.Serialization.Internal;
 using Confluent.Kafka.SyncOverAsync;
 using Microsoft.Extensions.DependencyInjection;
