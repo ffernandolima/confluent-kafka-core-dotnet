@@ -34,7 +34,7 @@ namespace Confluent.Kafka.Core.Retry.Polly.Internal
             _options = options;
         }
 
-        public void TryHandle(
+        public void Handle(
             Action<CancellationToken> executeAction,
             Action<Exception, TimeSpan, int> onRetryAction = null,
             CancellationToken cancellationToken = default)
@@ -48,7 +48,8 @@ namespace Confluent.Kafka.Core.Retry.Polly.Internal
                 .WaitAndRetry(_options.RetryCount, _options.DelayProvider, _options.Delays, onRetryAction ?? OnRetry)
                 .Execute(executeAction, cancellationToken);
         }
-        public async Task TryHandleAsync(
+
+        public async Task HandleAsync(
             Func<CancellationToken, Task> executeAction,
             Action<Exception, TimeSpan, int> onRetryAction = null,
             CancellationToken cancellationToken = default)

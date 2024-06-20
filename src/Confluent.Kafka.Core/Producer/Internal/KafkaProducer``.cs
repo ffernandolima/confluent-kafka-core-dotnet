@@ -153,7 +153,7 @@ namespace Confluent.Kafka.Core.Producer.Internal
             }
             else
             {
-                _options.RetryHandler!.TryHandle(
+                _options.RetryHandler!.Handle(
                     executeAction: _ => ProduceInternal(topicPartition, message, deliveryHandler),
                     onRetryAction: (exception, _, retryAttempt) => OnProduceRetry(topicPartition, message, exception, retryAttempt));
             }
@@ -231,7 +231,7 @@ namespace Confluent.Kafka.Core.Producer.Internal
             }
             else
             {
-                await _options.RetryHandler!.TryHandleAsync(
+                await _options.RetryHandler!.HandleAsync(
                     executeAction: async cancellationToken =>
                         deliveryResult = await ProduceInternalAsync(topicPartition, message, cancellationToken)
                             .ConfigureAwait(continueOnCapturedContext: false),

@@ -164,7 +164,7 @@ namespace Confluent.Kafka.Core.Consumer.Internal
                 }
                 else
                 {
-                    _options.RetryHandler!.TryHandle(
+                    _options.RetryHandler!.Handle(
                         executeAction: _ => consumeResult = ConsumeInternal(millisecondsTimeout),
                         onRetryAction: (exception, _, retryAttempt) => OnConsumeRetry(exception, retryAttempt));
                 }
@@ -197,7 +197,7 @@ namespace Confluent.Kafka.Core.Consumer.Internal
                 }
                 else
                 {
-                    _options.RetryHandler!.TryHandle(
+                    _options.RetryHandler!.Handle(
                         executeAction: _ => consumeResult = ConsumeInternal(timeout),
                         onRetryAction: (exception, _, retryAttempt) => OnConsumeRetry(exception, retryAttempt));
                 }
@@ -230,7 +230,7 @@ namespace Confluent.Kafka.Core.Consumer.Internal
                 }
                 else
                 {
-                    _options.RetryHandler!.TryHandle(
+                    _options.RetryHandler!.Handle(
                         executeAction: cancellationToken => consumeResult = ConsumeInternal(cancellationToken),
                         cancellationToken: cancellationToken,
                         onRetryAction: (exception, _, retryAttempt) => OnConsumeRetry(exception, retryAttempt));
