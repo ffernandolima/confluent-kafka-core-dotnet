@@ -4,14 +4,14 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Protobuf
 {
     public interface ISchemaRegistryProtobufSerializerBuilder
     {
-        ISchemaRegistryProtobufSerializerBuilder WithSchemaRegistryClientConfiguration(
+        ISchemaRegistryProtobufSerializerBuilder WithSchemaRegistryClient(
             Action<ISchemaRegistryClientBuilder> configureClient,
             object clientKey = null);
 
-        ISchemaRegistryProtobufSerializerBuilder WithProtobufSerializerConfiguration(
+        ISchemaRegistryProtobufSerializerBuilder WithSerializerConfiguration(
             Action<IProtobufSerializerConfigBuilder> configureSerializer);
 
-        ISchemaRegistryProtobufSerializerBuilder WithProtobufDeserializerConfiguration(
+        ISchemaRegistryProtobufSerializerBuilder WithDeserializerConfiguration(
             Action<IProtobufDeserializerConfigBuilder> configureDeserializer);
     }
 }

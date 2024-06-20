@@ -18,7 +18,7 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Avro.Internal
             _serviceProvider = serviceProvider;
         }
 
-        public ISchemaRegistryAvroSerializerBuilder WithSchemaRegistryClientConfiguration(
+        public ISchemaRegistryAvroSerializerBuilder WithSchemaRegistryClient(
             Action<ISchemaRegistryClientBuilder> configureClient,
             object clientKey = null)
         {
@@ -30,14 +30,14 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Avro.Internal
             return this;
         }
 
-        public ISchemaRegistryAvroSerializerBuilder WithAvroSerializerConfiguration(
+        public ISchemaRegistryAvroSerializerBuilder WithSerializerConfiguration(
             Action<IAvroSerializerConfigBuilder> configureSerializer)
         {
             SerializerConfig = AvroSerializerConfigBuilder.Build(configureSerializer);
             return this;
         }
 
-        public ISchemaRegistryAvroSerializerBuilder WithAvroDeserializerConfiguration(
+        public ISchemaRegistryAvroSerializerBuilder WithDeserializerConfiguration(
             Action<IAvroDeserializerConfigBuilder> configureDeserializer)
         {
             DeserializerConfig = AvroDeserializerConfigBuilder.Build(configureDeserializer);

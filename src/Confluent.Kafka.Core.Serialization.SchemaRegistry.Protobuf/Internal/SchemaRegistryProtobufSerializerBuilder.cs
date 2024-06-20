@@ -18,7 +18,7 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Protobuf.Internal
             _serviceProvider = serviceProvider;
         }
 
-        public ISchemaRegistryProtobufSerializerBuilder WithSchemaRegistryClientConfiguration(
+        public ISchemaRegistryProtobufSerializerBuilder WithSchemaRegistryClient(
             Action<ISchemaRegistryClientBuilder> configureClient,
             object clientKey = null)
         {
@@ -30,14 +30,14 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Protobuf.Internal
             return this;
         }
 
-        public ISchemaRegistryProtobufSerializerBuilder WithProtobufSerializerConfiguration(
+        public ISchemaRegistryProtobufSerializerBuilder WithSerializerConfiguration(
             Action<IProtobufSerializerConfigBuilder> configureSerializer)
         {
             SerializerConfig = ProtobufSerializerConfigBuilder.Build(configureSerializer);
             return this;
         }
 
-        public ISchemaRegistryProtobufSerializerBuilder WithProtobufDeserializerConfiguration(
+        public ISchemaRegistryProtobufSerializerBuilder WithDeserializerConfiguration(
             Action<IProtobufDeserializerConfigBuilder> configureDeserializer)
         {
             DeserializerConfig = ProtobufDeserializerConfigBuilder.Build(configureDeserializer);

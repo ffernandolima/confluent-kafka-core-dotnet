@@ -4,20 +4,20 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Json
 {
     public interface ISchemaRegistryJsonSerializerBuilder
     {
-        ISchemaRegistryJsonSerializerBuilder WithSchemaRegistryClientConfiguration(
+        ISchemaRegistryJsonSerializerBuilder WithSchemaRegistryClient(
             Action<ISchemaRegistryClientBuilder> configureClient,
             object clientKey = null);
 
         ISchemaRegistryJsonSerializerBuilder WithSchemaConfiguration(
             Action<ISchemaBuilder> configureSchema);
 
-        ISchemaRegistryJsonSerializerBuilder WithJsonSerializerConfiguration(
+        ISchemaRegistryJsonSerializerBuilder WithSerializerConfiguration(
             Action<IJsonSerializerConfigBuilder> configureSerializer);
 
-        ISchemaRegistryJsonSerializerBuilder WithJsonDeserializerConfiguration(
+        ISchemaRegistryJsonSerializerBuilder WithDeserializerConfiguration(
             Action<IJsonDeserializerConfigBuilder> configureDeserializer);
 
-        ISchemaRegistryJsonSerializerBuilder WithJsonSchemaGeneratorConfiguration(
+        ISchemaRegistryJsonSerializerBuilder WithSchemaGeneratorConfiguration(
             Action<IJsonSchemaGeneratorSettingsBuilder> configureSchemaGenerator);
     }
 }

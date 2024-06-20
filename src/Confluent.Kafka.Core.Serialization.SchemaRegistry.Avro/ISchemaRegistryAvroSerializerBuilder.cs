@@ -4,14 +4,14 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Avro
 {
     public interface ISchemaRegistryAvroSerializerBuilder
     {
-        ISchemaRegistryAvroSerializerBuilder WithSchemaRegistryClientConfiguration(
+        ISchemaRegistryAvroSerializerBuilder WithSchemaRegistryClient(
             Action<ISchemaRegistryClientBuilder> configureClient,
             object clientKey = null);
 
-        ISchemaRegistryAvroSerializerBuilder WithAvroSerializerConfiguration(
+        ISchemaRegistryAvroSerializerBuilder WithSerializerConfiguration(
             Action<IAvroSerializerConfigBuilder> configureSerializer);
 
-        ISchemaRegistryAvroSerializerBuilder WithAvroDeserializerConfiguration(
+        ISchemaRegistryAvroSerializerBuilder WithDeserializerConfiguration(
             Action<IAvroDeserializerConfigBuilder> configureDeserializer);
     }
 }
