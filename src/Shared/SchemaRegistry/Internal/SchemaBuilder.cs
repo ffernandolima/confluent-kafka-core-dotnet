@@ -8,14 +8,14 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Internal
         public RegisteredSchema RegisteredSchema { get; private set; }
         public Schema UnregisteredSchema { get; private set; }
 
-        public ISchemaBuilder WithRegisteredSchemaConfiguration(
+        public ISchemaBuilder WithRegisteredSchema(
             Action<IRegisteredSchemaBuilder> configureRegisteredSchema)
         {
             RegisteredSchema = RegisteredSchemaBuilder.Build(configureRegisteredSchema);
             return this;
         }
 
-        public ISchemaBuilder WithUnregisteredSchemaConfiguration(
+        public ISchemaBuilder WithUnregisteredSchema(
             Action<IUnregisteredSchemaBuilder> configureUnregisteredSchema)
         {
             UnregisteredSchema = UnregisteredSchemaBuilder.Build(configureUnregisteredSchema);

@@ -8,14 +8,14 @@ namespace Confluent.Kafka.Core.Idempotency.Redis.Internal
         public ConfigurationOptions RedisOptions { get; private set; }
         public RedisIdempotencyHandlerOptions<TKey, TValue> HandlerOptions { get; private set; }
 
-        public IRedisIdempotencyHandlerBuilder<TKey, TValue> WithRedisConfiguration(
+        public IRedisIdempotencyHandlerBuilder<TKey, TValue> WithRedisOptions(
             Action<IConfigurationOptionsBuilder> configureOptions)
         {
             RedisOptions = ConfigurationOptionsBuilder.Build(configureOptions);
             return this;
         }
 
-        public IRedisIdempotencyHandlerBuilder<TKey, TValue> WithHandlerConfiguration(
+        public IRedisIdempotencyHandlerBuilder<TKey, TValue> WithHandlerOptions(
             Action<IRedisIdempotencyHandlerOptionsBuilder<TKey, TValue>> configureOptions)
         {
             HandlerOptions = RedisIdempotencyHandlerOptionsBuilder<TKey, TValue>.Build(configureOptions);

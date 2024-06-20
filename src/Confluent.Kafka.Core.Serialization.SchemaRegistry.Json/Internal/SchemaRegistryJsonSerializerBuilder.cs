@@ -34,7 +34,7 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Json.Internal
             return this;
         }
 
-        public ISchemaRegistryJsonSerializerBuilder WithSchemaConfiguration(
+        public ISchemaRegistryJsonSerializerBuilder WithSchema(
             Action<ISchemaBuilder> configureSchema)
         {
             var builder = SchemaBuilder.Configure(configureSchema);
@@ -59,7 +59,7 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Json.Internal
             return this;
         }
 
-        public ISchemaRegistryJsonSerializerBuilder WithSchemaGeneratorConfiguration(
+        public ISchemaRegistryJsonSerializerBuilder WithSchemaGeneratorSettings(
             Action<IJsonSchemaGeneratorSettingsBuilder> configureSchemaGenerator)
         {
             SchemaGeneratorSettings = JsonSchemaGeneratorSettingsBuilder.Build(configureSchemaGenerator);
