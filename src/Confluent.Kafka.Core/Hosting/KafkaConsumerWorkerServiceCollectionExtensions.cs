@@ -28,11 +28,10 @@ namespace Microsoft.Extensions.DependencyInjection
             {
                 var loggerFactory = serviceProvider.GetService<ILoggerFactory>();
 
-                var builder = new KafkaConsumerWorkerBuilder<TKey, TValue>();
-
-                builder.WithWorkerKey(workerKey);
-                builder.WithLoggerFactory(loggerFactory);
-                builder.WithServiceProvider(serviceProvider);
+                var builder = new KafkaConsumerWorkerBuilder<TKey, TValue>()
+                    .WithWorkerKey(workerKey)
+                    .WithLoggerFactory(loggerFactory)
+                    .WithServiceProvider(serviceProvider);
 
                 configureWorker.Invoke(serviceProvider, builder);
 

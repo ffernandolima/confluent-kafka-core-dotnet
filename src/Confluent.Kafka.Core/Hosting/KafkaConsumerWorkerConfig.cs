@@ -1,4 +1,5 @@
-﻿using Confluent.Kafka.Core.Idempotency.Internal;
+﻿using Confluent.Kafka.Core.Hosting.Internal;
+using Confluent.Kafka.Core.Idempotency.Internal;
 using Confluent.Kafka.Core.Producer.Internal;
 using Confluent.Kafka.Core.Retry.Internal;
 using System;
@@ -10,6 +11,8 @@ namespace Confluent.Kafka.Core.Hosting
 {
     public sealed class KafkaConsumerWorkerConfig : IKafkaConsumerWorkerConfig
     {
+        #region IKafkaConsumerWorkerConfig Members
+
         public int MaxDegreeOfParallelism { get; set; } = 1;
         public bool EnableLogging { get; set; } = true;
         public bool EnableDiagnostics { get; set; } = true;
@@ -24,6 +27,14 @@ namespace Confluent.Kafka.Core.Hosting
         public TimeSpan NotEmptyTopicDelay { get; set; } = new TimeSpan(0, 0, 1);
         public TimeSpan UnavailableProcessingSlotsDelay { get; set; } = new TimeSpan(0, 0, 2);
         public TimeSpan PendingProcessingDelay { get; set; } = new TimeSpan(0, 0, 1);
+
+        #endregion IKafkaConsumerWorkerConfig Members
+
+        #region Public Methods
+
+        public static IKafkaConsumerWorkerConfigBuilder CreateBuilder() => new KafkaConsumerWorkerConfigBuilder();
+
+        #endregion Public Methods
 
         #region IValidatableObject Members
 

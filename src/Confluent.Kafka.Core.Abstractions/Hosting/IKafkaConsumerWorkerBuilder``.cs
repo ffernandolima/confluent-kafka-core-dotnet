@@ -41,5 +41,7 @@ namespace Confluent.Kafka.Core.Hosting
         IKafkaConsumerWorkerBuilder<TKey, TValue> WithConsumeResultHandlers(IEnumerable<IConsumeResultHandler<TKey, TValue>> consumeResultHandlers);
 
         IKafkaConsumerWorkerBuilder<TKey, TValue> WithWorkerConfiguration(Action<IKafkaConsumerWorkerConfigBuilder> configureWorker);
+
+        IKafkaConsumerWorker<TKey, TValue> Build();
     }
 }

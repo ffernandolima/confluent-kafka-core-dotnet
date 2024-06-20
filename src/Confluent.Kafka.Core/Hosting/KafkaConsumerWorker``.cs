@@ -13,7 +13,14 @@ namespace Confluent.Kafka.Core.Hosting
         private readonly ILogger _logger;
         private readonly IKafkaConsumerWorkerOptions<TKey, TValue> _options;
 
-        public IKafkaConsumerWorkerOptions<TKey, TValue> Options => _options;
+        public IKafkaConsumerWorkerOptions<TKey, TValue> Options
+        {
+            get
+            {
+                CheckDisposed();
+                return _options;
+            }
+        }
 
         public KafkaConsumerWorker(IKafkaConsumerWorkerBuilder<TKey, TValue> builder)
         {
@@ -32,5 +39,28 @@ namespace Confluent.Kafka.Core.Hosting
         {
             return Task.CompletedTask;
         }
+
+        private void CheckDisposed()
+        {
+            if (!_disposed)
+            {
+                return;
+            }
+
+            throw new ObjectDisposedException(_options.WorkerType!.ExtractTypeName());
+        }
+
+        #region IDisposable Members
+
+        private bool _disposed;
+
+        public override void Dispose()
+        {
+            _disposed = true;
+
+            base.Dispose();
+        }
+
+        #endregion IDisposable Members
     }
 }

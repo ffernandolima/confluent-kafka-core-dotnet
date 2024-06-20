@@ -20,7 +20,7 @@ using System.Linq;
 
 namespace Confluent.Kafka.Core.Hosting.Internal
 {
-    internal sealed class KafkaConsumerWorkerBuilder<TKey, TValue> :
+    public sealed class KafkaConsumerWorkerBuilder<TKey, TValue> :
         IKafkaConsumerWorkerBuilder<TKey, TValue>,
         IKafkaConsumerWorkerOptionsConverter<TKey, TValue>
     {
@@ -50,8 +50,12 @@ namespace Confluent.Kafka.Core.Hosting.Internal
         #region Ctors
 
         public KafkaConsumerWorkerBuilder()
+            : this(workerConfig: null)
+        { }
+
+        public KafkaConsumerWorkerBuilder(IKafkaConsumerWorkerConfig workerConfig)
         {
-            WorkerConfig = BuildConfig();
+            WorkerConfig = workerConfig ?? BuildConfig();
         }
 
         #endregion Ctors
@@ -261,6 +265,13 @@ namespace Confluent.Kafka.Core.Hosting.Internal
         }
 
         #endregion IKafkaConsumerWorkerBuilder Members
+
+        #region Public Methods
+
+        public static IKafkaConsumerWorkerBuilder<TKey, TValue> CreateBuilder(IKafkaConsumerWorkerConfig workerConfig = null)
+            => new KafkaConsumerWorkerBuilder<TKey, TValue>(workerConfig);
+
+        #endregion Public Methods
 
         #region Private Methods
 
