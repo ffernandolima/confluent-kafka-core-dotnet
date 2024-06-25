@@ -1,4 +1,5 @@
 ﻿using Confluent.Kafka.Core.Internal;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,8 +15,8 @@ namespace Confluent.Kafka.Core.Consumer.Internal
             GroupId = $"{Guid.NewGuid()}"
         };
 
-        public KafkaConsumerConfigBuilder(IKafkaConsumerConfig seedSubjectAbs = null)
-            : base(seedSubjectAbs)
+        public KafkaConsumerConfigBuilder(IKafkaConsumerConfig consumerConfig = null, IConfiguration configuration = null)
+            : base(consumerConfig, configuration)
         { }
 
         #region IConfigBuilder Members
@@ -649,6 +650,18 @@ namespace Confluent.Kafka.Core.Consumer.Internal
         #endregion IConsumerConfigBuilder Members
 
         #region IKafkaConsumerConfigBuilder Members
+
+        public IKafkaConsumerConfigBuilder FromConfiguration(string sectionKey)
+        {
+            AppendAction(config =>
+            {
+                if (!string.IsNullOrWhiteSpace(sectionKey))
+                {
+                    config = Bind(config, sectionKey);
+                }
+            });
+            return this;
+        }
 
         public IKafkaConsumerConfigBuilder WithTopicSubscriptions(IEnumerable<string> topicSubscriptions)
         {

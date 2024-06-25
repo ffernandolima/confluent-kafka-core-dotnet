@@ -4,6 +4,8 @@ namespace Confluent.Kafka.Core.Producer
 {
     public interface IKafkaProducerConfigBuilder : IProducerConfigBuilder<IKafkaProducerConfigBuilder>, IDisposable
     {
+        IKafkaProducerConfigBuilder FromConfiguration(string sectionKey);
+
         IKafkaProducerConfigBuilder WithDefaultTopic(string defaultTopic);
 
         IKafkaProducerConfigBuilder WithDefaultPartition(Partition defaultPartition);

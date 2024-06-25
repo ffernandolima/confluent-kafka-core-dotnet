@@ -20,6 +20,7 @@ namespace Confluent.Kafka.Core.Producer
 
             var handlerFactory = KafkaProducerHandlerFactory.GetOrCreateHandlerFactory<TKey, TValue>(
                 producerBuilder.ServiceProvider,
+                producerBuilder.Configuration,
                 producerBuilder.LoggerFactory,
                 configureOptions,
                 producerKey);

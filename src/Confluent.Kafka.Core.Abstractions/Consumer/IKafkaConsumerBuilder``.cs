@@ -1,6 +1,7 @@
 ﻿using Confluent.Kafka.Core.Models;
 using Confluent.Kafka.Core.Producer;
 using Confluent.Kafka.Core.Retry;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -9,6 +10,8 @@ namespace Confluent.Kafka.Core.Consumer
 {
     public interface IKafkaConsumerBuilder<TKey, TValue>
     {
+        IConfiguration Configuration { get; }
+
         ILoggerFactory LoggerFactory { get; }
 
         IServiceProvider ServiceProvider { get; }
@@ -46,6 +49,8 @@ namespace Confluent.Kafka.Core.Consumer
         IKafkaConsumerBuilder<TKey, TValue> WithOffsetsCommittedHandler(Action<IConsumer<TKey, TValue>, CommittedOffsets> offsetsCommittedHandler);
 
         IKafkaConsumerBuilder<TKey, TValue> WithConsumerKey(object consumerKey);
+
+        IKafkaConsumerBuilder<TKey, TValue> WithConfiguration(IConfiguration configuration);
 
         IKafkaConsumerBuilder<TKey, TValue> WithLoggerFactory(ILoggerFactory loggerFactory);
 

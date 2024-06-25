@@ -2,6 +2,7 @@
 {
     public interface IKafkaConsumerHandlerFactoryOptionsBuilder
     {
+        IKafkaConsumerHandlerFactoryOptionsBuilder FromConfiguration(string sectionKey);
         IKafkaConsumerHandlerFactoryOptionsBuilder WithEnableLogging(bool enableLogging);
     }
 }

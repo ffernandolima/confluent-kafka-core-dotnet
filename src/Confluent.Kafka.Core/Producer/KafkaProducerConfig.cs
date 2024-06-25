@@ -1,5 +1,6 @@
 ﻿using Confluent.Kafka.Core.Producer.Internal;
 using Confluent.Kafka.Core.Retry.Internal;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -55,7 +56,8 @@ namespace Confluent.Kafka.Core.Producer
 
         #region Public Methods
 
-        public static IKafkaProducerConfigBuilder CreateBuilder() => new KafkaProducerConfigBuilder();
+        public static IKafkaProducerConfigBuilder CreateBuilder(IKafkaProducerConfig producerConfig = null, IConfiguration configuration = null)
+            => new KafkaProducerConfigBuilder(producerConfig, configuration);
 
         #endregion Public Methods
 

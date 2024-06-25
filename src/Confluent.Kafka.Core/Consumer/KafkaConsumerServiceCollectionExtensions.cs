@@ -1,4 +1,5 @@
 ﻿using Confluent.Kafka.Core.Consumer;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using System;
@@ -26,10 +27,12 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.TryAddKeyedSingleton(consumerKey, (serviceProvider, _) =>
             {
+                var configuration = serviceProvider.GetService<IConfiguration>();
                 var loggerFactory = serviceProvider.GetService<ILoggerFactory>();
 
                 var builder = new KafkaConsumerBuilder<TKey, TValue>()
                     .WithConsumerKey(consumerKey)
+                    .WithConfiguration(configuration)
                     .WithLoggerFactory(loggerFactory)
                     .WithServiceProvider(serviceProvider);
 

@@ -24,6 +24,7 @@ namespace Confluent.Kafka.Core.Consumer
 
             var handlerFactory = KafkaConsumerHandlerFactory.GetOrCreateHandlerFactory<TKey, TValue>(
                 consumerBuilder.ServiceProvider,
+                consumerBuilder.Configuration,
                 consumerBuilder.LoggerFactory,
                 configureOptions,
                 consumerKey);

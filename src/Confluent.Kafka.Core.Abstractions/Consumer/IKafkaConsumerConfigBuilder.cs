@@ -5,6 +5,8 @@ namespace Confluent.Kafka.Core.Consumer
 {
     public interface IKafkaConsumerConfigBuilder : IConsumerConfigBuilder<IKafkaConsumerConfigBuilder>, IDisposable
     {
+        IKafkaConsumerConfigBuilder FromConfiguration(string sectionKey);
+
         IKafkaConsumerConfigBuilder WithTopicSubscriptions(IEnumerable<string> topicSubscriptions);
 
         IKafkaConsumerConfigBuilder WithPartitionAssignments(IEnumerable<TopicPartition> partitionAssignments);

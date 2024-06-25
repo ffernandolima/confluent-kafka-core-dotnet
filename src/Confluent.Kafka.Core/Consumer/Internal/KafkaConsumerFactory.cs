@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
 
@@ -8,6 +9,7 @@ namespace Confluent.Kafka.Core.Consumer.Internal
     {
         public static IKafkaConsumer<TKey, TValue> GetOrCreateConsumer<TKey, TValue>(
             IServiceProvider serviceProvider,
+            IConfiguration configuration,
             ILoggerFactory loggerFactory,
             Action<IKafkaConsumerBuilder<TKey, TValue>> configureConsumer,
             object consumerKey)
@@ -15,6 +17,9 @@ namespace Confluent.Kafka.Core.Consumer.Internal
             var consumerbuilder = serviceProvider?.GetKeyedService<IKafkaConsumerBuilder<TKey, TValue>>(consumerKey) ??
                 new KafkaConsumerBuilder<TKey, TValue>()
                     .WithConsumerKey(consumerKey)
+                    .WithConfiguration(
+                        configuration ??
+                        serviceProvider?.GetService<IConfiguration>())
                     .WithLoggerFactory(
                         loggerFactory ??
                         serviceProvider?.GetService<ILoggerFactory>())

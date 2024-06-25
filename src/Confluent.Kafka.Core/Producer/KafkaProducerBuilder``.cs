@@ -6,6 +6,7 @@ using Confluent.Kafka.Core.Retry;
 using Confluent.Kafka.Core.Retry.Internal;
 using Confluent.Kafka.Core.Serialization.Internal;
 using Confluent.Kafka.SyncOverAsync;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
@@ -93,6 +94,7 @@ namespace Confluent.Kafka.Core.Producer
 
         #region IKafkaProducerBuilder Members
 
+        public IConfiguration Configuration { get; private set; }
         public ILoggerFactory LoggerFactory { get; private set; }
         public IServiceProvider ServiceProvider { get; private set; }
         public IKafkaProducerConfig ProducerConfig { get; private set; }
@@ -165,6 +167,17 @@ namespace Confluent.Kafka.Core.Producer
             }
 
             _producerKey = producerKey;
+            return this;
+        }
+
+        public IKafkaProducerBuilder<TKey, TValue> WithConfiguration(IConfiguration configuration)
+        {
+            if (Configuration is not null)
+            {
+                throw new InvalidOperationException("Configuration may not be specified more than once.");
+            }
+
+            Configuration = configuration;
             return this;
         }
 
@@ -253,7 +266,7 @@ namespace Confluent.Kafka.Core.Producer
                 throw new InvalidOperationException("Producer may not be configured more than once.");
             }
 
-            BuildConfig(ProducerConfig, configureProducer);
+            ProducerConfig = BuildConfig(Configuration, ProducerConfig, configureProducer);
 
             _producerConfigured = true;
 
@@ -301,6 +314,7 @@ namespace Confluent.Kafka.Core.Producer
 
             _handlerFactory ??= KafkaProducerHandlerFactory.GetOrCreateHandlerFactory<TKey, TValue>(
                 ServiceProvider,
+                Configuration,
                 LoggerFactory,
                 builder => builder.WithEnableLogging(ProducerConfig.EnableLogging),
                 _producerKey);
@@ -345,10 +359,11 @@ namespace Confluent.Kafka.Core.Producer
         #region Private Methods
 
         private static IKafkaProducerConfig BuildConfig(
+            IConfiguration configuration = null,
             IKafkaProducerConfig producerConfig = null,
             Action<IKafkaProducerConfigBuilder> configureProducer = null)
         {
-            using var builder = new KafkaProducerConfigBuilder(producerConfig);
+            using var builder = new KafkaProducerConfigBuilder(producerConfig, configuration);
 
             configureProducer?.Invoke(builder);
 

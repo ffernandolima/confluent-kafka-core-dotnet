@@ -9,6 +9,7 @@ using Confluent.Kafka.Core.Retry;
 using Confluent.Kafka.Core.Retry.Internal;
 using Confluent.Kafka.Core.Serialization.Internal;
 using Confluent.Kafka.SyncOverAsync;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
@@ -98,6 +99,7 @@ namespace Confluent.Kafka.Core.Consumer
 
         #region IKafkaConsumerBuilder Members
 
+        public IConfiguration Configuration { get; private set; }
         public ILoggerFactory LoggerFactory { get; private set; }
         public IServiceProvider ServiceProvider { get; private set; }
         public IKafkaConsumerConfig ConsumerConfig { get; private set; }
@@ -203,6 +205,17 @@ namespace Confluent.Kafka.Core.Consumer
             return this;
         }
 
+        public IKafkaConsumerBuilder<TKey, TValue> WithConfiguration(IConfiguration configuration)
+        {
+            if (Configuration is not null)
+            {
+                throw new InvalidOperationException("Configuration may not be specified more than once.");
+            }
+
+            Configuration = configuration;
+            return this;
+        }
+
         public IKafkaConsumerBuilder<TKey, TValue> WithLoggerFactory(ILoggerFactory loggerFactory)
         {
             if (LoggerFactory is not null)
@@ -300,7 +313,7 @@ namespace Confluent.Kafka.Core.Consumer
                 throw new InvalidOperationException("Consumer may not be configured more than once.");
             }
 
-            BuildConfig(ConsumerConfig, configureConsumer);
+            ConsumerConfig = BuildConfig(Configuration, ConsumerConfig, configureConsumer);
 
             _consumerConfigured = true;
 
@@ -349,6 +362,7 @@ namespace Confluent.Kafka.Core.Consumer
 
             _handlerFactory ??= KafkaConsumerHandlerFactory.GetOrCreateHandlerFactory<TKey, TValue>(
                 ServiceProvider,
+                Configuration,
                 LoggerFactory,
                 builder => builder.WithEnableLogging(ConsumerConfig.EnableLogging),
                 _consumerKey);
@@ -418,10 +432,11 @@ namespace Confluent.Kafka.Core.Consumer
         #region Private Methods
 
         private static IKafkaConsumerConfig BuildConfig(
+            IConfiguration configuration = null,
             IKafkaConsumerConfig consumerConfig = null,
             Action<IKafkaConsumerConfigBuilder> configureConsumer = null)
         {
-            using var builder = new KafkaConsumerConfigBuilder(consumerConfig);
+            using var builder = new KafkaConsumerConfigBuilder(consumerConfig, configuration);
 
             configureConsumer?.Invoke(builder);
 

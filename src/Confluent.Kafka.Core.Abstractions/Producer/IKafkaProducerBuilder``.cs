@@ -1,4 +1,5 @@
 ﻿using Confluent.Kafka.Core.Retry;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -7,6 +8,8 @@ namespace Confluent.Kafka.Core.Producer
 {
     public interface IKafkaProducerBuilder<TKey, TValue>
     {
+        IConfiguration Configuration { get; }
+
         ILoggerFactory LoggerFactory { get; }
 
         IServiceProvider ServiceProvider { get; }
@@ -34,6 +37,8 @@ namespace Confluent.Kafka.Core.Producer
         IKafkaProducerBuilder<TKey, TValue> WithValueSerializer(IAsyncSerializer<TValue> serializer);
 
         IKafkaProducerBuilder<TKey, TValue> WithProducerKey(object producerKey);
+
+        IKafkaProducerBuilder<TKey, TValue> WithConfiguration(IConfiguration configuration);
 
         IKafkaProducerBuilder<TKey, TValue> WithLoggerFactory(ILoggerFactory loggerFactory);
 

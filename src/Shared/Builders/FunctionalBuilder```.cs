@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Configuration;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -12,6 +13,7 @@ namespace Confluent.Kafka.Core.Internal
             where TSelf : FunctionalBuilder<TSubject, TSubjectAbs, TSelf>
     {
         private readonly TSubject _seedSubject;
+        private readonly IConfiguration _configuration;
         private readonly Func<TSubject> _defaultFactory;
         private readonly Dictionary<int, object> _parameters = [];
         private readonly List<Func<TSubject, TSubject>> _functions = [];
@@ -19,10 +21,12 @@ namespace Confluent.Kafka.Core.Internal
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private TSubject _builtSubject;
 
-        public FunctionalBuilder(TSubject seedSubject = null)
+        public FunctionalBuilder(
+            TSubject seedSubject = null,
+            IConfiguration configuration = null)
         {
             _seedSubject = seedSubject;
-
+            _configuration = configuration;
             _defaultFactory = () => _parameters.Count > 0
                 ? (TSubject)Activator.CreateInstance(
                     typeof(TSubject),
@@ -30,8 +34,10 @@ namespace Confluent.Kafka.Core.Internal
                 : Activator.CreateInstance<TSubject>();
         }
 
-        public FunctionalBuilder(TSubjectAbs seedSubjectAbs = null)
-            : this((TSubject)seedSubjectAbs)
+        public FunctionalBuilder(
+            TSubjectAbs seedSubjectAbs = null,
+            IConfiguration configuration = null)
+            : this((TSubject)seedSubjectAbs, configuration)
         { }
 
         protected virtual TSubject CreateSubject() => _defaultFactory.Invoke();
@@ -55,6 +61,22 @@ namespace Confluent.Kafka.Core.Internal
             }
 
             return this as TSelf;
+        }
+
+        protected virtual TSubject Bind(
+            TSubject subject,
+            string sectionKey,
+            Action<BinderOptions> configureOptions = null)
+        {
+            _configuration?.GetSection(sectionKey).Bind(
+                subject,
+                configureOptions ??= options =>
+                {
+                    options.BindNonPublicProperties = false;
+                    options.ErrorOnUnknownConfiguration = false;
+                });
+
+            return subject;
         }
 
         public virtual TSelf Clear()

@@ -1,6 +1,7 @@
 ﻿using Confluent.Kafka.Core.Consumer.Internal;
 using Confluent.Kafka.Core.Producer.Internal;
 using Confluent.Kafka.Core.Retry.Internal;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -79,7 +80,8 @@ namespace Confluent.Kafka.Core.Consumer
 
         #region Public Methods
 
-        public static IKafkaConsumerConfigBuilder CreateBuilder() => new KafkaConsumerConfigBuilder();
+        public static IKafkaConsumerConfigBuilder CreateBuilder(IKafkaConsumerConfig consumerConfig = null, IConfiguration configuration = null)
+            => new KafkaConsumerConfigBuilder(consumerConfig, configuration);
 
         #endregion Public Methods
 

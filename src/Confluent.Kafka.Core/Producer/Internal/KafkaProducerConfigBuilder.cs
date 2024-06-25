@@ -1,4 +1,5 @@
 ﻿using Confluent.Kafka.Core.Internal;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 
@@ -8,8 +9,8 @@ namespace Confluent.Kafka.Core.Producer.Internal
         FunctionalBuilder<KafkaProducerConfig, IKafkaProducerConfig, KafkaProducerConfigBuilder>,
         IKafkaProducerConfigBuilder
     {
-        public KafkaProducerConfigBuilder(IKafkaProducerConfig seedSubjectAbs = null)
-            : base(seedSubjectAbs)
+        public KafkaProducerConfigBuilder(IKafkaProducerConfig producerConfig = null, IConfiguration configuration = null)
+            : base(producerConfig, configuration)
         { }
 
         #region IConfigBuilder Members
@@ -619,6 +620,18 @@ namespace Confluent.Kafka.Core.Producer.Internal
         #endregion IProducerConfigBuilder Members
 
         #region IKafkaProducerConfigBuilder Members
+
+        public IKafkaProducerConfigBuilder FromConfiguration(string sectionKey)
+        {
+            AppendAction(config =>
+            {
+                if (!string.IsNullOrWhiteSpace(sectionKey))
+                {
+                    config = Bind(config, sectionKey);
+                }
+            });
+            return this;
+        }
 
         public IKafkaProducerConfigBuilder WithDefaultTopic(string defaultTopic)
         {
