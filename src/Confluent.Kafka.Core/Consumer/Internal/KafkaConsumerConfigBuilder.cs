@@ -10,14 +10,14 @@ namespace Confluent.Kafka.Core.Consumer.Internal
         FunctionalBuilder<KafkaConsumerConfig, IKafkaConsumerConfig, KafkaConsumerConfigBuilder>,
         IKafkaConsumerConfigBuilder
     {
+        public KafkaConsumerConfigBuilder(IKafkaConsumerConfig consumerConfig = null, IConfiguration configuration = null)
+            : base(consumerConfig, configuration)
+        { }
+
         protected override KafkaConsumerConfig CreateSubject() => new()
         {
             GroupId = $"{Guid.NewGuid()}"
         };
-
-        public KafkaConsumerConfigBuilder(IKafkaConsumerConfig consumerConfig = null, IConfiguration configuration = null)
-            : base(consumerConfig, configuration)
-        { }
 
         #region IConfigBuilder Members
 
