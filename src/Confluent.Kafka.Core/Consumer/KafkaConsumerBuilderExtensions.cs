@@ -46,6 +46,7 @@ namespace Confluent.Kafka.Core.Consumer
 
             var deadLetterProducer = KafkaProducerFactory.GetOrCreateProducer(
                 consumerBuilder.ServiceProvider,
+                consumerBuilder.Configuration,
                 consumerBuilder.LoggerFactory,
                 configureProducer,
                 producerKey);
