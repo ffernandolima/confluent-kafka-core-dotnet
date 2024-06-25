@@ -1,4 +1,5 @@
 ﻿using Confluent.Kafka.Core.Internal;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 
@@ -8,6 +9,22 @@ namespace Confluent.Kafka.Core.Retry.Polly.Internal
         FunctionalBuilder<PollyRetryHandlerOptions, PollyRetryHandlerOptionsBuilder>,
         IPollyRetryHandlerOptionsBuilder
     {
+        public PollyRetryHandlerOptionsBuilder(IConfiguration configuration = null)
+            : base(seedSubject: null, configuration)
+        { }
+
+        public IPollyRetryHandlerOptionsBuilder FromConfiguration(string sectionKey)
+        {
+            AppendAction(options =>
+            {
+                if (!string.IsNullOrWhiteSpace(sectionKey))
+                {
+                    options = Bind(options, sectionKey);
+                }
+            });
+            return this;
+        }
+
         public IPollyRetryHandlerOptionsBuilder WithRetryCount(int retryCount)
         {
             AppendAction(options => options.RetryCount = retryCount);
@@ -52,9 +69,10 @@ namespace Confluent.Kafka.Core.Retry.Polly.Internal
 
         public static PollyRetryHandlerOptions Build(
             IServiceProvider serviceProvider,
+            IConfiguration configuration,
             Action<IServiceProvider, IPollyRetryHandlerOptionsBuilder> configureOptions)
         {
-            using var builder = new PollyRetryHandlerOptionsBuilder();
+            using var builder = new PollyRetryHandlerOptionsBuilder(configuration);
 
             configureOptions?.Invoke(serviceProvider, builder);
 

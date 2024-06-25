@@ -18,6 +18,7 @@ namespace Confluent.Kafka.Core.Retry.Polly
 
             var retryHandler = PollyRetryHandlerFactory.GetOrCreateRetryHandler<TKey, TValue>(
                 builder.ServiceProvider,
+                builder.Configuration,
                 builder.LoggerFactory,
                 configureOptions,
                 handlerKey);

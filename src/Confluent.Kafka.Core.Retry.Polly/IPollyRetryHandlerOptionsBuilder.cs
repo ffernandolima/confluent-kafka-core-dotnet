@@ -5,6 +5,8 @@ namespace Confluent.Kafka.Core.Retry.Polly
 {
     public interface IPollyRetryHandlerOptionsBuilder
     {
+        IPollyRetryHandlerOptionsBuilder FromConfiguration(string sectionKey);
+
         IPollyRetryHandlerOptionsBuilder WithRetryCount(int retryCount);
 
         IPollyRetryHandlerOptionsBuilder WithRetryDelay(TimeSpan retryDelay);
