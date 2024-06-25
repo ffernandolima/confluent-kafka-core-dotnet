@@ -1,4 +1,5 @@
 ﻿using Confluent.Kafka.Core.Internal;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using StackExchange.Redis;
 using StackExchange.Redis.Configuration;
@@ -15,8 +16,8 @@ namespace Confluent.Kafka.Core.Idempotency.Redis.Internal
         FunctionalBuilder<ConfigurationOptions, ConfigurationOptionsBuilder>,
         IConfigurationOptionsBuilder
     {
-        public ConfigurationOptionsBuilder(ConfigurationOptions seedSubject = null)
-            : base(seedSubject)
+        public ConfigurationOptionsBuilder(IConfiguration configuration = null)
+            : base(seedSubject: null, configuration)
         {
             ConnectionMultiplexer.SetFeatureFlag(
                 RedisIdempotencyHandlerConstants.PreventThreadTheftFeatureFlag,
@@ -27,6 +28,18 @@ namespace Confluent.Kafka.Core.Idempotency.Redis.Internal
         {
             AbortOnConnectFail = false
         };
+
+        public IConfigurationOptionsBuilder FromConfiguration(string sectionKey)
+        {
+            AppendAction(options =>
+            {
+                if (!string.IsNullOrWhiteSpace(sectionKey))
+                {
+                    options = Bind(options, sectionKey);
+                }
+            });
+            return this;
+        }
 
         public IConfigurationOptionsBuilder WithCertificateSelection(LocalCertificateSelectionCallback certificateSelection)
         {
@@ -304,9 +317,11 @@ namespace Confluent.Kafka.Core.Idempotency.Redis.Internal
             return this;
         }
 
-        public static ConfigurationOptions Build(Action<IConfigurationOptionsBuilder> configureOptions)
+        public static ConfigurationOptions Build(
+            IConfiguration configuration,
+            Action<IConfigurationOptionsBuilder> configureOptions)
         {
-            using var builder = new ConfigurationOptionsBuilder();
+            using var builder = new ConfigurationOptionsBuilder(configuration);
 
             configureOptions?.Invoke(builder);
 

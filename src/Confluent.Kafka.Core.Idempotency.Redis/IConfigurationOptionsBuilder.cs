@@ -11,6 +11,8 @@ namespace Confluent.Kafka.Core.Idempotency.Redis
 {
     public interface IConfigurationOptionsBuilder
     {
+        IConfigurationOptionsBuilder FromConfiguration(string sectionKey);
+
         IConfigurationOptionsBuilder WithCertificateSelection(LocalCertificateSelectionCallback certificateSelection);
 
         IConfigurationOptionsBuilder WithCertificateValidation(RemoteCertificateValidationCallback certificateValidation);

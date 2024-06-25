@@ -1,5 +1,6 @@
 ﻿using Confluent.Kafka.Core.Idempotency.Redis;
 using Confluent.Kafka.Core.Idempotency.Redis.Internal;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using System;
@@ -29,6 +30,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 {
                     var idempotencyHandler = RedisIdempotencyHandlerFactory.CreateIdempotencyHandler(
                         serviceProvider,
+                        serviceProvider.GetService<IConfiguration>(),
                         serviceProvider.GetService<ILoggerFactory>(),
                         configureHandler);
 

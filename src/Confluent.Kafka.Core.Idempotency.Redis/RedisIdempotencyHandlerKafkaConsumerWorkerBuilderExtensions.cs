@@ -18,6 +18,7 @@ namespace Confluent.Kafka.Core.Idempotency.Redis
 
             var idempotencyHandler = RedisIdempotencyHandlerFactory.GetOrCreateIdempotencyHandler(
                 builder.ServiceProvider,
+                builder.Configuration,
                 builder.LoggerFactory,
                 configureHandler,
                 handlerKey);

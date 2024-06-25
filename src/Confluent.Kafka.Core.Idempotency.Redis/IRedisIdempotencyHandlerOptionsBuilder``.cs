@@ -4,6 +4,8 @@ namespace Confluent.Kafka.Core.Idempotency.Redis
 {
     public interface IRedisIdempotencyHandlerOptionsBuilder<TKey, TValue>
     {
+        IRedisIdempotencyHandlerOptionsBuilder<TKey, TValue> FromConfiguration(string sectionKey);
+
         IRedisIdempotencyHandlerOptionsBuilder<TKey, TValue> WithGroupId(string groupId);
 
         IRedisIdempotencyHandlerOptionsBuilder<TKey, TValue> WithConsumerName(string consumerName);
