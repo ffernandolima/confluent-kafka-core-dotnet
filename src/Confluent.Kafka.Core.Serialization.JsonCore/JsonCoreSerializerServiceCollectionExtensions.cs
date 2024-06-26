@@ -1,6 +1,7 @@
 ﻿using Confluent.Kafka;
 using Confluent.Kafka.Core.Serialization.JsonCore;
 using Confluent.Kafka.Core.Serialization.JsonCore.Internal;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using System;
 
@@ -22,7 +23,15 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.TryAddKeyedSingleton(
                 serviceKey,
-                (serviceProvider, _) => JsonCoreSerializerFactory.CreateSerializer<T>(serviceProvider, configureOptions));
+                (serviceProvider, _) =>
+                {
+                    var serializer = JsonCoreSerializerFactory.CreateSerializer<T>(
+                        serviceProvider,
+                        serviceProvider.GetService<IConfiguration>(),
+                        configureOptions);
+
+                    return serializer;
+                });
 
             services.TryAddKeyedSingleton<ISerializer<T>>(
                 serviceKey,

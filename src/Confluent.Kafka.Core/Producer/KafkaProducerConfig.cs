@@ -56,8 +56,8 @@ namespace Confluent.Kafka.Core.Producer
 
         #region Public Methods
 
-        public static IKafkaProducerConfigBuilder CreateBuilder(IKafkaProducerConfig producerConfig = null, IConfiguration configuration = null)
-            => new KafkaProducerConfigBuilder(producerConfig, configuration);
+        public static IKafkaProducerConfigBuilder CreateBuilder(IConfiguration configuration = null)
+            => new KafkaProducerConfigBuilder(configuration: configuration);
 
         #endregion Public Methods
 

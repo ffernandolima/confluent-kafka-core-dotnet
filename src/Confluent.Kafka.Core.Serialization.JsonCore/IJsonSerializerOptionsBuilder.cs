@@ -8,6 +8,8 @@ namespace Confluent.Kafka.Core.Serialization.JsonCore
 {
     public interface IJsonSerializerOptionsBuilder
     {
+        IJsonSerializerOptionsBuilder FromConfiguration(string sectionKey);
+
         IJsonSerializerOptionsBuilder WithConverters(IList<JsonConverter> converters);
 
         IJsonSerializerOptionsBuilder WithTypeInfoResolver(IJsonTypeInfoResolver typeInfoResolver);

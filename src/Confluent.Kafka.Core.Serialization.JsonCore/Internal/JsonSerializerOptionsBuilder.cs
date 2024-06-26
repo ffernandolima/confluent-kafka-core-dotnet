@@ -1,4 +1,5 @@
 ﻿using Confluent.Kafka.Core.Internal;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,12 +14,28 @@ namespace Confluent.Kafka.Core.Serialization.JsonCore.Internal
         FunctionalBuilder<JsonSerializerOptions, JsonSerializerOptionsBuilder>,
         IJsonSerializerOptionsBuilder
     {
+        public JsonSerializerOptionsBuilder(IConfiguration configuration = null)
+            : base(seedSubject: null, configuration)
+        { }
+
         protected override JsonSerializerOptions CreateSubject() => new()
         {
             ReferenceHandler = ReferenceHandler.IgnoreCycles,
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
             DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
         };
+
+        public IJsonSerializerOptionsBuilder FromConfiguration(string sectionKey)
+        {
+            AppendAction(options =>
+            {
+                if (!string.IsNullOrWhiteSpace(sectionKey))
+                {
+                    options = Bind(options, sectionKey);
+                }
+            });
+            return this;
+        }
 
         public IJsonSerializerOptionsBuilder WithConverters(IList<JsonConverter> converters)
         {
@@ -176,9 +193,10 @@ namespace Confluent.Kafka.Core.Serialization.JsonCore.Internal
 
         public static JsonSerializerOptions Build(
             IServiceProvider serviceProvider,
+            IConfiguration configuration,
             Action<IServiceProvider, IJsonSerializerOptionsBuilder> configureOptions)
         {
-            using var builder = new JsonSerializerOptionsBuilder();
+            using var builder = new JsonSerializerOptionsBuilder(configuration);
 
             configureOptions?.Invoke(serviceProvider, builder);
 

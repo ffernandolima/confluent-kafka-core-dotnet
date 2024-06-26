@@ -34,7 +34,7 @@ namespace Confluent.Kafka.Core.Idempotency.Redis.Internal
         {
             var builder = RedisIdempotencyHandlerBuilder<TKey, TValue>.Configure(
                 serviceProvider,
-                configuration,
+                configuration ?? serviceProvider?.GetService<IConfiguration>(),
                 configureHandler);
 
             var multiplexer = ConnectionMultiplexer.Connect(builder.RedisOptions);

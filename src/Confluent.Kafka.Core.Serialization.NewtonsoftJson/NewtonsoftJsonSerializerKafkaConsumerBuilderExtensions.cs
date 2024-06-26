@@ -34,6 +34,7 @@ namespace Confluent.Kafka.Core.Consumer
 
             var keyDeserializer = NewtonsoftJsonSerializerFactory.GetOrCreateSerializer<TKey>(
                 builder.ServiceProvider,
+                builder.Configuration,
                 configureSettings,
                 serializerKey);
 
@@ -54,6 +55,7 @@ namespace Confluent.Kafka.Core.Consumer
 
             var valueDeserializer = NewtonsoftJsonSerializerFactory.GetOrCreateSerializer<TValue>(
                 builder.ServiceProvider,
+                builder.Configuration,
                 configureSettings,
                 serializerKey);
 

@@ -32,7 +32,7 @@ namespace Confluent.Kafka.Core.Consumer.Internal
         {
             var options = KafkaConsumerHandlerFactoryOptionsBuilder.Build(
                 serviceProvider,
-                configuration,
+                configuration ?? serviceProvider?.GetService<IConfiguration>(),
                 configureOptions);
 
             var handlerFactory = new KafkaConsumerHandlerFactory<TKey, TValue>(

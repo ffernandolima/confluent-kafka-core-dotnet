@@ -10,6 +10,8 @@ namespace Confluent.Kafka.Core.Serialization.NewtonsoftJson
 {
     public interface IJsonSerializerSettingsBuilder
     {
+        IJsonSerializerSettingsBuilder FromConfiguration(string sectionKey);
+
         IJsonSerializerSettingsBuilder WithReferenceLoopHandling(ReferenceLoopHandling referenceLoopHandling);
 
         IJsonSerializerSettingsBuilder WithMissingMemberHandling(MissingMemberHandling missingMemberHandling);

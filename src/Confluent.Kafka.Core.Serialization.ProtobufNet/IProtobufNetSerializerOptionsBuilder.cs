@@ -2,6 +2,8 @@
 {
     public interface IProtobufNetSerializerOptionsBuilder
     {
+        IProtobufNetSerializerOptionsBuilder FromConfiguration(string sectionKey);
+
         IProtobufNetSerializerOptionsBuilder WithAutomaticRuntimeMap(bool automaticRuntimeMap);
     }
 }

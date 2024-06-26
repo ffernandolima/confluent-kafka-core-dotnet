@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 
 namespace Confluent.Kafka.Core.Serialization.NewtonsoftJson.Internal
@@ -7,21 +8,26 @@ namespace Confluent.Kafka.Core.Serialization.NewtonsoftJson.Internal
     {
         public static NewtonsoftJsonSerializer<T> GetOrCreateSerializer<T>(
             IServiceProvider serviceProvider,
+            IConfiguration configuration,
             Action<IJsonSerializerSettingsBuilder> configureSettings,
             object serializerKey)
         {
             var serializer = serviceProvider?.GetKeyedService<NewtonsoftJsonSerializer<T>>(
                 serializerKey ?? NewtonsoftJsonSerializerConstants.NewtonsoftJsonSerializerKey) ??
-                CreateSerializer<T>(serviceProvider, (_, builder) => configureSettings?.Invoke(builder));
+                CreateSerializer<T>(serviceProvider, configuration, (_, builder) => configureSettings?.Invoke(builder));
 
             return serializer;
         }
 
         public static NewtonsoftJsonSerializer<T> CreateSerializer<T>(
             IServiceProvider serviceProvider,
+            IConfiguration configuration,
             Action<IServiceProvider, IJsonSerializerSettingsBuilder> configureSettings)
         {
-            var settings = JsonSerializerSettingsBuilder.Build(serviceProvider, configureSettings);
+            var settings = JsonSerializerSettingsBuilder.Build(
+                serviceProvider,
+                configuration ?? serviceProvider?.GetService<IConfiguration>(),
+                configureSettings);
 
             var serializer = new NewtonsoftJsonSerializer<T>(settings);
 

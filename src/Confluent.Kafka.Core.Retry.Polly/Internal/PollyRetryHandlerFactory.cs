@@ -33,7 +33,7 @@ namespace Confluent.Kafka.Core.Retry.Polly.Internal
         {
             var options = PollyRetryHandlerOptionsBuilder.Build(
                 serviceProvider,
-                configuration,
+                configuration ?? serviceProvider?.GetService<IConfiguration>(),
                 configureOptions);
 
             var retryHandler = new PollyRetryHandler<TKey, TValue>(

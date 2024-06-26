@@ -1,4 +1,5 @@
 ﻿using Confluent.Kafka.Core.Internal;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
@@ -15,6 +16,10 @@ namespace Confluent.Kafka.Core.Serialization.NewtonsoftJson.Internal
         FunctionalBuilder<JsonSerializerSettings, JsonSerializerSettingsBuilder>,
         IJsonSerializerSettingsBuilder
     {
+        public JsonSerializerSettingsBuilder(IConfiguration configuration = null)
+            : base(seedSubject: null, configuration)
+        { }
+
         protected override JsonSerializerSettings CreateSubject() => new()
         {
             NullValueHandling = NullValueHandling.Ignore,
@@ -24,6 +29,18 @@ namespace Confluent.Kafka.Core.Serialization.NewtonsoftJson.Internal
             ContractResolver = new CamelCasePropertyNamesContractResolver(),
             Converters = { new IsoDateTimeConverter { DateTimeStyles = DateTimeStyles.AssumeUniversal } }
         };
+
+        public IJsonSerializerSettingsBuilder FromConfiguration(string sectionKey)
+        {
+            AppendAction(settings =>
+            {
+                if (!string.IsNullOrWhiteSpace(sectionKey))
+                {
+                    settings = Bind(settings, sectionKey);
+                }
+            });
+            return this;
+        }
 
         public IJsonSerializerSettingsBuilder WithReferenceLoopHandling(ReferenceLoopHandling referenceLoopHandling)
         {
@@ -215,9 +232,10 @@ namespace Confluent.Kafka.Core.Serialization.NewtonsoftJson.Internal
 
         public static JsonSerializerSettings Build(
             IServiceProvider serviceProvider,
+            IConfiguration configuration,
             Action<IServiceProvider, IJsonSerializerSettingsBuilder> configureSettings)
         {
-            using var builder = new JsonSerializerSettingsBuilder();
+            using var builder = new JsonSerializerSettingsBuilder(configuration);
 
             configureSettings?.Invoke(serviceProvider, builder);
 

@@ -80,8 +80,8 @@ namespace Confluent.Kafka.Core.Consumer
 
         #region Public Methods
 
-        public static IKafkaConsumerConfigBuilder CreateBuilder(IKafkaConsumerConfig consumerConfig = null, IConfiguration configuration = null)
-            => new KafkaConsumerConfigBuilder(consumerConfig, configuration);
+        public static IKafkaConsumerConfigBuilder CreateBuilder(IConfiguration configuration = null)
+            => new KafkaConsumerConfigBuilder(configuration: configuration);
 
         #endregion Public Methods
 
