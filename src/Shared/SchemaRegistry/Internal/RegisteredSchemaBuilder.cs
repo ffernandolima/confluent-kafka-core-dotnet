@@ -34,58 +34,35 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Internal
         public RegisteredSchemaBuilder(IConfiguration configuration = null)
            : base(seedSubject: null, configuration)
         {
-            foreach (var parameter in Enum.GetValues(typeof(RegisteredSchemaParameter))
-                .Cast<RegisteredSchemaParameter>())
+            EnumerateParameters(parameter =>
             {
-                switch (parameter)
+                if (parameter == RegisteredSchemaParameter.SchemaReferences)
                 {
-                    case RegisteredSchemaParameter.SchemaReferences:
-                        {
-                            AppendParameter(parameters => parameters[(int)parameter] = new List<SchemaReference>());
-                        }
-                        break;
-                    default:
-                        {
-                            AppendParameter(parameters =>
-                            {
-                                parameters[(int)parameter] = DefaultValueMappings[parameter].GetDefaultValue();
-                            });
-                        }
-                        break;
+                    AppendParameter(parameters => parameters[(int)parameter] = new List<SchemaReference>());
                 }
-            }
+                else
+                {
+                    AppendParameter(parameters =>
+                    {
+                        parameters[(int)parameter] = DefaultValueMappings[parameter].GetDefaultValue();
+                    });
+                }
+            });
         }
 
         public IRegisteredSchemaBuilder FromConfiguration(string sectionKey)
         {
             if (!string.IsNullOrWhiteSpace(sectionKey))
             {
-                var configurationSection = GetSection(sectionKey);
+                var section = GetSection(sectionKey);
 
-                foreach (var parameter in Enum.GetValues(typeof(RegisteredSchemaParameter))
-                    .Cast<RegisteredSchemaParameter>())
+                EnumerateParameters(parameter => parameter != RegisteredSchemaParameter.SchemaReferences, parameter =>
                 {
-                    switch (parameter)
+                    AppendParameter(parameters =>
                     {
-                        case RegisteredSchemaParameter.SchemaReferences:
-                            {
-                                continue;
-                            }
-                        default:
-                            {
-                                AppendParameter(parameters =>
-                                {
-                                    var parameterType = DefaultValueMappings[parameter];
-                                    var parameterKey = parameter.ToString();
-
-                                    var parameterValue = configurationSection.GetValue(parameterType, parameterKey);
-
-                                    parameters[(int)parameter] = parameterValue;
-                                });
-                            }
-                            break;
-                    }
-                }
+                        parameters[(int)parameter] = section.GetValue(DefaultValueMappings[parameter], parameter.ToString());
+                    });
+                });
             }
             return this;
         }
@@ -135,6 +112,20 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Internal
             var registeredSchema = builder.Build();
 
             return registeredSchema;
+        }
+
+        private void EnumerateParameters(Action<RegisteredSchemaParameter> action) => EnumerateParameters(condition: null, action);
+
+        private void EnumerateParameters(Func<RegisteredSchemaParameter, bool> condition, Action<RegisteredSchemaParameter> action)
+        {
+            foreach (var parameter in Enum.GetValues(typeof(RegisteredSchemaParameter))
+                .Cast<RegisteredSchemaParameter>())
+            {
+                if (condition is null || condition.Invoke(parameter))
+                {
+                    action?.Invoke(parameter);
+                }
+            }
         }
     }
 }

@@ -26,60 +26,37 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Internal
         };
 
         public UnregisteredSchemaBuilder(IConfiguration configuration = null)
-           : base(seedSubject: null, configuration)
+            : base(seedSubject: null, configuration)
         {
-            foreach (var parameter in Enum.GetValues(typeof(UnregisteredSchemaParameter))
-                .Cast<UnregisteredSchemaParameter>())
+            EnumerateParameters(parameter =>
             {
-                switch (parameter)
+                if (parameter == UnregisteredSchemaParameter.SchemaReferences)
                 {
-                    case UnregisteredSchemaParameter.SchemaReferences:
-                        {
-                            AppendParameter(parameters => parameters[(int)parameter] = new List<SchemaReference>());
-                        }
-                        break;
-                    default:
-                        {
-                            AppendParameter(parameters =>
-                            {
-                                parameters[(int)parameter] = DefaultValueMappings[parameter].GetDefaultValue();
-                            });
-                        }
-                        break;
+                    AppendParameter(parameters => parameters[(int)parameter] = new List<SchemaReference>());
                 }
-            }
+                else
+                {
+                    AppendParameter(parameters =>
+                    {
+                        parameters[(int)parameter] = DefaultValueMappings[parameter].GetDefaultValue();
+                    });
+                }
+            });
         }
 
         public IUnregisteredSchemaBuilder FromConfiguration(string sectionKey)
         {
             if (!string.IsNullOrWhiteSpace(sectionKey))
             {
-                var configurationSection = GetSection(sectionKey);
+                var section = GetSection(sectionKey);
 
-                foreach (var parameter in Enum.GetValues(typeof(UnregisteredSchemaParameter))
-                    .Cast<UnregisteredSchemaParameter>())
+                EnumerateParameters(parameter => parameter != UnregisteredSchemaParameter.SchemaReferences, parameter =>
                 {
-                    switch (parameter)
+                    AppendParameter(parameters =>
                     {
-                        case UnregisteredSchemaParameter.SchemaReferences:
-                            {
-                                continue;
-                            }
-                        default:
-                            {
-                                AppendParameter(parameters =>
-                                {
-                                    var parameterType = DefaultValueMappings[parameter];
-                                    var parameterKey = parameter.ToString();
-
-                                    var parameterValue = configurationSection.GetValue(parameterType, parameterKey);
-
-                                    parameters[(int)parameter] = parameterValue;
-                                });
-                            }
-                            break;
-                    }
-                }
+                        parameters[(int)parameter] = section.GetValue(DefaultValueMappings[parameter], parameter.ToString());
+                    });
+                });
             }
             return this;
         }
@@ -111,6 +88,20 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Internal
             var unregisteredSchema = builder.Build();
 
             return unregisteredSchema;
+        }
+
+        private void EnumerateParameters(Action<UnregisteredSchemaParameter> action) => EnumerateParameters(condition: null, action);
+
+        private void EnumerateParameters(Func<UnregisteredSchemaParameter, bool> condition, Action<UnregisteredSchemaParameter> action)
+        {
+            foreach (var parameter in Enum.GetValues(typeof(UnregisteredSchemaParameter))
+                .Cast<UnregisteredSchemaParameter>())
+            {
+                if (condition is null || condition.Invoke(parameter))
+                {
+                    action?.Invoke(parameter);
+                }
+            }
         }
     }
 }
