@@ -738,5 +738,17 @@ namespace Confluent.Kafka.Core.Consumer.Internal
         }
 
         #endregion IKafkaConsumerConfigBuilder Members
+
+        public static IKafkaConsumerConfig BuildConfig(
+            IConfiguration configuration = null,
+            IKafkaConsumerConfig consumerConfig = null,
+            Action<IKafkaConsumerConfigBuilder> configureConsumer = null)
+        {
+            using var builder = new KafkaConsumerConfigBuilder(consumerConfig, configuration);
+
+            configureConsumer?.Invoke(builder);
+
+            return builder.Build();
+        }
     }
 }

@@ -56,7 +56,7 @@ namespace Confluent.Kafka.Core.Consumer
         { }
 
         public KafkaConsumerBuilder(IKafkaConsumerConfig consumerConfig)
-            : base(consumerConfig ??= BuildConfig())
+            : base(consumerConfig ??= KafkaConsumerConfigBuilder.BuildConfig())
         {
             ConsumerConfig = consumerConfig;
         }
@@ -313,7 +313,7 @@ namespace Confluent.Kafka.Core.Consumer
                 throw new InvalidOperationException("Consumer may not be configured more than once.");
             }
 
-            ConsumerConfig = BuildConfig(Configuration, ConsumerConfig, configureConsumer);
+            ConsumerConfig = KafkaConsumerConfigBuilder.BuildConfig(Configuration, ConsumerConfig, configureConsumer);
 
             _consumerConfigured = true;
 
@@ -467,21 +467,5 @@ namespace Confluent.Kafka.Core.Consumer
             => new KafkaConsumerBuilder<TKey, TValue>(consumerConfig);
 
         #endregion Public Methods
-
-        #region Private Methods
-
-        private static IKafkaConsumerConfig BuildConfig(
-            IConfiguration configuration = null,
-            IKafkaConsumerConfig consumerConfig = null,
-            Action<IKafkaConsumerConfigBuilder> configureConsumer = null)
-        {
-            using var builder = new KafkaConsumerConfigBuilder(consumerConfig, configuration);
-
-            configureConsumer?.Invoke(builder);
-
-            return builder.Build();
-        }
-
-        #endregion Private Methods
     }
 }

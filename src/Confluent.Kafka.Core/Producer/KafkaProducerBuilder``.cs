@@ -52,7 +52,7 @@ namespace Confluent.Kafka.Core.Producer
         { }
 
         public KafkaProducerBuilder(IKafkaProducerConfig producerConfig)
-            : base(producerConfig ??= BuildConfig())
+            : base(producerConfig ??= KafkaProducerConfigBuilder.BuildConfig())
         {
             ProducerConfig = producerConfig;
         }
@@ -266,7 +266,7 @@ namespace Confluent.Kafka.Core.Producer
                 throw new InvalidOperationException("Producer may not be configured more than once.");
             }
 
-            ProducerConfig = BuildConfig(Configuration, ProducerConfig, configureProducer);
+            ProducerConfig = KafkaProducerConfigBuilder.BuildConfig(Configuration, ProducerConfig, configureProducer);
 
             _producerConfigured = true;
 
@@ -394,21 +394,5 @@ namespace Confluent.Kafka.Core.Producer
             => new KafkaProducerBuilder<TKey, TValue>(producerConfig);
 
         #endregion Public Methods
-
-        #region Private Methods
-
-        private static IKafkaProducerConfig BuildConfig(
-            IConfiguration configuration = null,
-            IKafkaProducerConfig producerConfig = null,
-            Action<IKafkaProducerConfigBuilder> configureProducer = null)
-        {
-            using var builder = new KafkaProducerConfigBuilder(producerConfig, configuration);
-
-            configureProducer?.Invoke(builder);
-
-            return builder.Build();
-        }
-
-        #endregion Private Methods
     }
 }

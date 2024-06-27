@@ -682,5 +682,17 @@ namespace Confluent.Kafka.Core.Producer.Internal
         }
 
         #endregion IKafkaProducerConfigBuilder Members
+
+        public static IKafkaProducerConfig BuildConfig(
+            IConfiguration configuration = null,
+            IKafkaProducerConfig producerConfig = null,
+            Action<IKafkaProducerConfigBuilder> configureProducer = null)
+        {
+            using var builder = new KafkaProducerConfigBuilder(producerConfig, configuration);
+
+            configureProducer?.Invoke(builder);
+
+            return builder.Build();
+        }
     }
 }
