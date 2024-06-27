@@ -1,4 +1,7 @@
 ﻿using Confluent.Kafka.Core.Producer;
+#if NETSTANDARD2_0_OR_GREATER
+using Confluent.Kafka.Core.Producer.Internal;
+#endif
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
@@ -42,8 +45,11 @@ namespace Microsoft.Extensions.DependencyInjection
             {
                 var builder = serviceProvider.GetRequiredKeyedService<IKafkaProducerBuilder<TKey, TValue>>(producerKey);
 
+#if NETSTANDARD2_0_OR_GREATER
+                var producer = builder.Build().ToKafkaProducer();
+#else
                 var producer = builder.Build();
-
+#endif
                 return producer;
             });
 
