@@ -90,9 +90,9 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Internal
             return unregisteredSchema;
         }
 
-        private void EnumerateParameters(Action<UnregisteredSchemaParameter> action) => EnumerateParameters(condition: null, action);
+        private static void EnumerateParameters(Action<UnregisteredSchemaParameter> action) => EnumerateParameters(condition: null, action);
 
-        private void EnumerateParameters(Func<UnregisteredSchemaParameter, bool> condition, Action<UnregisteredSchemaParameter> action)
+        private static void EnumerateParameters(Func<UnregisteredSchemaParameter, bool> condition, Action<UnregisteredSchemaParameter> action)
         {
             foreach (var parameter in Enum.GetValues(typeof(UnregisteredSchemaParameter))
                 .Cast<UnregisteredSchemaParameter>())
