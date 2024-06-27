@@ -349,6 +349,45 @@ namespace Confluent.Kafka.Core.Producer
 
         #endregion IKafkaProducerBuilder Members
 
+        #region Internal Methods
+
+        internal static IKafkaProducer<TKey, TValue> Build(
+            IServiceProvider serviceProvider,
+            IConfiguration configuration,
+            ILoggerFactory loggerFactory,
+            Action<IServiceProvider, IKafkaProducerBuilder<TKey, TValue>> configureProducer,
+            object producerKey)
+        {
+            var builder = Configure(serviceProvider, configuration, loggerFactory, configureProducer, producerKey);
+
+#if NETSTANDARD2_0_OR_GREATER
+            var producer = builder.Build().ToKafkaProducer();
+#else
+            var producer = builder.Build();
+#endif
+            return producer;
+        }
+
+        internal static IKafkaProducerBuilder<TKey, TValue> Configure(
+            IServiceProvider serviceProvider,
+            IConfiguration configuration,
+            ILoggerFactory loggerFactory,
+            Action<IServiceProvider, IKafkaProducerBuilder<TKey, TValue>> configureProducer,
+            object producerKey)
+        {
+            var builder = new KafkaProducerBuilder<TKey, TValue>()
+                .WithProducerKey(producerKey)
+                .WithConfiguration(configuration)
+                .WithLoggerFactory(loggerFactory)
+                .WithServiceProvider(serviceProvider);
+
+            configureProducer?.Invoke(serviceProvider, builder);
+
+            return builder;
+        }
+
+        #endregion Internal Methods
+
         #region Public Methods
 
         public static IKafkaProducerBuilder<TKey, TValue> CreateBuilder(IKafkaProducerConfig producerConfig = null)

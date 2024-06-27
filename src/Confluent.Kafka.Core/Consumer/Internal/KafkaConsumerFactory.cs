@@ -22,24 +22,30 @@ namespace Confluent.Kafka.Core.Consumer.Internal
             Action<IKafkaConsumerBuilder<TKey, TValue>> configureConsumer,
             object consumerKey)
         {
-            var consumerbuilder = serviceProvider?.GetKeyedService<IKafkaConsumerBuilder<TKey, TValue>>(consumerKey) ??
-                new KafkaConsumerBuilder<TKey, TValue>()
-                    .WithConsumerKey(consumerKey)
-                    .WithConfiguration(
-                        configuration ??
-                        serviceProvider?.GetService<IConfiguration>())
-                    .WithLoggerFactory(
-                        loggerFactory ??
-                        serviceProvider?.GetService<ILoggerFactory>())
-                    .WithServiceProvider(serviceProvider);
+            var consumer = serviceProvider?.GetKeyedService<IKafkaConsumer<TKey, TValue>>(consumerKey) ??
+                CreateConsumer<TKey, TValue>(
+                    serviceProvider,
+                    configuration,
+                    loggerFactory,
+                    (_, builder) => configureConsumer?.Invoke(builder),
+                    consumerKey);
 
-            configureConsumer?.Invoke(consumerbuilder);
+            return consumer;
+        }
+        public IKafkaConsumer<TKey, TValue> CreateConsumer<TKey, TValue>(
+            IServiceProvider serviceProvider,
+            IConfiguration configuration,
+            ILoggerFactory loggerFactory,
+            Action<IServiceProvider, IKafkaConsumerBuilder<TKey, TValue>> configureConsumer,
+            object consumerKey)
+        {
+            var consumer = KafkaConsumerBuilder<TKey, TValue>.Build(
+                serviceProvider,
+                configuration ?? serviceProvider?.GetService<IConfiguration>(),
+                loggerFactory ?? serviceProvider?.GetService<ILoggerFactory>(),
+                configureConsumer,
+                consumerKey);
 
-#if NETSTANDARD2_0_OR_GREATER
-            var consumer = consumerbuilder.Build().ToKafkaConsumer();
-#else
-            var consumer = consumerbuilder.Build();
-#endif
             return consumer;
         }
     }

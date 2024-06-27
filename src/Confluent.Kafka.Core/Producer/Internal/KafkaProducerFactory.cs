@@ -22,24 +22,30 @@ namespace Confluent.Kafka.Core.Producer.Internal
             Action<IKafkaProducerBuilder<TKey, TValue>> configureProducer,
             object producerKey)
         {
-            var producerbuilder = serviceProvider?.GetKeyedService<IKafkaProducerBuilder<TKey, TValue>>(producerKey) ??
-                new KafkaProducerBuilder<TKey, TValue>()
-                    .WithProducerKey(producerKey)
-                    .WithConfiguration(
-                        configuration ??
-                        serviceProvider?.GetService<IConfiguration>())
-                    .WithLoggerFactory(
-                        loggerFactory ??
-                        serviceProvider?.GetService<ILoggerFactory>())
-                    .WithServiceProvider(serviceProvider);
+            var producer = serviceProvider?.GetKeyedService<IKafkaProducer<TKey, TValue>>(producerKey) ??
+                CreateProducer<TKey, TValue>(
+                    serviceProvider,
+                    configuration,
+                    loggerFactory,
+                    (_, builder) => configureProducer?.Invoke(builder),
+                    producerKey);
 
-            configureProducer?.Invoke(producerbuilder);
+            return producer;
+        }
+        public IKafkaProducer<TKey, TValue> CreateProducer<TKey, TValue>(
+            IServiceProvider serviceProvider,
+            IConfiguration configuration,
+            ILoggerFactory loggerFactory,
+            Action<IServiceProvider, IKafkaProducerBuilder<TKey, TValue>> configureProducer,
+            object producerKey)
+        {
+            var producer = KafkaProducerBuilder<TKey, TValue>.Build(
+                serviceProvider,
+                configuration ?? serviceProvider?.GetService<IConfiguration>(),
+                loggerFactory ?? serviceProvider?.GetService<ILoggerFactory>(),
+                configureProducer,
+                producerKey);
 
-#if NETSTANDARD2_0_OR_GREATER
-            var producer = producerbuilder.Build().ToKafkaProducer();
-#else
-            var producer = producerbuilder.Build();
-#endif
             return producer;
         }
     }

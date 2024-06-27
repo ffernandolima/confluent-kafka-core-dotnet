@@ -30,13 +30,12 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.TryAddKeyedSingleton(producerKey, (serviceProvider, _) =>
             {
-                var builder = new KafkaProducerBuilder<TKey, TValue>()
-                    .WithProducerKey(producerKey)
-                    .WithConfiguration(serviceProvider.GetService<IConfiguration>())
-                    .WithLoggerFactory(serviceProvider.GetService<ILoggerFactory>())
-                    .WithServiceProvider(serviceProvider);
-
-                configureProducer.Invoke(serviceProvider, builder);
+                var builder = KafkaProducerBuilder<TKey, TValue>.Configure(
+                    serviceProvider,
+                    serviceProvider.GetService<IConfiguration>(),
+                    serviceProvider.GetService<ILoggerFactory>(),
+                    configureProducer,
+                    producerKey);
 
                 return builder;
             });

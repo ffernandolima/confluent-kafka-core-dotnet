@@ -422,6 +422,45 @@ namespace Confluent.Kafka.Core.Consumer
 
         #endregion IKafkaConsumerBuilder Members
 
+        #region Internal Methods
+
+        internal static IKafkaConsumer<TKey, TValue> Build(
+            IServiceProvider serviceProvider,
+            IConfiguration configuration,
+            ILoggerFactory loggerFactory,
+            Action<IServiceProvider, IKafkaConsumerBuilder<TKey, TValue>> configureConsumer,
+            object consumerKey)
+        {
+            var builder = Configure(serviceProvider, configuration, loggerFactory, configureConsumer, consumerKey);
+
+#if NETSTANDARD2_0_OR_GREATER
+            var consumer = builder.Build().ToKafkaConsumer();
+#else
+            var consumer = builder.Build();
+#endif
+            return consumer;
+        }
+
+        internal static IKafkaConsumerBuilder<TKey, TValue> Configure(
+            IServiceProvider serviceProvider,
+            IConfiguration configuration,
+            ILoggerFactory loggerFactory,
+            Action<IServiceProvider, IKafkaConsumerBuilder<TKey, TValue>> configureConsumer,
+            object consumerKey)
+        {
+            var builder = new KafkaConsumerBuilder<TKey, TValue>()
+                .WithConsumerKey(consumerKey)
+                .WithConfiguration(configuration)
+                .WithLoggerFactory(loggerFactory)
+                .WithServiceProvider(serviceProvider);
+
+            configureConsumer?.Invoke(serviceProvider, builder);
+
+            return builder;
+        }
+
+        #endregion Internal Methods
+
         #region Public Methods
 
         public static IKafkaConsumerBuilder<TKey, TValue> CreateBuilder(IKafkaConsumerConfig consumerConfig = null)
