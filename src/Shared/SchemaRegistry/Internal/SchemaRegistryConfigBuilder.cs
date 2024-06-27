@@ -1,5 +1,6 @@
 ﻿using Confluent.Kafka.Core.Internal;
 using Confluent.SchemaRegistry;
+using Microsoft.Extensions.Configuration;
 using System;
 
 namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Internal
@@ -8,6 +9,22 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Internal
         FunctionalBuilder<SchemaRegistryConfig, SchemaRegistryConfigBuilder>,
         ISchemaRegistryConfigBuilder
     {
+        public SchemaRegistryConfigBuilder(IConfiguration configuration = null)
+            : base(seedSubject: null, configuration)
+        { }
+
+        public ISchemaRegistryConfigBuilder FromConfiguration(string sectionKey)
+        {
+            AppendAction(config =>
+            {
+                if (!string.IsNullOrWhiteSpace(sectionKey))
+                {
+                    config = Bind(config, sectionKey);
+                }
+            });
+            return this;
+        }
+
         public ISchemaRegistryConfigBuilder WithBasicAuthCredentialsSource(AuthCredentialsSource? basicAuthCredentialsSource)
         {
             AppendAction(config => config.BasicAuthCredentialsSource = basicAuthCredentialsSource);
@@ -62,9 +79,11 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Internal
             return this;
         }
 
-        public static SchemaRegistryConfig Build(Action<ISchemaRegistryConfigBuilder> configureSchemaRegistry)
+        public static SchemaRegistryConfig Build(
+            IConfiguration configuration,
+            Action<ISchemaRegistryConfigBuilder> configureSchemaRegistry)
         {
-            using var builder = new SchemaRegistryConfigBuilder();
+            using var builder = new SchemaRegistryConfigBuilder(configuration);
 
             configureSchemaRegistry?.Invoke(builder);
 

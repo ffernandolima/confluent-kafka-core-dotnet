@@ -1,5 +1,6 @@
 ﻿using Confluent.Kafka.Core.Internal;
 using Confluent.SchemaRegistry.Serdes;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 
@@ -9,6 +10,22 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Protobuf.Internal
         FunctionalBuilder<ProtobufDeserializerConfig, ProtobufDeserializerConfigBuilder>,
         IProtobufDeserializerConfigBuilder
     {
+        public ProtobufDeserializerConfigBuilder(IConfiguration configuration = null)
+            : base(seedSubject: null, configuration)
+        { }
+
+        public IProtobufDeserializerConfigBuilder FromConfiguration(string sectionKey)
+        {
+            AppendAction(config =>
+            {
+                if (!string.IsNullOrWhiteSpace(sectionKey))
+                {
+                    config = Bind(config, sectionKey);
+                }
+            });
+            return this;
+        }
+
         public IProtobufDeserializerConfigBuilder WithUseDeprecatedFormat(bool? useDeprecatedFormat)
         {
             AppendAction(config => config.UseDeprecatedFormat = useDeprecatedFormat);
@@ -21,9 +38,11 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Protobuf.Internal
             return this;
         }
 
-        public static ProtobufDeserializerConfig Build(Action<IProtobufDeserializerConfigBuilder> configureDeserializer)
+        public static ProtobufDeserializerConfig Build(
+            IConfiguration configuration,
+            Action<IProtobufDeserializerConfigBuilder> configureDeserializer)
         {
-            using var builder = new ProtobufDeserializerConfigBuilder();
+            using var builder = new ProtobufDeserializerConfigBuilder(configuration);
 
             configureDeserializer?.Invoke(builder);
 

@@ -5,6 +5,8 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Protobuf
 {
     public interface IProtobufSerializerConfigBuilder
     {
+        IProtobufSerializerConfigBuilder FromConfiguration(string sectionKey);
+
         IProtobufSerializerConfigBuilder WithBufferBytes(int? bufferBytes);
 
         IProtobufSerializerConfigBuilder WithAutoRegisterSchemas(bool? autoRegisterSchemas);

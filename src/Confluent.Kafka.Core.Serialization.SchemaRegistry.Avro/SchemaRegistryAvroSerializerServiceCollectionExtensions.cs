@@ -1,6 +1,7 @@
 ﻿using Confluent.Kafka;
 using Confluent.Kafka.Core.Serialization.SchemaRegistry.Avro;
 using Confluent.Kafka.Core.Serialization.SchemaRegistry.Avro.Internal;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using System;
 
@@ -27,7 +28,15 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.TryAddKeyedSingleton(
                 serviceKey,
-                (serviceProvider, _) => SchemaRegistryAvroSerializerFactory.CreateSerializer<T>(serviceProvider, configureSerializer));
+                (serviceProvider, _) =>
+                {
+                    var serializer = SchemaRegistryAvroSerializerFactory.CreateSerializer<T>(
+                        serviceProvider,
+                        serviceProvider.GetService<IConfiguration>(),
+                        configureSerializer);
+
+                    return serializer;
+                });
 
             services.TryAddKeyedSingleton<IAsyncSerializer<T>>(
                 serviceKey,

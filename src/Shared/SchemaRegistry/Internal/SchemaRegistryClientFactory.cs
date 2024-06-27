@@ -1,4 +1,5 @@
 ﻿using Confluent.SchemaRegistry;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 
@@ -8,21 +9,26 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Internal
     {
         public static ISchemaRegistryClient GetOrCreateSchemaRegistryClient(
             IServiceProvider serviceProvider,
+            IConfiguration configuration,
             Action<ISchemaRegistryClientBuilder> configureClient,
             object clientKey)
         {
             var schemaRegistryClient = serviceProvider?.GetKeyedService<ISchemaRegistryClient>(
                 clientKey ?? SchemaRegistryClientConstants.ConfluentSchemaRegistryClientKey) ??
-                CreateSchemaRegistryClient(serviceProvider, (_, builder) => configureClient?.Invoke(builder));
+                CreateSchemaRegistryClient(serviceProvider, configuration, (_, builder) => configureClient?.Invoke(builder));
 
             return schemaRegistryClient;
         }
 
         public static ISchemaRegistryClient CreateSchemaRegistryClient(
             IServiceProvider serviceProvider,
+            IConfiguration configuration,
             Action<IServiceProvider, ISchemaRegistryClientBuilder> configureClient)
         {
-            var builder = SchemaRegistryClientBuilder.Configure(serviceProvider, configureClient);
+            var builder = SchemaRegistryClientBuilder.Configure(
+                serviceProvider,
+                configuration ?? serviceProvider?.GetService<IConfiguration>(),
+                configureClient);
 
             var schemaRegistryClient = new CachedSchemaRegistryClient(
                 builder.SchemaRegistryConfig,

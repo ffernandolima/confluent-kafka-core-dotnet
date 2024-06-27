@@ -5,6 +5,8 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Json
 {
     public interface IJsonSerializerConfigBuilder
     {
+        IJsonSerializerConfigBuilder FromConfiguration(string sectionKey);
+
         IJsonSerializerConfigBuilder WithBufferBytes(int? bufferBytes);
 
         IJsonSerializerConfigBuilder WithAutoRegisterSchemas(bool? autoRegisterSchemas);

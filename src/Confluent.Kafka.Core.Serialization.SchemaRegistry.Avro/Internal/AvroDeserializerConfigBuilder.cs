@@ -1,5 +1,6 @@
 ﻿using Confluent.Kafka.Core.Internal;
 using Confluent.SchemaRegistry.Serdes;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 
@@ -9,15 +10,33 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Avro.Internal
         FunctionalBuilder<AvroDeserializerConfig, AvroDeserializerConfigBuilder>,
         IAvroDeserializerConfigBuilder
     {
+        public AvroDeserializerConfigBuilder(IConfiguration configuration = null)
+            : base(seedSubject: null, configuration)
+        { }
+
+        public IAvroDeserializerConfigBuilder FromConfiguration(string sectionKey)
+        {
+            AppendAction(config =>
+            {
+                if (!string.IsNullOrWhiteSpace(sectionKey))
+                {
+                    config = Bind(config, sectionKey);
+                }
+            });
+            return this;
+        }
+
         public IAvroDeserializerConfigBuilder WithConfigurationProperty(KeyValuePair<string, string> configurationProperty)
         {
             AppendAction(config => config.Set(configurationProperty.Key, configurationProperty.Value));
             return this;
         }
 
-        public static AvroDeserializerConfig Build(Action<IAvroDeserializerConfigBuilder> configureDeserializer)
+        public static AvroDeserializerConfig Build(
+            IConfiguration configuration,
+            Action<IAvroDeserializerConfigBuilder> configureDeserializer)
         {
-            using var builder = new AvroDeserializerConfigBuilder();
+            using var builder = new AvroDeserializerConfigBuilder(configuration);
 
             configureDeserializer?.Invoke(builder);
 

@@ -1,6 +1,7 @@
 ﻿using Confluent.Kafka.Core.Internal;
 using Confluent.SchemaRegistry;
 using Confluent.SchemaRegistry.Serdes;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 
@@ -10,10 +11,26 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Protobuf.Internal
         FunctionalBuilder<ProtobufSerializerConfig, ProtobufSerializerConfigBuilder>,
         IProtobufSerializerConfigBuilder
     {
+        public ProtobufSerializerConfigBuilder(IConfiguration configuration = null)
+            : base(seedSubject: null, configuration)
+        { }
+
         protected override ProtobufSerializerConfig CreateSubject() => new()
         {
             AutoRegisterSchemas = true
         };
+
+        public IProtobufSerializerConfigBuilder FromConfiguration(string sectionKey)
+        {
+            AppendAction(config =>
+            {
+                if (!string.IsNullOrWhiteSpace(sectionKey))
+                {
+                    config = Bind(config, sectionKey);
+                }
+            });
+            return this;
+        }
 
         public IProtobufSerializerConfigBuilder WithBufferBytes(int? bufferBytes)
         {
@@ -69,9 +86,11 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Protobuf.Internal
             return this;
         }
 
-        public static ProtobufSerializerConfig Build(Action<IProtobufSerializerConfigBuilder> configureSerializer)
+        public static ProtobufSerializerConfig Build(
+            IConfiguration configuration,
+            Action<IProtobufSerializerConfigBuilder> configureSerializer)
         {
-            using var builder = new ProtobufSerializerConfigBuilder();
+            using var builder = new ProtobufSerializerConfigBuilder(configuration);
 
             configureSerializer?.Invoke(builder);
 

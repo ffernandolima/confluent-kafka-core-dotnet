@@ -38,6 +38,7 @@ namespace Confluent.Kafka.Core.Producer
 
             var keySerializer = SchemaRegistryProtobufSerializerFactory.GetOrCreateSerializer<TKey>(
                 builder.ServiceProvider,
+                builder.Configuration,
                 configureSerializer,
                 serializerKey);
 
@@ -59,6 +60,7 @@ namespace Confluent.Kafka.Core.Producer
 
             var valueSerializer = SchemaRegistryProtobufSerializerFactory.GetOrCreateSerializer<TValue>(
                 builder.ServiceProvider,
+                builder.Configuration,
                 configureSerializer,
                 serializerKey);
 

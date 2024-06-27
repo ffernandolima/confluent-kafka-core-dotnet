@@ -2,6 +2,7 @@
 using Confluent.Kafka.Core.Serialization.SchemaRegistry.Protobuf;
 using Confluent.Kafka.Core.Serialization.SchemaRegistry.Protobuf.Internal;
 using Google.Protobuf;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using System;
 
@@ -29,7 +30,15 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.TryAddKeyedSingleton(
                 serviceKey,
-                (serviceProvider, _) => SchemaRegistryProtobufSerializerFactory.CreateSerializer<T>(serviceProvider, configureSerializer));
+                (serviceProvider, _) =>
+                {
+                    var serializer = SchemaRegistryProtobufSerializerFactory.CreateSerializer<T>(
+                        serviceProvider,
+                        serviceProvider.GetService<IConfiguration>(),
+                        configureSerializer);
+
+                    return serializer;
+                });
 
             services.TryAddKeyedSingleton<IAsyncSerializer<T>>(
                 serviceKey,

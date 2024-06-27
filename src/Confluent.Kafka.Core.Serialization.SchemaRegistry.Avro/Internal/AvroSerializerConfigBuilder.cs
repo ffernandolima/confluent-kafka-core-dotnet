@@ -1,6 +1,7 @@
 ﻿using Confluent.Kafka.Core.Internal;
 using Confluent.SchemaRegistry;
 using Confluent.SchemaRegistry.Serdes;
+using Microsoft.Extensions.Configuration;
 using System;
 
 namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Avro.Internal
@@ -9,10 +10,26 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Avro.Internal
         FunctionalBuilder<AvroSerializerConfig, AvroSerializerConfigBuilder>,
         IAvroSerializerConfigBuilder
     {
+        public AvroSerializerConfigBuilder(IConfiguration configuration = null)
+            : base(seedSubject: null, configuration)
+        { }
+
         protected override AvroSerializerConfig CreateSubject() => new()
         {
             AutoRegisterSchemas = true
         };
+
+        public IAvroSerializerConfigBuilder FromConfiguration(string sectionKey)
+        {
+            AppendAction(config =>
+            {
+                if (!string.IsNullOrWhiteSpace(sectionKey))
+                {
+                    config = Bind(config, sectionKey);
+                }
+            });
+            return this;
+        }
 
         public IAvroSerializerConfigBuilder WithBufferBytes(int? bufferBytes)
         {
@@ -44,9 +61,11 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Avro.Internal
             return this;
         }
 
-        public static AvroSerializerConfig Build(Action<IAvroSerializerConfigBuilder> configureSerializer)
+        public static AvroSerializerConfig Build(
+            IConfiguration configuration,
+            Action<IAvroSerializerConfigBuilder> configureSerializer)
         {
-            using var builder = new AvroSerializerConfigBuilder();
+            using var builder = new AvroSerializerConfigBuilder(configuration);
 
             configureSerializer?.Invoke(builder);
 

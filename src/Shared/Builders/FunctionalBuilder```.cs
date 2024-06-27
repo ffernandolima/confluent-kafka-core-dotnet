@@ -40,7 +40,8 @@ namespace Confluent.Kafka.Core.Internal
             : this((TSubject)seedSubjectAbs, configuration)
         { }
 
-        protected virtual TSubject CreateSubject() => _defaultFactory.Invoke();
+        protected virtual TSubject CreateSubject()
+            => _defaultFactory.Invoke();
 
         protected virtual TSelf AppendParameter(Action<IDictionary<int, object>> action)
         {
@@ -63,12 +64,17 @@ namespace Confluent.Kafka.Core.Internal
             return this as TSelf;
         }
 
+        protected virtual IConfigurationSection GetSection(string sectionKey)
+            => _configuration?.GetSection(sectionKey);
+
         protected virtual TSubject Bind(
             TSubject subject,
             string sectionKey,
             Action<BinderOptions> configureOptions = null)
         {
-            _configuration?.GetSection(sectionKey).Bind(
+            var configurationSection = GetSection(sectionKey);
+
+            configurationSection.Bind(
                 subject,
                 configureOptions ??= options =>
                 {

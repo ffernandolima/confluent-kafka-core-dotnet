@@ -34,6 +34,7 @@ namespace Confluent.Kafka.Core.Consumer
 
             var keyDeserializer = SchemaRegistryAvroSerializerFactory.GetOrCreateSerializer<TKey>(
                 builder.ServiceProvider,
+                builder.Configuration,
                 configureSerializer,
                 serializerKey);
 
@@ -54,6 +55,7 @@ namespace Confluent.Kafka.Core.Consumer
 
             var valueDeserializer = SchemaRegistryAvroSerializerFactory.GetOrCreateSerializer<TValue>(
                 builder.ServiceProvider,
+                builder.Configuration,
                 configureSerializer,
                 serializerKey);
 

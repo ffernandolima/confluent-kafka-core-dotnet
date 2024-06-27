@@ -4,6 +4,8 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Avro
 {
     public interface IAvroSerializerConfigBuilder
     {
+        IAvroSerializerConfigBuilder FromConfiguration(string sectionKey);
+
         IAvroSerializerConfigBuilder WithBufferBytes(int? bufferBytes);
 
         IAvroSerializerConfigBuilder WithAutoRegisterSchemas(bool? autoRegisterSchemas);

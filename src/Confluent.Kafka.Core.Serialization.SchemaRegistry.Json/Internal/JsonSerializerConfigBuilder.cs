@@ -1,6 +1,7 @@
 ﻿using Confluent.Kafka.Core.Internal;
 using Confluent.SchemaRegistry;
 using Confluent.SchemaRegistry.Serdes;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 
@@ -10,10 +11,26 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Json.Internal
         FunctionalBuilder<JsonSerializerConfig, JsonSerializerConfigBuilder>,
         IJsonSerializerConfigBuilder
     {
+        public JsonSerializerConfigBuilder(IConfiguration configuration = null)
+            : base(seedSubject: null, configuration)
+        { }
+
         protected override JsonSerializerConfig CreateSubject() => new()
         {
             AutoRegisterSchemas = true
         };
+
+        public IJsonSerializerConfigBuilder FromConfiguration(string sectionKey)
+        {
+            AppendAction(config =>
+            {
+                if (!string.IsNullOrWhiteSpace(sectionKey))
+                {
+                    config = Bind(config, sectionKey);
+                }
+            });
+            return this;
+        }
 
         public IJsonSerializerConfigBuilder WithBufferBytes(int? bufferBytes)
         {
@@ -57,9 +74,11 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Json.Internal
             return this;
         }
 
-        public static JsonSerializerConfig Build(Action<IJsonSerializerConfigBuilder> configureSerializer)
+        public static JsonSerializerConfig Build(
+            IConfiguration configuration,
+            Action<IJsonSerializerConfigBuilder> configureSerializer)
         {
-            using var builder = new JsonSerializerConfigBuilder();
+            using var builder = new JsonSerializerConfigBuilder(configuration);
 
             configureSerializer?.Invoke(builder);
 

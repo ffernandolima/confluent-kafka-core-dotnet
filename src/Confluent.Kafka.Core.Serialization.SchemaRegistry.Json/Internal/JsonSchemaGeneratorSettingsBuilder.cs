@@ -1,4 +1,5 @@
 ﻿using Confluent.Kafka.Core.Internal;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using NJsonSchema;
 using NJsonSchema.Generation;
@@ -13,10 +14,26 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Json.Internal
         FunctionalBuilder<JsonSchemaGeneratorSettings, JsonSchemaGeneratorSettingsBuilder>,
         IJsonSchemaGeneratorSettingsBuilder
     {
+        public JsonSchemaGeneratorSettingsBuilder(IConfiguration configuration = null)
+            : base(seedSubject: null, configuration)
+        { }
+
         protected override JsonSchemaGeneratorSettings CreateSubject() => new()
         {
             FlattenInheritanceHierarchy = true
         };
+
+        public IJsonSchemaGeneratorSettingsBuilder FromConfiguration(string sectionKey)
+        {
+            AppendAction(settings =>
+            {
+                if (!string.IsNullOrWhiteSpace(sectionKey))
+                {
+                    settings = Bind(settings, sectionKey);
+                }
+            });
+            return this;
+        }
 
         public IJsonSchemaGeneratorSettingsBuilder WithDefaultReferenceTypeNullHandling(
             ReferenceTypeNullHandling defaultReferenceTypeNullHandling)
@@ -181,9 +198,11 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Json.Internal
             return this;
         }
 
-        public static JsonSchemaGeneratorSettings Build(Action<IJsonSchemaGeneratorSettingsBuilder> configureSchemaGenerator)
+        public static JsonSchemaGeneratorSettings Build(
+            IConfiguration configuration,
+            Action<IJsonSchemaGeneratorSettingsBuilder> configureSchemaGenerator)
         {
-            using var builder = new JsonSchemaGeneratorSettingsBuilder();
+            using var builder = new JsonSchemaGeneratorSettingsBuilder(configuration);
 
             configureSchemaGenerator?.Invoke(builder);
 

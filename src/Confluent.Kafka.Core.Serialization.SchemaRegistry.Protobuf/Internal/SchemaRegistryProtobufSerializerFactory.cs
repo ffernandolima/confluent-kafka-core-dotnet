@@ -1,4 +1,5 @@
 ﻿using Google.Protobuf;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 
@@ -8,23 +9,28 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Protobuf.Internal
     {
         public static SchemaRegistryProtobufSerializer<T> GetOrCreateSerializer<T>(
             IServiceProvider serviceProvider,
+            IConfiguration configuration,
             Action<ISchemaRegistryProtobufSerializerBuilder> configureSerializer,
             object serializerKey)
                 where T : class, IMessage<T>, new()
         {
             var serializer = serviceProvider?.GetKeyedService<SchemaRegistryProtobufSerializer<T>>(
                 serializerKey ?? SchemaRegistryProtobufSerializerConstants.SchemaRegistryProtobufSerializerKey) ??
-                CreateSerializer<T>(serviceProvider, (_, builder) => configureSerializer?.Invoke(builder));
+                CreateSerializer<T>(serviceProvider, configuration, (_, builder) => configureSerializer?.Invoke(builder));
 
             return serializer;
         }
 
         public static SchemaRegistryProtobufSerializer<T> CreateSerializer<T>(
             IServiceProvider serviceProvider,
+            IConfiguration configuration,
             Action<IServiceProvider, ISchemaRegistryProtobufSerializerBuilder> configureSerializer)
                 where T : class, IMessage<T>, new()
         {
-            var builder = SchemaRegistryProtobufSerializerBuilder.Configure(serviceProvider, configureSerializer);
+            var builder = SchemaRegistryProtobufSerializerBuilder.Configure(
+                serviceProvider,
+                configuration ?? serviceProvider?.GetService<IConfiguration>(),
+                configureSerializer);
 
             var serializer = new SchemaRegistryProtobufSerializer<T>(
                 builder.SchemaRegistryClient,

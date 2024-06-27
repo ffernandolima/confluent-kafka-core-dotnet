@@ -1,5 +1,6 @@
 ﻿using Confluent.Kafka.Core.Internal;
 using Confluent.SchemaRegistry;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,8 +31,8 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Internal
             { RegisteredSchemaParameter.SchemaReferences, typeof(List<SchemaReference>) }
         };
 
-        public RegisteredSchemaBuilder(RegisteredSchema seedSubject = null)
-           : base(seedSubject)
+        public RegisteredSchemaBuilder(IConfiguration configuration = null)
+           : base(seedSubject: null, configuration)
         {
             foreach (var parameter in Enum.GetValues(typeof(RegisteredSchemaParameter))
                 .Cast<RegisteredSchemaParameter>())
@@ -53,6 +54,40 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Internal
                         break;
                 }
             }
+        }
+
+        public IRegisteredSchemaBuilder FromConfiguration(string sectionKey)
+        {
+            if (!string.IsNullOrWhiteSpace(sectionKey))
+            {
+                var configurationSection = GetSection(sectionKey);
+
+                foreach (var parameter in Enum.GetValues(typeof(RegisteredSchemaParameter))
+                    .Cast<RegisteredSchemaParameter>())
+                {
+                    switch (parameter)
+                    {
+                        case RegisteredSchemaParameter.SchemaReferences:
+                            {
+                                continue;
+                            }
+                        default:
+                            {
+                                AppendParameter(parameters =>
+                                {
+                                    var parameterType = DefaultValueMappings[parameter];
+                                    var parameterKey = parameter.ToString();
+
+                                    var parameterValue = configurationSection.GetValue(parameterType, parameterKey);
+
+                                    parameters[(int)parameter] = parameterValue;
+                                });
+                            }
+                            break;
+                    }
+                }
+            }
+            return this;
         }
 
         public IRegisteredSchemaBuilder WithSubject(string subject)
@@ -91,9 +126,9 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Internal
             return this;
         }
 
-        public static RegisteredSchema Build(Action<IRegisteredSchemaBuilder> configureRegisteredSchema)
+        public static RegisteredSchema Build(IConfiguration configuration, Action<IRegisteredSchemaBuilder> configureRegisteredSchema)
         {
-            using var builder = new RegisteredSchemaBuilder();
+            using var builder = new RegisteredSchemaBuilder(configuration);
 
             configureRegisteredSchema?.Invoke(builder);
 

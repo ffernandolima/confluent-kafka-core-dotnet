@@ -1,6 +1,7 @@
 ﻿using Confluent.Kafka;
 using Confluent.Kafka.Core.Serialization.SchemaRegistry.Json;
 using Confluent.Kafka.Core.Serialization.SchemaRegistry.Json.Internal;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using System;
 
@@ -28,7 +29,15 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.TryAddKeyedSingleton(
                 serviceKey,
-                (serviceProvider, _) => SchemaRegistryJsonSerializerFactory.CreateSerializer<T>(serviceProvider, configureSerializer));
+                (serviceProvider, _) =>
+                {
+                    var serializer = SchemaRegistryJsonSerializerFactory.CreateSerializer<T>(
+                        serviceProvider,
+                        serviceProvider.GetService<IConfiguration>(),
+                        configureSerializer);
+
+                    return serializer;
+                });
 
             services.TryAddKeyedSingleton<IAsyncSerializer<T>>(
                 serviceKey,

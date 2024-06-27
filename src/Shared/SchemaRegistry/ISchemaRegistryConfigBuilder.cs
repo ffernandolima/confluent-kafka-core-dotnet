@@ -4,6 +4,8 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry
 {
     public interface ISchemaRegistryConfigBuilder
     {
+        ISchemaRegistryConfigBuilder FromConfiguration(string sectionKey);
+
         ISchemaRegistryConfigBuilder WithBasicAuthCredentialsSource(AuthCredentialsSource? basicAuthCredentialsSource);
 
         ISchemaRegistryConfigBuilder WithUrl(string url);

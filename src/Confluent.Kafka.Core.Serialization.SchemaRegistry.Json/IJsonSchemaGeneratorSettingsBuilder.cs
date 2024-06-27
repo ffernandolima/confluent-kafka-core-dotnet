@@ -8,6 +8,8 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Json
 {
     public interface IJsonSchemaGeneratorSettingsBuilder
     {
+        IJsonSchemaGeneratorSettingsBuilder FromConfiguration(string sectionKey);
+
         IJsonSchemaGeneratorSettingsBuilder WithDefaultReferenceTypeNullHandling(
             ReferenceTypeNullHandling defaultReferenceTypeNullHandling);
 
