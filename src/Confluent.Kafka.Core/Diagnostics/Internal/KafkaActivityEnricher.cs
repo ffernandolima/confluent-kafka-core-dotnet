@@ -1,7 +1,6 @@
 ﻿using Confluent.Kafka.Core.Consumer;
 using Confluent.Kafka.Core.Producer;
 using Confluent.Kafka.Core.Serialization.Internal;
-using Confluent.Kafka.SyncOverAsync;
 using System;
 using System.Collections.Concurrent;
 using System.Diagnostics;
@@ -237,25 +236,9 @@ namespace Confluent.Kafka.Core.Diagnostics.Internal
 
             try
             {
-                var serializer = (ISerializer<TValue>)Serializers.GetOrAdd(typeof(TValue), key =>
-                {
-                    if (configuredSerializer is ISerializer<TValue>)
-                    {
-                        return configuredSerializer;
-                    }
-
-                    if (configuredSerializer is SyncOverAsyncDeserializer<TValue> syncDeserializer)
-                    {
-                        var innerDeserializer = syncDeserializer.GetInnerDeserializer();
-
-                        if (innerDeserializer is IAsyncSerializer<TValue> asyncSerializer)
-                        {
-                            return asyncSerializer.AsSyncOverAsync();
-                        }
-                    }
-
-                    return KafkaSerialization.TryGetSerializer(key);
-                });
+                var serializer = (ISerializer<TValue>)Serializers.GetOrAdd(
+                    typeof(TValue),
+                    key => configuredSerializer.ToSerializer<TValue>());
 
                 messageBody = serializer?.Serialize(messageValue, contextFactory.Invoke());
             }
