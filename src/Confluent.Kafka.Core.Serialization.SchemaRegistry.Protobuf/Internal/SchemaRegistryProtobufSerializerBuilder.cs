@@ -25,7 +25,7 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Protobuf.Internal
             Action<ISchemaRegistryClientBuilder> configureClient,
             object clientKey = null)
         {
-            SchemaRegistryClient = SchemaRegistryClientFactory.GetOrCreateSchemaRegistryClient(
+            SchemaRegistryClient = SchemaRegistryClientFactory.Instance.GetOrCreateSchemaRegistryClient(
                 _serviceProvider,
                 _configuration,
                 configureClient,

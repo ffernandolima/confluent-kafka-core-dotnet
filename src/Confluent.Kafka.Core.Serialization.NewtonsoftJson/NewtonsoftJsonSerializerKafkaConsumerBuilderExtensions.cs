@@ -32,7 +32,7 @@ namespace Confluent.Kafka.Core.Consumer
                 throw new ArgumentNullException(nameof(builder), $"{nameof(builder)} cannot be null.");
             }
 
-            var keyDeserializer = NewtonsoftJsonSerializerFactory.GetOrCreateSerializer<TKey>(
+            var keyDeserializer = NewtonsoftJsonSerializerFactory.Instance.GetOrCreateSerializer<TKey>(
                 builder.ServiceProvider,
                 builder.Configuration,
                 configureSettings,
@@ -53,7 +53,7 @@ namespace Confluent.Kafka.Core.Consumer
                 throw new ArgumentNullException(nameof(builder), $"{nameof(builder)} cannot be null.");
             }
 
-            var valueDeserializer = NewtonsoftJsonSerializerFactory.GetOrCreateSerializer<TValue>(
+            var valueDeserializer = NewtonsoftJsonSerializerFactory.Instance.GetOrCreateSerializer<TValue>(
                 builder.ServiceProvider,
                 builder.Configuration,
                 configureSettings,

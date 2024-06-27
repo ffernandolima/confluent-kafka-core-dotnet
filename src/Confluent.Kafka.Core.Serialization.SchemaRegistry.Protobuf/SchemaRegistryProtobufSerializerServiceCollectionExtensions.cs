@@ -32,7 +32,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 serviceKey,
                 (serviceProvider, _) =>
                 {
-                    var serializer = SchemaRegistryProtobufSerializerFactory.CreateSerializer<T>(
+                    var serializer = SchemaRegistryProtobufSerializerFactory.Instance.CreateSerializer<T>(
                         serviceProvider,
                         serviceProvider.GetService<IConfiguration>(),
                         configureSerializer);

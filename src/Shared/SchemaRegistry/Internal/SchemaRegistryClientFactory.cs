@@ -5,9 +5,17 @@ using System;
 
 namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Internal
 {
-    internal static class SchemaRegistryClientFactory
+    internal sealed class SchemaRegistryClientFactory
     {
-        public static ISchemaRegistryClient GetOrCreateSchemaRegistryClient(
+        private static readonly Lazy<SchemaRegistryClientFactory> Factory = new(
+          () => new SchemaRegistryClientFactory(), isThreadSafe: true);
+
+        public static SchemaRegistryClientFactory Instance => Factory.Value;
+
+        private SchemaRegistryClientFactory()
+        { }
+
+        public ISchemaRegistryClient GetOrCreateSchemaRegistryClient(
             IServiceProvider serviceProvider,
             IConfiguration configuration,
             Action<ISchemaRegistryClientBuilder> configureClient,
@@ -20,7 +28,7 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Internal
             return schemaRegistryClient;
         }
 
-        public static ISchemaRegistryClient CreateSchemaRegistryClient(
+        public ISchemaRegistryClient CreateSchemaRegistryClient(
             IServiceProvider serviceProvider,
             IConfiguration configuration,
             Action<IServiceProvider, ISchemaRegistryClientBuilder> configureClient)

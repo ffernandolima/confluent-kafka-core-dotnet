@@ -22,7 +22,7 @@ namespace Confluent.Kafka.Core.Consumer
                 throw new ArgumentNullException(nameof(consumerBuilder), $"{nameof(consumerBuilder)} cannot be null.");
             }
 
-            var handlerFactory = KafkaConsumerHandlerFactory.GetOrCreateHandlerFactory<TKey, TValue>(
+            var handlerFactory = KafkaConsumerHandlerFactory.Instance.GetOrCreateHandlerFactory<TKey, TValue>(
                 consumerBuilder.ServiceProvider,
                 consumerBuilder.Configuration,
                 consumerBuilder.LoggerFactory,
@@ -44,7 +44,7 @@ namespace Confluent.Kafka.Core.Consumer
                 throw new ArgumentNullException(nameof(consumerBuilder), $"{nameof(consumerBuilder)} cannot be null.");
             }
 
-            var deadLetterProducer = KafkaProducerFactory.GetOrCreateProducer(
+            var deadLetterProducer = KafkaProducerFactory.Instance.GetOrCreateProducer(
                 consumerBuilder.ServiceProvider,
                 consumerBuilder.Configuration,
                 consumerBuilder.LoggerFactory,
@@ -76,7 +76,7 @@ namespace Confluent.Kafka.Core.Consumer
             if (interceptorTypes.Length > 0)
             {
                 var interceptors = interceptorTypes
-                    .Select(interceptorType => ObjectFactory.TryCreateInstance(consumerBuilder.ServiceProvider, interceptorType))
+                    .Select(interceptorType => ObjectFactory.Instance.TryCreateInstance(consumerBuilder.ServiceProvider, interceptorType))
                     .Where(interceptor => interceptor is not null)
                     .Cast<IKafkaConsumerInterceptor<TKey, TValue>>()
                     .ToArray();

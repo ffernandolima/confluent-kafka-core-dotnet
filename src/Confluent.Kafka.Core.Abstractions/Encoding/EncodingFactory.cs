@@ -1,10 +1,20 @@
-﻿namespace Confluent.Kafka.Core.Encoding
+﻿using System;
+
+namespace Confluent.Kafka.Core.Encoding
 {
     using System.Text;
 
-    public static class EncodingFactory
+    public sealed class EncodingFactory
     {
-        public static Encoding CreateDefault() => new UTF8Encoding(
+        private static readonly Lazy<EncodingFactory> Factory = new(
+          () => new EncodingFactory(), isThreadSafe: true);
+
+        public static EncodingFactory Instance => Factory.Value;
+
+        private EncodingFactory()
+        { }
+
+        public Encoding CreateDefault() => new UTF8Encoding(
             encoderShouldEmitUTF8Identifier: false,
             throwOnInvalidBytes: false);
     }

@@ -43,7 +43,7 @@ namespace Confluent.Kafka.Core.Models.Internal
         public KafkaHeaders(Headers headers, Encoding encoding = null)
         {
             _headers = headers ?? throw new ArgumentNullException(nameof(headers), $"{nameof(headers)} cannot be null.");
-            _encoding = encoding ?? EncodingFactory.CreateDefault();
+            _encoding = encoding ?? EncodingFactory.Instance.CreateDefault();
         }
 
         public void Add(string key, string value)

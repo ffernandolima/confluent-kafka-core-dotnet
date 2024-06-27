@@ -6,9 +6,17 @@ using System;
 
 namespace Confluent.Kafka.Core.Idempotency.Redis.Internal
 {
-    internal static class RedisIdempotencyHandlerFactory
+    internal sealed class RedisIdempotencyHandlerFactory
     {
-        public static IIdempotencyHandler<TKey, TValue> GetOrCreateIdempotencyHandler<TKey, TValue>(
+        private static readonly Lazy<RedisIdempotencyHandlerFactory> Factory = new(
+           () => new RedisIdempotencyHandlerFactory(), isThreadSafe: true);
+
+        public static RedisIdempotencyHandlerFactory Instance => Factory.Value;
+
+        private RedisIdempotencyHandlerFactory()
+        { }
+
+        public IIdempotencyHandler<TKey, TValue> GetOrCreateIdempotencyHandler<TKey, TValue>(
             IServiceProvider serviceProvider,
             IConfiguration configuration,
             ILoggerFactory loggerFactory,
@@ -26,7 +34,7 @@ namespace Confluent.Kafka.Core.Idempotency.Redis.Internal
             return idempotencyHandler;
         }
 
-        public static IIdempotencyHandler<TKey, TValue> CreateIdempotencyHandler<TKey, TValue>(
+        public IIdempotencyHandler<TKey, TValue> CreateIdempotencyHandler<TKey, TValue>(
             IServiceProvider serviceProvider,
             IConfiguration configuration,
             ILoggerFactory loggerFactory,

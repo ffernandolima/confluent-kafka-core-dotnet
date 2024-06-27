@@ -4,9 +4,17 @@ using System;
 
 namespace Confluent.Kafka.Core.Serialization.NewtonsoftJson.Internal
 {
-    internal static class NewtonsoftJsonSerializerFactory
+    internal sealed class NewtonsoftJsonSerializerFactory
     {
-        public static NewtonsoftJsonSerializer<T> GetOrCreateSerializer<T>(
+        private static readonly Lazy<NewtonsoftJsonSerializerFactory> Factory = new(
+           () => new NewtonsoftJsonSerializerFactory(), isThreadSafe: true);
+
+        public static NewtonsoftJsonSerializerFactory Instance => Factory.Value;
+
+        private NewtonsoftJsonSerializerFactory()
+        { }
+
+        public NewtonsoftJsonSerializer<T> GetOrCreateSerializer<T>(
             IServiceProvider serviceProvider,
             IConfiguration configuration,
             Action<IJsonSerializerSettingsBuilder> configureSettings,
@@ -19,7 +27,7 @@ namespace Confluent.Kafka.Core.Serialization.NewtonsoftJson.Internal
             return serializer;
         }
 
-        public static NewtonsoftJsonSerializer<T> CreateSerializer<T>(
+        public NewtonsoftJsonSerializer<T> CreateSerializer<T>(
             IServiceProvider serviceProvider,
             IConfiguration configuration,
             Action<IServiceProvider, IJsonSerializerSettingsBuilder> configureSettings)

@@ -16,7 +16,7 @@ namespace Confluent.Kafka.Core.Idempotency.Redis
                 throw new ArgumentNullException(nameof(builder), $"{nameof(builder)} cannot be null.");
             }
 
-            var idempotencyHandler = RedisIdempotencyHandlerFactory.GetOrCreateIdempotencyHandler(
+            var idempotencyHandler = RedisIdempotencyHandlerFactory.Instance.GetOrCreateIdempotencyHandler(
                 builder.ServiceProvider,
                 builder.Configuration,
                 builder.LoggerFactory,

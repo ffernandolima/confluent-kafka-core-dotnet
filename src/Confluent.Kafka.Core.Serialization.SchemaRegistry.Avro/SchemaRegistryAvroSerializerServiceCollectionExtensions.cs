@@ -30,7 +30,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 serviceKey,
                 (serviceProvider, _) =>
                 {
-                    var serializer = SchemaRegistryAvroSerializerFactory.CreateSerializer<T>(
+                    var serializer = SchemaRegistryAvroSerializerFactory.Instance.CreateSerializer<T>(
                         serviceProvider,
                         serviceProvider.GetService<IConfiguration>(),
                         configureSerializer);

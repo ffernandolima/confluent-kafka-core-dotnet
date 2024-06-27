@@ -25,7 +25,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 serviceKey,
                 (serviceProvider, _) =>
                 {
-                    var serializer = JsonCoreSerializerFactory.CreateSerializer<T>(
+                    var serializer = JsonCoreSerializerFactory.Instance.CreateSerializer<T>(
                         serviceProvider,
                         serviceProvider.GetService<IConfiguration>(),
                         configureOptions);

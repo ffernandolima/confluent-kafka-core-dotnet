@@ -28,7 +28,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 handlerKey ?? RedisIdempotencyHandlerConstants.RedisIdempotencyHandlerKey,
                 (serviceProvider, _) =>
                 {
-                    var idempotencyHandler = RedisIdempotencyHandlerFactory.CreateIdempotencyHandler(
+                    var idempotencyHandler = RedisIdempotencyHandlerFactory.Instance.CreateIdempotencyHandler(
                         serviceProvider,
                         serviceProvider.GetService<IConfiguration>(),
                         serviceProvider.GetService<ILoggerFactory>(),

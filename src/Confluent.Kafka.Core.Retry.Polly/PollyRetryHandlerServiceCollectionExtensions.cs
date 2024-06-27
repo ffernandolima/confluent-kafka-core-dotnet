@@ -23,7 +23,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 handlerKey ?? PollyRetryHandlerConstants.PollyRetryHandlerKey,
                 (serviceProvider, _) =>
                 {
-                    var retryHandler = PollyRetryHandlerFactory.CreateRetryHandler<TKey, TValue>(
+                    var retryHandler = PollyRetryHandlerFactory.Instance.CreateRetryHandler<TKey, TValue>(
                         serviceProvider,
                         serviceProvider.GetService<IConfiguration>(),
                         serviceProvider.GetService<ILoggerFactory>(),

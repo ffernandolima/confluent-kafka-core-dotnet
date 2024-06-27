@@ -18,7 +18,7 @@ namespace Confluent.Kafka.Core.Producer
                 throw new ArgumentNullException(nameof(producerBuilder), $"{nameof(producerBuilder)} cannot be null.");
             }
 
-            var handlerFactory = KafkaProducerHandlerFactory.GetOrCreateHandlerFactory<TKey, TValue>(
+            var handlerFactory = KafkaProducerHandlerFactory.Instance.GetOrCreateHandlerFactory<TKey, TValue>(
                 producerBuilder.ServiceProvider,
                 producerBuilder.Configuration,
                 producerBuilder.LoggerFactory,
@@ -50,7 +50,7 @@ namespace Confluent.Kafka.Core.Producer
             if (interceptorTypes.Length > 0)
             {
                 var interceptors = interceptorTypes
-                    .Select(interceptorType => ObjectFactory.TryCreateInstance(producerBuilder.ServiceProvider, interceptorType))
+                    .Select(interceptorType => ObjectFactory.Instance.TryCreateInstance(producerBuilder.ServiceProvider, interceptorType))
                     .Where(interceptor => interceptor is not null)
                     .Cast<IKafkaProducerInterceptor<TKey, TValue>>()
                     .ToArray();

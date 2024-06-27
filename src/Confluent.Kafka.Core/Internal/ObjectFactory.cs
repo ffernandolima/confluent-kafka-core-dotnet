@@ -3,9 +3,17 @@ using System;
 
 namespace Confluent.Kafka.Core.Internal
 {
-    internal static class ObjectFactory
+    internal sealed class ObjectFactory
     {
-        public static object TryCreateInstance(IServiceProvider serviceProvider, Type objectType)
+        private static readonly Lazy<ObjectFactory> Factory = new(
+         () => new ObjectFactory(), isThreadSafe: true);
+
+        public static ObjectFactory Instance => Factory.Value;
+
+        private ObjectFactory()
+        { }
+
+        public object TryCreateInstance(IServiceProvider serviceProvider, Type objectType)
         {
             if (objectType is null)
             {

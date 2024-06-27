@@ -27,7 +27,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 clientKey ?? SchemaRegistryClientConstants.ConfluentSchemaRegistryClientKey,
                 (serviceProvider, _) =>
                 {
-                    var schemaRegistryClient = SchemaRegistryClientFactory.CreateSchemaRegistryClient(
+                    var schemaRegistryClient = SchemaRegistryClientFactory.Instance.CreateSchemaRegistryClient(
                         serviceProvider,
                         serviceProvider.GetService<IConfiguration>(),
                         configureClient);

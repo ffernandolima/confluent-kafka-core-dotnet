@@ -14,7 +14,7 @@ namespace Confluent.Kafka.Core.Serialization.NewtonsoftJson.Internal
         public NewtonsoftJsonSerializer(JsonSerializerSettings settings)
         {
             _settings = settings ?? throw new ArgumentNullException(nameof(settings), $"{nameof(settings)} cannot be null.");
-            _encoding = EncodingFactory.CreateDefault();
+            _encoding = EncodingFactory.Instance.CreateDefault();
         }
 
         public byte[] Serialize(T data, SerializationContext context)

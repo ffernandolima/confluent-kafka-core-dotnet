@@ -5,9 +5,17 @@ using System;
 
 namespace Confluent.Kafka.Core.Consumer.Internal
 {
-    internal static class KafkaConsumerFactory
+    internal sealed class KafkaConsumerFactory
     {
-        public static IKafkaConsumer<TKey, TValue> GetOrCreateConsumer<TKey, TValue>(
+        private static readonly Lazy<KafkaConsumerFactory> Factory = new(
+            () => new KafkaConsumerFactory(), isThreadSafe: true);
+
+        public static KafkaConsumerFactory Instance => Factory.Value;
+
+        private KafkaConsumerFactory()
+        { }
+
+        public IKafkaConsumer<TKey, TValue> GetOrCreateConsumer<TKey, TValue>(
             IServiceProvider serviceProvider,
             IConfiguration configuration,
             ILoggerFactory loggerFactory,

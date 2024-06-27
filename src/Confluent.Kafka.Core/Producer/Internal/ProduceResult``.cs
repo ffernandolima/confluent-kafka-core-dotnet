@@ -10,7 +10,7 @@ namespace Confluent.Kafka.Core.Producer.Internal
 
         public ProduceResult(TopicPartition partition, Message<TKey, TValue> message)
         {
-            DeliveryReport = DeliveryReportFactory.CreateDefault(partition, message);
+            DeliveryReport = DeliveryReportFactory.Instance.CreateDefault(partition, message);
         }
 
         public void Complete(DeliveryReport<TKey, TValue> deliveryReport)

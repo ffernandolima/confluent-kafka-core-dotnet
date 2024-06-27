@@ -5,9 +5,17 @@ using System;
 
 namespace Confluent.Kafka.Core.Consumer.Internal
 {
-    internal static class KafkaConsumerHandlerFactory
+    internal sealed class KafkaConsumerHandlerFactory
     {
-        public static IKafkaConsumerHandlerFactory<TKey, TValue> GetOrCreateHandlerFactory<TKey, TValue>(
+        private static readonly Lazy<KafkaConsumerHandlerFactory> Factory = new(
+            () => new KafkaConsumerHandlerFactory(), isThreadSafe: true);
+
+        public static KafkaConsumerHandlerFactory Instance => Factory.Value;
+
+        private KafkaConsumerHandlerFactory()
+        { }
+
+        public IKafkaConsumerHandlerFactory<TKey, TValue> GetOrCreateHandlerFactory<TKey, TValue>(
             IServiceProvider serviceProvider,
             IConfiguration configuration,
             ILoggerFactory loggerFactory,
@@ -24,7 +32,7 @@ namespace Confluent.Kafka.Core.Consumer.Internal
             return handlerFactory;
         }
 
-        public static IKafkaConsumerHandlerFactory<TKey, TValue> CreateHandlerFactory<TKey, TValue>(
+        public IKafkaConsumerHandlerFactory<TKey, TValue> CreateHandlerFactory<TKey, TValue>(
             IServiceProvider serviceProvider,
             IConfiguration configuration,
             ILoggerFactory loggerFactory,

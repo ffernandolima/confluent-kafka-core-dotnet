@@ -4,9 +4,17 @@ using System;
 
 namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Avro.Internal
 {
-    internal static class SchemaRegistryAvroSerializerFactory
+    internal sealed class SchemaRegistryAvroSerializerFactory
     {
-        public static SchemaRegistryAvroSerializer<T> GetOrCreateSerializer<T>(
+        private static readonly Lazy<SchemaRegistryAvroSerializerFactory> Factory = new(
+          () => new SchemaRegistryAvroSerializerFactory(), isThreadSafe: true);
+
+        public static SchemaRegistryAvroSerializerFactory Instance => Factory.Value;
+
+        private SchemaRegistryAvroSerializerFactory()
+        { }
+
+        public SchemaRegistryAvroSerializer<T> GetOrCreateSerializer<T>(
            IServiceProvider serviceProvider,
            IConfiguration configuration,
            Action<ISchemaRegistryAvroSerializerBuilder> configureSerializer,
@@ -19,7 +27,7 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Avro.Internal
             return serializer;
         }
 
-        public static SchemaRegistryAvroSerializer<T> CreateSerializer<T>(
+        public SchemaRegistryAvroSerializer<T> CreateSerializer<T>(
             IServiceProvider serviceProvider,
             IConfiguration configuration,
             Action<IServiceProvider, ISchemaRegistryAvroSerializerBuilder> configureSerializer)

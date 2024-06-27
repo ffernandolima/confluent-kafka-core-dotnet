@@ -4,9 +4,17 @@ using System;
 
 namespace Confluent.Kafka.Core.Serialization.ProtobufNet.Internal
 {
-    internal static class ProtobufNetSerializerFactory
+    internal sealed class ProtobufNetSerializerFactory
     {
-        public static ProtobufNetSerializer<T> GetOrCreateSerializer<T>(
+        private static readonly Lazy<ProtobufNetSerializerFactory> Factory = new(
+          () => new ProtobufNetSerializerFactory(), isThreadSafe: true);
+
+        public static ProtobufNetSerializerFactory Instance => Factory.Value;
+
+        private ProtobufNetSerializerFactory()
+        { }
+
+        public ProtobufNetSerializer<T> GetOrCreateSerializer<T>(
             IServiceProvider serviceProvider,
             IConfiguration configuration,
             Action<IProtobufNetSerializerOptionsBuilder> configureOptions,
@@ -19,7 +27,7 @@ namespace Confluent.Kafka.Core.Serialization.ProtobufNet.Internal
             return serializer;
         }
 
-        public static ProtobufNetSerializer<T> CreateSerializer<T>(
+        public ProtobufNetSerializer<T> CreateSerializer<T>(
             IServiceProvider serviceProvider,
             IConfiguration configuration,
             Action<IServiceProvider, IProtobufNetSerializerOptionsBuilder> configureOptions)

@@ -1,8 +1,18 @@
-﻿namespace Confluent.Kafka.Core.Producer.Internal
+﻿using System;
+
+namespace Confluent.Kafka.Core.Producer.Internal
 {
-    internal static class DeliveryReportFactory
+    internal sealed class DeliveryReportFactory
     {
-        public static DeliveryReport<TKey, TValue> CreateDefault<TKey, TValue>(
+        private static readonly Lazy<DeliveryReportFactory> Factory = new(
+            () => new DeliveryReportFactory(), isThreadSafe: true);
+
+        public static DeliveryReportFactory Instance => Factory.Value;
+
+        private DeliveryReportFactory()
+        { }
+
+        public DeliveryReport<TKey, TValue> CreateDefault<TKey, TValue>(
             TopicPartition partition,
             Message<TKey, TValue> message)
         {

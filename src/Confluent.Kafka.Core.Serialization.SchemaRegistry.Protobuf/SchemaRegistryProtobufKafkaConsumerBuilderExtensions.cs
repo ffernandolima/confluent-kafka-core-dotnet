@@ -36,7 +36,7 @@ namespace Confluent.Kafka.Core.Consumer
                 throw new ArgumentNullException(nameof(builder), $"{nameof(builder)} cannot be null.");
             }
 
-            var keyDeserializer = SchemaRegistryProtobufSerializerFactory.GetOrCreateSerializer<TKey>(
+            var keyDeserializer = SchemaRegistryProtobufSerializerFactory.Instance.GetOrCreateSerializer<TKey>(
                 builder.ServiceProvider,
                 builder.Configuration,
                 configureSerializer,
@@ -58,7 +58,7 @@ namespace Confluent.Kafka.Core.Consumer
                 throw new ArgumentNullException(nameof(builder), $"{nameof(builder)} cannot be null.");
             }
 
-            var valueDeserializer = SchemaRegistryProtobufSerializerFactory.GetOrCreateSerializer<TValue>(
+            var valueDeserializer = SchemaRegistryProtobufSerializerFactory.Instance.GetOrCreateSerializer<TValue>(
                 builder.ServiceProvider,
                 builder.Configuration,
                 configureSerializer,

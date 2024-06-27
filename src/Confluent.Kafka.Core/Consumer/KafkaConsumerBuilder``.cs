@@ -360,7 +360,7 @@ namespace Confluent.Kafka.Core.Consumer
                 }
             }
 
-            _handlerFactory ??= KafkaConsumerHandlerFactory.GetOrCreateHandlerFactory<TKey, TValue>(
+            _handlerFactory ??= KafkaConsumerHandlerFactory.Instance.GetOrCreateHandlerFactory<TKey, TValue>(
                 ServiceProvider,
                 Configuration,
                 LoggerFactory,
@@ -401,7 +401,7 @@ namespace Confluent.Kafka.Core.Consumer
 
             _interceptors ??= [];
 
-            _diagnosticsManager ??= DiagnosticsManagerFactory.GetDiagnosticsManager(
+            _diagnosticsManager ??= DiagnosticsManagerFactory.Instance.GetDiagnosticsManager(
                 ServiceProvider,
                 ConsumerConfig.EnableDiagnostics);
 

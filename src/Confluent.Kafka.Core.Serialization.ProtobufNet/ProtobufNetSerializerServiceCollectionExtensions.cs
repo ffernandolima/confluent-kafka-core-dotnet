@@ -25,7 +25,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 serviceKey,
                 (serviceProvider, _) =>
                 {
-                    var serializer = ProtobufNetSerializerFactory.CreateSerializer<T>(
+                    var serializer = ProtobufNetSerializerFactory.Instance.CreateSerializer<T>(
                         serviceProvider,
                         serviceProvider.GetService<IConfiguration>(),
                         configureOptions);

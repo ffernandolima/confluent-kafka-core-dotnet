@@ -31,7 +31,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 serviceKey,
                 (serviceProvider, _) =>
                 {
-                    var serializer = SchemaRegistryJsonSerializerFactory.CreateSerializer<T>(
+                    var serializer = SchemaRegistryJsonSerializerFactory.Instance.CreateSerializer<T>(
                         serviceProvider,
                         serviceProvider.GetService<IConfiguration>(),
                         configureSerializer);

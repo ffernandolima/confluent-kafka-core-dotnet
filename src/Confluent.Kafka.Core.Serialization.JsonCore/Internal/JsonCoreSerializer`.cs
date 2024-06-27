@@ -14,7 +14,7 @@ namespace Confluent.Kafka.Core.Serialization.JsonCore.Internal
         public JsonCoreSerializer(JsonSerializerOptions options)
         {
             _options = options ?? throw new ArgumentNullException(nameof(options), $"{nameof(options)} cannot be null.");
-            _encoding = EncodingFactory.CreateDefault();
+            _encoding = EncodingFactory.Instance.CreateDefault();
         }
 
         public byte[] Serialize(T data, SerializationContext context)

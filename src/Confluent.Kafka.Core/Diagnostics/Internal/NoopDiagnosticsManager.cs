@@ -10,6 +10,9 @@ namespace Confluent.Kafka.Core.Diagnostics.Internal
 
         public static NoopDiagnosticsManager Instance => Factory.Value;
 
+        private NoopDiagnosticsManager()
+        { }
+
         protected override ActivitySourceBase ActivitySource { get; } = null;
         protected override ActivityEnricherBase ActivityEnricher { get; } = null;
         protected override DistributedContextPropagator Propagator { get; } = null;

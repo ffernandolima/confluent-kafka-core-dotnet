@@ -4,9 +4,17 @@ using System;
 
 namespace Confluent.Kafka.Core.Serialization.JsonCore.Internal
 {
-    internal static class JsonCoreSerializerFactory
+    internal sealed class JsonCoreSerializerFactory
     {
-        public static JsonCoreSerializer<T> GetOrCreateSerializer<T>(
+        private static readonly Lazy<JsonCoreSerializerFactory> Factory = new(
+           () => new JsonCoreSerializerFactory(), isThreadSafe: true);
+
+        public static JsonCoreSerializerFactory Instance => Factory.Value;
+
+        private JsonCoreSerializerFactory()
+        { }
+
+        public JsonCoreSerializer<T> GetOrCreateSerializer<T>(
             IServiceProvider serviceProvider,
             IConfiguration configuration,
             Action<IJsonSerializerOptionsBuilder> configureOptions,
@@ -19,7 +27,7 @@ namespace Confluent.Kafka.Core.Serialization.JsonCore.Internal
             return serializer;
         }
 
-        public static JsonCoreSerializer<T> CreateSerializer<T>(
+        public JsonCoreSerializer<T> CreateSerializer<T>(
             IServiceProvider serviceProvider,
             IConfiguration configuration,
             Action<IServiceProvider, IJsonSerializerOptionsBuilder> configureOptions)

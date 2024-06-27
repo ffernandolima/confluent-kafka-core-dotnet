@@ -3,9 +3,17 @@ using System;
 
 namespace Confluent.Kafka.Core.Diagnostics.Internal
 {
-    internal static class DiagnosticsManagerFactory
+    internal sealed class DiagnosticsManagerFactory
     {
-        public static IDiagnosticsManager GetDiagnosticsManager(IServiceProvider serviceProvider, bool enableDiagnostics)
+        private static readonly Lazy<DiagnosticsManagerFactory> Factory = new(
+            () => new DiagnosticsManagerFactory(), isThreadSafe: true);
+
+        public static DiagnosticsManagerFactory Instance => Factory.Value;
+
+        private DiagnosticsManagerFactory()
+        { }
+
+        public IDiagnosticsManager GetDiagnosticsManager(IServiceProvider serviceProvider, bool enableDiagnostics)
         {
             var diagnosticsManager = !enableDiagnostics
                 ? serviceProvider?.GetKeyedService<IDiagnosticsManager>(nameof(NoopDiagnosticsManager)) ?? NoopDiagnosticsManager.Instance

@@ -4,9 +4,17 @@ using System;
 
 namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Json.Internal
 {
-    internal static class SchemaRegistryJsonSerializerFactory
+    internal sealed class SchemaRegistryJsonSerializerFactory
     {
-        public static SchemaRegistryJsonSerializer<T> GetOrCreateSerializer<T>(
+        private static readonly Lazy<SchemaRegistryJsonSerializerFactory> Factory = new(
+          () => new SchemaRegistryJsonSerializerFactory(), isThreadSafe: true);
+
+        public static SchemaRegistryJsonSerializerFactory Instance => Factory.Value;
+
+        private SchemaRegistryJsonSerializerFactory()
+        { }
+
+        public SchemaRegistryJsonSerializer<T> GetOrCreateSerializer<T>(
             IServiceProvider serviceProvider,
             IConfiguration configuration,
             Action<ISchemaRegistryJsonSerializerBuilder> configureSerializer,
@@ -20,7 +28,7 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Json.Internal
             return serializer;
         }
 
-        public static SchemaRegistryJsonSerializer<T> CreateSerializer<T>(
+        public SchemaRegistryJsonSerializer<T> CreateSerializer<T>(
            IServiceProvider serviceProvider,
            IConfiguration configuration,
            Action<IServiceProvider, ISchemaRegistryJsonSerializerBuilder> configureSerializer)

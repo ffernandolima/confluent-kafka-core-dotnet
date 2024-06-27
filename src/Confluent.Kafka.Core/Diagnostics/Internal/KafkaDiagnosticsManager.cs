@@ -9,6 +9,9 @@ namespace Confluent.Kafka.Core.Diagnostics.Internal
 
         public static KafkaDiagnosticsManager Instance => Factory.Value;
 
+        private KafkaDiagnosticsManager()
+        { }
+
         protected override ActivitySourceBase ActivitySource { get; } = new KafkaActivitySource();
         protected override ActivityEnricherBase ActivityEnricher { get; } = new KafkaActivityEnricher();
     }

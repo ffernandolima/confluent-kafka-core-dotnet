@@ -16,7 +16,7 @@ namespace Confluent.Kafka.Core.Producer
                 throw new ArgumentNullException(nameof(builder), $"{nameof(builder)} cannot be null.");
             }
 
-            var retryHandler = PollyRetryHandlerFactory.GetOrCreateRetryHandler<TKey, TValue>(
+            var retryHandler = PollyRetryHandlerFactory.Instance.GetOrCreateRetryHandler<TKey, TValue>(
                 builder.ServiceProvider,
                 builder.Configuration,
                 builder.LoggerFactory,

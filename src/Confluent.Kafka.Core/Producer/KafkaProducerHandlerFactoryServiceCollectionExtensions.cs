@@ -21,7 +21,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.AddKafkaProducerHandlerFactory(serviceProvider =>
             {
-                var handlerFactory = KafkaProducerHandlerFactory.CreateHandlerFactory<TKey, TValue>(
+                var handlerFactory = KafkaProducerHandlerFactory.Instance.CreateHandlerFactory<TKey, TValue>(
                     serviceProvider,
                     serviceProvider.GetService<IConfiguration>(),
                     serviceProvider.GetService<ILoggerFactory>(),

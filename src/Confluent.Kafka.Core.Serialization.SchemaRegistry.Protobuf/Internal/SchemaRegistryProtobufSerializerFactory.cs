@@ -5,9 +5,17 @@ using System;
 
 namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Protobuf.Internal
 {
-    internal static class SchemaRegistryProtobufSerializerFactory
+    internal sealed class SchemaRegistryProtobufSerializerFactory
     {
-        public static SchemaRegistryProtobufSerializer<T> GetOrCreateSerializer<T>(
+        private static readonly Lazy<SchemaRegistryProtobufSerializerFactory> Factory = new(
+          () => new SchemaRegistryProtobufSerializerFactory(), isThreadSafe: true);
+
+        public static SchemaRegistryProtobufSerializerFactory Instance => Factory.Value;
+
+        private SchemaRegistryProtobufSerializerFactory()
+        { }
+
+        public SchemaRegistryProtobufSerializer<T> GetOrCreateSerializer<T>(
             IServiceProvider serviceProvider,
             IConfiguration configuration,
             Action<ISchemaRegistryProtobufSerializerBuilder> configureSerializer,
@@ -21,7 +29,7 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Protobuf.Internal
             return serializer;
         }
 
-        public static SchemaRegistryProtobufSerializer<T> CreateSerializer<T>(
+        public SchemaRegistryProtobufSerializer<T> CreateSerializer<T>(
             IServiceProvider serviceProvider,
             IConfiguration configuration,
             Action<IServiceProvider, ISchemaRegistryProtobufSerializerBuilder> configureSerializer)

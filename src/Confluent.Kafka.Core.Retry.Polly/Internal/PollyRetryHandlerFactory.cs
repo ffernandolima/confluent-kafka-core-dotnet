@@ -5,9 +5,17 @@ using System;
 
 namespace Confluent.Kafka.Core.Retry.Polly.Internal
 {
-    internal static class PollyRetryHandlerFactory
+    internal sealed class PollyRetryHandlerFactory
     {
-        public static IRetryHandler<TKey, TValue> GetOrCreateRetryHandler<TKey, TValue>(
+        private static readonly Lazy<PollyRetryHandlerFactory> Factory = new(
+           () => new PollyRetryHandlerFactory(), isThreadSafe: true);
+
+        public static PollyRetryHandlerFactory Instance => Factory.Value;
+
+        private PollyRetryHandlerFactory()
+        { }
+
+        public IRetryHandler<TKey, TValue> GetOrCreateRetryHandler<TKey, TValue>(
             IServiceProvider serviceProvider,
             IConfiguration configuration,
             ILoggerFactory loggerFactory,
@@ -25,7 +33,7 @@ namespace Confluent.Kafka.Core.Retry.Polly.Internal
             return retryHandler;
         }
 
-        public static IRetryHandler<TKey, TValue> CreateRetryHandler<TKey, TValue>(
+        public IRetryHandler<TKey, TValue> CreateRetryHandler<TKey, TValue>(
             IServiceProvider serviceProvider,
             IConfiguration configuration,
             ILoggerFactory loggerFactory,
