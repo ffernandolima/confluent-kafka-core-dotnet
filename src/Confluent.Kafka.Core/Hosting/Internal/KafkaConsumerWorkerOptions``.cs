@@ -28,6 +28,7 @@ namespace Confluent.Kafka.Core.Hosting.Internal
         public IKafkaProducer<byte[], KafkaMetadataMessage> RetryProducer { get; init; }
         public IKafkaProducer<byte[], KafkaMetadataMessage> DeadLetterProducer { get; init; }
         public IEnumerable<IConsumeResultHandler<TKey, TValue>> ConsumeResultHandlers { get; init; }
+        public IConsumeResultErrorHandler<TKey, TValue> ConsumeResultErrorHandler { get; init; }
 
         public ISerializer<TKey> KeySerializer
         {

@@ -39,6 +39,7 @@ namespace Confluent.Kafka.Core.Hosting.Internal
         private IKafkaProducer<byte[], KafkaMetadataMessage> _retryProducer;
         private IKafkaProducer<byte[], KafkaMetadataMessage> _deadLetterProducer;
         private IEnumerable<IConsumeResultHandler<TKey, TValue>> _consumeResultHandlers;
+        private IConsumeResultErrorHandler<TKey, TValue> _consumeResultErrorHandler;
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private IKafkaConsumerWorker<TKey, TValue> _builtWorker;
@@ -77,7 +78,8 @@ namespace Confluent.Kafka.Core.Hosting.Internal
                 IdempotencyHandler = _idempotencyHandler,
                 RetryProducer = _retryProducer,
                 DeadLetterProducer = _deadLetterProducer,
-                ConsumeResultHandlers = _consumeResultHandlers
+                ConsumeResultHandlers = _consumeResultHandlers,
+                ConsumeResultErrorHandler = _consumeResultErrorHandler
             };
 
             return _builtOptions;
@@ -222,6 +224,17 @@ namespace Confluent.Kafka.Core.Hosting.Internal
             {
                 _consumeResultHandlers = consumeResultHandlers.Where(consumeResultHandler => consumeResultHandler is not null);
             }
+            return this;
+        }
+
+        public IKafkaConsumerWorkerBuilder<TKey, TValue> WithConsumeResultErrorHandler(IConsumeResultErrorHandler<TKey, TValue> consumeResultErrorHandler)
+        {
+            if (_consumeResultErrorHandler is not null)
+            {
+                throw new InvalidOperationException("Consume result error handler may not be specified more than once.");
+            }
+
+            _consumeResultErrorHandler = consumeResultErrorHandler;
             return this;
         }
 

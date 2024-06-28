@@ -34,5 +34,7 @@ namespace Confluent.Kafka.Core.Hosting
         IKafkaProducer<byte[], KafkaMetadataMessage> DeadLetterProducer { get; }
 
         IEnumerable<IConsumeResultHandler<TKey, TValue>> ConsumeResultHandlers { get; }
+
+        IConsumeResultErrorHandler<TKey, TValue> ConsumeResultErrorHandler { get; }
     }
 }
