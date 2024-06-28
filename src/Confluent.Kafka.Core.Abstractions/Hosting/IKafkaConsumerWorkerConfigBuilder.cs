@@ -4,6 +4,8 @@ namespace Confluent.Kafka.Core.Hosting
 {
     public interface IKafkaConsumerWorkerConfigBuilder
     {
+        IKafkaConsumerWorkerConfigBuilder FromConfiguration(string sectionKey);
+
         IKafkaConsumerWorkerConfigBuilder WithMaxDegreeOfParallelism(int maxDegreeOfParallelism);
 
         IKafkaConsumerWorkerConfigBuilder WithEnableLogging(bool enableLogging);

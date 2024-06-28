@@ -7,6 +7,7 @@ using Confluent.Kafka.Core.Retry;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
 
 namespace Confluent.Kafka.Core.Hosting
 {
@@ -31,5 +32,7 @@ namespace Confluent.Kafka.Core.Hosting
         IKafkaProducer<byte[], KafkaMetadataMessage> RetryProducer { get; }
 
         IKafkaProducer<byte[], KafkaMetadataMessage> DeadLetterProducer { get; }
+
+        IEnumerable<IConsumeResultHandler<TKey, TValue>> ConsumeResultHandlers { get; }
     }
 }

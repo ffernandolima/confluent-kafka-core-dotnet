@@ -3,6 +3,7 @@ using Confluent.Kafka.Core.Idempotency;
 using Confluent.Kafka.Core.Models;
 using Confluent.Kafka.Core.Producer;
 using Confluent.Kafka.Core.Retry;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
@@ -12,6 +13,8 @@ namespace Confluent.Kafka.Core.Hosting
 {
     public interface IKafkaConsumerWorkerBuilder<TKey, TValue>
     {
+        IConfiguration Configuration { get; }
+
         ILoggerFactory LoggerFactory { get; }
 
         IServiceProvider ServiceProvider { get; }
@@ -19,6 +22,8 @@ namespace Confluent.Kafka.Core.Hosting
         IKafkaConsumerWorkerConfig WorkerConfig { get; }
 
         IKafkaConsumerWorkerBuilder<TKey, TValue> WithWorkerKey(object workerKey);
+
+        IKafkaConsumerWorkerBuilder<TKey, TValue> WithConfiguration(IConfiguration configuration);
 
         IKafkaConsumerWorkerBuilder<TKey, TValue> WithLoggerFactory(ILoggerFactory loggerFactory);
 

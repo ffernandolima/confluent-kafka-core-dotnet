@@ -2,6 +2,7 @@
 using Confluent.Kafka.Core.Idempotency.Internal;
 using Confluent.Kafka.Core.Producer.Internal;
 using Confluent.Kafka.Core.Retry.Internal;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -32,7 +33,8 @@ namespace Confluent.Kafka.Core.Hosting
 
         #region Public Methods
 
-        public static IKafkaConsumerWorkerConfigBuilder CreateBuilder() => new KafkaConsumerWorkerConfigBuilder();
+        public static IKafkaConsumerWorkerConfigBuilder CreateBuilder(IConfiguration configuration = null)
+            => new KafkaConsumerWorkerConfigBuilder(configuration: configuration);
 
         #endregion Public Methods
 

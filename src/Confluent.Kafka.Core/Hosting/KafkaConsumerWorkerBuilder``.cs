@@ -9,6 +9,7 @@ using Confluent.Kafka.Core.Producer;
 using Confluent.Kafka.Core.Producer.Internal;
 using Confluent.Kafka.Core.Retry;
 using Confluent.Kafka.Core.Retry.Internal;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -55,7 +56,7 @@ namespace Confluent.Kafka.Core.Hosting.Internal
 
         public KafkaConsumerWorkerBuilder(IKafkaConsumerWorkerConfig workerConfig)
         {
-            WorkerConfig = workerConfig ?? BuildConfig();
+            WorkerConfig = workerConfig ?? KafkaConsumerWorkerConfigBuilder.BuildConfig();
         }
 
         #endregion Ctors
@@ -75,7 +76,8 @@ namespace Confluent.Kafka.Core.Hosting.Internal
                 RetryHandler = _retryHandler,
                 IdempotencyHandler = _idempotencyHandler,
                 RetryProducer = _retryProducer,
-                DeadLetterProducer = _deadLetterProducer
+                DeadLetterProducer = _deadLetterProducer,
+                ConsumeResultHandlers = _consumeResultHandlers
             };
 
             return _builtOptions;
@@ -85,6 +87,7 @@ namespace Confluent.Kafka.Core.Hosting.Internal
 
         #region IKafkaConsumerWorkerBuilder Members
 
+        public IConfiguration Configuration { get; private set; }
         public ILoggerFactory LoggerFactory { get; private set; }
         public IServiceProvider ServiceProvider { get; private set; }
         public IKafkaConsumerWorkerConfig WorkerConfig { get; private set; }
@@ -97,6 +100,17 @@ namespace Confluent.Kafka.Core.Hosting.Internal
             }
 
             _workerKey = workerKey;
+            return this;
+        }
+
+        public IKafkaConsumerWorkerBuilder<TKey, TValue> WithConfiguration(IConfiguration configuration)
+        {
+            if (Configuration is not null)
+            {
+                throw new InvalidOperationException("Configuration may not be specified more than once.");
+            }
+
+            Configuration = configuration;
             return this;
         }
 
@@ -126,7 +140,7 @@ namespace Confluent.Kafka.Core.Hosting.Internal
         {
             if (_hostApplicationLifetime is not null)
             {
-                throw new InvalidOperationException("host application lifetime may not be specified more than once.");
+                throw new InvalidOperationException("Host application lifetime may not be specified more than once.");
             }
 
             _hostApplicationLifetime = hostApplicationLifetime;
@@ -218,7 +232,7 @@ namespace Confluent.Kafka.Core.Hosting.Internal
                 throw new InvalidOperationException("Worker may not be configured more than once.");
             }
 
-            BuildConfig(WorkerConfig, configureWorker);
+            WorkerConfig = KafkaConsumerWorkerConfigBuilder.BuildConfig(Configuration, WorkerConfig, configureWorker);
 
             _workerConfigured = true;
 
@@ -255,7 +269,7 @@ namespace Confluent.Kafka.Core.Hosting.Internal
 
             _hostApplicationLifetime ??= ServiceProvider?.GetService<IHostApplicationLifetime>();
 
-            _diagnosticsManager ??= DiagnosticsManagerFactory.GetDiagnosticsManager(
+            _diagnosticsManager ??= DiagnosticsManagerFactory.Instance.GetDiagnosticsManager(
                 ServiceProvider,
                 WorkerConfig.EnableDiagnostics);
 
@@ -266,26 +280,47 @@ namespace Confluent.Kafka.Core.Hosting.Internal
 
         #endregion IKafkaConsumerWorkerBuilder Members
 
+        #region Internal Methods
+
+        internal static IKafkaConsumerWorker<TKey, TValue> Build(
+            IServiceProvider serviceProvider,
+            IConfiguration configuration,
+            ILoggerFactory loggerFactory,
+            Action<IServiceProvider, IKafkaConsumerWorkerBuilder<TKey, TValue>> configureWorker,
+            object workerKey)
+        {
+            var builder = Configure(serviceProvider, configuration, loggerFactory, configureWorker, workerKey);
+
+            var worker = builder.Build();
+
+            return worker;
+        }
+
+        internal static IKafkaConsumerWorkerBuilder<TKey, TValue> Configure(
+            IServiceProvider serviceProvider,
+            IConfiguration configuration,
+            ILoggerFactory loggerFactory,
+            Action<IServiceProvider, IKafkaConsumerWorkerBuilder<TKey, TValue>> configureWorker,
+            object workerKey)
+        {
+            var builder = new KafkaConsumerWorkerBuilder<TKey, TValue>()
+                .WithWorkerKey(workerKey)
+                .WithConfiguration(configuration)
+                .WithLoggerFactory(loggerFactory)
+                .WithServiceProvider(serviceProvider);
+
+            configureWorker?.Invoke(serviceProvider, builder);
+
+            return builder;
+        }
+
+        #endregion Internal Methods
+
         #region Public Methods
 
         public static IKafkaConsumerWorkerBuilder<TKey, TValue> CreateBuilder(IKafkaConsumerWorkerConfig workerConfig = null)
             => new KafkaConsumerWorkerBuilder<TKey, TValue>(workerConfig);
 
         #endregion Public Methods
-
-        #region Private Methods
-
-        private static IKafkaConsumerWorkerConfig BuildConfig(
-           IKafkaConsumerWorkerConfig workerConfig = null,
-           Action<IKafkaConsumerWorkerConfigBuilder> configureWorker = null)
-        {
-            using var builder = new KafkaConsumerWorkerConfigBuilder(workerConfig);
-
-            configureWorker?.Invoke(builder);
-
-            return builder.Build();
-        }
-
-        #endregion Private Methods
     }
 }

@@ -22,8 +22,9 @@ namespace Confluent.Kafka.Core.Hosting
                 throw new ArgumentNullException(nameof(workerBuilder), $"{nameof(workerBuilder)} cannot be null.");
             }
 
-            var consumer = KafkaConsumerFactory.GetOrCreateConsumer(
+            var consumer = KafkaConsumerFactory.Instance.GetOrCreateConsumer(
                 workerBuilder.ServiceProvider,
+                workerBuilder.Configuration,
                 workerBuilder.LoggerFactory,
                 configureConsumer,
                 consumerKey);
@@ -43,8 +44,9 @@ namespace Confluent.Kafka.Core.Hosting
                 throw new ArgumentNullException(nameof(workerBuilder), $"{nameof(workerBuilder)} cannot be null.");
             }
 
-            var retryProducer = KafkaProducerFactory.GetOrCreateProducer(
+            var retryProducer = KafkaProducerFactory.Instance.GetOrCreateProducer(
                 workerBuilder.ServiceProvider,
+                workerBuilder.Configuration,
                 workerBuilder.LoggerFactory,
                 configureProducer,
                 producerKey);
@@ -64,8 +66,9 @@ namespace Confluent.Kafka.Core.Hosting
                 throw new ArgumentNullException(nameof(workerBuilder), $"{nameof(workerBuilder)} cannot be null.");
             }
 
-            var deadLetterProducer = KafkaProducerFactory.GetOrCreateProducer(
+            var deadLetterProducer = KafkaProducerFactory.Instance.GetOrCreateProducer(
                 workerBuilder.ServiceProvider,
+                workerBuilder.Configuration,
                 workerBuilder.LoggerFactory,
                 configureProducer,
                 producerKey);
@@ -96,7 +99,7 @@ namespace Confluent.Kafka.Core.Hosting
             {
                 var consumeResultHandlers = consumeResultHandlerTypes
                     .Select(consumeResultHandlerType =>
-                        ObjectFactory.TryCreateInstance(workerBuilder.ServiceProvider, consumeResultHandlerType))
+                        ObjectFactory.Instance.TryCreateInstance(workerBuilder.ServiceProvider, consumeResultHandlerType))
                     .Where(consumeResultHandler => consumeResultHandler is not null)
                     .Cast<IConsumeResultHandler<TKey, TValue>>()
                     .ToArray();

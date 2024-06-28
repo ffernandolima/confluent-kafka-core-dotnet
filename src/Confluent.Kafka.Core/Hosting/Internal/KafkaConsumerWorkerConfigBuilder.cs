@@ -1,4 +1,5 @@
 ﻿using Confluent.Kafka.Core.Internal;
+using Microsoft.Extensions.Configuration;
 using System;
 
 namespace Confluent.Kafka.Core.Hosting.Internal
@@ -7,9 +8,21 @@ namespace Confluent.Kafka.Core.Hosting.Internal
         FunctionalBuilder<KafkaConsumerWorkerConfig, IKafkaConsumerWorkerConfig, KafkaConsumerWorkerConfigBuilder>,
         IKafkaConsumerWorkerConfigBuilder
     {
-        public KafkaConsumerWorkerConfigBuilder(IKafkaConsumerWorkerConfig seedSubjectAbs = null)
-            : base(seedSubjectAbs)
+        public KafkaConsumerWorkerConfigBuilder(IKafkaConsumerWorkerConfig workerConfig = null, IConfiguration configuration = null)
+            : base(workerConfig, configuration)
         { }
+
+        public IKafkaConsumerWorkerConfigBuilder FromConfiguration(string sectionKey)
+        {
+            AppendAction(config =>
+            {
+                if (!string.IsNullOrWhiteSpace(sectionKey))
+                {
+                    config = Bind(config, sectionKey);
+                }
+            });
+            return this;
+        }
 
         public IKafkaConsumerWorkerConfigBuilder WithMaxDegreeOfParallelism(int maxDegreeOfParallelism)
         {
@@ -93,6 +106,18 @@ namespace Confluent.Kafka.Core.Hosting.Internal
         {
             AppendAction(config => config.PendingProcessingDelay = pendingProcessingDelay);
             return this;
+        }
+
+        public static IKafkaConsumerWorkerConfig BuildConfig(
+           IConfiguration configuration = null,
+           IKafkaConsumerWorkerConfig workerConfig = null,
+           Action<IKafkaConsumerWorkerConfigBuilder> configureWorker = null)
+        {
+            using var builder = new KafkaConsumerWorkerConfigBuilder(workerConfig, configuration);
+
+            configureWorker?.Invoke(builder);
+
+            return builder.Build();
         }
     }
 }

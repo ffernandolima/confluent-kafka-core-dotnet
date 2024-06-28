@@ -1,5 +1,6 @@
 ﻿using Confluent.Kafka.Core.Hosting;
 using Confluent.Kafka.Core.Hosting.Internal;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -26,16 +27,12 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.TryAddKeyedSingleton(workerKey, (serviceProvider, _) =>
             {
-                var loggerFactory = serviceProvider.GetService<ILoggerFactory>();
-
-                var builder = new KafkaConsumerWorkerBuilder<TKey, TValue>()
-                    .WithWorkerKey(workerKey)
-                    .WithLoggerFactory(loggerFactory)
-                    .WithServiceProvider(serviceProvider);
-
-                configureWorker.Invoke(serviceProvider, builder);
-
-                var worker = builder.Build();
+                var worker = KafkaConsumerWorkerBuilder<TKey, TValue>.Build(
+                    serviceProvider,
+                    serviceProvider.GetService<IConfiguration>(),
+                    serviceProvider.GetService<ILoggerFactory>(),
+                    configureWorker,
+                    workerKey);
 
                 return worker;
             });
@@ -44,24 +41,14 @@ namespace Microsoft.Extensions.DependencyInjection
             {
                 services.TryAddEnumerable(
                     ServiceDescriptor.Singleton<IHostedService, IKafkaConsumerWorker<TKey, TValue>>(
-                        serviceProvider =>
-                        {
-                            var worker = serviceProvider.GetRequiredKeyedService<IKafkaConsumerWorker<TKey, TValue>>(workerKey);
-
-                            return worker;
-                        }));
+                        serviceProvider => serviceProvider.GetRequiredKeyedService<IKafkaConsumerWorker<TKey, TValue>>(workerKey)));
             }
             else
             {
                 services.TryAddEnumerable(
                     ServiceDescriptor.KeyedSingleton<IHostedService, IKafkaConsumerWorker<TKey, TValue>>(
                         workerKey,
-                        (serviceProvider, _) =>
-                        {
-                            var worker = serviceProvider.GetRequiredKeyedService<IKafkaConsumerWorker<TKey, TValue>>(workerKey);
-
-                            return worker;
-                        }));
+                        (serviceProvider, _) => serviceProvider.GetRequiredKeyedService<IKafkaConsumerWorker<TKey, TValue>>(workerKey)));
             }
 
             return services;
