@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace Confluent.Kafka.Core.Hosting.Internal
@@ -9,26 +8,24 @@ namespace Confluent.Kafka.Core.Hosting.Internal
         private Exception _exception;
 
         public bool IsHandled { get; private set; }
-        public Task BackgroundTask { get; private set; }
-        public Activity Activity { get; private set; }
+        public TaskActivity TaskActivity { get; private set; }
         public ConsumeResult<TKey, TValue> ConsumeResult { get; private set; }
 
-        public int Id => BackgroundTask.Id;
-        public bool IsCompleted => BackgroundTask.IsCompleted;
-        public bool IsCanceled => BackgroundTask.IsCanceled;
-        public bool IsFaulted => BackgroundTask.IsFaulted;
-        public AggregateException Exception => BackgroundTask.Exception;
+        public int Id => TaskActivity.ExecutingTask!.Id;
+        public bool IsCompleted => TaskActivity.ExecutingTask!.IsCompleted;
+        public bool IsCanceled => TaskActivity.ExecutingTask!.IsCanceled;
+        public bool IsFaulted => TaskActivity.ExecutingTask!.IsFaulted;
+        public AggregateException Exception => TaskActivity.ExecutingTask!.Exception;
 
-        public BackgroundWorkItem(Task backgroundTask, Activity activity, ConsumeResult<TKey, TValue> consumeResult)
+        public BackgroundWorkItem(TaskActivity taskActivity, ConsumeResult<TKey, TValue> consumeResult)
         {
-            BackgroundTask = backgroundTask ?? throw new ArgumentNullException(nameof(backgroundTask), $"{nameof(backgroundTask)} cannot be null.");
-            Activity = activity ?? throw new ArgumentNullException(nameof(activity), $"{nameof(activity)} cannot be null.");
+            TaskActivity = taskActivity ?? throw new ArgumentNullException(nameof(taskActivity), $"{nameof(taskActivity)} cannot be null.");
             ConsumeResult = consumeResult ?? throw new ArgumentNullException(nameof(consumeResult), $"{nameof(consumeResult)} cannot be null.");
         }
 
         public async Task<Exception> GetExceptionAsync()
         {
-            if (!BackgroundTask.IsFaulted)
+            if (!TaskActivity.ExecutingTask!.IsFaulted)
             {
                 return null;
             }
@@ -37,7 +34,7 @@ namespace Confluent.Kafka.Core.Hosting.Internal
             {
                 try
                 {
-                    await BackgroundTask.ConfigureAwait(continueOnCapturedContext: false);
+                    await TaskActivity.ExecutingTask!.ConfigureAwait(continueOnCapturedContext: false);
                 }
                 catch (Exception exception)
                 {
@@ -45,7 +42,7 @@ namespace Confluent.Kafka.Core.Hosting.Internal
                 }
             }
 
-            return _exception ?? BackgroundTask.Exception;
+            return _exception ?? TaskActivity.ExecutingTask!.Exception;
         }
 
         public void SetHandled()
@@ -53,14 +50,9 @@ namespace Confluent.Kafka.Core.Hosting.Internal
             IsHandled = true;
         }
 
-        public BackgroundWorkItem<TKey, TValue> AttachContinuation<TResult>(Func<Task, TResult> continuation)
+        public BackgroundWorkItem<TKey, TValue> AttachContinuation<TResult>(Func<TaskActivity, TResult> continuationFunction)
         {
-            if (continuation is null)
-            {
-                throw new ArgumentNullException(nameof(continuation), $"{nameof(continuation)} cannot be null.");
-            }
-
-            BackgroundTask.ContinueWith(continuation, TaskContinuationOptions.AttachedToParent);
+            TaskActivity.ContinueWith(continuationFunction, TaskContinuationOptions.AttachedToParent);
 
             return this;
         }
