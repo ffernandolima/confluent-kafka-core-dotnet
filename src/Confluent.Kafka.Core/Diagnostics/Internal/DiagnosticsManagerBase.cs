@@ -1,5 +1,7 @@
 ﻿using Confluent.Kafka.Core.Consumer;
+using Confluent.Kafka.Core.Hosting;
 using Confluent.Kafka.Core.Producer;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 
@@ -82,6 +84,11 @@ namespace Confluent.Kafka.Core.Diagnostics.Internal
         public void Enrich<TKey, TValue>(Activity activity, DeliveryResult<TKey, TValue> deliveryResult, IKafkaProducerOptions<TKey, TValue> options)
         {
             ActivityEnricher?.Enrich(activity, deliveryResult, options);
+        }
+
+        public void Enrich<TKey, TValue>(Activity activity, ConsumeResult<TKey, TValue> consumeResult, IKafkaConsumerWorkerOptions<TKey, TValue> options, Exception exception = null)
+        {
+            ActivityEnricher?.Enrich(activity, consumeResult, options, exception);
         }
     }
 }

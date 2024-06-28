@@ -35,6 +35,7 @@
                 public const string ResultIsError = "messaging.kafka.result.is_error";
                 public const string ResultErrorCode = "messaging.kafka.result.error_code";
                 public const string ResultErrorReason = "messaging.kafka.result.error_reason";
+                public const string ProcessingIsError = "messaging.kafka.processing.is_error";
             }
         }
     }

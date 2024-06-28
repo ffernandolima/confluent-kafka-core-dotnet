@@ -1,4 +1,6 @@
 ﻿using Confluent.Kafka.Core.Consumer;
+using Confluent.Kafka.Core.Hosting;
+using Confluent.Kafka.Core.Models.Internal;
 using Confluent.Kafka.Core.Producer;
 using Confluent.Kafka.Core.Serialization.Internal;
 using System;
@@ -79,7 +81,7 @@ namespace Confluent.Kafka.Core.Diagnostics.Internal
 
             if (consumeResult.Message is not null)
             {
-                builder.WithMessageId(options.MessageIdHandler?.Invoke(consumeResult.Message.Value))
+                builder.WithMessageId(consumeResult.Message!.GetId(options.MessageIdHandler))
                        .WithMessageKey(consumeResult.Message.Key)
                        .WithMessageValue(consumeResult.Message.Value)
                        .WithMessageBody(
@@ -220,6 +222,51 @@ namespace Confluent.Kafka.Core.Diagnostics.Internal
             var attributes = builder.Build();
 
             EnrichInternal(activity, attributes);
+        }
+
+        public override void Enrich<TKey, TValue>(Activity activity, ConsumeResult<TKey, TValue> consumeResult, IKafkaConsumerWorkerOptions<TKey, TValue> options, Exception exception = null)
+        {
+            if (activity is null)
+            {
+                return;
+            }
+
+            if (consumeResult is null)
+            {
+                throw new ArgumentNullException(nameof(consumeResult), $"{nameof(consumeResult)} cannot be null.");
+            }
+
+            if (options is null)
+            {
+                throw new ArgumentNullException(nameof(options), $"{nameof(options)} cannot be null.");
+            }
+
+            using var builder = new KafkaActivityAttributesBuilder()
+                .WithException(exception)
+                .WithTopic(consumeResult.Topic)
+                .WithOffset(consumeResult.Offset)
+                .WithPartition(consumeResult.Partition)
+                .WithOperation(OperationNames.ProcessOperation)
+                .WithGroupId(options.Consumer!.Options!.ConsumerConfig!.GroupId)
+                .WithBootstrapServers(options.Consumer!.Options!.ConsumerConfig!.BootstrapServers);
+
+            if (consumeResult.Message is not null)
+            {
+                builder.WithMessageId(consumeResult.Message!.GetId(options.Consumer!.Options!.MessageIdHandler))
+                       .WithMessageKey(consumeResult.Message.Key)
+                       .WithMessageValue(consumeResult.Message.Value)
+                       .WithMessageBody(
+                            GetMessageBody(
+                                consumeResult.Message.Value,
+                                options.Consumer!.Options!.ValueDeserializer,
+                                () => new(MessageComponentType.Value, consumeResult.Topic, consumeResult.Message.Headers)));
+            }
+
+            var attributes = builder.Build();
+
+            EnrichInternal(activity, attributes);
+
+            activity.SetTag(SemanticConventions.Messaging.Kafka.ProcessingIsError, exception is not null);
         }
 
         private static byte[] GetMessageBody<TValue>(TValue messageValue, object configuredSerializer, Func<SerializationContext> contextFactory)
