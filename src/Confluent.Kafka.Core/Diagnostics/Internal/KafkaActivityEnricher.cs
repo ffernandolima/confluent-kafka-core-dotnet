@@ -81,7 +81,7 @@ namespace Confluent.Kafka.Core.Diagnostics.Internal
 
             if (consumeResult.Message is not null)
             {
-                builder.WithMessageId(consumeResult.Message!.GetId(options.MessageIdHandler))
+                builder.WithMessageId(consumeResult.Message.GetId(options.MessageIdHandler))
                        .WithMessageKey(consumeResult.Message.Key)
                        .WithMessageValue(consumeResult.Message.Value)
                        .WithMessageBody(
@@ -126,7 +126,7 @@ namespace Confluent.Kafka.Core.Diagnostics.Internal
 
             if (deliveryResult.Message is not null)
             {
-                builder.WithMessageId(options.MessageIdHandler?.Invoke(deliveryResult.Message.Value))
+                builder.WithMessageId(deliveryResult.Message.GetId(options.MessageIdHandler))
                        .WithMessageKey(deliveryResult.Message.Key)
                        .WithMessageValue(deliveryResult.Message.Value)
                        .WithMessageBody(
@@ -168,7 +168,7 @@ namespace Confluent.Kafka.Core.Diagnostics.Internal
 
             if (deliveryReport.Message is not null)
             {
-                builder.WithMessageId(options.MessageIdHandler?.Invoke(deliveryReport.Message.Value))
+                builder.WithMessageId(deliveryReport.Message.GetId(options.MessageIdHandler))
                        .WithMessageKey(deliveryReport.Message.Key)
                        .WithMessageValue(deliveryReport.Message.Value)
                        .WithMessageBody(
@@ -209,7 +209,7 @@ namespace Confluent.Kafka.Core.Diagnostics.Internal
 
             if (deliveryResult.Message is not null)
             {
-                builder.WithMessageId(options.MessageIdHandler?.Invoke(deliveryResult.Message.Value))
+                builder.WithMessageId(deliveryResult.Message.GetId(options.MessageIdHandler))
                        .WithMessageKey(deliveryResult.Message.Key)
                        .WithMessageValue(deliveryResult.Message.Value)
                        .WithMessageBody(
@@ -252,7 +252,7 @@ namespace Confluent.Kafka.Core.Diagnostics.Internal
 
             if (consumeResult.Message is not null)
             {
-                builder.WithMessageId(consumeResult.Message!.GetId(options.Consumer!.Options!.MessageIdHandler))
+                builder.WithMessageId(consumeResult.Message.GetId(options.Consumer!.Options!.MessageIdHandler))
                        .WithMessageKey(consumeResult.Message.Key)
                        .WithMessageValue(consumeResult.Message.Value)
                        .WithMessageBody(

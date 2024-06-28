@@ -7,7 +7,7 @@ namespace Confluent.Kafka.Core.Diagnostics.Internal
         private static readonly AssemblyName AssemblyName = typeof(KafkaActivitySource).Assembly.GetName();
 
         public KafkaActivitySource()
-            : base(AssemblyName.Name, AssemblyName.Version.ToString())
+            : base(AssemblyName.Name, AssemblyName.Version!.ToString())
         { }
     }
 }
