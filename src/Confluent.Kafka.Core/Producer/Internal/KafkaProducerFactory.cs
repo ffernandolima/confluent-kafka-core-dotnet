@@ -32,6 +32,7 @@ namespace Confluent.Kafka.Core.Producer.Internal
 
             return producer;
         }
+
         public IKafkaProducer<TKey, TValue> CreateProducer<TKey, TValue>(
             IServiceProvider serviceProvider,
             IConfiguration configuration,

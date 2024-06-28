@@ -32,6 +32,7 @@ namespace Confluent.Kafka.Core.Consumer.Internal
 
             return consumer;
         }
+
         public IKafkaConsumer<TKey, TValue> CreateConsumer<TKey, TValue>(
             IServiceProvider serviceProvider,
             IConfiguration configuration,
