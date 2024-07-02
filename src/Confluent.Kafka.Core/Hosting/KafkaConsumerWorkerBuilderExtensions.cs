@@ -22,11 +22,31 @@ namespace Confluent.Kafka.Core.Hosting
                 throw new ArgumentNullException(nameof(workerBuilder), $"{nameof(workerBuilder)} cannot be null.");
             }
 
-            var consumer = KafkaConsumerFactory.Instance.GetOrCreateConsumer(
+            var consumer = KafkaConsumerFactory.Instance.GetOrCreateConsumer<TKey, TValue>(
                 workerBuilder.ServiceProvider,
                 workerBuilder.Configuration,
                 workerBuilder.LoggerFactory,
-                configureConsumer,
+                builder =>
+                {
+                    configureConsumer?.Invoke(builder);
+
+                    try
+                    {
+                        builder.WithConsumerConfiguration(builder =>
+                        {
+                            builder.WithEnableAutoCommit(enableAutoCommit: false);
+                            builder.WithCommitAfterConsuming(commitAfterConsuming: false);
+                            builder.WithEnableAutoOffsetStore(enableAutoOffsetStore: false);
+                        });
+                    }
+                    catch (Exception ex)
+                    {
+                        if (ex is not InvalidOperationException ioex || ioex.Message != "Consumer may not be configured more than once.")
+                        {
+                            throw;
+                        }
+                    }
+                },
                 consumerKey);
 
             workerBuilder.WithConsumer(consumer);
