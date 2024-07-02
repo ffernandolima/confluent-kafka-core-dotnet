@@ -67,6 +67,18 @@ namespace Confluent.Kafka.Core.Producer
         {
             IKafkaProducerConfig producerConfig = validationContext?.ObjectInstance as KafkaProducerConfig ?? this;
 
+            if (validationContext?.Items is not null)
+            {
+                if (producerConfig.EnableRetryOnFailure &&
+                    validationContext.Items.TryGetValue(KafkaRetryConstants.RetryHandler, out object retryHandler) &&
+                    retryHandler is null)
+                {
+                    yield return new ValidationResult(
+                        $"{KafkaRetryConstants.RetryHandler} cannot be null when {nameof(producerConfig.EnableRetryOnFailure)} is enabled.",
+                        [KafkaRetryConstants.RetryHandler, nameof(producerConfig.EnableRetryOnFailure)]);
+                }
+            }
+
             if (string.IsNullOrWhiteSpace(producerConfig.BootstrapServers))
             {
                 yield return new ValidationResult(
@@ -79,18 +91,6 @@ namespace Confluent.Kafka.Core.Producer
                 yield return new ValidationResult(
                     $"{nameof(producerConfig.DefaultTimeout)} cannot be infinite.",
                     [nameof(producerConfig.DefaultTimeout)]);
-            }
-
-            if (validationContext?.Items is not null)
-            {
-                if (producerConfig.EnableRetryOnFailure &&
-                    validationContext.Items.TryGetValue(KafkaRetryConstants.RetryHandler, out object retryHandler) &&
-                    retryHandler is null)
-                {
-                    yield return new ValidationResult(
-                        $"{KafkaRetryConstants.RetryHandler} cannot be null when {nameof(producerConfig.EnableRetryOnFailure)} is enabled.",
-                        [KafkaRetryConstants.RetryHandler, nameof(producerConfig.EnableRetryOnFailure)]);
-                }
             }
         }
 

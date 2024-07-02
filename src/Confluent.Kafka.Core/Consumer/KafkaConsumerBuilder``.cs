@@ -3,6 +3,7 @@ using Confluent.Kafka.Core.Diagnostics;
 using Confluent.Kafka.Core.Diagnostics.Internal;
 using Confluent.Kafka.Core.Internal;
 using Confluent.Kafka.Core.Models;
+using Confluent.Kafka.Core.Models.Internal;
 using Confluent.Kafka.Core.Producer;
 using Confluent.Kafka.Core.Producer.Internal;
 using Confluent.Kafka.Core.Retry;
@@ -334,6 +335,7 @@ namespace Confluent.Kafka.Core.Consumer
             ConsumerConfig.ValidateAndThrow<KafkaConsumerConfigException>(
                 new ValidationContext(ConsumerConfig, new Dictionary<object, object>
                 {
+                    [KafkaSenderConstants.Sender] = new KafkaSender(this, KafkaSenderType.Consumer),
                     [KafkaProducerConstants.DeadLetterProducer] = _deadLetterProducer,
                     [KafkaRetryConstants.RetryHandler] = _retryHandler
                 }));

@@ -5,6 +5,7 @@ using Confluent.Kafka.Core.Idempotency;
 using Confluent.Kafka.Core.Idempotency.Internal;
 using Confluent.Kafka.Core.Internal;
 using Confluent.Kafka.Core.Models;
+using Confluent.Kafka.Core.Models.Internal;
 using Confluent.Kafka.Core.Producer;
 using Confluent.Kafka.Core.Producer.Internal;
 using Confluent.Kafka.Core.Retry;
@@ -272,6 +273,12 @@ namespace Confluent.Kafka.Core.Hosting.Internal
             {
                 throw new InvalidOperationException("Consumer cannot be null.");
             }
+
+            _consumer.Options!.ConsumerConfig.ValidateAndThrow<KafkaConsumerConfigException>(
+                new ValidationContext(_consumer.Options!.ConsumerConfig, new Dictionary<object, object>
+                {
+                    [KafkaSenderConstants.Sender] = new KafkaSender(this, KafkaSenderType.Hosting)
+                }));
 
             if (_consumeResultHandlers is null || !_consumeResultHandlers.Any(consumeResultHandler => consumeResultHandler is not null))
             {

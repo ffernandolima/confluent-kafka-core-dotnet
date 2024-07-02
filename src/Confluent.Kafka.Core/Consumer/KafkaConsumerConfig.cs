@@ -1,4 +1,5 @@
 ﻿using Confluent.Kafka.Core.Consumer.Internal;
+using Confluent.Kafka.Core.Models.Internal;
 using Confluent.Kafka.Core.Producer.Internal;
 using Confluent.Kafka.Core.Retry.Internal;
 using Microsoft.Extensions.Configuration;
@@ -91,6 +92,54 @@ namespace Confluent.Kafka.Core.Consumer
         {
             IKafkaConsumerConfig consumerConfig = validationContext?.ObjectInstance as KafkaConsumerConfig ?? this;
 
+            if (validationContext?.Items is not null)
+            {
+                if (validationContext.Items.TryGetValue(KafkaSenderConstants.Sender, out object sender) &&
+                    sender is KafkaSender { Type: KafkaSenderType.Hosting })
+                {
+                    if (consumerConfig.EnableAutoCommit.GetValueOrDefault(defaultValue: true))
+                    {
+                        yield return new ValidationResult(
+                            $"{nameof(consumerConfig.EnableAutoCommit)} must be false.",
+                            [nameof(consumerConfig.EnableAutoCommit)]);
+                    }
+
+                    if (consumerConfig.CommitAfterConsuming)
+                    {
+                        yield return new ValidationResult(
+                            $"{nameof(consumerConfig.CommitAfterConsuming)} must be false.",
+                            [nameof(consumerConfig.CommitAfterConsuming)]);
+                    }
+
+                    if (consumerConfig.EnableAutoOffsetStore.GetValueOrDefault(defaultValue: true))
+                    {
+                        yield return new ValidationResult(
+                            $"{nameof(consumerConfig.EnableAutoOffsetStore)} must be false.",
+                            [nameof(consumerConfig.EnableAutoOffsetStore)]);
+                    }
+
+                    yield break;
+                }
+
+                if (consumerConfig.EnableDeadLetterTopic &&
+                    validationContext.Items.TryGetValue(KafkaProducerConstants.DeadLetterProducer, out object deadLetterProducer) &&
+                    deadLetterProducer is null)
+                {
+                    yield return new ValidationResult(
+                        $"{KafkaProducerConstants.DeadLetterProducer} cannot be null when {nameof(consumerConfig.EnableDeadLetterTopic)} is enabled.",
+                        [KafkaProducerConstants.DeadLetterProducer, nameof(consumerConfig.EnableDeadLetterTopic)]);
+                }
+
+                if (consumerConfig.EnableRetryOnFailure &&
+                    validationContext.Items.TryGetValue(KafkaRetryConstants.RetryHandler, out object retryHandler) &&
+                    retryHandler is null)
+                {
+                    yield return new ValidationResult(
+                        $"{KafkaRetryConstants.RetryHandler} cannot be null when {nameof(consumerConfig.EnableRetryOnFailure)} is enabled.",
+                        [KafkaRetryConstants.RetryHandler, nameof(consumerConfig.EnableRetryOnFailure)]);
+                }
+            }
+
             if (string.IsNullOrWhiteSpace(consumerConfig.BootstrapServers))
             {
                 yield return new ValidationResult(
@@ -117,27 +166,6 @@ namespace Confluent.Kafka.Core.Consumer
                 yield return new ValidationResult(
                     $"{nameof(consumerConfig.DefaultTimeout)} cannot be infinite.",
                     [nameof(consumerConfig.DefaultTimeout)]);
-            }
-
-            if (validationContext?.Items is not null)
-            {
-                if (consumerConfig.EnableDeadLetterTopic &&
-                    validationContext.Items.TryGetValue(KafkaProducerConstants.DeadLetterProducer, out object deadLetterProducer) &&
-                    deadLetterProducer is null)
-                {
-                    yield return new ValidationResult(
-                        $"{KafkaProducerConstants.DeadLetterProducer} cannot be null when {nameof(consumerConfig.EnableDeadLetterTopic)} is enabled.",
-                        [KafkaProducerConstants.DeadLetterProducer, nameof(consumerConfig.EnableDeadLetterTopic)]);
-                }
-
-                if (consumerConfig.EnableRetryOnFailure &&
-                    validationContext.Items.TryGetValue(KafkaRetryConstants.RetryHandler, out object retryHandler) &&
-                    retryHandler is null)
-                {
-                    yield return new ValidationResult(
-                        $"{KafkaRetryConstants.RetryHandler} cannot be null when {nameof(consumerConfig.EnableRetryOnFailure)} is enabled.",
-                        [KafkaRetryConstants.RetryHandler, nameof(consumerConfig.EnableRetryOnFailure)]);
-                }
             }
         }
 

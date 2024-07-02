@@ -44,41 +44,6 @@ namespace Confluent.Kafka.Core.Hosting
         {
             IKafkaConsumerWorkerConfig workerConfig = validationContext?.ObjectInstance as KafkaConsumerWorkerConfig ?? this;
 
-            if (workerConfig.MaxDegreeOfParallelism <= 0)
-            {
-                yield return new ValidationResult(
-                    $"{nameof(workerConfig.MaxDegreeOfParallelism)} cannot be less than or equal to zero.",
-                    [nameof(workerConfig.MaxDegreeOfParallelism)]);
-            }
-
-            if (workerConfig.EmptyTopicDelay == Timeout.InfiniteTimeSpan)
-            {
-                yield return new ValidationResult(
-                    $"{nameof(workerConfig.EmptyTopicDelay)} cannot be infinite.",
-                    [nameof(workerConfig.EmptyTopicDelay)]);
-            }
-
-            if (workerConfig.NotEmptyTopicDelay == Timeout.InfiniteTimeSpan)
-            {
-                yield return new ValidationResult(
-                    $"{nameof(workerConfig.NotEmptyTopicDelay)} cannot be infinite.",
-                    [nameof(workerConfig.NotEmptyTopicDelay)]);
-            }
-
-            if (workerConfig.UnavailableProcessingSlotsDelay == Timeout.InfiniteTimeSpan)
-            {
-                yield return new ValidationResult(
-                    $"{nameof(workerConfig.UnavailableProcessingSlotsDelay)} cannot be infinite.",
-                    [nameof(workerConfig.UnavailableProcessingSlotsDelay)]);
-            }
-
-            if (workerConfig.PendingProcessingDelay == Timeout.InfiniteTimeSpan)
-            {
-                yield return new ValidationResult(
-                    $"{nameof(workerConfig.PendingProcessingDelay)} cannot be infinite.",
-                    [nameof(workerConfig.PendingProcessingDelay)]);
-            }
-
             if (validationContext?.Items is not null)
             {
                 if (workerConfig.EnableIdempotency &&
@@ -116,6 +81,41 @@ namespace Confluent.Kafka.Core.Hosting
                         $"{KafkaProducerConstants.DeadLetterProducer} cannot be null when {nameof(workerConfig.EnableDeadLetterTopic)} is enabled.",
                         [KafkaProducerConstants.DeadLetterProducer, nameof(workerConfig.EnableDeadLetterTopic)]);
                 }
+            }
+
+            if (workerConfig.MaxDegreeOfParallelism <= 0)
+            {
+                yield return new ValidationResult(
+                    $"{nameof(workerConfig.MaxDegreeOfParallelism)} cannot be less than or equal to zero.",
+                    [nameof(workerConfig.MaxDegreeOfParallelism)]);
+            }
+
+            if (workerConfig.EmptyTopicDelay == Timeout.InfiniteTimeSpan)
+            {
+                yield return new ValidationResult(
+                    $"{nameof(workerConfig.EmptyTopicDelay)} cannot be infinite.",
+                    [nameof(workerConfig.EmptyTopicDelay)]);
+            }
+
+            if (workerConfig.NotEmptyTopicDelay == Timeout.InfiniteTimeSpan)
+            {
+                yield return new ValidationResult(
+                    $"{nameof(workerConfig.NotEmptyTopicDelay)} cannot be infinite.",
+                    [nameof(workerConfig.NotEmptyTopicDelay)]);
+            }
+
+            if (workerConfig.UnavailableProcessingSlotsDelay == Timeout.InfiniteTimeSpan)
+            {
+                yield return new ValidationResult(
+                    $"{nameof(workerConfig.UnavailableProcessingSlotsDelay)} cannot be infinite.",
+                    [nameof(workerConfig.UnavailableProcessingSlotsDelay)]);
+            }
+
+            if (workerConfig.PendingProcessingDelay == Timeout.InfiniteTimeSpan)
+            {
+                yield return new ValidationResult(
+                    $"{nameof(workerConfig.PendingProcessingDelay)} cannot be infinite.",
+                    [nameof(workerConfig.PendingProcessingDelay)]);
             }
         }
 
