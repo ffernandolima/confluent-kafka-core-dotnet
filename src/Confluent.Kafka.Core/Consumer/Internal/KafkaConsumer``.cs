@@ -1082,6 +1082,8 @@ namespace Confluent.Kafka.Core.Consumer.Internal
                 {
                     _consumer?.Close();
                     _consumer?.Dispose();
+
+                    _options.DeadLetterProducer?.Dispose();
                 }
 
                 _disposed = true;
