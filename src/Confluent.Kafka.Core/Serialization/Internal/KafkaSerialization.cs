@@ -1,11 +1,15 @@
 ﻿using System;
+#if NET8_0_OR_GREATER
+using System.Collections.Frozen;
+#endif
 using System.Collections.Generic;
 
 namespace Confluent.Kafka.Core.Serialization.Internal
 {
     internal static class KafkaSerialization
     {
-        public static readonly Dictionary<Type, object> DefaultDeserializers = new()
+        public static readonly IDictionary<Type, object> DefaultDeserializers =
+            new Dictionary<Type, object>()
         {
             { typeof(Ignore), Deserializers.Ignore    },
             { typeof(Null),   Deserializers.Null      },
@@ -15,9 +19,15 @@ namespace Confluent.Kafka.Core.Serialization.Internal
             { typeof(float),  Deserializers.Single    },
             { typeof(double), Deserializers.Double    },
             { typeof(byte[]), Deserializers.ByteArray }
-        };
+        }
+#if NET8_0_OR_GREATER
+        .ToFrozenDictionary();
+#else
+        ;
+#endif
 
-        public static readonly Dictionary<Type, object> DefaultSerializers = new()
+        public static readonly IDictionary<Type, object> DefaultSerializers =
+            new Dictionary<Type, object>()
         {
             { typeof(Ignore), Ignore                },
             { typeof(Null),   Serializers.Null      },
@@ -27,7 +37,12 @@ namespace Confluent.Kafka.Core.Serialization.Internal
             { typeof(float),  Serializers.Single    },
             { typeof(double), Serializers.Double    },
             { typeof(byte[]), Serializers.ByteArray }
-        };
+        }
+#if NET8_0_OR_GREATER
+        .ToFrozenDictionary();
+#else
+        ;
+#endif
 
         public static readonly ISerializer<Ignore> Ignore = new IgnoreSerializer();
 

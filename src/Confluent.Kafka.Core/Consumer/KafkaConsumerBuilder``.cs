@@ -14,6 +14,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
+#if NET8_0_OR_GREATER
+using System.Collections.Frozen;
+#endif
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
@@ -338,8 +341,12 @@ namespace Confluent.Kafka.Core.Consumer
                     [KafkaSenderConstants.Sender] = new KafkaSender(this, KafkaSenderType.Consumer),
                     [KafkaProducerConstants.DeadLetterProducer] = _deadLetterProducer,
                     [KafkaRetryConstants.RetryHandler] = _retryHandler
-                }));
-
+                }
+#if NET8_0_OR_GREATER
+                .ToFrozenDictionary()));
+#else
+                ));
+#endif
             LoggerFactory ??= ServiceProvider?.GetService<ILoggerFactory>();
 
             if (KeyDeserializer is null)

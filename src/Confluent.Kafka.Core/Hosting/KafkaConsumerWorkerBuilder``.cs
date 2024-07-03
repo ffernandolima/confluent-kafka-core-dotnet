@@ -15,6 +15,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
+#if NET8_0_OR_GREATER
+using System.Collections.Frozen;
+#endif
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
@@ -267,7 +270,12 @@ namespace Confluent.Kafka.Core.Hosting.Internal
                     [KafkaProducerConstants.DeadLetterProducer] = _deadLetterProducer,
                     [KafkaProducerConstants.RetryProducer] = _retryProducer,
                     [KafkaRetryConstants.RetryHandler] = _retryHandler
-                }));
+                }
+#if NET8_0_OR_GREATER
+                .ToFrozenDictionary()));
+#else
+                ));
+#endif
 
             if (_consumer is null)
             {
@@ -278,7 +286,12 @@ namespace Confluent.Kafka.Core.Hosting.Internal
                 new ValidationContext(_consumer.Options!.ConsumerConfig, new Dictionary<object, object>
                 {
                     [KafkaSenderConstants.Sender] = new KafkaSender(this, KafkaSenderType.Hosting)
-                }));
+                }
+#if NET8_0_OR_GREATER
+                .ToFrozenDictionary()));
+#else
+                ));
+#endif
 
             if (_consumeResultHandlers is null || !_consumeResultHandlers.Any(consumeResultHandler => consumeResultHandler is not null))
             {

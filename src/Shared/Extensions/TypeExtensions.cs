@@ -1,4 +1,7 @@
 ﻿using System;
+#if NET8_0_OR_GREATER
+using System.Collections.Frozen;
+#endif
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -7,7 +10,8 @@ namespace Confluent.Kafka.Core.Internal
 {
     internal static class TypeExtensions
     {
-        private static readonly Dictionary<Type, string> BuiltInTypeNames = new()
+        private static readonly IDictionary<Type, string> BuiltInTypeNames =
+            new Dictionary<Type, string>()
         {
             { typeof(void),    "void"    },
             { typeof(bool),    "bool"    },
@@ -25,7 +29,12 @@ namespace Confluent.Kafka.Core.Internal
             { typeof(uint),    "uint"    },
             { typeof(ulong),   "ulong"   },
             { typeof(ushort),  "ushort"  }
-        };
+        }
+#if NET8_0_OR_GREATER
+        .ToFrozenDictionary();
+#else
+        ;
+#endif
 
         private static Dictionary<Type, object> DefaultValueTypes = [];
 

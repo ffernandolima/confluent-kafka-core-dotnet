@@ -2,6 +2,9 @@
 using Confluent.SchemaRegistry;
 using Microsoft.Extensions.Configuration;
 using System;
+#if NET8_0_OR_GREATER
+using System.Collections.Frozen;
+#endif
 using System.Collections.Generic;
 using System.Linq;
 
@@ -18,12 +21,18 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Internal
             SchemaType
         }
 
-        private static readonly Dictionary<UnregisteredSchemaParameter, Type> DefaultValueMappings = new()
+        private static readonly IDictionary<UnregisteredSchemaParameter, Type> DefaultValueMappings =
+            new Dictionary<UnregisteredSchemaParameter, Type>()
         {
             { UnregisteredSchemaParameter.SchemaString,     typeof(string)                },
             { UnregisteredSchemaParameter.SchemaType,       typeof(SchemaType)            },
             { UnregisteredSchemaParameter.SchemaReferences, typeof(List<SchemaReference>) }
-        };
+        }
+#if NET8_0_OR_GREATER
+        .ToFrozenDictionary();
+#else
+        ;
+#endif
 
         public UnregisteredSchemaBuilder(IConfiguration configuration = null)
             : base(seedSubject: null, configuration)
