@@ -77,7 +77,8 @@ namespace Confluent.Kafka.Core.Retry.Polly.Internal
                           .Select(typeName => Type.GetType(typeName, throwOnError: false, ignoreCase: true))
                           .Where(type => type is not null);
 
-            var shouldHandle = _cachedExceptionFilter.Invoke(exception) && !_cachedExceptionTypeFilters.Contains(exception.GetType());
+            var shouldHandle = _cachedExceptionFilter.Invoke(exception) &&
+                !_cachedExceptionTypeFilters.Contains(exception.GetType());
 
             if (!shouldHandle)
             {
