@@ -34,9 +34,9 @@ namespace Confluent.Kafka.Core.Hosting
                     {
                         builder.WithConsumerConfiguration(builder =>
                         {
-                            builder.WithEnableAutoCommit(enableAutoCommit: false);
-                            builder.WithCommitAfterConsuming(commitAfterConsuming: false);
-                            builder.WithEnableAutoOffsetStore(enableAutoOffsetStore: false);
+                            builder.WithEnableAutoCommit(false);
+                            builder.WithCommitAfterConsuming(false);
+                            builder.WithEnableAutoOffsetStore(false);
                         });
                     }
                     catch (Exception ex)
