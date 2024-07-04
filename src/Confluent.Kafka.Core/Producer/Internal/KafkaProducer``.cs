@@ -164,7 +164,7 @@ namespace Confluent.Kafka.Core.Producer.Internal
             CancellationToken cancellationToken = default)
         {
             var deliveryResult = await ProduceAsync(_options.ProducerConfig!.DefaultTopic, _options.ProducerConfig!.DefaultPartition, message, cancellationToken)
-                .ConfigureAwait(continueOnCapturedContext: false);
+                .ConfigureAwait(false);
 
             return deliveryResult;
         }
@@ -175,7 +175,7 @@ namespace Confluent.Kafka.Core.Producer.Internal
             CancellationToken cancellationToken = default)
         {
             var deliveryResult = await ProduceAsync(topic, _options.ProducerConfig!.DefaultPartition, message, cancellationToken)
-                .ConfigureAwait(continueOnCapturedContext: false);
+                .ConfigureAwait(false);
 
             return deliveryResult;
         }
@@ -186,7 +186,7 @@ namespace Confluent.Kafka.Core.Producer.Internal
            CancellationToken cancellationToken = default)
         {
             var deliveryResult = await ProduceAsync(_options.ProducerConfig!.DefaultTopic, partition, message, cancellationToken)
-                .ConfigureAwait(continueOnCapturedContext: false);
+                .ConfigureAwait(false);
 
             return deliveryResult;
         }
@@ -198,7 +198,7 @@ namespace Confluent.Kafka.Core.Producer.Internal
             CancellationToken cancellationToken = default)
         {
             var deliveryResult = await ProduceAsync(new TopicPartition(topic, partition), message, cancellationToken)
-                .ConfigureAwait(continueOnCapturedContext: false);
+                .ConfigureAwait(false);
 
             return deliveryResult;
         }
@@ -227,17 +227,17 @@ namespace Confluent.Kafka.Core.Producer.Internal
             if (!_options.ProducerConfig!.EnableRetryOnFailure)
             {
                 deliveryResult = await ProduceInternalAsync(topicPartition, message, cancellationToken)
-                    .ConfigureAwait(continueOnCapturedContext: false);
+                    .ConfigureAwait(false);
             }
             else
             {
                 await _options.RetryHandler!.HandleAsync(
                     executeAction: async cancellationToken =>
                         deliveryResult = await ProduceInternalAsync(topicPartition, message, cancellationToken)
-                            .ConfigureAwait(continueOnCapturedContext: false),
+                            .ConfigureAwait(false),
                     cancellationToken: cancellationToken,
                     onRetryAction: (exception, _, retryAttempt) => OnProduceRetry(topicPartition, message, exception, retryAttempt))
-                .ConfigureAwait(continueOnCapturedContext: false);
+                .ConfigureAwait(false);
             }
 
             return deliveryResult;
@@ -478,7 +478,7 @@ namespace Confluent.Kafka.Core.Producer.Internal
             try
             {
                 var deliveryResult = await _producer.ProduceAsync(topicPartition, message, cancellationToken)
-                    .ConfigureAwait(continueOnCapturedContext: false);
+                    .ConfigureAwait(false);
 
                 _logger.LogMessageProductionSuccess(
                     messageId,

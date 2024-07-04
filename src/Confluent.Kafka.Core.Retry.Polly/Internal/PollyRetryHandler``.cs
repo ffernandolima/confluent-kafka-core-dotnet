@@ -62,7 +62,7 @@ namespace Confluent.Kafka.Core.Retry.Polly.Internal
             await _policyBuilder
                 .WaitAndRetryAsync(_options.RetryCount, _options.DelayProvider, _options.Delays, onRetryAction ?? OnRetry)
                 .ExecuteAsync(executeAction, cancellationToken)
-                .ConfigureAwait(continueOnCapturedContext: false);
+                .ConfigureAwait(false);
         }
 
         private bool ShouldHandle(Exception exception)

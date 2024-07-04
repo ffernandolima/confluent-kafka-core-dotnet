@@ -74,7 +74,7 @@ namespace Confluent.Kafka.Core.Idempotency.Redis.Internal
             try
             {
                 var addedSuccessfully = await TryAddItemWhenNotExistsAsync(messageId, cancellationToken)
-                    .ConfigureAwait(continueOnCapturedContext: false);
+                    .ConfigureAwait(false);
 
                 return addedSuccessfully;
             }
@@ -114,7 +114,7 @@ namespace Confluent.Kafka.Core.Idempotency.Redis.Internal
 
             var addedSuccessfully = await database.SortedSetAddAsync(Key, messageId, score, When.NotExists)
                 .WithCancellation(cancellationToken)
-                .ConfigureAwait(continueOnCapturedContext: false);
+                .ConfigureAwait(false);
 
             return addedSuccessfully;
         }

@@ -34,7 +34,7 @@ namespace Confluent.Kafka.Core.Hosting.Internal
             {
                 try
                 {
-                    await TaskActivity.ExecutingTask!.ConfigureAwait(continueOnCapturedContext: false);
+                    await TaskActivity.ExecutingTask!.ConfigureAwait(false);
                 }
                 catch (Exception exception)
                 {
