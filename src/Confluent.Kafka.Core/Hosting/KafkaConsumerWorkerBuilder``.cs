@@ -194,6 +194,7 @@ namespace Confluent.Kafka.Core.Hosting.Internal
             }
 
             _retryProducer = retryProducer;
+            _retryProducer?.ValidateAndThrow(KafkaRetryConstants.RetryTopicSuffix);
             return this;
         }
 
@@ -205,6 +206,7 @@ namespace Confluent.Kafka.Core.Hosting.Internal
             }
 
             _deadLetterProducer = deadLetterProducer;
+            _deadLetterProducer?.ValidateAndThrow(KafkaProducerConstants.DeadLetterTopicSuffix);
             return this;
         }
 
