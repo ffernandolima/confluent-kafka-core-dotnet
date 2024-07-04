@@ -27,14 +27,14 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.TryAddKeyedSingleton(workerKey, (serviceProvider, _) =>
             {
-                var worker = KafkaConsumerWorkerBuilder<TKey, TValue>.Configure(
+                var builder = KafkaConsumerWorkerBuilder<TKey, TValue>.Configure(
                     serviceProvider,
                     serviceProvider.GetService<IConfiguration>(),
                     serviceProvider.GetService<ILoggerFactory>(),
                     configureWorker,
                     workerKey);
 
-                return worker;
+                return builder;
             });
 
             services.TryAddKeyedSingleton(workerKey, (serviceProvider, _) =>
