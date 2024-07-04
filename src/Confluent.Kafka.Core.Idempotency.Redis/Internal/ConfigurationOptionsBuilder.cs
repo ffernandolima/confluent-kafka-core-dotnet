@@ -18,11 +18,7 @@ namespace Confluent.Kafka.Core.Idempotency.Redis.Internal
     {
         public ConfigurationOptionsBuilder(IConfiguration configuration = null)
             : base(seedSubject: null, configuration)
-        {
-            ConnectionMultiplexer.SetFeatureFlag(
-                RedisIdempotencyHandlerConstants.PreventThreadTheftFeatureFlag,
-                enabled: true);
-        }
+        { }
 
         protected override ConfigurationOptions CreateSubject() => new()
         {
@@ -318,12 +314,13 @@ namespace Confluent.Kafka.Core.Idempotency.Redis.Internal
         }
 
         public static ConfigurationOptions Build(
+            IServiceProvider serviceProvider,
             IConfiguration configuration,
-            Action<IConfigurationOptionsBuilder> configureOptions)
+            Action<IServiceProvider, IConfigurationOptionsBuilder> configureOptions)
         {
             using var builder = new ConfigurationOptionsBuilder(configuration);
 
-            configureOptions?.Invoke(builder);
+            configureOptions?.Invoke(serviceProvider, builder);
 
             var options = builder.Build();
 

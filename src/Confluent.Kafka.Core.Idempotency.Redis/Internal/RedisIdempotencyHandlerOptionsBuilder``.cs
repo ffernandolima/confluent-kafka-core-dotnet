@@ -42,6 +42,12 @@ namespace Confluent.Kafka.Core.Idempotency.Redis.Internal
             return this;
         }
 
+        public IRedisIdempotencyHandlerOptionsBuilder<TKey, TValue> WithExpirationDelay(TimeSpan expirationDelay)
+        {
+            AppendAction(options => options.ExpirationDelay = expirationDelay);
+            return this;
+        }
+
         public IRedisIdempotencyHandlerOptionsBuilder<TKey, TValue> WithMessageIdHandler(Func<TValue, string> messageIdHandler)
         {
             AppendAction(options => options.MessageIdHandler = messageIdHandler);

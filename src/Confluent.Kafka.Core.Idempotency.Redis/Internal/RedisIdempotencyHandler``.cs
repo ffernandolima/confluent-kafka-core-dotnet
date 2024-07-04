@@ -3,6 +3,7 @@ using Confluent.Kafka.Core.Retry.Polly;
 using Microsoft.Extensions.Logging;
 using StackExchange.Redis;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Confluent.Kafka.Core.Idempotency.Redis.Internal
@@ -16,7 +17,11 @@ namespace Confluent.Kafka.Core.Idempotency.Redis.Internal
         private readonly IConnectionMultiplexer _multiplexer;
         private readonly RedisIdempotencyHandlerOptions<TKey, TValue> _options;
 
-        private string Key => $"Idempotency:GroupIds:{_options.GroupId}:Consumers:{_options.ConsumerName}";
+        private Task _expirationTask;
+        private CancellationTokenSource _expirationCts;
+
+        private string _key;
+        private string Key => _key ??= $"Idempotency:GroupIds:{_options.GroupId}:Consumers:{_options.ConsumerName}";
 
         public RedisIdempotencyHandler(
             ILoggerFactory loggerFactory,
@@ -40,8 +45,23 @@ namespace Confluent.Kafka.Core.Idempotency.Redis.Internal
             _options = options;
         }
 
-        public async Task<bool> TryHandleAsync(TValue messageValue)
+        public Task StartAsync(CancellationToken cancellationToken = default)
         {
+            CheckDisposed();
+
+            if (_expirationCts is null && _expirationTask is null)
+            {
+                _expirationCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+                _expirationTask = StartExpirationTask(_expirationCts.Token);
+            }
+
+            return _expirationTask.IsCompleted ? _expirationTask : Task.CompletedTask;
+        }
+
+        public async Task<bool> TryHandleAsync(TValue messageValue, CancellationToken cancellationToken = default)
+        {
+            CheckDisposed();
+
             var messageId = _options.MessageIdHandler.Invoke(messageValue);
 
             if (string.IsNullOrWhiteSpace(messageId))
@@ -53,15 +73,18 @@ namespace Confluent.Kafka.Core.Idempotency.Redis.Internal
 
             try
             {
-                await TryRemoveExpiredItemsAsync()
-                    .ConfigureAwait(continueOnCapturedContext: false);
-
-                var addedSuccessfully = await TryAddItemWhenNotExistsAsync(messageId)
+                var addedSuccessfully = await TryAddItemWhenNotExistsAsync(messageId, cancellationToken)
                     .ConfigureAwait(continueOnCapturedContext: false);
 
                 return addedSuccessfully;
             }
-            catch (RedisException ex)
+            catch (OperationCanceledException ex)
+            {
+                _logger.LogIdempotencyHandlingCanceled(ex, Key);
+
+                return true;
+            }
+            catch (Exception ex)
             {
                 _logger.LogIdempotencyHandlingFailure(ex, Key);
 
@@ -69,14 +92,13 @@ namespace Confluent.Kafka.Core.Idempotency.Redis.Internal
             }
         }
 
-        private async Task TryRemoveExpiredItemsAsync()
+        private void TryRemoveExpiredItems()
         {
             var database = _multiplexer.GetDatabase();
 
             var maximumScore = ToUnixTimeSeconds(DateTime.UtcNow.Subtract(_options.ExpirationInterval));
 
-            var affected = await database.SortedSetRemoveRangeByScoreAsync(Key, 0, maximumScore)
-                .ConfigureAwait(continueOnCapturedContext: false);
+            var affected = database.SortedSetRemoveRangeByScore(Key, 0, maximumScore);
 
             if (affected > 0)
             {
@@ -84,18 +106,90 @@ namespace Confluent.Kafka.Core.Idempotency.Redis.Internal
             }
         }
 
-        private async Task<bool> TryAddItemWhenNotExistsAsync(string identifier)
+        private async Task<bool> TryAddItemWhenNotExistsAsync(string messageId, CancellationToken cancellationToken)
         {
             var database = _multiplexer.GetDatabase();
 
             var score = ToUnixTimeSeconds(DateTime.UtcNow);
 
-            var addedSuccessfully = await database.SortedSetAddAsync(Key, identifier, score, When.NotExists)
+            var addedSuccessfully = await database.SortedSetAddAsync(Key, messageId, score, When.NotExists)
+                .WithCancellation(cancellationToken)
                 .ConfigureAwait(continueOnCapturedContext: false);
 
             return addedSuccessfully;
         }
 
+        private Task StartExpirationTask(CancellationToken cancellationToken)
+            => Task.Factory.StartNew(() =>
+            {
+                try
+                {
+                    for (; ; )
+                    {
+                        cancellationToken.ThrowIfCancellationRequested();
+
+                        TryRemoveExpiredItems();
+
+                        Task.Delay(_options.ExpirationDelay).Wait(cancellationToken);
+                    }
+                }
+                catch (OperationCanceledException ex)
+                {
+                    _logger.LogSortedSetMembersExpirationCanceled(ex, Key);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogSortedSetMembersExpirationFailure(ex, Key);
+                }
+
+            }, CancellationToken.None, TaskCreationOptions.LongRunning, TaskScheduler.Default);
+
+        private void CheckDisposed()
+        {
+            if (!_disposed)
+            {
+                return;
+            }
+
+            throw new ObjectDisposedException(DefaultIdempotencyHandlerType.ExtractTypeName());
+        }
+
         private static long ToUnixTimeSeconds(DateTime source) => ((DateTimeOffset)source).ToUnixTimeSeconds();
+
+        #region IDisposable Members
+
+        private bool _disposed;
+
+        private void Dispose(bool disposing)
+        {
+            if (!_disposed)
+            {
+                if (disposing)
+                {
+                    try
+                    {
+                        _expirationCts?.Cancel();
+
+                        _expirationTask?.Wait();
+                    }
+                    finally
+                    {
+                        _expirationCts?.Dispose();
+                    }
+
+                    _multiplexer?.Dispose();
+                }
+
+                _disposed = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        #endregion IDisposable Members
     }
 }

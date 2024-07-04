@@ -9,7 +9,8 @@ namespace Confluent.Kafka.Core.Idempotency.Redis
     {
         public string GroupId { get; set; }
         public string ConsumerName { get; set; }
-        public TimeSpan ExpirationInterval { get; set; } = TimeSpan.FromDays(7);
+        public TimeSpan ExpirationInterval { get; set; } = new TimeSpan(7, 0, 0, 0);
+        public TimeSpan ExpirationDelay { get; set; } = new TimeSpan(0, 1, 0);
         public Func<TValue, string> MessageIdHandler { get; set; }
         public bool EnableLogging { get; set; } = true;
 
@@ -38,6 +39,13 @@ namespace Confluent.Kafka.Core.Idempotency.Redis
                 yield return new ValidationResult(
                     $"{nameof(options.ExpirationInterval)} cannot be infinite.",
                     [nameof(options.ExpirationInterval)]);
+            }
+
+            if (options.ExpirationDelay == Timeout.InfiniteTimeSpan)
+            {
+                yield return new ValidationResult(
+                    $"{nameof(options.ExpirationDelay)} cannot be infinite.",
+                    [nameof(options.ExpirationDelay)]);
             }
 
             if (options.MessageIdHandler is null)

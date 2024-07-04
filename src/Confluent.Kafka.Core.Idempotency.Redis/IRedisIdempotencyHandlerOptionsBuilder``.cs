@@ -12,6 +12,8 @@ namespace Confluent.Kafka.Core.Idempotency.Redis
 
         IRedisIdempotencyHandlerOptionsBuilder<TKey, TValue> WithExpirationInterval(TimeSpan expirationInterval);
 
+        IRedisIdempotencyHandlerOptionsBuilder<TKey, TValue> WithExpirationDelay(TimeSpan expirationDelay);
+
         IRedisIdempotencyHandlerOptionsBuilder<TKey, TValue> WithMessageIdHandler(Func<TValue, string> messageIdHandler);
 
         IRedisIdempotencyHandlerOptionsBuilder<TKey, TValue> WithEnableLogging(bool enableLogging);

@@ -1,9 +1,12 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Confluent.Kafka.Core.Idempotency
 {
-    public interface IIdempotencyHandler<TKey, TValue>
+    public interface IIdempotencyHandler<TKey, TValue> : IDisposable
     {
-        Task<bool> TryHandleAsync(TValue messageValue);
+        Task StartAsync(CancellationToken cancellationToken = default);
+        Task<bool> TryHandleAsync(TValue messageValue, CancellationToken cancellationToken = default);
     }
 }
