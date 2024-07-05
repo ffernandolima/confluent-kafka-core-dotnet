@@ -87,7 +87,7 @@ namespace Confluent.Kafka.Core.Producer
                 ValueSerializer = ValueSerializer,
                 MessageIdHandler = _messageIdHandler,
                 RetryHandler = _retryHandler,
-                Interceptors = _interceptors
+                Interceptors = _interceptors!.ToArray()
             };
 
             return _builtOptions;
