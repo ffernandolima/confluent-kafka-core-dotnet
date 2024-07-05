@@ -82,7 +82,7 @@ namespace Confluent.Kafka.Core.Hosting.Internal
                 IdempotencyHandler = _idempotencyHandler,
                 RetryProducer = _retryProducer,
                 DeadLetterProducer = _deadLetterProducer,
-                ConsumeResultHandlers = _consumeResultHandlers,
+                ConsumeResultHandlers = _consumeResultHandlers!.ToArray(),
                 ConsumeResultErrorHandler = _consumeResultErrorHandler
             };
 

@@ -93,7 +93,7 @@ namespace Confluent.Kafka.Core.Consumer
                 MessageIdHandler = _messageIdHandler,
                 RetryHandler = _retryHandler,
                 DeadLetterProducer = _deadLetterProducer,
-                Interceptors = _interceptors
+                Interceptors = _interceptors!.ToArray()
             };
 
             return _builtOptions;
