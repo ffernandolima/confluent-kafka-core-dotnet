@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Confluent.Kafka.Core.Retry;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace Confluent.Kafka.Core.Hosting
@@ -22,6 +23,8 @@ namespace Confluent.Kafka.Core.Hosting
         string[] RetryTopicExceptionTypeFilters { get; }
 
         Func<Exception, bool> RetryTopicExceptionFilter { get; }
+
+        RetrySpecification RetryTopicSpecification { get; }
 
         bool EnableDeadLetterTopic { get; }
 
