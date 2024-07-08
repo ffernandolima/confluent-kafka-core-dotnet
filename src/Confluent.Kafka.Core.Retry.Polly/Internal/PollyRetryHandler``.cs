@@ -2,8 +2,6 @@
 using Microsoft.Extensions.Logging;
 using Polly;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -16,9 +14,6 @@ namespace Confluent.Kafka.Core.Retry.Polly.Internal
         private readonly ILogger _logger;
         private readonly PolicyBuilder _policyBuilder;
         private readonly PollyRetryHandlerOptions _options;
-
-        private Func<Exception, bool> _cachedFilter;
-        private IEnumerable<Type> _cachedTypeFilters;
 
         public PollyRetryHandler(ILoggerFactory loggerFactory, PollyRetryHandlerOptions options)
         {
@@ -67,19 +62,7 @@ namespace Confluent.Kafka.Core.Retry.Polly.Internal
 
         private bool ShouldHandle(Exception exception)
         {
-            _cachedFilter ??= _options.ExceptionFilter is null
-                ? exception => true
-                : _options.ExceptionFilter;
-
-            _cachedTypeFilters ??= _options.ExceptionTypeFilters is null
-                ? []
-                : _options.ExceptionTypeFilters
-                          .Select(typeName => Type.GetType(typeName, throwOnError: false, ignoreCase: true))
-                          .Where(type => type is not null)
-                          .ToArray();
-
-            var shouldHandle = _cachedFilter.Invoke(exception) &&
-                !_cachedTypeFilters.Contains(exception.GetType());
+            var shouldHandle = _options.RetrySpecification!.IsSatisfiedBy(exception);
 
             if (!shouldHandle)
             {

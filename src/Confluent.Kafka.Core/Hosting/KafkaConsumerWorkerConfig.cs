@@ -1,6 +1,7 @@
 ﻿using Confluent.Kafka.Core.Hosting.Internal;
 using Confluent.Kafka.Core.Idempotency.Internal;
 using Confluent.Kafka.Core.Producer.Internal;
+using Confluent.Kafka.Core.Retry;
 using Confluent.Kafka.Core.Retry.Internal;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -12,6 +13,8 @@ namespace Confluent.Kafka.Core.Hosting
 {
     public sealed class KafkaConsumerWorkerConfig : IKafkaConsumerWorkerConfig
     {
+        private RetrySpecification _retrySpecification;
+
         #region IKafkaConsumerWorkerConfig Members
 
         public int MaxDegreeOfParallelism { get; set; } = 1;
@@ -28,6 +31,8 @@ namespace Confluent.Kafka.Core.Hosting
         public TimeSpan NotEmptyTopicDelay { get; set; } = new TimeSpan(0, 0, 1);
         public TimeSpan UnavailableProcessingSlotsDelay { get; set; } = new TimeSpan(0, 0, 2);
         public TimeSpan PendingProcessingDelay { get; set; } = new TimeSpan(0, 0, 1);
+        public RetrySpecification RetryTopicSpecification => 
+            _retrySpecification ??= RetrySpecification.Create(RetryTopicExceptionFilter, RetryTopicExceptionTypeFilters);
 
         #endregion IKafkaConsumerWorkerConfig Members
 

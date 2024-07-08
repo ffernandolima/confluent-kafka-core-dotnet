@@ -10,6 +10,7 @@ namespace Confluent.Kafka.Core.Retry.Polly
     {
         private IEnumerable<TimeSpan> _delays;
         private Func<int, TimeSpan> _delayProvider;
+        private RetrySpecification _retrySpecification;
 
         public int RetryCount { get; set; } = 1;
         public TimeSpan RetryDelay { get; set; } = TimeSpan.Zero;
@@ -18,6 +19,8 @@ namespace Confluent.Kafka.Core.Retry.Polly
         public string[] ExceptionTypeFilters { get; set; }
         public Func<Exception, bool> ExceptionFilter { get; set; }
         public bool EnableLogging { get; set; } = true;
+        public RetrySpecification RetrySpecification =>
+            _retrySpecification ??= RetrySpecification.Create(ExceptionFilter, ExceptionTypeFilters);
 
         public PollyRetryHandlerOptions()
         {
