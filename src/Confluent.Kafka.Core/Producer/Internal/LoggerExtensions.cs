@@ -57,7 +57,7 @@ namespace Confluent.Kafka.Core.Producer.Internal
 
         [LoggerMessage(
             Level = LogLevel.Error,
-            Message = "An error has occurred while executing the interceptor 'OnProduce' for the message #{MessageId}, topic '{Topic}' and partition [{Partition}].")]
+            Message = "An exception has occurred while executing the interceptor 'OnProduce' for the message #{MessageId}, topic '{Topic}' and partition [{Partition}].")]
         public static partial void LogMessageProductionInterceptionFailure(this ILogger logger, Exception exception, object messageId, string topic, Partition partition);
     }
 }
