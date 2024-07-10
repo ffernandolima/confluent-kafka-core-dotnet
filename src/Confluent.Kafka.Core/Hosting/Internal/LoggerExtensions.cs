@@ -52,16 +52,6 @@ namespace Confluent.Kafka.Core.Hosting.Internal
         public static partial void LogIdempotencyDisabled(this ILogger logger, object messageId);
 
         [LoggerMessage(
-            Level = LogLevel.Warning,
-            Message = "The message #{MessageId} has been reproduced once it contains the specific retry headers. The idempotency mechanism will be bypassed.")]
-        public static partial void LogIdempotencyBypassed(this ILogger logger, object messageId);
-
-        [LoggerMessage(
-            Level = LogLevel.Warning,
-            Message = "The message #{MessageId} has already been processed.")]
-        public static partial void LogMessageAlreadyProcessed(this ILogger logger, object messageId);
-
-        [LoggerMessage(
             Level = LogLevel.Debug,
             Message = "The message #{MessageId} has been reproduced once it contains the specific retry headers and " +
                       "it will not be processed because the group id header value does not correspond to the configured group id value.")]
@@ -93,6 +83,16 @@ namespace Confluent.Kafka.Core.Hosting.Internal
             Level = LogLevel.Debug,
             Message = "The message #{MessageId} will not be produced to the retry topic since the configured filters have ruled out the possibility of production.")]
         public static partial void LogMessageProcessingNotRetriable(this ILogger logger, object messageId);
+
+        [LoggerMessage(
+            Level = LogLevel.Warning,
+            Message = "The message #{MessageId} has been reproduced once it contains the specific retry headers. The idempotency mechanism will be bypassed.")]
+        public static partial void LogIdempotencyBypassed(this ILogger logger, object messageId);
+
+        [LoggerMessage(
+            Level = LogLevel.Warning,
+            Message = "The message #{MessageId} has already been processed.")]
+        public static partial void LogMessageAlreadyProcessed(this ILogger logger, object messageId);
 
         [LoggerMessage(
             Level = LogLevel.Error,
