@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
 
 namespace Confluent.Kafka.Core.Hosting.Internal
 {
@@ -79,8 +80,9 @@ namespace Confluent.Kafka.Core.Hosting.Internal
         [LoggerMessage(
             Level = LogLevel.Debug,
             Message = "Dispatched a background work item to process the message #{MessageId} from the topic '{Topic}', partition [{Partition}] and offset @{Offset}. " +
-                      "Message Value: {@MessageValue}")]
-        public static partial void LogWorkItemDispatched(this ILogger logger, object messageId, string topic, Partition partition, Offset offset, object messageValue);
+                      "Message Value: {@MessageValue}. Headers: {@Headers}.")]
+        public static partial void LogWorkItemDispatched(
+            this ILogger logger, object messageId, string topic, Partition partition, Offset offset, object messageValue, IDictionary<string, string> headers);
 
         [LoggerMessage(
             Level = LogLevel.Debug,

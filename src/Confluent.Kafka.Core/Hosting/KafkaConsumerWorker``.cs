@@ -292,13 +292,15 @@ namespace Confluent.Kafka.Core.Hosting
 
             var messageId = consumeResult.Message!.GetId(_options.Consumer!.Options!.MessageIdHandler);
 
+            var headers = consumeResult.Message!.Headers?.ToDictionary();
+
             try
             {
                 taskActivity = TaskActivity.Run(async activity =>
                 {
                     var stopwatch = Stopwatch.StartNew();
 
-                    activity = StartActivity(consumeResult.Topic, consumeResult.Message!.Headers?.ToDictionary());
+                    activity = StartActivity(consumeResult.Topic, headers);
 
                     await _semaphore.WaitAsync(cancellationToken).ConfigureAwait(false);
 
@@ -376,7 +378,8 @@ namespace Confluent.Kafka.Core.Hosting
                         consumeResult.Topic,
                         consumeResult.Partition,
                         consumeResult.Offset,
-                        consumeResult.Message!.Value);
+                        consumeResult.Message!.Value,
+                        headers);
 
                     var workItem = new BackgroundWorkItem<TKey, TValue>(taskActivity, consumeResult)
                         .AttachContinuation(taskActivity => taskActivity.TraceActivity?.SetEndTime(DateTime.UtcNow));
