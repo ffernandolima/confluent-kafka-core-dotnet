@@ -172,7 +172,7 @@ namespace Confluent.Kafka.Core.Hosting
 
             if (consumeResults is not null && consumeResults.Any())
             {
-                foreach (var consumeResult in consumeResults.Where(consumeResult => consumeResult?.Message is not null))
+                foreach (var consumeResult in consumeResults.Where(consumeResult => consumeResult!.Message is not null))
                 {
                     DispatchWorkItem(consumeResult, cancellationToken);
 
@@ -328,7 +328,7 @@ namespace Confluent.Kafka.Core.Hosting
                         {
                             _logger.LogIdempotencyDisabled(messageId);
 
-                            if (!ShouldHandleConsumeResult(consumeResult))
+                            if (!ShouldHandleFetchedConsumeResult(consumeResult))
                             {
                                 _logger.LogMessageProcessingSkip(messageId);
 
@@ -342,7 +342,7 @@ namespace Confluent.Kafka.Core.Hosting
 
                             await _options.RetryHandler!.HandleAsync(
                                 executeAction: async cancellationToken =>
-                                    await HandleConsumeResultAsync(consumeResult, cancellationToken).ConfigureAwait(false),
+                                    await HandleFetchedConsumeResultAsync(consumeResult, cancellationToken).ConfigureAwait(false),
                                 cancellationToken: cancellationToken,
                                 onRetryAction: (exception, timeSpan, retryAttempt) =>
                                     _logger.LogMessageProcessingRetryFailure(exception, messageId, retryAttempt))
@@ -352,7 +352,7 @@ namespace Confluent.Kafka.Core.Hosting
                         {
                             _logger.LogRetryStrategyDisabled(messageId);
 
-                            await HandleConsumeResultAsync(consumeResult, cancellationToken).ConfigureAwait(false);
+                            await HandleFetchedConsumeResultAsync(consumeResult, cancellationToken).ConfigureAwait(false);
                         }
                     }
                     finally
@@ -360,7 +360,7 @@ namespace Confluent.Kafka.Core.Hosting
                         _semaphore.Release();
                     }
 
-                    async Task HandleConsumeResultAsync(ConsumeResult<TKey, TValue> consumeResult, CancellationToken cancellationToken)
+                    async Task HandleFetchedConsumeResultAsync(ConsumeResult<TKey, TValue> consumeResult, CancellationToken cancellationToken)
                     {
                         foreach (var consumeResultHandler in _options.ConsumeResultHandlers)
                         {
@@ -570,7 +570,7 @@ namespace Confluent.Kafka.Core.Hosting
             return shouldBypass;
         }
 
-        private bool ShouldHandleConsumeResult(ConsumeResult<TKey, TValue> consumeResult)
+        private bool ShouldHandleFetchedConsumeResult(ConsumeResult<TKey, TValue> consumeResult)
         {
             var headers = consumeResult.Message!.Headers?.ToDictionary();
 
