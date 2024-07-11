@@ -47,7 +47,7 @@ namespace Confluent.Kafka.Core.Diagnostics.Internal
         {
             AppendAction(attribute =>
             {
-                if (messageKey is not null && messageKey is not Null && messageKey is not Ignore)
+                if (messageKey is not null and not Null and not Ignore)
                 {
                     attribute.MessageKey = messageKey.ToString();
                 }
