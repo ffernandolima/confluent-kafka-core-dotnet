@@ -310,11 +310,13 @@ namespace Confluent.Kafka.Core.Hosting
 
             try
             {
-                taskActivity = TaskActivity.Run(async activity =>
+                taskActivity = TaskActivity.Run(async activitySetter =>
                 {
                     var stopwatch = Stopwatch.StartNew();
 
-                    activity = StartActivity(consumeResult.Topic, headers);
+                    var activity = StartActivity(consumeResult.Topic, headers);
+
+                    activitySetter?.Invoke(activity);
 
                     await _semaphore.WaitAsync(cancellationToken).ConfigureAwait(false);
 
