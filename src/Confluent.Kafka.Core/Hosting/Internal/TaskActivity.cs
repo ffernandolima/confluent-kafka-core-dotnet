@@ -15,16 +15,16 @@ namespace Confluent.Kafka.Core.Hosting.Internal
             TraceActivity = traceActivity;
         }
 
-        public static TaskActivity Run(Func<Activity, Task> processWorkItem)
+        public static TaskActivity Run(Func<Activity, Task> function)
         {
-            if (processWorkItem is null)
+            if (function is null)
             {
-                throw new ArgumentNullException(nameof(processWorkItem), $"{nameof(processWorkItem)} cannot be null.");
+                throw new ArgumentNullException(nameof(function), $"{nameof(function)} cannot be null.");
             }
 
             Activity traceActivity = null;
 
-            var executingTask = Task.Run(() => processWorkItem.Invoke(traceActivity));
+            var executingTask = Task.Run(() => function.Invoke(traceActivity));
 
             var taskActivity = new TaskActivity(executingTask, traceActivity);
 
