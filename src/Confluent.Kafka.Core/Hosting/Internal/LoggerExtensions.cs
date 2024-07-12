@@ -125,6 +125,11 @@ namespace Confluent.Kafka.Core.Hosting.Internal
         public static partial void LogMessageProcessingFailure(this ILogger logger, Exception exception, object messageId);
 
         [LoggerMessage(
+           Level = LogLevel.Error,
+           Message = "An exception has occurred while handling the message #{MessageId} processing failure.")]
+        public static partial void LogErrorHandlerFailure(this ILogger logger, Exception exception, object messageId);
+
+        [LoggerMessage(
             Level = LogLevel.Error,
             Message = "An exception has occurred while producing a dead letter message - built from the message #{MessageId} - to the '{DeadLetterTopic}' topic.")]
         public static partial void LogDeadLetterProductionFailure(this ILogger logger, Exception exception, object messageId, string deadLetterTopic);
@@ -133,5 +138,15 @@ namespace Confluent.Kafka.Core.Hosting.Internal
             Level = LogLevel.Error,
             Message = "An exception has occurred while producing a retry message - built from the message #{MessageId} - to the '{RetryTopic}' topic.")]
         public static partial void LogRetryProductionFailure(this ILogger logger, Exception exception, object messageId, string retryTopic);
+
+        [LoggerMessage(
+            Level = LogLevel.Error,
+            Message = "An exception has occurred while committing the message #{MessageId}.")]
+        public static partial void LogMessageCommitFailure(this ILogger logger, Exception exception, object messageId);
+
+        [LoggerMessage(
+            Level = LogLevel.Error,
+            Message = "An exception has occurred while storing the message #{MessageId} offset.")]
+        public static partial void LogMessageOffsetStorageFailure(this ILogger logger, Exception exception, object messageId);
     }
 }
