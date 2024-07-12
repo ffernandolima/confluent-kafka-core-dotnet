@@ -201,9 +201,9 @@ namespace Confluent.Kafka.Core.Hosting
 
                     if (!workItem.IsFaulted && !workItem.IsCanceled)
                     {
-                        Commit(workItem.ConsumeResult);
+                        Commit(workItem);
 
-                        StoreOffset(workItem.ConsumeResult);
+                        StoreOffset(workItem);
 
                         if (!workItem.IsHandled)
                         {
@@ -214,9 +214,9 @@ namespace Confluent.Kafka.Core.Hosting
                     {
                         if (_options.WorkerConfig!.CommitFaultedMessages)
                         {
-                            Commit(workItem.ConsumeResult);
+                            Commit(workItem);
 
-                            StoreOffset(workItem.ConsumeResult);
+                            StoreOffset(workItem);
                         }
 
                         if (!workItem.IsHandled)
@@ -247,34 +247,30 @@ namespace Confluent.Kafka.Core.Hosting
                     }
                 }
 
-                void Commit(ConsumeResult<TKey, TValue> consumeResult)
+                void Commit(BackgroundWorkItem<TKey, TValue> workItem)
                 {
                     try
                     {
-                        _options.Consumer!.Commit(consumeResult);
+                        _options.Consumer!.Commit(workItem.ConsumeResult);
                     }
                     catch (Exception ex)
                     {
-                        var messageId = consumeResult.Message!.GetId(_options.Consumer!.Options!.MessageIdHandler);
-
-                        _logger.LogMessageCommitFailure(ex, messageId);
+                        _logger.LogMessageCommitFailure(ex, workItem.MessageId);
                     }
                 }
 
-                void StoreOffset(ConsumeResult<TKey, TValue> consumeResult)
+                void StoreOffset(BackgroundWorkItem<TKey, TValue> workItem)
                 {
                     try
                     {
                         if (!_options.Consumer!.Options!.ConsumerConfig!.EnableAutoOffsetStore.GetValueOrDefault(defaultValue: true))
                         {
-                            _options.Consumer!.StoreOffset(consumeResult);
+                            _options.Consumer!.StoreOffset(workItem.ConsumeResult);
                         }
                     }
                     catch (Exception ex)
                     {
-                        var messageId = consumeResult.Message!.GetId(_options.Consumer!.Options!.MessageIdHandler);
-
-                        _logger.LogMessageOffsetStorageFailure(ex, messageId);
+                        _logger.LogMessageOffsetStorageFailure(ex, workItem.MessageId);
                     }
                 }
             }
@@ -399,7 +395,7 @@ namespace Confluent.Kafka.Core.Hosting
                         consumeResult.Message!.Value,
                         headers);
 
-                    var workItem = new BackgroundWorkItem<TKey, TValue>(taskActivity, consumeResult)
+                    var workItem = new BackgroundWorkItem<TKey, TValue>(messageId, taskActivity, consumeResult)
                         .AttachContinuation(taskActivity => taskActivity.TraceActivity?.SetEndTime(DateTime.UtcNow));
 
                     _workItems.Enqueue(workItem);
@@ -413,11 +409,9 @@ namespace Confluent.Kafka.Core.Hosting
 
             var activity = workItem.TaskActivity!.TraceActivity;
 
-            var messageId = consumeResult!.Message!.GetId(_options.Consumer!.Options!.MessageIdHandler);
-
             try
             {
-                _logger.LogMessageProcessingSuccess(messageId);
+                _logger.LogMessageProcessingSuccess(workItem.MessageId);
 
                 _options.DiagnosticsManager!.Enrich(activity, consumeResult, _options);
             }
@@ -438,21 +432,19 @@ namespace Confluent.Kafka.Core.Hosting
 
             var exception = await workItem.GetExceptionAsync().ConfigureAwait(false);
 
-            var messageId = consumeResult!.Message!.GetId(_options.Consumer!.Options!.MessageIdHandler);
-
             try
             {
-                _logger.LogMessageProcessingFailure(exception, messageId);
+                _logger.LogMessageProcessingFailure(exception, workItem.MessageId);
 
                 _options.DiagnosticsManager!.Enrich(activity, consumeResult, _options, exception);
 
-                if (_options.WorkerConfig!.EnableRetryTopic && ShouldProduceRetryMessage(exception, messageId))
+                if (_options.WorkerConfig!.EnableRetryTopic && ShouldProduceRetryMessage(exception, workItem.MessageId))
                 {
-                    await ProduceRetryMessageAsync(consumeResult, messageId, exception).ConfigureAwait(false);
+                    await ProduceRetryMessageAsync(consumeResult, workItem.MessageId, exception).ConfigureAwait(false);
                 }
                 else if (_options.WorkerConfig!.EnableDeadLetterTopic)
                 {
-                    await ProduceDeadLetterMessageAsync(consumeResult, messageId, exception).ConfigureAwait(false);
+                    await ProduceDeadLetterMessageAsync(consumeResult, workItem.MessageId, exception).ConfigureAwait(false);
                 }
             }
             finally
@@ -470,7 +462,7 @@ namespace Confluent.Kafka.Core.Hosting
                     }
                     catch (Exception ex)
                     {
-                        _logger.LogErrorHandlerFailure(ex, messageId);
+                        _logger.LogErrorHandlerFailure(ex, workItem.MessageId);
                     }
                 }
             }

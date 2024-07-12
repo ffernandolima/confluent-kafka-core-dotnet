@@ -8,6 +8,7 @@ namespace Confluent.Kafka.Core.Hosting.Internal
         private Exception _exception;
 
         public bool IsHandled { get; private set; }
+        public object MessageId { get; private set; }
         public TaskActivity TaskActivity { get; private set; }
         public ConsumeResult<TKey, TValue> ConsumeResult { get; private set; }
 
@@ -17,8 +18,9 @@ namespace Confluent.Kafka.Core.Hosting.Internal
         public bool IsFaulted => TaskActivity.ExecutingTask!.IsFaulted;
         public AggregateException Exception => TaskActivity.ExecutingTask!.Exception;
 
-        public BackgroundWorkItem(TaskActivity taskActivity, ConsumeResult<TKey, TValue> consumeResult)
+        public BackgroundWorkItem(object messageId, TaskActivity taskActivity, ConsumeResult<TKey, TValue> consumeResult)
         {
+            MessageId = messageId;
             TaskActivity = taskActivity ?? throw new ArgumentNullException(nameof(taskActivity), $"{nameof(taskActivity)} cannot be null.");
             ConsumeResult = consumeResult ?? throw new ArgumentNullException(nameof(consumeResult), $"{nameof(consumeResult)} cannot be null.");
         }
