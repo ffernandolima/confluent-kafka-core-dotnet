@@ -407,13 +407,15 @@ namespace Confluent.Kafka.Core.Hosting
 
         private void HandleCompletedWorkItem(BackgroundWorkItem<TKey, TValue> workItem)
         {
+            var messageId = workItem.MessageId;
+
             var consumeResult = workItem.ConsumeResult;
 
             var activity = workItem.TaskActivity!.TraceActivity;
 
             try
             {
-                _logger.LogMessageProcessingSuccess(workItem.MessageId);
+                _logger.LogMessageProcessingSuccess(messageId);
 
                 _options.DiagnosticsManager!.Enrich(activity, consumeResult, _options);
             }
@@ -428,6 +430,8 @@ namespace Confluent.Kafka.Core.Hosting
 
         private async Task HandleFaultedWorkItem(BackgroundWorkItem<TKey, TValue> workItem)
         {
+            var messageId = workItem.MessageId;
+
             var consumeResult = workItem.ConsumeResult;
 
             var activity = workItem.TaskActivity!.TraceActivity;
@@ -436,17 +440,17 @@ namespace Confluent.Kafka.Core.Hosting
 
             try
             {
-                _logger.LogMessageProcessingFailure(exception, workItem.MessageId);
+                _logger.LogMessageProcessingFailure(exception, messageId);
 
                 _options.DiagnosticsManager!.Enrich(activity, consumeResult, _options, exception);
 
-                if (_options.WorkerConfig!.EnableRetryTopic && ShouldProduceRetryMessage(exception, workItem.MessageId))
+                if (_options.WorkerConfig!.EnableRetryTopic && ShouldProduceRetryMessage(exception, messageId))
                 {
-                    await ProduceRetryMessageAsync(consumeResult, workItem.MessageId, exception).ConfigureAwait(false);
+                    await ProduceRetryMessageAsync(consumeResult, messageId, exception).ConfigureAwait(false);
                 }
                 else if (_options.WorkerConfig!.EnableDeadLetterTopic)
                 {
-                    await ProduceDeadLetterMessageAsync(consumeResult, workItem.MessageId, exception).ConfigureAwait(false);
+                    await ProduceDeadLetterMessageAsync(consumeResult, messageId, exception).ConfigureAwait(false);
                 }
             }
             finally
@@ -464,7 +468,7 @@ namespace Confluent.Kafka.Core.Hosting
                     }
                     catch (Exception ex)
                     {
-                        _logger.LogErrorHandlerFailure(ex, workItem.MessageId);
+                        _logger.LogErrorHandlerFailure(ex, messageId);
                     }
                 }
             }
