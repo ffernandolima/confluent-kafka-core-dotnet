@@ -255,6 +255,8 @@ namespace Confluent.Kafka.Core.Hosting
                     }
                     catch (Exception ex)
                     {
+                        var messageId = consumeResult.Message!.GetId(_options.Consumer!.Options!.MessageIdHandler);
+
                         _logger.LogMessageCommitFailure(ex, messageId);
                     }
                 }
@@ -270,6 +272,8 @@ namespace Confluent.Kafka.Core.Hosting
                     }
                     catch (Exception ex)
                     {
+                        var messageId = consumeResult.Message!.GetId(_options.Consumer!.Options!.MessageIdHandler);
+
                         _logger.LogMessageOffsetStorageFailure(ex, messageId);
                     }
                 }
