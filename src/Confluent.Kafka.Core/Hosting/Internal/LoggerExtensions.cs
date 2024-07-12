@@ -38,7 +38,7 @@ namespace Confluent.Kafka.Core.Hosting.Internal
 
         [LoggerMessage(
             Level = LogLevel.Debug,
-            Message = "The current thread - representing the message #{MessageId} processing - had been blocked for {Elapsed:hh:mm:ss} until it has entered the SemaphoreSlim.")]
+            Message = "The current thread - representing the message #{MessageId} processing - had been blocked for {Elapsed:hh:mm:ss} until it has proceeded.")]
         public static partial void LogCurrentThreadBlocked(this ILogger logger, object messageId, TimeSpan elapsed);
 
         [LoggerMessage(
