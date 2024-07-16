@@ -106,8 +106,8 @@ namespace Confluent.Kafka.Core.Internal
 
         private void ClearInternal()
         {
-            _functions.Clear();
-            _parameters.Clear();
+            _functions?.Clear();
+            _parameters?.Clear();
             _builtSubject = null;
         }
 
