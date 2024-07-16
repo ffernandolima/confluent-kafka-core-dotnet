@@ -19,7 +19,7 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Protobuf.Internal
         {
             if (schemaRegistryClient is null)
             {
-                throw new ArgumentNullException(nameof(schemaRegistryClient), $"{nameof(schemaRegistryClient)} cannot be null.");
+                throw new ArgumentNullException(nameof(schemaRegistryClient));
             }
 
             _serializer = new ProtobufSerializer<T>(schemaRegistryClient, serializerConfig);

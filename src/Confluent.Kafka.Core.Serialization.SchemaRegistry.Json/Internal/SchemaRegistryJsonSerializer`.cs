@@ -20,7 +20,7 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Json.Internal
         {
             if (schemaRegistryClient is null)
             {
-                throw new ArgumentNullException(nameof(schemaRegistryClient), $"{nameof(schemaRegistryClient)} cannot be null.");
+                throw new ArgumentNullException(nameof(schemaRegistryClient));
             }
 
             if (schema is not null)

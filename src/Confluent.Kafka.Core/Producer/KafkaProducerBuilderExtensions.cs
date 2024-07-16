@@ -15,7 +15,7 @@ namespace Confluent.Kafka.Core.Producer
         {
             if (producerBuilder is null)
             {
-                throw new ArgumentNullException(nameof(producerBuilder), $"{nameof(producerBuilder)} cannot be null.");
+                throw new ArgumentNullException(nameof(producerBuilder));
             }
 
             var handlerFactory = KafkaProducerHandlerFactory.Instance.GetOrCreateHandlerFactory<TKey, TValue>(
@@ -36,7 +36,7 @@ namespace Confluent.Kafka.Core.Producer
         {
             if (producerBuilder is null)
             {
-                throw new ArgumentNullException(nameof(producerBuilder), $"{nameof(producerBuilder)} cannot be null.");
+                throw new ArgumentNullException(nameof(producerBuilder));
             }
 
             var interceptorType = typeof(IKafkaProducerInterceptor<TKey, TValue>);

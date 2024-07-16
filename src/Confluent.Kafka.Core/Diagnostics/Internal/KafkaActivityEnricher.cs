@@ -22,12 +22,12 @@ namespace Confluent.Kafka.Core.Diagnostics.Internal
 
             if (consumeException is null)
             {
-                throw new ArgumentNullException(nameof(consumeException), $"{nameof(consumeException)} cannot be null.");
+                throw new ArgumentNullException(nameof(consumeException));
             }
 
             if (consumerConfig is null)
             {
-                throw new ArgumentNullException(nameof(consumerConfig), $"{nameof(consumerConfig)} cannot be null.");
+                throw new ArgumentNullException(nameof(consumerConfig));
             }
 
             var consumerRecord = consumeException.ConsumerRecord ?? throw new InvalidOperationException("Consumer record cannot be null.");
@@ -63,12 +63,12 @@ namespace Confluent.Kafka.Core.Diagnostics.Internal
 
             if (consumeResult is null)
             {
-                throw new ArgumentNullException(nameof(consumeResult), $"{nameof(consumeResult)} cannot be null.");
+                throw new ArgumentNullException(nameof(consumeResult));
             }
 
             if (options is null)
             {
-                throw new ArgumentNullException(nameof(options), $"{nameof(options)} cannot be null.");
+                throw new ArgumentNullException(nameof(options));
             }
 
             using var builder = new KafkaActivityAttributesBuilder()
@@ -105,12 +105,12 @@ namespace Confluent.Kafka.Core.Diagnostics.Internal
 
             if (produceException is null)
             {
-                throw new ArgumentNullException(nameof(produceException), $"{nameof(produceException)} cannot be null.");
+                throw new ArgumentNullException(nameof(produceException));
             }
 
             if (options is null)
             {
-                throw new ArgumentNullException(nameof(options), $"{nameof(options)} cannot be null.");
+                throw new ArgumentNullException(nameof(options));
             }
 
             var deliveryResult = produceException.DeliveryResult ?? throw new InvalidOperationException("Delivery result cannot be null.");
@@ -150,12 +150,12 @@ namespace Confluent.Kafka.Core.Diagnostics.Internal
 
             if (deliveryReport is null)
             {
-                throw new ArgumentNullException(nameof(deliveryReport), $"{nameof(deliveryReport)} cannot be null.");
+                throw new ArgumentNullException(nameof(deliveryReport));
             }
 
             if (options is null)
             {
-                throw new ArgumentNullException(nameof(options), $"{nameof(options)} cannot be null.");
+                throw new ArgumentNullException(nameof(options));
             }
 
             using var builder = new KafkaActivityAttributesBuilder()
@@ -192,12 +192,12 @@ namespace Confluent.Kafka.Core.Diagnostics.Internal
 
             if (deliveryResult is null)
             {
-                throw new ArgumentNullException(nameof(deliveryResult), $"{nameof(deliveryResult)} cannot be null.");
+                throw new ArgumentNullException(nameof(deliveryResult));
             }
 
             if (options is null)
             {
-                throw new ArgumentNullException(nameof(options), $"{nameof(options)} cannot be null.");
+                throw new ArgumentNullException(nameof(options));
             }
 
             using var builder = new KafkaActivityAttributesBuilder()
@@ -233,12 +233,12 @@ namespace Confluent.Kafka.Core.Diagnostics.Internal
 
             if (consumeResult is null)
             {
-                throw new ArgumentNullException(nameof(consumeResult), $"{nameof(consumeResult)} cannot be null.");
+                throw new ArgumentNullException(nameof(consumeResult));
             }
 
             if (options is null)
             {
-                throw new ArgumentNullException(nameof(options), $"{nameof(options)} cannot be null.");
+                throw new ArgumentNullException(nameof(options));
             }
 
             using var builder = new KafkaActivityAttributesBuilder()

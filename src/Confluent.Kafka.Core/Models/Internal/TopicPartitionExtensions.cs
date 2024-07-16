@@ -10,7 +10,7 @@ namespace Confluent.Kafka.Core.Models.Internal
         {
             if (topicPartition is null)
             {
-                throw new ArgumentNullException(nameof(topicPartition), $"{nameof(topicPartition)} cannot be null.");
+                throw new ArgumentNullException(nameof(topicPartition));
             }
 
             List<ValidationResult> validationResults = null;

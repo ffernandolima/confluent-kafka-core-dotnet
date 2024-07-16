@@ -17,7 +17,7 @@ namespace Confluent.Kafka.Core.Producer.Internal
         {
             if (deliveryReport is null)
             {
-                throw new ArgumentNullException(nameof(deliveryReport), $"{nameof(deliveryReport)} cannot be null.");
+                throw new ArgumentNullException(nameof(deliveryReport));
             }
 
             DeliveryHandled = true;

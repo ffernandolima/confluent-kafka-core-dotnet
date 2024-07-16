@@ -60,7 +60,7 @@ namespace Confluent.Kafka.Core.Producer.Internal
         {
             if (builder is null)
             {
-                throw new ArgumentNullException(nameof(builder), $"{nameof(builder)} cannot be null.");
+                throw new ArgumentNullException(nameof(builder));
             }
 
             var options = builder.ToOptions();
@@ -144,7 +144,7 @@ namespace Confluent.Kafka.Core.Producer.Internal
 
             if (message is null)
             {
-                throw new ArgumentNullException(nameof(message), $"{nameof(message)} cannot be null.");
+                throw new ArgumentNullException(nameof(message));
             }
 
             if (!_options.ProducerConfig!.EnableRetryOnFailure)
@@ -214,7 +214,7 @@ namespace Confluent.Kafka.Core.Producer.Internal
 
             if (message is null)
             {
-                throw new ArgumentNullException(nameof(message), $"{nameof(message)} cannot be null.");
+                throw new ArgumentNullException(nameof(message));
             }
 
             if (!cancellationToken.CanBeCanceled)
@@ -354,7 +354,7 @@ namespace Confluent.Kafka.Core.Producer.Internal
 
             if (groupMetadata is null)
             {
-                throw new ArgumentNullException(nameof(groupMetadata), $"{nameof(groupMetadata)} cannot be null.");
+                throw new ArgumentNullException(nameof(groupMetadata));
             }
 
             if (timeout == Timeout.InfiniteTimeSpan)

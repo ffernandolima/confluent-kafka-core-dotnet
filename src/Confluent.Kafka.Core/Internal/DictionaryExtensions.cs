@@ -10,7 +10,7 @@ namespace Confluent.Kafka.Core.Internal
         {
             if (dictionary is null)
             {
-                throw new ArgumentNullException(nameof(dictionary), $"{nameof(dictionary)} cannot be null.");
+                throw new ArgumentNullException(nameof(dictionary));
             }
 
             if (dictionary.IsReadOnly)
@@ -20,7 +20,7 @@ namespace Confluent.Kafka.Core.Internal
 
             if (key is null)
             {
-                throw new ArgumentNullException(nameof(key), $"{nameof(key)} cannot be null.");
+                throw new ArgumentNullException(nameof(key));
             }
 
             dictionary[key] = value;

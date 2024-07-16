@@ -10,12 +10,12 @@ namespace Confluent.Kafka.Core.Models.Internal
         {
             if (header is null)
             {
-                throw new ArgumentNullException(nameof(header), $"{nameof(header)} cannot be null.");
+                throw new ArgumentNullException(nameof(header));
             }
 
             if (encoding is null)
             {
-                throw new ArgumentNullException(nameof(encoding), $"{nameof(encoding)} cannot be null.");
+                throw new ArgumentNullException(nameof(encoding));
             }
 
             var stringValue = encoding.GetString(header.GetValueBytes());

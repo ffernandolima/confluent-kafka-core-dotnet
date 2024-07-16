@@ -11,7 +11,7 @@ namespace Confluent.Kafka.Core.Threading.Internal
 
         public TaskActivity(Task executingTask, Activity traceActivity)
         {
-            ExecutingTask = executingTask ?? throw new ArgumentNullException(nameof(executingTask), $"{nameof(executingTask)} cannot be null.");
+            ExecutingTask = executingTask ?? throw new ArgumentNullException(nameof(executingTask));
             TraceActivity = traceActivity;
         }
 
@@ -19,7 +19,7 @@ namespace Confluent.Kafka.Core.Threading.Internal
         {
             if (function is null)
             {
-                throw new ArgumentNullException(nameof(function), $"{nameof(function)} cannot be null.");
+                throw new ArgumentNullException(nameof(function));
             }
 
             Activity executingActivity = null;
@@ -37,7 +37,7 @@ namespace Confluent.Kafka.Core.Threading.Internal
         {
             if (continuationFunction is null)
             {
-                throw new ArgumentNullException(nameof(continuationFunction), $"{nameof(continuationFunction)} cannot be null.");
+                throw new ArgumentNullException(nameof(continuationFunction));
             }
 
             var continuationTask = ExecutingTask.ContinueWith(_ => continuationFunction.Invoke(this), continuationOptions);

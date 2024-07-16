@@ -32,7 +32,7 @@ namespace Confluent.Kafka.Core.Retry
         {
             if (source is null)
             {
-                throw new ArgumentNullException(nameof(source), $"{nameof(source)} cannot be null.");
+                throw new ArgumentNullException(nameof(source));
             }
 
             return base.Evaluate(source);

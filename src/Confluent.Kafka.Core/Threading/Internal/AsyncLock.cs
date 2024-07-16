@@ -21,7 +21,7 @@ namespace Confluent.Kafka.Core.Threading.Internal
         {
             if (options is null)
             {
-                throw new ArgumentNullException(nameof(options), $"{nameof(options)} cannot be null.");
+                throw new ArgumentNullException(nameof(options));
             }
 
             options.ValidateAndThrow<AsyncLockOptionsException>();
@@ -81,7 +81,7 @@ namespace Confluent.Kafka.Core.Threading.Internal
 
             public AsyncLockReleaser(IAsyncSemaphore semaphore)
             {
-                _semaphore = semaphore ?? throw new ArgumentNullException(nameof(semaphore), $"{nameof(semaphore)} cannot be null.");
+                _semaphore = semaphore ?? throw new ArgumentNullException(nameof(semaphore));
             }
 
             #region IDisposable Members

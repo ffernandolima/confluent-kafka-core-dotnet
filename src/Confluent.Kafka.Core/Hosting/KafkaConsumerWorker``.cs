@@ -42,7 +42,7 @@ namespace Confluent.Kafka.Core.Hosting
         {
             if (builder is null)
             {
-                throw new ArgumentNullException(nameof(builder), $"{nameof(builder)} cannot be null.");
+                throw new ArgumentNullException(nameof(builder));
             }
 
             var options = builder.ToOptions();

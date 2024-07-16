@@ -22,8 +22,8 @@ namespace Confluent.Kafka.Core.Hosting.Internal
         public BackgroundWorkItem(object messageId, TaskActivity taskActivity, ConsumeResult<TKey, TValue> consumeResult)
         {
             MessageId = messageId;
-            TaskActivity = taskActivity ?? throw new ArgumentNullException(nameof(taskActivity), $"{nameof(taskActivity)} cannot be null.");
-            ConsumeResult = consumeResult ?? throw new ArgumentNullException(nameof(consumeResult), $"{nameof(consumeResult)} cannot be null.");
+            TaskActivity = taskActivity ?? throw new ArgumentNullException(nameof(taskActivity));
+            ConsumeResult = consumeResult ?? throw new ArgumentNullException(nameof(consumeResult));
         }
 
         public async Task<Exception> GetExceptionAsync()

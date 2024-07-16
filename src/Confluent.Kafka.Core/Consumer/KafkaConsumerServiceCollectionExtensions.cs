@@ -18,12 +18,12 @@ namespace Microsoft.Extensions.DependencyInjection
         {
             if (services is null)
             {
-                throw new ArgumentNullException(nameof(services), $"{nameof(services)} cannot be null.");
+                throw new ArgumentNullException(nameof(services));
             }
 
             if (configureConsumer is null)
             {
-                throw new ArgumentNullException(nameof(configureConsumer), $"{nameof(configureConsumer)} cannot be null.");
+                throw new ArgumentNullException(nameof(configureConsumer));
             }
 
             services.AddKafkaDiagnostics();

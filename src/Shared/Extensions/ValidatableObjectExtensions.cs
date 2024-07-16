@@ -14,7 +14,7 @@ namespace Confluent.Kafka.Core.Internal
         {
             if (validatableObject is null)
             {
-                throw new ArgumentNullException(nameof(validatableObject), $"{nameof(validatableObject)} cannot be null.");
+                throw new ArgumentNullException(nameof(validatableObject));
             }
 
             var validationResults = new List<ValidationResult>();

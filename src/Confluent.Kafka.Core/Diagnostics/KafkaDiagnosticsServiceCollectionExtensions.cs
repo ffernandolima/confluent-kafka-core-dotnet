@@ -27,7 +27,7 @@ namespace Microsoft.Extensions.DependencyInjection
         {
             if (services is null)
             {
-                throw new ArgumentNullException(nameof(services), $"{nameof(services)} cannot be null.");
+                throw new ArgumentNullException(nameof(services));
             }
 
             foreach (var mapping in _mappings)

@@ -19,7 +19,7 @@ namespace Confluent.Kafka.Core.Retry.Polly.Internal
         {
             if (options is null)
             {
-                throw new ArgumentNullException(nameof(options), $"{nameof(options)} cannot be null.");
+                throw new ArgumentNullException(nameof(options));
             }
 
             options.ValidateAndThrow<PollyRetryHandlerOptionsException>();
@@ -36,7 +36,7 @@ namespace Confluent.Kafka.Core.Retry.Polly.Internal
         {
             if (executeAction is null)
             {
-                throw new ArgumentNullException(nameof(executeAction), $"{nameof(executeAction)} cannot be null.");
+                throw new ArgumentNullException(nameof(executeAction));
             }
 
             _policyBuilder
@@ -51,7 +51,7 @@ namespace Confluent.Kafka.Core.Retry.Polly.Internal
         {
             if (executeAction is null)
             {
-                throw new ArgumentNullException(nameof(executeAction), $"{nameof(executeAction)} cannot be null.");
+                throw new ArgumentNullException(nameof(executeAction));
             }
 
             await _policyBuilder

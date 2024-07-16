@@ -8,7 +8,7 @@ namespace Confluent.Kafka.Core.Models.Internal
         {
             if (message is null)
             {
-                throw new ArgumentNullException(nameof(message), $"{nameof(message)} cannot be null.");
+                throw new ArgumentNullException(nameof(message));
             }
 
             message.Headers ??= [];
@@ -23,7 +23,7 @@ namespace Confluent.Kafka.Core.Models.Internal
         {
             if (message is null)
             {
-                throw new ArgumentNullException(nameof(message), $"{nameof(message)} cannot be null.");
+                throw new ArgumentNullException(nameof(message));
             }
 
             var messageId = handler?.Invoke(message.Value);

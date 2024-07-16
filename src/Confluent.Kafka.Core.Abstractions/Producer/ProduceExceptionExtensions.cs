@@ -15,7 +15,7 @@ namespace Confluent.Kafka.Core.Producer
         {
             if (produceException is null)
             {
-                throw new ArgumentNullException(nameof(produceException), $"{nameof(produceException)} cannot be null.");
+                throw new ArgumentNullException(nameof(produceException));
             }
 
             var isSerializationException = SerializationCodes.Contains(produceException.Error!.Code);

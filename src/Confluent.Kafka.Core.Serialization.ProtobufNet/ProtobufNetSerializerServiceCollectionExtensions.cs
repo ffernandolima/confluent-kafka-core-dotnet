@@ -16,7 +16,7 @@ namespace Microsoft.Extensions.DependencyInjection
         {
             if (services is null)
             {
-                throw new ArgumentNullException(nameof(services), $"{nameof(services)} cannot be null.");
+                throw new ArgumentNullException(nameof(services));
             }
 
             var serviceKey = serializerKey ?? ProtobufNetSerializerConstants.ProtobufNetSerializerKey;

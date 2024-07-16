@@ -30,12 +30,12 @@ namespace Confluent.Kafka.Core.Idempotency.Redis.Internal
         {
             if (multiplexer is null)
             {
-                throw new ArgumentNullException(nameof(multiplexer), $"{nameof(multiplexer)} cannot be null.");
+                throw new ArgumentNullException(nameof(multiplexer));
             }
 
             if (options is null)
             {
-                throw new ArgumentNullException(nameof(options), $"{nameof(options)} cannot be null.");
+                throw new ArgumentNullException(nameof(options));
             }
 
             options.ValidateAndThrow<RedisIdempotencyHandlerOptionsException<TKey, TValue>>();

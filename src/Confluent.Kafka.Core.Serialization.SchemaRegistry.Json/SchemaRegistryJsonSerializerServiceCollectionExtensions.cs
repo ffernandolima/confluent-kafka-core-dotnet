@@ -17,12 +17,12 @@ namespace Microsoft.Extensions.DependencyInjection
         {
             if (services is null)
             {
-                throw new ArgumentNullException(nameof(services), $"{nameof(services)} cannot be null.");
+                throw new ArgumentNullException(nameof(services));
             }
 
             if (configureSerializer is null)
             {
-                throw new ArgumentNullException(nameof(configureSerializer), $"{nameof(configureSerializer)} cannot be null.");
+                throw new ArgumentNullException(nameof(configureSerializer));
             }
 
             var serviceKey = serializerKey ?? SchemaRegistryJsonSerializerConstants.SchemaRegistryJsonSerializerKey;

@@ -23,7 +23,7 @@ namespace Confluent.Kafka.Core.Threading.Internal
 
         public AsyncSemaphore(SemaphoreSlim semaphore)
         {
-            _semaphore = semaphore ?? throw new ArgumentNullException(nameof(semaphore), $"{nameof(semaphore)} cannot be null.");
+            _semaphore = semaphore ?? throw new ArgumentNullException(nameof(semaphore));
         }
 
         public Task WaitAsync(CancellationToken cancellationToken)

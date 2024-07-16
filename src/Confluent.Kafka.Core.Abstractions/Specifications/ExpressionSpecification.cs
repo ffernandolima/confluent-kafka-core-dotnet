@@ -13,7 +13,7 @@ namespace Confluent.Kafka.Core.Specifications
         {
             if (expression is null)
             {
-                throw new ArgumentNullException(nameof(expression), $"{nameof(expression)} cannot be null.");
+                throw new ArgumentNullException(nameof(expression));
             }
 
             _predicate = expression.Compile();

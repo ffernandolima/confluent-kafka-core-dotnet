@@ -97,7 +97,7 @@ namespace Confluent.Kafka.Core.Consumer.Internal
         {
             if (builder is null)
             {
-                throw new ArgumentNullException(nameof(builder), $"{nameof(builder)} cannot be null.");
+                throw new ArgumentNullException(nameof(builder));
             }
 
             var options = builder.ToOptions();
@@ -361,7 +361,7 @@ namespace Confluent.Kafka.Core.Consumer.Internal
 
             if (partition is null)
             {
-                throw new ArgumentNullException(nameof(partition), $"{nameof(partition)} cannot be null.");
+                throw new ArgumentNullException(nameof(partition));
             }
 
             _consumer.Assign(partition);
@@ -375,7 +375,7 @@ namespace Confluent.Kafka.Core.Consumer.Internal
 
             if (offset is null)
             {
-                throw new ArgumentNullException(nameof(offset), $"{nameof(offset)} cannot be null.");
+                throw new ArgumentNullException(nameof(offset));
             }
 
             _consumer.Assign(offset);
@@ -478,7 +478,7 @@ namespace Confluent.Kafka.Core.Consumer.Internal
 
             if (consumeResult is null)
             {
-                throw new ArgumentNullException(nameof(consumeResult), $"{nameof(consumeResult)} cannot be null.");
+                throw new ArgumentNullException(nameof(consumeResult));
             }
 
             _consumer.StoreOffset(consumeResult);
@@ -490,7 +490,7 @@ namespace Confluent.Kafka.Core.Consumer.Internal
 
             if (offset is null)
             {
-                throw new ArgumentNullException(nameof(offset), $"{nameof(offset)} cannot be null.");
+                throw new ArgumentNullException(nameof(offset));
             }
 
             _consumer.StoreOffset(offset);
@@ -537,7 +537,7 @@ namespace Confluent.Kafka.Core.Consumer.Internal
 
             if (consumeResult is null)
             {
-                throw new ArgumentNullException(nameof(consumeResult), $"{nameof(consumeResult)} cannot be null.");
+                throw new ArgumentNullException(nameof(consumeResult));
             }
 
             _consumer.Commit(consumeResult);
@@ -584,7 +584,7 @@ namespace Confluent.Kafka.Core.Consumer.Internal
 
             if (offset is null)
             {
-                throw new ArgumentNullException(nameof(offset), $"{nameof(offset)} cannot be null.");
+                throw new ArgumentNullException(nameof(offset));
             }
 
             _consumer.Seek(offset);
@@ -646,7 +646,7 @@ namespace Confluent.Kafka.Core.Consumer.Internal
 
             if (partition is null)
             {
-                throw new ArgumentNullException(nameof(partition), $"{nameof(partition)} cannot be null.");
+                throw new ArgumentNullException(nameof(partition));
             }
 
             var offsetPosition = _consumer.Position(partition);
@@ -676,7 +676,7 @@ namespace Confluent.Kafka.Core.Consumer.Internal
 
             if (partition is null)
             {
-                throw new ArgumentNullException(nameof(partition), $"{nameof(partition)} cannot be null.");
+                throw new ArgumentNullException(nameof(partition));
             }
 
             var watermarkOffsets = _consumer.GetWatermarkOffsets(partition);
@@ -690,7 +690,7 @@ namespace Confluent.Kafka.Core.Consumer.Internal
 
             if (partition is null)
             {
-                throw new ArgumentNullException(nameof(partition), $"{nameof(partition)} cannot be null.");
+                throw new ArgumentNullException(nameof(partition));
             }
 
             if (timeout == Timeout.InfiniteTimeSpan)

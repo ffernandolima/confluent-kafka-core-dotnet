@@ -19,7 +19,7 @@ namespace Confluent.Kafka.Core.Consumer
         {
             if (consumerBuilder is null)
             {
-                throw new ArgumentNullException(nameof(consumerBuilder), $"{nameof(consumerBuilder)} cannot be null.");
+                throw new ArgumentNullException(nameof(consumerBuilder));
             }
 
             var handlerFactory = KafkaConsumerHandlerFactory.Instance.GetOrCreateHandlerFactory<TKey, TValue>(
@@ -41,7 +41,7 @@ namespace Confluent.Kafka.Core.Consumer
         {
             if (consumerBuilder is null)
             {
-                throw new ArgumentNullException(nameof(consumerBuilder), $"{nameof(consumerBuilder)} cannot be null.");
+                throw new ArgumentNullException(nameof(consumerBuilder));
             }
 
             var deadLetterProducer = KafkaProducerFactory.Instance.GetOrCreateProducer(
@@ -62,7 +62,7 @@ namespace Confluent.Kafka.Core.Consumer
         {
             if (consumerBuilder is null)
             {
-                throw new ArgumentNullException(nameof(consumerBuilder), $"{nameof(consumerBuilder)} cannot be null.");
+                throw new ArgumentNullException(nameof(consumerBuilder));
             }
 
             var interceptorType = typeof(IKafkaConsumerInterceptor<TKey, TValue>);

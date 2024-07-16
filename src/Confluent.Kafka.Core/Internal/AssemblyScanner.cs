@@ -11,12 +11,12 @@ namespace Confluent.Kafka.Core.Internal
         {
             if (assemblies is null)
             {
-                throw new ArgumentNullException(nameof(assemblies), $"{nameof(assemblies)} cannot be null.");
+                throw new ArgumentNullException(nameof(assemblies));
             }
 
             if (predicate is null)
             {
-                throw new ArgumentNullException(nameof(predicate), $"{nameof(predicate)} cannot be null.");
+                throw new ArgumentNullException(nameof(predicate));
             }
 
             var assemblyTypes = AppDomain.CurrentDomain

@@ -42,7 +42,7 @@ namespace Confluent.Kafka.Core.Internal
         {
             if (sourceType is null)
             {
-                throw new ArgumentNullException(nameof(sourceType), $"{nameof(sourceType)} cannot be null.");
+                throw new ArgumentNullException(nameof(sourceType));
             }
 
             if (sourceType.IsGenericType)
@@ -71,7 +71,7 @@ namespace Confluent.Kafka.Core.Internal
         {
             if (sourceType is null)
             {
-                throw new ArgumentNullException(nameof(sourceType), $"{nameof(sourceType)} cannot be null.");
+                throw new ArgumentNullException(nameof(sourceType));
             }
 
             if (!sourceType.IsValueType)

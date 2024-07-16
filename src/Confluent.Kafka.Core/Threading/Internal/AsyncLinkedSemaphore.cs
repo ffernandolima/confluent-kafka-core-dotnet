@@ -14,7 +14,7 @@ namespace Confluent.Kafka.Core.Threading.Internal
 
         private AsyncLinkedSemaphore(IReadOnlyList<IAsyncSemaphore> semaphores)
         {
-            _semaphores = semaphores ?? throw new ArgumentNullException(nameof(semaphores), $"{nameof(semaphores)} cannot be null.");
+            _semaphores = semaphores ?? throw new ArgumentNullException(nameof(semaphores));
         }
 
         public async Task WaitAsync(CancellationToken cancellationToken)

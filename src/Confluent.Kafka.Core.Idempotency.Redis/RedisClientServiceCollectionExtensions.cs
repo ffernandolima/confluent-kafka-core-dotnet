@@ -16,12 +16,12 @@ namespace Microsoft.Extensions.DependencyInjection
         {
             if (services is null)
             {
-                throw new ArgumentNullException(nameof(services), $"{nameof(services)} cannot be null.");
+                throw new ArgumentNullException(nameof(services));
             }
 
             if (configureOptions is null)
             {
-                throw new ArgumentNullException(nameof(configureOptions), $"{nameof(configureOptions)} cannot be null.");
+                throw new ArgumentNullException(nameof(configureOptions));
             }
 
             services.TryAddKeyedSingleton(

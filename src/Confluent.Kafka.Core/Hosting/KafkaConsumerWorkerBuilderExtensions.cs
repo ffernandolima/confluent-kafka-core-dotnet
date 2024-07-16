@@ -19,7 +19,7 @@ namespace Confluent.Kafka.Core.Hosting
         {
             if (workerBuilder is null)
             {
-                throw new ArgumentNullException(nameof(workerBuilder), $"{nameof(workerBuilder)} cannot be null.");
+                throw new ArgumentNullException(nameof(workerBuilder));
             }
 
             var consumer = KafkaConsumerFactory.Instance.GetOrCreateConsumer<TKey, TValue>(
@@ -61,7 +61,7 @@ namespace Confluent.Kafka.Core.Hosting
         {
             if (workerBuilder is null)
             {
-                throw new ArgumentNullException(nameof(workerBuilder), $"{nameof(workerBuilder)} cannot be null.");
+                throw new ArgumentNullException(nameof(workerBuilder));
             }
 
             var retryProducer = KafkaProducerFactory.Instance.GetOrCreateProducer(
@@ -83,7 +83,7 @@ namespace Confluent.Kafka.Core.Hosting
         {
             if (workerBuilder is null)
             {
-                throw new ArgumentNullException(nameof(workerBuilder), $"{nameof(workerBuilder)} cannot be null.");
+                throw new ArgumentNullException(nameof(workerBuilder));
             }
 
             var deadLetterProducer = KafkaProducerFactory.Instance.GetOrCreateProducer(
@@ -104,7 +104,7 @@ namespace Confluent.Kafka.Core.Hosting
         {
             if (workerBuilder is null)
             {
-                throw new ArgumentNullException(nameof(workerBuilder), $"{nameof(workerBuilder)} cannot be null.");
+                throw new ArgumentNullException(nameof(workerBuilder));
             }
 
             var consumeResultHandlerType = typeof(IConsumeResultHandler<TKey, TValue>);

@@ -17,7 +17,7 @@ namespace Confluent.Kafka.Core.Consumer.Internal
         {
             if (options is null)
             {
-                throw new ArgumentNullException(nameof(options), $"{nameof(options)} cannot be null.");
+                throw new ArgumentNullException(nameof(options));
             }
 
             _logger = loggerFactory.CreateLogger(options.EnableLogging, DefaultConsumerHandlerFactoryType);

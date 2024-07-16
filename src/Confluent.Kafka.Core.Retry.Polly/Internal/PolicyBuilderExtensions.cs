@@ -16,12 +16,12 @@ namespace Confluent.Kafka.Core.Retry.Polly.Internal
         {
             if (policyBuilder is null)
             {
-                throw new ArgumentNullException(nameof(policyBuilder), $"{nameof(policyBuilder)} cannot be null.");
+                throw new ArgumentNullException(nameof(policyBuilder));
             }
 
             if (onRetry is null)
             {
-                throw new ArgumentNullException(nameof(onRetry), $"{nameof(onRetry)} cannot be null.");
+                throw new ArgumentNullException(nameof(onRetry));
             }
 
             return sleepDurations is null
@@ -38,12 +38,12 @@ namespace Confluent.Kafka.Core.Retry.Polly.Internal
         {
             if (policyBuilder is null)
             {
-                throw new ArgumentNullException(nameof(policyBuilder), $"{nameof(policyBuilder)} cannot be null.");
+                throw new ArgumentNullException(nameof(policyBuilder));
             }
 
             if (onRetry is null)
             {
-                throw new ArgumentNullException(nameof(onRetry), $"{nameof(onRetry)} cannot be null.");
+                throw new ArgumentNullException(nameof(onRetry));
             }
 
             return sleepDurations is null

@@ -17,12 +17,12 @@ namespace Microsoft.Extensions.DependencyInjection
         {
             if (services is null)
             {
-                throw new ArgumentNullException(nameof(services), $"{nameof(services)} cannot be null.");
+                throw new ArgumentNullException(nameof(services));
             }
 
             if (configureWorker is null)
             {
-                throw new ArgumentNullException(nameof(configureWorker), $"{nameof(configureWorker)} cannot be null.");
+                throw new ArgumentNullException(nameof(configureWorker));
             }
 
             services.TryAddKeyedSingleton(workerKey, (serviceProvider, _) =>

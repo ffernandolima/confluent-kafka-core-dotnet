@@ -9,7 +9,7 @@ namespace Confluent.Kafka.Core.Internal
         {
             if (exception is null)
             {
-                throw new ArgumentNullException(nameof(exception), $"{nameof(exception)} cannot be null.");
+                throw new ArgumentNullException(nameof(exception));
             }
 
             var exceptions = new List<Exception>();

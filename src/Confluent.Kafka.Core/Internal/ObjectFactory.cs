@@ -17,7 +17,7 @@ namespace Confluent.Kafka.Core.Internal
         {
             if (objectType is null)
             {
-                throw new ArgumentNullException(nameof(objectType), $"{nameof(objectType)} cannot be null.");
+                throw new ArgumentNullException(nameof(objectType));
             }
 
             try

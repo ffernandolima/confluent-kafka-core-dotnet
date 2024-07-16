@@ -12,7 +12,7 @@ namespace Confluent.Kafka.Core.Serialization.ProtobufNet.Internal
 
         public ProtobufNetSerializer(ProtobufNetSerializerOptions options)
         {
-            _options = options ?? throw new ArgumentNullException(nameof(options), $"{nameof(options)} cannot be null.");
+            _options = options ?? throw new ArgumentNullException(nameof(options));
 
             TryMapAutomatically();
         }

@@ -16,7 +16,7 @@ namespace Microsoft.Extensions.DependencyInjection
         {
             if (services is null)
             {
-                throw new ArgumentNullException(nameof(services), $"{nameof(services)} cannot be null.");
+                throw new ArgumentNullException(nameof(services));
             }
 
             services.AddKafkaConsumerHandlerFactory(serviceProvider =>
@@ -41,12 +41,12 @@ namespace Microsoft.Extensions.DependencyInjection
         {
             if (services is null)
             {
-                throw new ArgumentNullException(nameof(services), $"{nameof(services)} cannot be null.");
+                throw new ArgumentNullException(nameof(services));
             }
 
             if (implementationFactory is null)
             {
-                throw new ArgumentNullException(nameof(implementationFactory), $"{nameof(implementationFactory)} cannot be null.");
+                throw new ArgumentNullException(nameof(implementationFactory));
             }
 
             services.TryAddKeyedSingleton(consumerKey, (serviceProvider, _) => implementationFactory.Invoke(serviceProvider));

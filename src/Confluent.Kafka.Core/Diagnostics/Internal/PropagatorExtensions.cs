@@ -10,7 +10,7 @@ namespace Confluent.Kafka.Core.Diagnostics.Internal
         {
             if (propagator is null)
             {
-                throw new ArgumentNullException(nameof(propagator), $"{nameof(propagator)} cannot be null.");
+                throw new ArgumentNullException(nameof(propagator));
             }
 
             propagator.Inject(
@@ -30,7 +30,7 @@ namespace Confluent.Kafka.Core.Diagnostics.Internal
         {
             if (propagator is null)
             {
-                throw new ArgumentNullException(nameof(propagator), $"{nameof(propagator)} cannot be null.");
+                throw new ArgumentNullException(nameof(propagator));
             }
 
             propagator.ExtractTraceIdAndState(

@@ -42,7 +42,7 @@ namespace Confluent.Kafka.Core.Models.Internal
 
         public KafkaHeaders(Headers headers, Encoding encoding = null)
         {
-            _headers = headers ?? throw new ArgumentNullException(nameof(headers), $"{nameof(headers)} cannot be null.");
+            _headers = headers ?? throw new ArgumentNullException(nameof(headers));
             _encoding = encoding ?? EncodingFactory.Instance.CreateDefault();
         }
 
@@ -82,8 +82,7 @@ namespace Confluent.Kafka.Core.Models.Internal
         {
             if (array is null)
             {
-                throw new ArgumentNullException(
-                    nameof(array), $"{nameof(array)} cannot be null.");
+                throw new ArgumentNullException(nameof(array));
             }
 
             if (arrayIndex < 0)

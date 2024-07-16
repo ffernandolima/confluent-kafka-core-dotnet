@@ -11,7 +11,7 @@ namespace Confluent.Kafka.Core.Models.Internal
         {
             if (headers is null)
             {
-                throw new ArgumentNullException(nameof(headers), $"{nameof(headers)} cannot be null.");
+                throw new ArgumentNullException(nameof(headers));
             }
 
             var kafkaHeaders = new KafkaHeaders(headers, encoding);

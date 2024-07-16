@@ -17,7 +17,7 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Avro.Internal
         {
             if (schemaRegistryClient is null)
             {
-                throw new ArgumentNullException(nameof(schemaRegistryClient), $"{nameof(schemaRegistryClient)} cannot be null.");
+                throw new ArgumentNullException(nameof(schemaRegistryClient));
             }
 
             _serializer = new AvroSerializer<T>(schemaRegistryClient, serializerConfig);

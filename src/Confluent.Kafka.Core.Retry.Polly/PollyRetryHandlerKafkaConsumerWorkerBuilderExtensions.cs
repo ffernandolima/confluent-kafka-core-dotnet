@@ -13,7 +13,7 @@ namespace Confluent.Kafka.Core.Retry.Polly
         {
             if (builder is null)
             {
-                throw new ArgumentNullException(nameof(builder), $"{nameof(builder)} cannot be null.");
+                throw new ArgumentNullException(nameof(builder));
             }
 
             var retryHandler = PollyRetryHandlerFactory.Instance.GetOrCreateRetryHandler<TKey, TValue>(

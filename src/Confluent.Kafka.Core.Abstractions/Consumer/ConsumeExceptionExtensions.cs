@@ -15,7 +15,7 @@ namespace Confluent.Kafka.Core.Consumer
         {
             if (consumeException is null)
             {
-                throw new ArgumentNullException(nameof(consumeException), $"{nameof(consumeException)} cannot be null.");
+                throw new ArgumentNullException(nameof(consumeException));
             }
 
             var isDeserializationException = DeserializationCodes.Contains(consumeException.Error!.Code);
