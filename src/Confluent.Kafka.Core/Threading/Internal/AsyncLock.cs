@@ -92,7 +92,7 @@ namespace Confluent.Kafka.Core.Threading.Internal
             {
                 if (!_disposed)
                 {
-                    _semaphore.Release();
+                    _semaphore?.Release();
 
                     _disposed = true;
                 }
