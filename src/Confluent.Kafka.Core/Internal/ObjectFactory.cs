@@ -6,7 +6,7 @@ namespace Confluent.Kafka.Core.Internal
     internal sealed class ObjectFactory
     {
         private static readonly Lazy<ObjectFactory> Factory = new(
-         () => new ObjectFactory(), isThreadSafe: true);
+            () => new ObjectFactory(), isThreadSafe: true);
 
         public static ObjectFactory Instance => Factory.Value;
 
