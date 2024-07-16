@@ -28,6 +28,8 @@ namespace Confluent.Kafka.Core.Hosting
 
         bool EnableDeadLetterTopic { get; }
 
+        bool EnableMessageOrderGuarantee { get; }
+
         TimeSpan EmptyTopicDelay { get; }
 
         TimeSpan NotEmptyTopicDelay { get; }

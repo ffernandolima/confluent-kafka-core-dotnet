@@ -47,6 +47,8 @@ namespace Confluent.Kafka.Core.Hosting
 
         IKafkaConsumerWorkerBuilder<TKey, TValue> WithConsumeResultErrorHandler(IConsumeResultErrorHandler<TKey, TValue> consumeResultErrorHandler);
 
+        IKafkaConsumerWorkerBuilder<TKey, TValue> WithMessageOrderGuaranteeKeyHandler(Func<ConsumeResult<TKey, TValue>, object> messageOrderGuaranteeKeyHandler);
+
         IKafkaConsumerWorkerBuilder<TKey, TValue> WithWorkerConfiguration(Action<IKafkaConsumerWorkerConfigBuilder> configureWorker);
 
         IKafkaConsumerWorker<TKey, TValue> Build();

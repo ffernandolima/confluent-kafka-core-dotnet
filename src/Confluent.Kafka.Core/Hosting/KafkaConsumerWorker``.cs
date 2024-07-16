@@ -6,6 +6,7 @@ using Confluent.Kafka.Core.Models;
 using Confluent.Kafka.Core.Models.Internal;
 using Confluent.Kafka.Core.Producer.Internal;
 using Confluent.Kafka.Core.Retry.Internal;
+using Confluent.Kafka.Core.Threading.Internal;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
@@ -24,7 +25,7 @@ namespace Confluent.Kafka.Core.Hosting
         private readonly IKafkaConsumerWorkerOptions<TKey, TValue> _options;
 
         private readonly string _serviceName;
-        private readonly SemaphoreSlim _semaphore;
+        private readonly AsyncLock _asyncLock;
         private readonly ConcurrentBag<Exception> _exceptions;
         private readonly ConcurrentQueue<BackgroundWorkItem<TKey, TValue>> _workItems;
 
@@ -48,7 +49,7 @@ namespace Confluent.Kafka.Core.Hosting
 
             _logger = options.LoggerFactory.CreateLogger(options.WorkerConfig!.EnableLogging, options.WorkerType);
             _serviceName = options.WorkerType!.ExtractTypeName();
-            _semaphore = new SemaphoreSlim(options.WorkerConfig!.MaxDegreeOfParallelism, options.WorkerConfig!.MaxDegreeOfParallelism);
+            _asyncLock = AsyncLockFactory.Instance.CreateAsyncLock(options.ToLockOptions());
             _exceptions = [];
             _workItems = [];
             _options = options;
@@ -144,7 +145,7 @@ namespace Confluent.Kafka.Core.Hosting
             }
         }
 
-        private bool HasAvailableSlots() => _semaphore.CurrentCount > 0;
+        private bool HasAvailableSlots() => _asyncLock.CurrentCount > 0;
 
         private bool ExecuteInternal(CancellationToken cancellationToken)
         {
@@ -161,7 +162,7 @@ namespace Confluent.Kafka.Core.Hosting
 
             try
             {
-                consumeResults = _options.Consumer!.ConsumeBatch(_semaphore.CurrentCount);
+                consumeResults = _options.Consumer!.ConsumeBatch(_asyncLock.CurrentCount);
             }
             catch (Exception ex)
             {
@@ -318,62 +319,57 @@ namespace Confluent.Kafka.Core.Hosting
 
                     activitySetter?.Invoke(activity);
 
-                    await _semaphore.WaitAsync(cancellationToken).ConfigureAwait(false);
+                    var lockContext = AsyncLockContext.Create(ConsumeResultConstants.ConsumeResult, consumeResult);
+
+                    using var releaser = await _asyncLock.LockAsync(lockContext, cancellationToken).ConfigureAwait(false);
 
                     _logger.LogCurrentThreadBlocked(messageId, stopwatch.Elapsed);
 
-                    try
+                    if (_options.WorkerConfig!.EnableIdempotency)
                     {
-                        if (_options.WorkerConfig!.EnableIdempotency)
+                        _logger.LogIdempotencyEnabled(messageId);
+
+                        if (ShouldBypassIdempotency(consumeResult))
                         {
-                            _logger.LogIdempotencyEnabled(messageId);
-
-                            if (ShouldBypassIdempotency(consumeResult))
-                            {
-                                _logger.LogIdempotencyBypassed(messageId);
-                            }
-                            else if (!await _options.IdempotencyHandler!.TryHandleAsync(consumeResult.Message!.Value, cancellationToken)
-                                .ConfigureAwait(false))
-                            {
-                                _logger.LogMessageAlreadyProcessed(messageId);
-
-                                return;
-                            }
+                            _logger.LogIdempotencyBypassed(messageId);
                         }
-                        else
+                        else if (!await _options.IdempotencyHandler!.TryHandleAsync(consumeResult.Message!.Value, cancellationToken)
+                            .ConfigureAwait(false))
                         {
-                            _logger.LogIdempotencyDisabled(messageId);
+                            _logger.LogMessageAlreadyProcessed(messageId);
 
-                            if (!ShouldHandleFetchedConsumeResult(consumeResult))
-                            {
-                                _logger.LogMessageProcessingSkip(messageId);
-
-                                return;
-                            }
-                        }
-
-                        if (_options.WorkerConfig!.EnableRetryOnFailure)
-                        {
-                            _logger.LogRetryStrategyEnabled(messageId);
-
-                            await _options.RetryHandler!.HandleAsync(
-                                executeAction: async cancellationToken =>
-                                    await HandleFetchedConsumeResultAsync(consumeResult, cancellationToken).ConfigureAwait(false),
-                                cancellationToken: cancellationToken,
-                                onRetryAction: (exception, timeSpan, retryAttempt) =>
-                                    _logger.LogMessageProcessingRetryFailure(exception, messageId, retryAttempt))
-                            .ConfigureAwait(false);
-                        }
-                        else
-                        {
-                            _logger.LogRetryStrategyDisabled(messageId);
-
-                            await HandleFetchedConsumeResultAsync(consumeResult, cancellationToken).ConfigureAwait(false);
+                            return;
                         }
                     }
-                    finally
+                    else
                     {
-                        _semaphore.Release();
+                        _logger.LogIdempotencyDisabled(messageId);
+
+                        if (!ShouldHandleFetchedConsumeResult(consumeResult))
+                        {
+                            _logger.LogMessageProcessingSkip(messageId);
+
+                            return;
+                        }
+                    }
+
+                    if (_options.WorkerConfig!.EnableRetryOnFailure)
+                    {
+                        _logger.LogRetryStrategyEnabled(messageId);
+
+                        await _options.RetryHandler!.HandleAsync(
+                            executeAction: async cancellationToken =>
+                                await HandleFetchedConsumeResultAsync(consumeResult, cancellationToken).ConfigureAwait(false),
+                            cancellationToken: cancellationToken,
+                            onRetryAction: (exception, timeSpan, retryAttempt) =>
+                                _logger.LogMessageProcessingRetryFailure(exception, messageId, retryAttempt))
+                        .ConfigureAwait(false);
+                    }
+                    else
+                    {
+                        _logger.LogRetryStrategyDisabled(messageId);
+
+                        await HandleFetchedConsumeResultAsync(consumeResult, cancellationToken).ConfigureAwait(false);
                     }
 
                     async Task HandleFetchedConsumeResultAsync(ConsumeResult<TKey, TValue> consumeResult, CancellationToken cancellationToken)
@@ -687,7 +683,7 @@ namespace Confluent.Kafka.Core.Hosting
                 _options.IdempotencyHandler,
                 _options.RetryProducer,
                 _options.DeadLetterProducer,
-                _semaphore
+                _asyncLock
             };
 
             foreach (var disposable in disposables)

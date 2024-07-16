@@ -27,11 +27,12 @@ namespace Confluent.Kafka.Core.Hosting
         public string[] RetryTopicExceptionTypeFilters { get; set; }
         public Func<Exception, bool> RetryTopicExceptionFilter { get; set; }
         public bool EnableDeadLetterTopic { get; set; }
+        public bool EnableMessageOrderGuarantee { get; set; }
         public TimeSpan EmptyTopicDelay { get; set; } = new TimeSpan(0, 0, 10);
         public TimeSpan NotEmptyTopicDelay { get; set; } = new TimeSpan(0, 0, 1);
         public TimeSpan UnavailableProcessingSlotsDelay { get; set; } = new TimeSpan(0, 0, 2);
         public TimeSpan PendingProcessingDelay { get; set; } = new TimeSpan(0, 0, 1);
-        public RetrySpecification RetryTopicSpecification => 
+        public RetrySpecification RetryTopicSpecification =>
             _retrySpecification ??= RetrySpecification.Create(RetryTopicExceptionFilter, RetryTopicExceptionTypeFilters);
 
         #endregion IKafkaConsumerWorkerConfig Members
@@ -85,6 +86,15 @@ namespace Confluent.Kafka.Core.Hosting
                     yield return new ValidationResult(
                         $"{KafkaProducerConstants.DeadLetterProducer} cannot be null when {nameof(workerConfig.EnableDeadLetterTopic)} is enabled.",
                         [KafkaProducerConstants.DeadLetterProducer, nameof(workerConfig.EnableDeadLetterTopic)]);
+                }
+
+                if (workerConfig.EnableMessageOrderGuarantee &&
+                    validationContext.Items.TryGetValue(MessageOrderGuaranteeConstants.MessageOrderGuaranteeKeyHandler, out object messageOrderGuaranteeKeyHandler) &&
+                    messageOrderGuaranteeKeyHandler is null)
+                {
+                    yield return new ValidationResult(
+                        $"{MessageOrderGuaranteeConstants.MessageOrderGuaranteeKeyHandler} cannot be null when {nameof(workerConfig.EnableMessageOrderGuarantee)} is enabled.",
+                        [MessageOrderGuaranteeConstants.MessageOrderGuaranteeKeyHandler, nameof(workerConfig.EnableMessageOrderGuarantee)]);
                 }
             }
 

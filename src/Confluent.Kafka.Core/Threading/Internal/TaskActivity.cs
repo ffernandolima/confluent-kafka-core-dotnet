@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.Threading.Tasks;
 
-namespace Confluent.Kafka.Core.Hosting.Internal
+namespace Confluent.Kafka.Core.Threading.Internal
 {
     internal sealed class TaskActivity
     {

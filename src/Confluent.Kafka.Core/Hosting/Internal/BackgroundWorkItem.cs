@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Confluent.Kafka.Core.Threading.Internal;
+using System;
 using System.Threading.Tasks;
 
 namespace Confluent.Kafka.Core.Hosting.Internal

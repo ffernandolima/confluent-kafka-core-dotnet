@@ -37,6 +37,8 @@ namespace Confluent.Kafka.Core.Hosting
 
         IConsumeResultErrorHandler<TKey, TValue> ConsumeResultErrorHandler { get; }
 
+        Func<ConsumeResult<TKey, TValue>, object> MessageOrderGuaranteeKeyHandler { get; }
+
         ISerializer<TKey> KeySerializer { get; }
 
         ISerializer<TValue> ValueSerializer { get; }

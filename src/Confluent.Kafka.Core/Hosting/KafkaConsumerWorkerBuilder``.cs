@@ -44,6 +44,7 @@ namespace Confluent.Kafka.Core.Hosting.Internal
         private IKafkaProducer<byte[], KafkaMetadataMessage> _deadLetterProducer;
         private IEnumerable<IConsumeResultHandler<TKey, TValue>> _consumeResultHandlers;
         private IConsumeResultErrorHandler<TKey, TValue> _consumeResultErrorHandler;
+        private Func<ConsumeResult<TKey, TValue>, object> _messageOrderGuaranteeKeyHandler;
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private IKafkaConsumerWorker<TKey, TValue> _builtWorker;
@@ -83,7 +84,8 @@ namespace Confluent.Kafka.Core.Hosting.Internal
                 RetryProducer = _retryProducer,
                 DeadLetterProducer = _deadLetterProducer,
                 ConsumeResultHandlers = _consumeResultHandlers!.ToArray(),
-                ConsumeResultErrorHandler = _consumeResultErrorHandler
+                ConsumeResultErrorHandler = _consumeResultErrorHandler,
+                MessageOrderGuaranteeKeyHandler = _messageOrderGuaranteeKeyHandler
             };
 
             return _builtOptions;
@@ -244,6 +246,17 @@ namespace Confluent.Kafka.Core.Hosting.Internal
             return this;
         }
 
+        public IKafkaConsumerWorkerBuilder<TKey, TValue> WithMessageOrderGuaranteeKeyHandler(Func<ConsumeResult<TKey, TValue>, object> messageOrderGuaranteeKeyHandler)
+        {
+            if (_messageOrderGuaranteeKeyHandler is not null)
+            {
+                throw new InvalidOperationException("Message order guarantee key handler may not be specified more than once.");
+            }
+
+            _messageOrderGuaranteeKeyHandler = messageOrderGuaranteeKeyHandler;
+            return this;
+        }
+
         public IKafkaConsumerWorkerBuilder<TKey, TValue> WithWorkerConfiguration(Action<IKafkaConsumerWorkerConfigBuilder> configureWorker)
         {
             if (_workerConfigured)
@@ -268,6 +281,7 @@ namespace Confluent.Kafka.Core.Hosting.Internal
             WorkerConfig.ValidateAndThrow<KafkaConsumerWorkerConfigException>(
                 new ValidationContext(WorkerConfig, new Dictionary<object, object>
                 {
+                    [MessageOrderGuaranteeConstants.MessageOrderGuaranteeKeyHandler] = _messageOrderGuaranteeKeyHandler,
                     [KafkaIdempotencyConstants.IdempotencyHandler] = _idempotencyHandler,
                     [KafkaProducerConstants.DeadLetterProducer] = _deadLetterProducer,
                     [KafkaProducerConstants.RetryProducer] = _retryProducer,
