@@ -22,8 +22,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Builders", "Builders", "{98
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Extensions", "Extensions", "{DB727559-4041-4073-95BC-829910973C08}"
 	ProjectSection(SolutionItems) = preProject
-		src\Shared\Extensions\DictionaryExtensions.cs = src\Shared\Extensions\DictionaryExtensions.cs
-		src\Shared\Extensions\ExceptionExtensions.cs = src\Shared\Extensions\ExceptionExtensions.cs
 		src\Shared\Extensions\LoggerFactoryExtensions.cs = src\Shared\Extensions\LoggerFactoryExtensions.cs
 		src\Shared\Extensions\TaskExtensions.cs = src\Shared\Extensions\TaskExtensions.cs
 		src\Shared\Extensions\TypeExtensions.cs = src\Shared\Extensions\TypeExtensions.cs

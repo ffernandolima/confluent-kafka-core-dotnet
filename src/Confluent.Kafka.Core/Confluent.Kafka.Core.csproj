@@ -28,8 +28,6 @@
 	</ItemGroup>
 
 	<ItemGroup Label="Extensions">
-		<Compile Include="..\Shared\Extensions\DictionaryExtensions.cs"        Link="Internal\DictionaryExtensions.cs" />
-		<Compile Include="..\Shared\Extensions\ExceptionExtensions.cs"         Link="Internal\ExceptionExtensions.cs" />
 		<Compile Include="..\Shared\Extensions\LoggerFactoryExtensions.cs"     Link="Internal\LoggerFactoryExtensions.cs" />
 		<Compile Include="..\Shared\Extensions\TypeExtensions.cs"              Link="Internal\TypeExtensions.cs" />
 		<Compile Include="..\Shared\Extensions\ValidatableObjectExtensions.cs" Link="Internal\ValidatableObjectExtensions.cs" />
