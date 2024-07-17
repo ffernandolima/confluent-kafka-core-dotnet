@@ -113,7 +113,7 @@ namespace Confluent.Kafka.Core.Threading.Internal
                 {
                     _semaphore?.Dispose();
 
-                    if (_semaphores is not null && _semaphores.Count > 0)
+                    if (_semaphores is not null && !_semaphores.IsEmpty)
                     {
                         foreach (var semaphore in _semaphores.Values)
                         {

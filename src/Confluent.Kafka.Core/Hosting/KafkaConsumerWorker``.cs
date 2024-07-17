@@ -132,12 +132,7 @@ namespace Confluent.Kafka.Core.Hosting
             {
                 var delay = _options.WorkerConfig!.PendingProcessingDelay;
 
-#if NET8_0_OR_GREATER
                 while (!_workItems.IsEmpty || !_exceptions.IsEmpty)
-#else
-                while (_workItems.Any() || _exceptions.Any())
-#endif
-
                 {
                     try
                     {
@@ -198,12 +193,7 @@ namespace Confluent.Kafka.Core.Hosting
 
         private async Task HandleCompletedWorkItemsAsync()
         {
-#if NET8_0_OR_GREATER
             if (_workItems.IsEmpty)
-#else
-            if (!_workItems.Any())
-#endif
-
             {
                 return;
             }
@@ -300,11 +290,7 @@ namespace Confluent.Kafka.Core.Hosting
 
         private void HandleConsumptionExceptions()
         {
-#if NET8_0_OR_GREATER
             if (_exceptions.IsEmpty)
-#else
-            if (!_exceptions.Any())
-#endif
             {
                 return;
             }
