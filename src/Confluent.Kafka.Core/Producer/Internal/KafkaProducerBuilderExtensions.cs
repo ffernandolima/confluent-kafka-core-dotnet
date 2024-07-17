@@ -9,8 +9,9 @@ namespace Confluent.Kafka.Core.Producer.Internal
         {
             if (producerBuilder is not IProducerBuilder<TKey, TValue> underlyingProducerBuilder)
             {
-                throw new InvalidCastException(
-                    $"{nameof(producerBuilder)} should be of type '{typeof(IProducerBuilder<TKey, TValue>).ExtractTypeName()}'.");
+                var producerBuilderType = typeof(IProducerBuilder<TKey, TValue>).ExtractTypeName();
+
+                throw new InvalidCastException($"{nameof(producerBuilder)} should be of type '{producerBuilderType}'.");
             }
 
             var underlyingProducer = underlyingProducerBuilder.Build();
@@ -22,8 +23,9 @@ namespace Confluent.Kafka.Core.Producer.Internal
         {
             if (producerBuilder is not IKafkaProducerOptionsConverter<TKey, TValue> converter)
             {
-                throw new InvalidCastException(
-                    $"{nameof(producerBuilder)} should be of type '{typeof(IKafkaProducerOptionsConverter<TKey, TValue>).ExtractTypeName()}'.");
+                var optionsConverterType = typeof(IKafkaProducerOptionsConverter<TKey, TValue>).ExtractTypeName();
+
+                throw new InvalidCastException($"{nameof(producerBuilder)} should be of type '{optionsConverterType}'.");
             }
 
             var options = converter.ToOptions();

@@ -9,8 +9,9 @@ namespace Confluent.Kafka.Core.Consumer.Internal
         {
             if (consumerBuilder is not IConsumerBuilder<TKey, TValue> underlyingConsumerBuilder)
             {
-                throw new InvalidCastException(
-                    $"{nameof(consumerBuilder)} should be of type '{typeof(IConsumerBuilder<TKey, TValue>).ExtractTypeName()}'.");
+                var consumerBuilderType = typeof(IConsumerBuilder<TKey, TValue>).ExtractTypeName();
+
+                throw new InvalidCastException($"{nameof(consumerBuilder)} should be of type '{consumerBuilderType}'.");
             }
 
             var underlyingConsumer = underlyingConsumerBuilder.Build();
@@ -22,8 +23,9 @@ namespace Confluent.Kafka.Core.Consumer.Internal
         {
             if (consumerBuilder is not IKafkaConsumerOptionsConverter<TKey, TValue> converter)
             {
-                throw new InvalidCastException(
-                    $"{nameof(consumerBuilder)} should be of type '{typeof(IKafkaConsumerOptionsConverter<TKey, TValue>).ExtractTypeName()}'.");
+                var optionsConverterType = typeof(IKafkaConsumerOptionsConverter<TKey, TValue>).ExtractTypeName();
+
+                throw new InvalidCastException($"{nameof(consumerBuilder)} should be of type '{optionsConverterType}'.");
             }
 
             var options = converter.ToOptions();

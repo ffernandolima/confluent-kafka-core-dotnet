@@ -9,8 +9,9 @@ namespace Confluent.Kafka.Core.Producer.Internal
         {
             if (producer is not IKafkaProducer<TKey, TValue> kafkaProducer)
             {
-                throw new InvalidCastException(
-                    $"{nameof(producer)} should be of type '{typeof(IKafkaProducer<TKey, TValue>).ExtractTypeName()}'.");
+                var kafkaProducerType = typeof(IKafkaProducer<TKey, TValue>).ExtractTypeName();
+
+                throw new InvalidCastException($"{nameof(producer)} should be of type '{kafkaProducerType}'.");
             }
 
             return kafkaProducer;

@@ -10,8 +10,9 @@ namespace Confluent.Kafka.Core.Hosting.Internal
         {
             if (workerBuilder is not IKafkaConsumerWorkerOptionsConverter<TKey, TValue> converter)
             {
-                throw new InvalidCastException(
-                    $"{nameof(workerBuilder)} should be of type '{typeof(IKafkaConsumerWorkerOptionsConverter<TKey, TValue>).ExtractTypeName()}'.");
+                var optionsConverterType = typeof(IKafkaConsumerWorkerOptionsConverter<TKey, TValue>).ExtractTypeName();
+
+                throw new InvalidCastException($"{nameof(workerBuilder)} should be of type '{optionsConverterType}'.");
             }
 
             var options = converter.ToOptions();

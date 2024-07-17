@@ -9,8 +9,9 @@ namespace Confluent.Kafka.Core.Consumer.Internal
         {
             if (consumer is not IKafkaConsumer<TKey, TValue> kafkaConsumer)
             {
-                throw new InvalidCastException(
-                    $"{nameof(consumer)} should be of type '{typeof(IKafkaConsumer<TKey, TValue>).ExtractTypeName()}'.");
+                var kafkaConsumerType = typeof(IKafkaConsumer<TKey, TValue>).ExtractTypeName();
+
+                throw new InvalidCastException($"{nameof(consumer)} should be of type '{kafkaConsumerType}'.");
             }
 
             return kafkaConsumer;
