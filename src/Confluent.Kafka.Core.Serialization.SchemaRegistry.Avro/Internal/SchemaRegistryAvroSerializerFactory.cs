@@ -4,7 +4,7 @@ using System;
 
 namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Avro.Internal
 {
-    internal sealed class SchemaRegistryAvroSerializerFactory
+    internal sealed class SchemaRegistryAvroSerializerFactory : ISchemaRegistryAvroSerializerFactory
     {
         private static readonly Lazy<SchemaRegistryAvroSerializerFactory> Factory = new(
           () => new SchemaRegistryAvroSerializerFactory(), isThreadSafe: true);

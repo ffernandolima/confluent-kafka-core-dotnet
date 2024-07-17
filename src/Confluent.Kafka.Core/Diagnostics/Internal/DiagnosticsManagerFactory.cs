@@ -3,7 +3,7 @@ using System;
 
 namespace Confluent.Kafka.Core.Diagnostics.Internal
 {
-    internal sealed class DiagnosticsManagerFactory
+    internal sealed class DiagnosticsManagerFactory : IDiagnosticsManagerFactory
     {
         private static readonly Lazy<DiagnosticsManagerFactory> Factory = new(
             () => new DiagnosticsManagerFactory(), isThreadSafe: true);

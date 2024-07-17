@@ -32,6 +32,7 @@
 	</ItemGroup>
 
 	<ItemGroup Label="SchemaRegistry">
+		<Compile Include="..\Shared\SchemaRegistry\Internal\ISchemaRegistryClientFactory.cs"           Link="SchemaRegistry\Internal\ISchemaRegistryClientFactory.cs" />
 		<Compile Include="..\Shared\SchemaRegistry\Internal\RegisteredSchemaBuilder.cs"                Link="SchemaRegistry\Internal\RegisteredSchemaBuilder.cs" />
 		<Compile Include="..\Shared\SchemaRegistry\Internal\SchemaBuilder.cs"                          Link="SchemaRegistry\Internal\SchemaBuilder.cs" />
 		<Compile Include="..\Shared\SchemaRegistry\Internal\SchemaRegistryClientBuilder.cs"            Link="SchemaRegistry\Internal\SchemaRegistryClientBuilder.cs" />

@@ -6,7 +6,7 @@ using System;
 
 namespace Confluent.Kafka.Core.Idempotency.Redis.Internal
 {
-    internal sealed class RedisClientFactory
+    internal sealed class RedisClientFactory : IRedisClientFactory
     {
         private static readonly Lazy<RedisClientFactory> Factory = new(
             () => new RedisClientFactory(), isThreadSafe: true);

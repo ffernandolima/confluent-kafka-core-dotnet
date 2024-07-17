@@ -4,7 +4,7 @@ using System;
 
 namespace Confluent.Kafka.Core.Serialization.ProtobufNet.Internal
 {
-    internal sealed class ProtobufNetSerializerFactory
+    internal sealed class ProtobufNetSerializerFactory : IProtobufNetSerializerFactory
     {
         private static readonly Lazy<ProtobufNetSerializerFactory> Factory = new(
           () => new ProtobufNetSerializerFactory(), isThreadSafe: true);

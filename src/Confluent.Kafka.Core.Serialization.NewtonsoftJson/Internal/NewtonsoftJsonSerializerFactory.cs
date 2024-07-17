@@ -4,7 +4,7 @@ using System;
 
 namespace Confluent.Kafka.Core.Serialization.NewtonsoftJson.Internal
 {
-    internal sealed class NewtonsoftJsonSerializerFactory
+    internal sealed class NewtonsoftJsonSerializerFactory : INewtonsoftJsonSerializerFactory
     {
         private static readonly Lazy<NewtonsoftJsonSerializerFactory> Factory = new(
            () => new NewtonsoftJsonSerializerFactory(), isThreadSafe: true);

@@ -5,7 +5,7 @@ using System;
 
 namespace Confluent.Kafka.Core.Producer.Internal
 {
-    internal sealed class KafkaProducerFactory
+    internal sealed class KafkaProducerFactory : IKafkaProducerFactory
     {
         private static readonly Lazy<KafkaProducerFactory> Factory = new(
             () => new KafkaProducerFactory(), isThreadSafe: true);

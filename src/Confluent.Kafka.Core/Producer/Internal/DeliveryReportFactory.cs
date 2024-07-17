@@ -2,7 +2,7 @@
 
 namespace Confluent.Kafka.Core.Producer.Internal
 {
-    internal sealed class DeliveryReportFactory
+    internal sealed class DeliveryReportFactory : IDeliveryReportFactory
     {
         private static readonly Lazy<DeliveryReportFactory> Factory = new(
             () => new DeliveryReportFactory(), isThreadSafe: true);

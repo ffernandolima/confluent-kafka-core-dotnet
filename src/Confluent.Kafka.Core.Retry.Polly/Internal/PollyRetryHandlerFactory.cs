@@ -5,7 +5,7 @@ using System;
 
 namespace Confluent.Kafka.Core.Retry.Polly.Internal
 {
-    internal sealed class PollyRetryHandlerFactory
+    internal sealed class PollyRetryHandlerFactory : IPollyRetryHandlerFactory
     {
         private static readonly Lazy<PollyRetryHandlerFactory> Factory = new(
            () => new PollyRetryHandlerFactory(), isThreadSafe: true);

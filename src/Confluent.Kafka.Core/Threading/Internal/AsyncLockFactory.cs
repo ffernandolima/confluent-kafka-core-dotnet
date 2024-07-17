@@ -2,7 +2,7 @@
 
 namespace Confluent.Kafka.Core.Threading.Internal
 {
-    internal sealed class AsyncLockFactory
+    internal sealed class AsyncLockFactory : IAsyncLockFactory
     {
         private static readonly Lazy<AsyncLockFactory> Factory = new(
             () => new AsyncLockFactory(), isThreadSafe: true);

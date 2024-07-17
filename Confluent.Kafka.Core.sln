@@ -30,6 +30,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Extensions", "Extensions", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Internal", "Internal", "{C5BEBCA1-8A0D-4DB6-A676-3DF3257BC7C2}"
 	ProjectSection(SolutionItems) = preProject
+		src\Shared\SchemaRegistry\Internal\ISchemaRegistryClientFactory.cs = src\Shared\SchemaRegistry\Internal\ISchemaRegistryClientFactory.cs
 		src\Shared\SchemaRegistry\Internal\RegisteredSchemaBuilder.cs = src\Shared\SchemaRegistry\Internal\RegisteredSchemaBuilder.cs
 		src\Shared\SchemaRegistry\Internal\SchemaBuilder.cs = src\Shared\SchemaRegistry\Internal\SchemaBuilder.cs
 		src\Shared\SchemaRegistry\Internal\SchemaRegistryClientBuilder.cs = src\Shared\SchemaRegistry\Internal\SchemaRegistryClientBuilder.cs

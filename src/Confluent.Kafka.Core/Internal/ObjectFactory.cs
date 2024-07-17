@@ -3,7 +3,12 @@ using System;
 
 namespace Confluent.Kafka.Core.Internal
 {
-    internal sealed class ObjectFactory
+    internal interface IObjectFactory
+    {
+        object TryCreateInstance(IServiceProvider serviceProvider, Type objectType);
+    }
+
+    internal sealed class ObjectFactory : IObjectFactory
     {
         private static readonly Lazy<ObjectFactory> Factory = new(
             () => new ObjectFactory(), isThreadSafe: true);

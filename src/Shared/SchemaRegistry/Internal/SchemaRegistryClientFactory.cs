@@ -5,7 +5,7 @@ using System;
 
 namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Internal
 {
-    internal sealed class SchemaRegistryClientFactory
+    internal sealed class SchemaRegistryClientFactory : ISchemaRegistryClientFactory
     {
         private static readonly Lazy<SchemaRegistryClientFactory> Factory = new(
           () => new SchemaRegistryClientFactory(), isThreadSafe: true);

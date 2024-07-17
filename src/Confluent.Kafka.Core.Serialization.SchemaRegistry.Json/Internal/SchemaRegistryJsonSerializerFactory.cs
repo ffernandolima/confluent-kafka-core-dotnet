@@ -4,7 +4,7 @@ using System;
 
 namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Json.Internal
 {
-    internal sealed class SchemaRegistryJsonSerializerFactory
+    internal sealed class SchemaRegistryJsonSerializerFactory : ISchemaRegistryJsonSerializerFactory
     {
         private static readonly Lazy<SchemaRegistryJsonSerializerFactory> Factory = new(
           () => new SchemaRegistryJsonSerializerFactory(), isThreadSafe: true);
