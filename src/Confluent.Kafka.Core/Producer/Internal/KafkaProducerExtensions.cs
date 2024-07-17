@@ -10,7 +10,7 @@ namespace Confluent.Kafka.Core.Producer.Internal
         {
             if (producer is null)
             {
-                throw new ArgumentNullException(nameof(producer);
+                throw new ArgumentNullException(nameof(producer));
             }
 
             if (string.IsNullOrWhiteSpace(suffix))
