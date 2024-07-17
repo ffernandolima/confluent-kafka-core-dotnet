@@ -13,9 +13,9 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Json.Internal
                 where T : class;
 
         SchemaRegistryJsonSerializer<T> CreateSerializer<T>(
-           IServiceProvider serviceProvider,
-           IConfiguration configuration,
-           Action<IServiceProvider, ISchemaRegistryJsonSerializerBuilder> configureSerializer)
+            IServiceProvider serviceProvider,
+            IConfiguration configuration,
+            Action<IServiceProvider, ISchemaRegistryJsonSerializerBuilder> configureSerializer)
                 where T : class;
     }
 }
