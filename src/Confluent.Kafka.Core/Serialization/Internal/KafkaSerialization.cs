@@ -8,6 +8,8 @@ namespace Confluent.Kafka.Core.Serialization.Internal
 {
     internal static class KafkaSerialization
     {
+        public static readonly ISerializer<Ignore> Ignore = new IgnoreSerializer();
+
         public static readonly IDictionary<Type, object> DefaultDeserializers =
             new Dictionary<Type, object>()
         {
@@ -43,9 +45,6 @@ namespace Confluent.Kafka.Core.Serialization.Internal
 #else
         ;
 #endif
-
-        public static readonly ISerializer<Ignore> Ignore = new IgnoreSerializer();
-
         private sealed class IgnoreSerializer : ISerializer<Ignore>
         {
             public byte[] Serialize(Ignore data, SerializationContext context) => null;
