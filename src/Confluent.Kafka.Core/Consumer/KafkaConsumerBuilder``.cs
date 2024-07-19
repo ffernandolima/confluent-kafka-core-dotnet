@@ -162,9 +162,9 @@ namespace Confluent.Kafka.Core.Consumer
             return this;
         }
 
-        public IKafkaConsumerBuilder<TKey, TValue> WithPartitionsAssignedHandler(Action<IConsumer<TKey, TValue>, List<TopicPartition>> partitionAssignmentHandler)
+        public IKafkaConsumerBuilder<TKey, TValue> WithPartitionsAssignedHandler(Action<IConsumer<TKey, TValue>, List<TopicPartition>> partitionsAssignedHandler)
         {
-            SetPartitionsAssignedHandler(partitionAssignmentHandler);
+            SetPartitionsAssignedHandler(partitionsAssignedHandler);
             return this;
         }
 
