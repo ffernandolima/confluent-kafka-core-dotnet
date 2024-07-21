@@ -8,7 +8,7 @@ namespace Confluent.Kafka.Core.Diagnostics.Internal
 {
     internal abstract class ActivityEnricherBase
     {
-        public abstract void Enrich(Activity activity, ConsumeException consumeException, IConsumerConfig consumerConfig);
+        public abstract void Enrich(Activity activity, ConsumeException consumeException, IKafkaConsumerConfig consumerConfig);
 
         public abstract void Enrich<TKey, TValue>(Activity activity, ConsumeResult<TKey, TValue> consumeResult, IKafkaConsumerOptions<TKey, TValue> options);
 
@@ -18,6 +18,8 @@ namespace Confluent.Kafka.Core.Diagnostics.Internal
 
         public abstract void Enrich<TKey, TValue>(Activity activity, DeliveryResult<TKey, TValue> deliveryResult, IKafkaProducerOptions<TKey, TValue> options);
 
-        public abstract void Enrich<TKey, TValue>(Activity activity, ConsumeResult<TKey, TValue> consumeResult, IKafkaConsumerWorkerOptions<TKey, TValue> options, Exception exception = null);
+        public abstract void Enrich<TKey, TValue>(Activity activity, Exception exception, ConsumeResult<TKey, TValue> consumeResult, IKafkaConsumerWorkerOptions<TKey, TValue> options);
+
+        public abstract void Enrich<TKey, TValue>(Activity activity, ConsumeResult<TKey, TValue> consumeResult, IKafkaConsumerWorkerOptions<TKey, TValue> options);
     }
 }

@@ -445,7 +445,7 @@ namespace Confluent.Kafka.Core.Hosting
             {
                 _logger.LogMessageProcessingFailure(exception, messageId);
 
-                _options.DiagnosticsManager!.Enrich(activity, consumeResult, _options, exception);
+                _options.DiagnosticsManager!.Enrich(activity, exception, consumeResult, _options);
 
                 if (_options.WorkerConfig!.EnableRetryTopic && ShouldProduceRetryMessage(exception, messageId))
                 {

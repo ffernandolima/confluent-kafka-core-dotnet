@@ -61,7 +61,7 @@ namespace Confluent.Kafka.Core.Diagnostics.Internal
             return propagationContext;
         }
 
-        public void Enrich(Activity activity, ConsumeException consumeException, IConsumerConfig consumerConfig)
+        public void Enrich(Activity activity, ConsumeException consumeException, IKafkaConsumerConfig consumerConfig)
         {
             ActivityEnricher?.Enrich(activity, consumeException, consumerConfig);
         }
@@ -86,9 +86,14 @@ namespace Confluent.Kafka.Core.Diagnostics.Internal
             ActivityEnricher?.Enrich(activity, deliveryResult, options);
         }
 
-        public void Enrich<TKey, TValue>(Activity activity, ConsumeResult<TKey, TValue> consumeResult, IKafkaConsumerWorkerOptions<TKey, TValue> options, Exception exception = null)
+        public void Enrich<TKey, TValue>(Activity activity, Exception exception, ConsumeResult<TKey, TValue> consumeResult, IKafkaConsumerWorkerOptions<TKey, TValue> options)
         {
-            ActivityEnricher?.Enrich(activity, consumeResult, options, exception);
+            ActivityEnricher?.Enrich(activity, exception, consumeResult, options);
+        }
+
+        public void Enrich<TKey, TValue>(Activity activity, ConsumeResult<TKey, TValue> consumeResult, IKafkaConsumerWorkerOptions<TKey, TValue> options)
+        {
+            ActivityEnricher?.Enrich(activity, consumeResult, options);
         }
     }
 }

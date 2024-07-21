@@ -13,7 +13,7 @@ namespace Confluent.Kafka.Core.Diagnostics.Internal
     {
         private static readonly ConcurrentDictionary<Type, object> Serializers = [];
 
-        public override void Enrich(Activity activity, ConsumeException consumeException, IConsumerConfig consumerConfig)
+        public override void Enrich(Activity activity, ConsumeException consumeException, IKafkaConsumerConfig consumerConfig)
         {
             if (activity is null)
             {
@@ -224,11 +224,16 @@ namespace Confluent.Kafka.Core.Diagnostics.Internal
             EnrichInternal(activity, attributes);
         }
 
-        public override void Enrich<TKey, TValue>(Activity activity, ConsumeResult<TKey, TValue> consumeResult, IKafkaConsumerWorkerOptions<TKey, TValue> options, Exception exception = null)
+        public override void Enrich<TKey, TValue>(Activity activity, Exception exception, ConsumeResult<TKey, TValue> consumeResult, IKafkaConsumerWorkerOptions<TKey, TValue> options)
         {
             if (activity is null)
             {
                 return;
+            }
+
+            if (exception is null)
+            {
+                throw new ArgumentNullException(nameof(exception));
             }
 
             if (consumeResult is null)
@@ -266,7 +271,51 @@ namespace Confluent.Kafka.Core.Diagnostics.Internal
 
             EnrichInternal(activity, attributes);
 
-            activity.SetTag(SemanticConventions.Messaging.Kafka.ProcessingIsError, exception is not null);
+            activity.SetTag(SemanticConventions.Messaging.Kafka.ProcessingIsError, true);
+        }
+
+        public override void Enrich<TKey, TValue>(Activity activity, ConsumeResult<TKey, TValue> consumeResult, IKafkaConsumerWorkerOptions<TKey, TValue> options)
+        {
+            if (activity is null)
+            {
+                return;
+            }
+
+            if (consumeResult is null)
+            {
+                throw new ArgumentNullException(nameof(consumeResult));
+            }
+
+            if (options is null)
+            {
+                throw new ArgumentNullException(nameof(options));
+            }
+
+            using var builder = new KafkaActivityAttributesBuilder()
+                .WithTopic(consumeResult.Topic)
+                .WithOffset(consumeResult.Offset)
+                .WithPartition(consumeResult.Partition)
+                .WithOperation(OperationNames.ProcessOperation)
+                .WithGroupId(options.Consumer!.Options!.ConsumerConfig!.GroupId)
+                .WithBootstrapServers(options.Consumer!.Options!.ConsumerConfig!.BootstrapServers);
+
+            if (consumeResult.Message is not null)
+            {
+                builder.WithMessageId(consumeResult.Message.GetId(options.Consumer!.Options!.MessageIdHandler))
+                       .WithMessageKey(consumeResult.Message.Key)
+                       .WithMessageValue(consumeResult.Message.Value)
+                       .WithMessageBody(
+                            GetMessageBody(
+                                consumeResult.Message.Value,
+                                options.Consumer!.Options!.ValueDeserializer,
+                                () => new(MessageComponentType.Value, consumeResult.Topic, consumeResult.Message.Headers)));
+            }
+
+            var attributes = builder.Build();
+
+            EnrichInternal(activity, attributes);
+
+            activity.SetTag(SemanticConventions.Messaging.Kafka.ProcessingIsError, false);
         }
 
         private static byte[] GetMessageBody<TValue>(TValue messageValue, object configuredSerializer, Func<SerializationContext> contextFactory)

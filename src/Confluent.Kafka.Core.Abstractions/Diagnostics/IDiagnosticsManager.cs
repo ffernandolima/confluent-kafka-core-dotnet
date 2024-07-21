@@ -19,7 +19,7 @@ namespace Confluent.Kafka.Core.Diagnostics
 
         IPropagationContext ExtractContext(IDictionary<string, string> carrier);
 
-        void Enrich(Activity activity, ConsumeException consumeException, IConsumerConfig consumerConfig);
+        void Enrich(Activity activity, ConsumeException consumeException, IKafkaConsumerConfig consumerConfig);
 
         void Enrich<TKey, TValue>(Activity activity, ConsumeResult<TKey, TValue> consumeResult, IKafkaConsumerOptions<TKey, TValue> options);
 
@@ -29,6 +29,8 @@ namespace Confluent.Kafka.Core.Diagnostics
 
         void Enrich<TKey, TValue>(Activity activity, DeliveryResult<TKey, TValue> deliveryResult, IKafkaProducerOptions<TKey, TValue> options);
 
-        void Enrich<TKey, TValue>(Activity activity, ConsumeResult<TKey, TValue> consumeResult, IKafkaConsumerWorkerOptions<TKey, TValue> options, Exception exception = null);
+        void Enrich<TKey, TValue>(Activity activity, Exception exception, ConsumeResult<TKey, TValue> consumeResult, IKafkaConsumerWorkerOptions<TKey, TValue> options);
+
+        void Enrich<TKey, TValue>(Activity activity, ConsumeResult<TKey, TValue> consumeResult, IKafkaConsumerWorkerOptions<TKey, TValue> options);
     }
 }
