@@ -326,7 +326,7 @@ namespace Confluent.Kafka.Core.Hosting
 
                     activitySetter?.Invoke(activity);
 
-                    var lockContext = AsyncLockContext.Create(ConsumeResultConstants.ConsumeResult, consumeResult);
+                    var lockContext = new AsyncLockContext { [ConsumeResultConstants.ConsumeResult] = consumeResult };
 
                     using var releaser = await _asyncLock.LockAsync(lockContext, cancellationToken).ConfigureAwait(false);
 

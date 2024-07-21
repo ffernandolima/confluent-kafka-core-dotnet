@@ -1,5 +1,4 @@
-﻿using System.Collections.Concurrent;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Confluent.Kafka.Core.Threading.Internal
 {
@@ -12,13 +11,5 @@ namespace Confluent.Kafka.Core.Threading.Internal
             get => Items[key];
             set => Items[key] = value;
         }
-
-        public AsyncLockContext(params KeyValuePair<object, object>[] items)
-        {
-            Items = new ConcurrentDictionary<object, object>(items);
-        }
-
-        public static AsyncLockContext Create(object key, object value)
-            => new(new KeyValuePair<object, object>(key, value));
     }
 }

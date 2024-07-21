@@ -1,4 +1,4 @@
-﻿using Confluent.Kafka.Core.Models.Internal;
+﻿using Confluent.Kafka.Core.Consumer.Internal;
 using Confluent.Kafka.Core.Threading.Internal;
 using System;
 using System.Collections.Generic;

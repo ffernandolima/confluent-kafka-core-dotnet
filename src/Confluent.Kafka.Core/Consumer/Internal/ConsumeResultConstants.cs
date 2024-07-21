@@ -1,4 +1,4 @@
-﻿namespace Confluent.Kafka.Core.Models.Internal
+﻿namespace Confluent.Kafka.Core.Consumer.Internal
 {
     internal static class ConsumeResultConstants
     {
