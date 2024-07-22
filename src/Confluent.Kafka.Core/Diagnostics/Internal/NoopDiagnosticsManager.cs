@@ -14,7 +14,7 @@ namespace Confluent.Kafka.Core.Diagnostics.Internal
         { }
 
         protected override ActivitySourceBase ActivitySource { get; } = null;
-        protected override ActivityEnricherBase ActivityEnricher { get; } = null;
+        protected override IKafkaActivityEnricher ActivityEnricher { get; } = null;
         protected override DistributedContextPropagator Propagator { get; } = null;
     }
 }

@@ -9,11 +9,11 @@ using System.Diagnostics;
 
 namespace Confluent.Kafka.Core.Diagnostics.Internal
 {
-    internal sealed class KafkaActivityEnricher : ActivityEnricherBase
+    internal sealed class KafkaActivityEnricher : IKafkaActivityEnricher
     {
         private static readonly ConcurrentDictionary<Type, object> Serializers = [];
 
-        public override void Enrich(Activity activity, ConsumeException consumeException, IKafkaConsumerConfig consumerConfig)
+        public void Enrich(Activity activity, ConsumeException consumeException, IKafkaConsumerConfig consumerConfig)
         {
             if (activity is null)
             {
@@ -54,7 +54,7 @@ namespace Confluent.Kafka.Core.Diagnostics.Internal
             EnrichInternal(activity, attributes);
         }
 
-        public override void Enrich<TKey, TValue>(Activity activity, ConsumeResult<TKey, TValue> consumeResult, IKafkaConsumerOptions<TKey, TValue> options)
+        public void Enrich<TKey, TValue>(Activity activity, ConsumeResult<TKey, TValue> consumeResult, IKafkaConsumerOptions<TKey, TValue> options)
         {
             if (activity is null)
             {
@@ -96,7 +96,7 @@ namespace Confluent.Kafka.Core.Diagnostics.Internal
             EnrichInternal(activity, attributes);
         }
 
-        public override void Enrich<TKey, TValue>(Activity activity, ProduceException<TKey, TValue> produceException, IKafkaProducerOptions<TKey, TValue> options)
+        public void Enrich<TKey, TValue>(Activity activity, ProduceException<TKey, TValue> produceException, IKafkaProducerOptions<TKey, TValue> options)
         {
             if (activity is null)
             {
@@ -141,7 +141,7 @@ namespace Confluent.Kafka.Core.Diagnostics.Internal
             EnrichInternal(activity, attributes);
         }
 
-        public override void Enrich<TKey, TValue>(Activity activity, DeliveryReport<TKey, TValue> deliveryReport, IKafkaProducerOptions<TKey, TValue> options)
+        public void Enrich<TKey, TValue>(Activity activity, DeliveryReport<TKey, TValue> deliveryReport, IKafkaProducerOptions<TKey, TValue> options)
         {
             if (activity is null)
             {
@@ -183,7 +183,7 @@ namespace Confluent.Kafka.Core.Diagnostics.Internal
             EnrichInternal(activity, attributes);
         }
 
-        public override void Enrich<TKey, TValue>(Activity activity, DeliveryResult<TKey, TValue> deliveryResult, IKafkaProducerOptions<TKey, TValue> options)
+        public void Enrich<TKey, TValue>(Activity activity, DeliveryResult<TKey, TValue> deliveryResult, IKafkaProducerOptions<TKey, TValue> options)
         {
             if (activity is null)
             {
@@ -224,7 +224,7 @@ namespace Confluent.Kafka.Core.Diagnostics.Internal
             EnrichInternal(activity, attributes);
         }
 
-        public override void Enrich<TKey, TValue>(Activity activity, Exception exception, ConsumeResult<TKey, TValue> consumeResult, IKafkaConsumerWorkerOptions<TKey, TValue> options)
+        public void Enrich<TKey, TValue>(Activity activity, Exception exception, ConsumeResult<TKey, TValue> consumeResult, IKafkaConsumerWorkerOptions<TKey, TValue> options)
         {
             if (activity is null)
             {
@@ -274,7 +274,7 @@ namespace Confluent.Kafka.Core.Diagnostics.Internal
             activity.SetTag(SemanticConventions.Messaging.Kafka.ProcessingIsError, true);
         }
 
-        public override void Enrich<TKey, TValue>(Activity activity, ConsumeResult<TKey, TValue> consumeResult, IKafkaConsumerWorkerOptions<TKey, TValue> options)
+        public void Enrich<TKey, TValue>(Activity activity, ConsumeResult<TKey, TValue> consumeResult, IKafkaConsumerWorkerOptions<TKey, TValue> options)
         {
             if (activity is null)
             {

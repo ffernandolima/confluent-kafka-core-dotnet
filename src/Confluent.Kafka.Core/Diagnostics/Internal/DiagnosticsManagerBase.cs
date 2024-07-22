@@ -10,8 +10,10 @@ namespace Confluent.Kafka.Core.Diagnostics.Internal
     internal abstract class DiagnosticsManagerBase : IDiagnosticsManager
     {
         protected abstract ActivitySourceBase ActivitySource { get; }
-        protected abstract ActivityEnricherBase ActivityEnricher { get; }
+        protected abstract IKafkaActivityEnricher ActivityEnricher { get; }
         protected virtual DistributedContextPropagator Propagator { get; } = DistributedContextPropagator.CreateDefaultPropagator();
+
+        #region IDiagnosticsManager Members
 
         public Activity StartActivity(string activityName, ActivityKind activityKind, IPropagationContext propagationContext)
         {
@@ -49,6 +51,10 @@ namespace Confluent.Kafka.Core.Diagnostics.Internal
             return activity;
         }
 
+        #endregion IDiagnosticsManager Members
+
+        #region IContextPropagator Members
+
         public void InjectContext(Activity activity, IDictionary<string, string> carrier)
         {
             Propagator?.Inject(activity, carrier);
@@ -60,6 +66,10 @@ namespace Confluent.Kafka.Core.Diagnostics.Internal
 
             return propagationContext;
         }
+
+        #endregion IContextPropagator Members
+
+        #region IKafkaActivityEnricher Members
 
         public void Enrich(Activity activity, ConsumeException consumeException, IKafkaConsumerConfig consumerConfig)
         {
@@ -95,5 +105,7 @@ namespace Confluent.Kafka.Core.Diagnostics.Internal
         {
             ActivityEnricher?.Enrich(activity, consumeResult, options);
         }
+
+        #endregion IKafkaActivityEnricher Members
     }
 }
