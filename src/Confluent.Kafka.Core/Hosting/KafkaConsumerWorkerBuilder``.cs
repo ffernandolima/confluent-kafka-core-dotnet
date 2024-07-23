@@ -12,7 +12,6 @@ using Confluent.Kafka.Core.Retry;
 using Confluent.Kafka.Core.Retry.Internal;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
 #if NET8_0_OR_GREATER

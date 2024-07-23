@@ -4,7 +4,6 @@ using Confluent.Kafka.Core.Idempotency;
 using Confluent.Kafka.Core.Models;
 using Confluent.Kafka.Core.Producer;
 using Confluent.Kafka.Core.Retry;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
