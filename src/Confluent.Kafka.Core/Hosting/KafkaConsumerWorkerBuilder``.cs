@@ -36,7 +36,6 @@ namespace Confluent.Kafka.Core.Hosting.Internal
         private object _workerKey;
         private bool _workerConfigured;
         private IDiagnosticsManager _diagnosticsManager;
-        private IHostApplicationLifetime _hostApplicationLifetime;
         private IKafkaConsumer<TKey, TValue> _consumer;
         private IRetryHandler<TKey, TValue> _retryHandler;
         private IIdempotencyHandler<TKey, TValue> _idempotencyHandler;
@@ -77,7 +76,6 @@ namespace Confluent.Kafka.Core.Hosting.Internal
                 LoggerFactory = LoggerFactory,
                 WorkerConfig = WorkerConfig,
                 DiagnosticsManager = _diagnosticsManager,
-                HostApplicationLifetime = _hostApplicationLifetime,
                 Consumer = _consumer,
                 RetryHandler = _retryHandler,
                 IdempotencyHandler = _idempotencyHandler,
@@ -141,17 +139,6 @@ namespace Confluent.Kafka.Core.Hosting.Internal
             }
 
             ServiceProvider = serviceProvider;
-            return this;
-        }
-
-        public IKafkaConsumerWorkerBuilder<TKey, TValue> WithHostApplicationLifetime(IHostApplicationLifetime hostApplicationLifetime)
-        {
-            if (_hostApplicationLifetime is not null)
-            {
-                throw new InvalidOperationException("Host application lifetime may not be specified more than once.");
-            }
-
-            _hostApplicationLifetime = hostApplicationLifetime;
             return this;
         }
 
@@ -315,8 +302,6 @@ namespace Confluent.Kafka.Core.Hosting.Internal
             }
 
             LoggerFactory ??= ServiceProvider?.GetService<ILoggerFactory>();
-
-            _hostApplicationLifetime ??= ServiceProvider?.GetService<IHostApplicationLifetime>();
 
             _diagnosticsManager ??= DiagnosticsManagerFactory.Instance.GetDiagnosticsManager(
                 ServiceProvider,

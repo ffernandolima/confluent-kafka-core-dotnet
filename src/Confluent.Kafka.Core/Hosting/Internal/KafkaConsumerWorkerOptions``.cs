@@ -21,7 +21,6 @@ namespace Confluent.Kafka.Core.Hosting.Internal
         public ILoggerFactory LoggerFactory { get; init; }
         public IKafkaConsumerWorkerConfig WorkerConfig { get; init; }
         public IDiagnosticsManager DiagnosticsManager { get; init; }
-        public IHostApplicationLifetime HostApplicationLifetime { get; init; }
         public IKafkaConsumer<TKey, TValue> Consumer { get; init; }
         public IRetryHandler<TKey, TValue> RetryHandler { get; init; }
         public IIdempotencyHandler<TKey, TValue> IdempotencyHandler { get; init; }

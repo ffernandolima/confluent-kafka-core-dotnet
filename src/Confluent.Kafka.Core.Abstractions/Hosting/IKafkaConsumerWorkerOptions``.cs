@@ -21,8 +21,6 @@ namespace Confluent.Kafka.Core.Hosting
 
         IDiagnosticsManager DiagnosticsManager { get; }
 
-        IHostApplicationLifetime HostApplicationLifetime { get; }
-
         IKafkaConsumer<TKey, TValue> Consumer { get; }
 
         IRetryHandler<TKey, TValue> RetryHandler { get; }

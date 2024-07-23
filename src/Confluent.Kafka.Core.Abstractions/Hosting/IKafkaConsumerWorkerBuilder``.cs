@@ -29,8 +29,6 @@ namespace Confluent.Kafka.Core.Hosting
 
         IKafkaConsumerWorkerBuilder<TKey, TValue> WithServiceProvider(IServiceProvider serviceProvider);
 
-        IKafkaConsumerWorkerBuilder<TKey, TValue> WithHostApplicationLifetime(IHostApplicationLifetime hostApplicationLifetime);
-
         IKafkaConsumerWorkerBuilder<TKey, TValue> WithConsumer(IKafkaConsumer<TKey, TValue> consumer);
 
         IKafkaConsumerWorkerBuilder<TKey, TValue> WithRetryHandler(IRetryHandler<TKey, TValue> retryHandler);
