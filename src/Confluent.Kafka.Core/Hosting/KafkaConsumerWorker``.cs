@@ -473,11 +473,6 @@ namespace Confluent.Kafka.Core.Hosting
 
         private async Task ProduceRetryMessageAsync(ConsumeResult<TKey, TValue> consumeResult, object messageId, Exception exception = null)
         {
-            if (string.IsNullOrWhiteSpace(consumeResult?.Topic))
-            {
-                return;
-            }
-
             var headers = consumeResult.Message!.Headers?.ToDictionary();
 
             headers?.AddOrUpdate(KafkaRetryConstants.RetryGroupIdKey, _options.Consumer!.Options!.ConsumerConfig!.GroupId);
@@ -502,11 +497,6 @@ namespace Confluent.Kafka.Core.Hosting
 
         private async Task ProduceDeadLetterMessageAsync(ConsumeResult<TKey, TValue> consumeResult, object messageId, Exception exception = null)
         {
-            if (string.IsNullOrWhiteSpace(consumeResult?.Topic))
-            {
-                return;
-            }
-
             var message = CreateMetadataMessage(consumeResult, messageId, exception);
 
             var producerConfig = _options.DeadLetterProducer!.Options!.ProducerConfig;

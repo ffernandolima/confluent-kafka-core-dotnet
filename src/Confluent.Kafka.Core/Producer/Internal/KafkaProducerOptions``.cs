@@ -11,7 +11,7 @@ namespace Confluent.Kafka.Core.Producer.Internal
         public Type ProducerType { get; init; }
         public ILoggerFactory LoggerFactory { get; init; }
         public IKafkaProducerConfig ProducerConfig { get; init; }
-        public IDiagnosticsManager DiagnosticsManager { get; init; }
+        public IKafkaDiagnosticsManager DiagnosticsManager { get; init; }
         public ISerializer<TKey> KeySerializer { get; init; }
         public ISerializer<TValue> ValueSerializer { get; init; }
         public Func<TValue, object> MessageIdHandler { get; init; }

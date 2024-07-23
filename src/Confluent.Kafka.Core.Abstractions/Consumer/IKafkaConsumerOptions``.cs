@@ -16,7 +16,7 @@ namespace Confluent.Kafka.Core.Consumer
 
         IKafkaConsumerConfig ConsumerConfig { get; }
 
-        IDiagnosticsManager DiagnosticsManager { get; }
+        IKafkaDiagnosticsManager DiagnosticsManager { get; }
 
         IDeserializer<TKey> KeyDeserializer { get; }
 

@@ -33,7 +33,7 @@ namespace Confluent.Kafka.Core.Producer
         private bool _producerConfigured;
         private Func<TValue, object> _messageIdHandler;
         private IRetryHandler<TKey, TValue> _retryHandler;
-        private IDiagnosticsManager _diagnosticsManager;
+        private IKafkaDiagnosticsManager _diagnosticsManager;
         private IKafkaProducerHandlerFactory<TKey, TValue> _handlerFactory;
         private IEnumerable<IKafkaProducerInterceptor<TKey, TValue>> _interceptors;
 
@@ -346,9 +346,10 @@ namespace Confluent.Kafka.Core.Producer
 
             _interceptors ??= [];
 
-            _diagnosticsManager ??= DiagnosticsManagerFactory.Instance.GetDiagnosticsManager(
+            _diagnosticsManager = KafkaDiagnosticsManagerFactory.Instance.GetOrCreateDiagnosticsManager(
                 ServiceProvider,
-                ProducerConfig.EnableDiagnostics);
+                ProducerConfig.EnableDiagnostics,
+                configureOptions: null);
 
             _builtProducer = (IKafkaProducer<TKey, TValue>)Activator.CreateInstance(DefaultProducerType, this);
 

@@ -18,7 +18,7 @@ namespace Confluent.Kafka.Core.Hosting
 
         IKafkaConsumerWorkerConfig WorkerConfig { get; }
 
-        IDiagnosticsManager DiagnosticsManager { get; }
+        IKafkaDiagnosticsManager DiagnosticsManager { get; }
 
         IKafkaConsumer<TKey, TValue> Consumer { get; }
 

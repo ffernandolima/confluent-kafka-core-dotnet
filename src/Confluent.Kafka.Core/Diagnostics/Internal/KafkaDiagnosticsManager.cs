@@ -1,18 +1,14 @@
-﻿using System;
-
-namespace Confluent.Kafka.Core.Diagnostics.Internal
+﻿namespace Confluent.Kafka.Core.Diagnostics.Internal
 {
-    internal sealed class KafkaDiagnosticsManager : DiagnosticsManagerBase
+    internal sealed class KafkaDiagnosticsManager : KafkaDiagnosticsManagerBase
     {
-        private static readonly Lazy<KafkaDiagnosticsManager> Factory = new(
-            () => new KafkaDiagnosticsManager(), isThreadSafe: true);
+        protected override ActivitySourceBase ActivitySource { get; }
+        protected override IKafkaActivityEnricher ActivityEnricher { get; }
 
-        public static KafkaDiagnosticsManager Instance => Factory.Value;
-
-        private KafkaDiagnosticsManager()
-        { }
-
-        protected override ActivitySourceBase ActivitySource { get; } = new KafkaActivitySource();
-        protected override IKafkaActivityEnricher ActivityEnricher { get; } = new KafkaActivityEnricher();
+        public KafkaDiagnosticsManager(KafkaEnrichmentOptions options)
+        {
+            ActivitySource = new KafkaActivitySource();
+            ActivityEnricher = new KafkaActivityEnricher(options);
+        }
     }
 }

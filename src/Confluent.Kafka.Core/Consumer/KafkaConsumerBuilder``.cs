@@ -35,7 +35,7 @@ namespace Confluent.Kafka.Core.Consumer
 
         private object _consumerKey;
         private bool _consumerConfigured;
-        private IDiagnosticsManager _diagnosticsManager;
+        private IKafkaDiagnosticsManager _diagnosticsManager;
         private Func<TValue, object> _messageIdHandler;
         private IRetryHandler<TKey, TValue> _retryHandler;
         private IKafkaConsumerHandlerFactory<TKey, TValue> _handlerFactory;
@@ -410,9 +410,10 @@ namespace Confluent.Kafka.Core.Consumer
 
             _interceptors ??= [];
 
-            _diagnosticsManager ??= DiagnosticsManagerFactory.Instance.GetDiagnosticsManager(
+            _diagnosticsManager = KafkaDiagnosticsManagerFactory.Instance.GetOrCreateDiagnosticsManager(
                 ServiceProvider,
-                ConsumerConfig.EnableDiagnostics);
+                ConsumerConfig.EnableDiagnostics,
+                configureOptions: null);
 
             _builtConsumer = (IKafkaConsumer<TKey, TValue>)Activator.CreateInstance(DefaultConsumerType, this);
 

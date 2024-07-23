@@ -14,7 +14,7 @@ namespace Confluent.Kafka.Core.Producer
 
         IKafkaProducerConfig ProducerConfig { get; }
 
-        IDiagnosticsManager DiagnosticsManager { get; }
+        IKafkaDiagnosticsManager DiagnosticsManager { get; }
 
         ISerializer<TKey> KeySerializer { get; }
 

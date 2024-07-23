@@ -13,7 +13,7 @@ namespace Confluent.Kafka.Core.Consumer.Internal
         public Type ConsumerType { get; init; }
         public ILoggerFactory LoggerFactory { get; init; }
         public IKafkaConsumerConfig ConsumerConfig { get; init; }
-        public IDiagnosticsManager DiagnosticsManager { get; init; }
+        public IKafkaDiagnosticsManager DiagnosticsManager { get; init; }
         public IDeserializer<TKey> KeyDeserializer { get; init; }
         public IDeserializer<TValue> ValueDeserializer { get; init; }
         public Func<TValue, object> MessageIdHandler { get; init; }

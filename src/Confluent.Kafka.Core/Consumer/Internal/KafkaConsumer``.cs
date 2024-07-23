@@ -974,7 +974,7 @@ namespace Confluent.Kafka.Core.Consumer.Internal
 
         private void ProduceDeadLetterMessage(ConsumeResult<byte[], byte[]> consumeResult, Error error)
         {
-            if (_options.ConsumerConfig!.EnableDeadLetterTopic && consumeResult is not null)
+            if (_options.ConsumerConfig!.EnableDeadLetterTopic)
             {
                 var producerConfig = _options.DeadLetterProducer!.Options!.ProducerConfig;
 
@@ -984,7 +984,7 @@ namespace Confluent.Kafka.Core.Consumer.Internal
 
                 var message = new Message<byte[], KafkaMetadataMessage>
                 {
-                    Key = consumeResult.Message?.Key,
+                    Key = consumeResult.Message!.Key,
                     Value = new KafkaMetadataMessage
                     {
                         Id = Guid.NewGuid(),
@@ -992,14 +992,14 @@ namespace Confluent.Kafka.Core.Consumer.Internal
                         SourceGroupId = _options.ConsumerConfig!.GroupId,
                         SourcePartition = consumeResult.Partition,
                         SourceOffset = consumeResult.Offset,
-                        SourceKey = consumeResult.Message?.Key,
-                        SourceMessage = consumeResult.Message?.Value,
+                        SourceKey = consumeResult.Message!.Key,
+                        SourceMessage = consumeResult.Message!.Value,
                         SourceKeyType = typeof(TKey).AssemblyQualifiedName,
                         SourceMessageType = typeof(TValue).AssemblyQualifiedName,
                         ErrorCode = error?.Code ?? ErrorCode.Unknown,
                         Reason = error?.Reason ?? ErrorCode.Unknown.GetReason()
                     },
-                    Headers = consumeResult.Message?.Headers
+                    Headers = consumeResult.Message!.Headers
                 };
 
                 try

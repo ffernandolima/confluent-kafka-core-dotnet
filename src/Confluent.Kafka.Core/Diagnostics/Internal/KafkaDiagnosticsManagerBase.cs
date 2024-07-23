@@ -7,13 +7,13 @@ using System.Diagnostics;
 
 namespace Confluent.Kafka.Core.Diagnostics.Internal
 {
-    internal abstract class DiagnosticsManagerBase : IDiagnosticsManager
+    internal abstract class KafkaDiagnosticsManagerBase : IKafkaDiagnosticsManager
     {
         protected abstract ActivitySourceBase ActivitySource { get; }
         protected abstract IKafkaActivityEnricher ActivityEnricher { get; }
         protected virtual DistributedContextPropagator Propagator { get; } = DistributedContextPropagator.CreateDefaultPropagator();
 
-        #region IDiagnosticsManager Members
+        #region IKafkaDiagnosticsManager Members
 
         public Activity StartActivity(string activityName, ActivityKind activityKind, IPropagationContext propagationContext)
         {
@@ -51,7 +51,7 @@ namespace Confluent.Kafka.Core.Diagnostics.Internal
             return activity;
         }
 
-        #endregion IDiagnosticsManager Members
+        #endregion IKafkaDiagnosticsManager Members
 
         #region IContextPropagator Members
 

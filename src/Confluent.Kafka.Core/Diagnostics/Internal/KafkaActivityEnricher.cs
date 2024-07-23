@@ -13,6 +13,13 @@ namespace Confluent.Kafka.Core.Diagnostics.Internal
     {
         private static readonly ConcurrentDictionary<Type, object> Serializers = [];
 
+        private readonly KafkaEnrichmentOptions _options;
+
+        public KafkaActivityEnricher(KafkaEnrichmentOptions options)
+        {
+            _options = options ?? throw new ArgumentNullException(nameof(options));
+        }
+
         public void Enrich(Activity activity, ConsumeException consumeException, IKafkaConsumerConfig consumerConfig)
         {
             if (activity is null)
@@ -33,25 +40,36 @@ namespace Confluent.Kafka.Core.Diagnostics.Internal
             var consumerRecord = consumeException.ConsumerRecord ?? throw new InvalidOperationException("Consumer record cannot be null.");
 
             using var builder = new KafkaActivityAttributesBuilder()
-                .WithException(consumeException)
-                .WithError(consumeException.Error)
-                .WithTopic(consumerRecord.Topic)
-                .WithOffset(consumerRecord.Offset)
-                .WithPartition(consumerRecord.Partition)
-                .WithOperation(OperationNames.ReceiveOperation)
+                .WithBootstrapServers(consumerConfig.BootstrapServers)
                 .WithGroupId(consumerConfig.GroupId)
-                .WithBootstrapServers(consumerConfig.BootstrapServers);
-
-            if (consumerRecord.Message is not null)
-            {
-                builder.WithMessageKey(consumerRecord.Message.Key)
-                       .WithMessageValue(consumerRecord.Message.Value)
-                       .WithMessageBody(consumerRecord.Message.Value);
-            }
+                .WithTopic(consumerRecord.Topic)
+                .WithPartition(consumerRecord.Partition)
+                .WithOffset(consumerRecord.Offset)
+                .WithMessageKey(consumerRecord.Message!.Key)
+                .WithMessageValue(consumerRecord.Message!.Value)
+                .WithMessageBody(consumerRecord.Message!.Value)
+                .WithOperation(OperationNames.ReceiveOperation)
+                .WithError(consumeException.Error)
+                .WithException(consumeException);
 
             var attributes = builder.Build();
 
             EnrichInternal(activity, attributes);
+
+            _options.EnrichConsumptionFailure?.Invoke(activity,
+                new KafkaConsumptionFailureEnrichmentContext
+                {
+                    Topic = consumerRecord.Topic,
+                    Partition = consumerRecord.Partition,
+                    Offset = consumerRecord.Offset,
+                    Key = consumerRecord.Message!.Key,
+                    Value = consumerRecord.Message!.Value,
+                    Timestamp = consumerRecord.Message!.Timestamp,
+                    Headers = consumerRecord.Message!.Headers,
+                    ConsumerConfig = consumerConfig,
+                    Error = consumeException.Error,
+                    Exception = consumeException
+                });
         }
 
         public void Enrich<TKey, TValue>(Activity activity, ConsumeResult<TKey, TValue> consumeResult, IKafkaConsumerOptions<TKey, TValue> options)
@@ -72,28 +90,37 @@ namespace Confluent.Kafka.Core.Diagnostics.Internal
             }
 
             using var builder = new KafkaActivityAttributesBuilder()
-                .WithTopic(consumeResult.Topic)
-                .WithOffset(consumeResult.Offset)
-                .WithPartition(consumeResult.Partition)
-                .WithOperation(OperationNames.ReceiveOperation)
+                .WithBootstrapServers(options.ConsumerConfig!.BootstrapServers)
                 .WithGroupId(options.ConsumerConfig!.GroupId)
-                .WithBootstrapServers(options.ConsumerConfig!.BootstrapServers);
-
-            if (consumeResult.Message is not null)
-            {
-                builder.WithMessageId(consumeResult.Message.GetId(options.MessageIdHandler))
-                       .WithMessageKey(consumeResult.Message.Key)
-                       .WithMessageValue(consumeResult.Message.Value)
-                       .WithMessageBody(
-                            GetMessageBody(
-                                consumeResult.Message.Value,
-                                options.ValueDeserializer,
-                                () => new(MessageComponentType.Value, consumeResult.Topic, consumeResult.Message.Headers)));
-            }
+                .WithTopic(consumeResult.Topic)
+                .WithPartition(consumeResult.Partition)
+                .WithOffset(consumeResult.Offset)
+                .WithMessageKey(consumeResult.Message!.Key)
+                .WithMessageValue(consumeResult.Message!.Value)
+                .WithMessageId(consumeResult.Message!.GetId(options.MessageIdHandler))
+                .WithMessageBody(
+                    GetMessageBody(
+                        consumeResult.Message!.Value,
+                        options.ValueDeserializer,
+                        () => new(MessageComponentType.Value, consumeResult.Topic, consumeResult.Message!.Headers)))
+                .WithOperation(OperationNames.ReceiveOperation);
 
             var attributes = builder.Build();
 
             EnrichInternal(activity, attributes);
+
+            _options.EnrichConsumption?.Invoke(activity,
+                new KafkaConsumptionEnrichmentContext
+                {
+                    Topic = consumeResult.Topic,
+                    Partition = consumeResult.Partition,
+                    Offset = consumeResult.Offset,
+                    Key = consumeResult.Message!.Key,
+                    Value = consumeResult.Message!.Value,
+                    Timestamp = consumeResult.Message!.Timestamp,
+                    Headers = consumeResult.Message!.Headers,
+                    ConsumerConfig = options.ConsumerConfig
+                });
         }
 
         public void Enrich<TKey, TValue>(Activity activity, ProduceException<TKey, TValue> produceException, IKafkaProducerOptions<TKey, TValue> options)
@@ -116,29 +143,41 @@ namespace Confluent.Kafka.Core.Diagnostics.Internal
             var deliveryResult = produceException.DeliveryResult ?? throw new InvalidOperationException("Delivery result cannot be null.");
 
             using var builder = new KafkaActivityAttributesBuilder()
-                .WithException(produceException)
-                .WithError(produceException.Error)
+                .WithBootstrapServers(options.ProducerConfig!.BootstrapServers)
                 .WithTopic(deliveryResult.Topic)
-                .WithOffset(deliveryResult.Offset)
                 .WithPartition(deliveryResult.Partition)
+                .WithOffset(deliveryResult.Offset)
+                .WithMessageKey(deliveryResult.Message!.Key)
+                .WithMessageValue(deliveryResult.Message!.Value)
+                .WithMessageId(deliveryResult.Message!.GetId(options.MessageIdHandler))
+                .WithMessageBody(
+                    GetMessageBody(
+                        deliveryResult.Message!.Value,
+                        options.ValueSerializer,
+                        () => new(MessageComponentType.Value, deliveryResult.Topic, deliveryResult.Message!.Headers)))
                 .WithOperation(OperationNames.PublishOperation)
-                .WithBootstrapServers(options.ProducerConfig!.BootstrapServers);
-
-            if (deliveryResult.Message is not null)
-            {
-                builder.WithMessageId(deliveryResult.Message.GetId(options.MessageIdHandler))
-                       .WithMessageKey(deliveryResult.Message.Key)
-                       .WithMessageValue(deliveryResult.Message.Value)
-                       .WithMessageBody(
-                            GetMessageBody(
-                                deliveryResult.Message.Value,
-                                options.ValueSerializer,
-                                () => new(MessageComponentType.Value, deliveryResult.Topic, deliveryResult.Message.Headers)));
-            }
+                .WithError(produceException.Error)
+                .WithException(produceException);
 
             var attributes = builder.Build();
 
             EnrichInternal(activity, attributes);
+
+            _options.EnrichProductionFailure?.Invoke(activity,
+                new KafkaProductionFailureEnrichmentContext
+                {
+                    Topic = deliveryResult.Topic,
+                    Partition = deliveryResult.Partition,
+                    Offset = deliveryResult.Offset,
+                    Key = deliveryResult.Message!.Key,
+                    Value = deliveryResult.Message!.Value,
+                    Timestamp = deliveryResult.Message!.Timestamp,
+                    Headers = deliveryResult.Message!.Headers,
+                    Status = deliveryResult.Status,
+                    ProducerConfig = options.ProducerConfig,
+                    Error = produceException.Error,
+                    Exception = produceException
+                });
         }
 
         public void Enrich<TKey, TValue>(Activity activity, DeliveryReport<TKey, TValue> deliveryReport, IKafkaProducerOptions<TKey, TValue> options)
@@ -159,28 +198,39 @@ namespace Confluent.Kafka.Core.Diagnostics.Internal
             }
 
             using var builder = new KafkaActivityAttributesBuilder()
-                .WithError(deliveryReport.Error)
+                .WithBootstrapServers(options.ProducerConfig!.BootstrapServers)
                 .WithTopic(deliveryReport.Topic)
-                .WithOffset(deliveryReport.Offset)
                 .WithPartition(deliveryReport.Partition)
+                .WithOffset(deliveryReport.Offset)
+                .WithMessageKey(deliveryReport.Message!.Key)
+                .WithMessageValue(deliveryReport.Message!.Value)
+                .WithMessageId(deliveryReport.Message!.GetId(options.MessageIdHandler))
+                .WithMessageBody(
+                    GetMessageBody(
+                        deliveryReport.Message!.Value,
+                        options.ValueSerializer,
+                        () => new(MessageComponentType.Value, deliveryReport.Topic, deliveryReport.Message!.Headers)))
                 .WithOperation(OperationNames.PublishOperation)
-                .WithBootstrapServers(options.ProducerConfig!.BootstrapServers);
-
-            if (deliveryReport.Message is not null)
-            {
-                builder.WithMessageId(deliveryReport.Message.GetId(options.MessageIdHandler))
-                       .WithMessageKey(deliveryReport.Message.Key)
-                       .WithMessageValue(deliveryReport.Message.Value)
-                       .WithMessageBody(
-                            GetMessageBody(
-                                deliveryReport.Message.Value,
-                                options.ValueSerializer,
-                                () => new(MessageComponentType.Value, deliveryReport.Topic, deliveryReport.Message.Headers)));
-            }
+                .WithError(deliveryReport.Error);
 
             var attributes = builder.Build();
 
             EnrichInternal(activity, attributes);
+
+            _options.EnrichSyncProduction?.Invoke(activity,
+                new KafkaSyncProductionEnrichmentContext
+                {
+                    Topic = deliveryReport.Topic,
+                    Partition = deliveryReport.Partition,
+                    Offset = deliveryReport.Offset,
+                    Key = deliveryReport.Message!.Key,
+                    Value = deliveryReport.Message!.Value,
+                    Timestamp = deliveryReport.Message!.Timestamp,
+                    Headers = deliveryReport.Message!.Headers,
+                    Status = deliveryReport.Status,
+                    ProducerConfig = options.ProducerConfig,
+                    Error = deliveryReport.Error
+                });
         }
 
         public void Enrich<TKey, TValue>(Activity activity, DeliveryResult<TKey, TValue> deliveryResult, IKafkaProducerOptions<TKey, TValue> options)
@@ -201,27 +251,37 @@ namespace Confluent.Kafka.Core.Diagnostics.Internal
             }
 
             using var builder = new KafkaActivityAttributesBuilder()
+                .WithBootstrapServers(options.ProducerConfig!.BootstrapServers)
                 .WithTopic(deliveryResult.Topic)
-                .WithOffset(deliveryResult.Offset)
                 .WithPartition(deliveryResult.Partition)
-                .WithOperation(OperationNames.PublishOperation)
-                .WithBootstrapServers(options.ProducerConfig!.BootstrapServers);
-
-            if (deliveryResult.Message is not null)
-            {
-                builder.WithMessageId(deliveryResult.Message.GetId(options.MessageIdHandler))
-                       .WithMessageKey(deliveryResult.Message.Key)
-                       .WithMessageValue(deliveryResult.Message.Value)
-                       .WithMessageBody(
-                            GetMessageBody(
-                                deliveryResult.Message.Value,
-                                options.ValueSerializer,
-                                () => new(MessageComponentType.Value, deliveryResult.Topic, deliveryResult.Message.Headers)));
-            }
+                .WithOffset(deliveryResult.Offset)
+                .WithMessageKey(deliveryResult.Message!.Key)
+                .WithMessageValue(deliveryResult.Message!.Value)
+                .WithMessageId(deliveryResult.Message!.GetId(options.MessageIdHandler))
+                .WithMessageBody(
+                    GetMessageBody(
+                        deliveryResult.Message!.Value,
+                        options.ValueSerializer,
+                        () => new(MessageComponentType.Value, deliveryResult.Topic, deliveryResult.Message!.Headers)))
+                .WithOperation(OperationNames.PublishOperation);
 
             var attributes = builder.Build();
 
             EnrichInternal(activity, attributes);
+
+            _options.EnrichAsyncProduction?.Invoke(activity,
+                new KafkaAsyncProductionEnrichmentContext
+                {
+                    Topic = deliveryResult.Topic,
+                    Partition = deliveryResult.Partition,
+                    Offset = deliveryResult.Offset,
+                    Key = deliveryResult.Message!.Key,
+                    Value = deliveryResult.Message!.Value,
+                    Timestamp = deliveryResult.Message!.Timestamp,
+                    Headers = deliveryResult.Message!.Headers,
+                    Status = deliveryResult.Status,
+                    ProducerConfig = options.ProducerConfig
+                });
         }
 
         public void Enrich<TKey, TValue>(Activity activity, Exception exception, ConsumeResult<TKey, TValue> consumeResult, IKafkaConsumerWorkerOptions<TKey, TValue> options)
@@ -247,31 +307,42 @@ namespace Confluent.Kafka.Core.Diagnostics.Internal
             }
 
             using var builder = new KafkaActivityAttributesBuilder()
-                .WithException(exception)
-                .WithTopic(consumeResult.Topic)
-                .WithOffset(consumeResult.Offset)
-                .WithPartition(consumeResult.Partition)
-                .WithOperation(OperationNames.ProcessOperation)
+                .WithBootstrapServers(options.Consumer!.Options!.ConsumerConfig!.BootstrapServers)
                 .WithGroupId(options.Consumer!.Options!.ConsumerConfig!.GroupId)
-                .WithBootstrapServers(options.Consumer!.Options!.ConsumerConfig!.BootstrapServers);
-
-            if (consumeResult.Message is not null)
-            {
-                builder.WithMessageId(consumeResult.Message.GetId(options.Consumer!.Options!.MessageIdHandler))
-                       .WithMessageKey(consumeResult.Message.Key)
-                       .WithMessageValue(consumeResult.Message.Value)
-                       .WithMessageBody(
-                            GetMessageBody(
-                                consumeResult.Message.Value,
-                                options.Consumer!.Options!.ValueDeserializer,
-                                () => new(MessageComponentType.Value, consumeResult.Topic, consumeResult.Message.Headers)));
-            }
+                .WithTopic(consumeResult.Topic)
+                .WithPartition(consumeResult.Partition)
+                .WithOffset(consumeResult.Offset)
+                .WithMessageKey(consumeResult.Message!.Key)
+                .WithMessageValue(consumeResult.Message!.Value)
+                .WithMessageId(consumeResult.Message!.GetId(options.Consumer!.Options!.MessageIdHandler))
+                .WithMessageBody(
+                    GetMessageBody(
+                        consumeResult.Message!.Value,
+                        options.Consumer!.Options!.ValueDeserializer,
+                        () => new(MessageComponentType.Value, consumeResult.Topic, consumeResult.Message!.Headers)))
+                .WithOperation(OperationNames.ProcessOperation)
+                .WithException(exception);
 
             var attributes = builder.Build();
 
             EnrichInternal(activity, attributes);
 
             activity.SetTag(SemanticConventions.Messaging.Kafka.ProcessingIsError, true);
+
+            _options.EnrichProcessingFailure?.Invoke(activity,
+                new KafkaProcessingFailureEnrichmentContext
+                {
+                    Topic = consumeResult.Topic,
+                    Partition = consumeResult.Partition,
+                    Offset = consumeResult.Offset,
+                    Key = consumeResult.Message!.Key,
+                    Value = consumeResult.Message!.Value,
+                    Timestamp = consumeResult.Message!.Timestamp,
+                    Headers = consumeResult.Message!.Headers,
+                    ConsumerConfig = options.Consumer!.Options!.ConsumerConfig,
+                    WorkerConfig = options.WorkerConfig,
+                    Exception = exception
+                });
         }
 
         public void Enrich<TKey, TValue>(Activity activity, ConsumeResult<TKey, TValue> consumeResult, IKafkaConsumerWorkerOptions<TKey, TValue> options)
@@ -292,30 +363,40 @@ namespace Confluent.Kafka.Core.Diagnostics.Internal
             }
 
             using var builder = new KafkaActivityAttributesBuilder()
-                .WithTopic(consumeResult.Topic)
-                .WithOffset(consumeResult.Offset)
-                .WithPartition(consumeResult.Partition)
-                .WithOperation(OperationNames.ProcessOperation)
+                .WithBootstrapServers(options.Consumer!.Options!.ConsumerConfig!.BootstrapServers)
                 .WithGroupId(options.Consumer!.Options!.ConsumerConfig!.GroupId)
-                .WithBootstrapServers(options.Consumer!.Options!.ConsumerConfig!.BootstrapServers);
-
-            if (consumeResult.Message is not null)
-            {
-                builder.WithMessageId(consumeResult.Message.GetId(options.Consumer!.Options!.MessageIdHandler))
-                       .WithMessageKey(consumeResult.Message.Key)
-                       .WithMessageValue(consumeResult.Message.Value)
-                       .WithMessageBody(
-                            GetMessageBody(
-                                consumeResult.Message.Value,
-                                options.Consumer!.Options!.ValueDeserializer,
-                                () => new(MessageComponentType.Value, consumeResult.Topic, consumeResult.Message.Headers)));
-            }
+                .WithTopic(consumeResult.Topic)
+                .WithPartition(consumeResult.Partition)
+                .WithOffset(consumeResult.Offset)
+                .WithMessageKey(consumeResult.Message!.Key)
+                .WithMessageValue(consumeResult.Message!.Value)
+                .WithMessageId(consumeResult.Message!.GetId(options.Consumer!.Options!.MessageIdHandler))
+                .WithMessageBody(
+                    GetMessageBody(
+                        consumeResult.Message!.Value,
+                        options.Consumer!.Options!.ValueDeserializer,
+                        () => new(MessageComponentType.Value, consumeResult.Topic, consumeResult.Message!.Headers)))
+                .WithOperation(OperationNames.ProcessOperation);
 
             var attributes = builder.Build();
 
             EnrichInternal(activity, attributes);
 
             activity.SetTag(SemanticConventions.Messaging.Kafka.ProcessingIsError, false);
+
+            _options.EnrichProcessing?.Invoke(activity,
+                new KafkaProcessingEnrichmentContext
+                {
+                    Topic = consumeResult.Topic,
+                    Partition = consumeResult.Partition,
+                    Offset = consumeResult.Offset,
+                    Key = consumeResult.Message!.Key,
+                    Value = consumeResult.Message!.Value,
+                    Timestamp = consumeResult.Message!.Timestamp,
+                    Headers = consumeResult.Message!.Headers,
+                    ConsumerConfig = options.Consumer!.Options!.ConsumerConfig,
+                    WorkerConfig = options.WorkerConfig
+                });
         }
 
         private static byte[] GetMessageBody<TValue>(TValue messageValue, object configuredSerializer, Func<SerializationContext> contextFactory)

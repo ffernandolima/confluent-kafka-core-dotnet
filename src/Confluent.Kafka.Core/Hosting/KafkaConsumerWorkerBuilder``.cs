@@ -34,7 +34,7 @@ namespace Confluent.Kafka.Core.Hosting.Internal
 
         private object _workerKey;
         private bool _workerConfigured;
-        private IDiagnosticsManager _diagnosticsManager;
+        private IKafkaDiagnosticsManager _diagnosticsManager;
         private IKafkaConsumer<TKey, TValue> _consumer;
         private IRetryHandler<TKey, TValue> _retryHandler;
         private IIdempotencyHandler<TKey, TValue> _idempotencyHandler;
@@ -302,9 +302,10 @@ namespace Confluent.Kafka.Core.Hosting.Internal
 
             LoggerFactory ??= ServiceProvider?.GetService<ILoggerFactory>();
 
-            _diagnosticsManager ??= DiagnosticsManagerFactory.Instance.GetDiagnosticsManager(
+            _diagnosticsManager = KafkaDiagnosticsManagerFactory.Instance.GetOrCreateDiagnosticsManager(
                 ServiceProvider,
-                WorkerConfig.EnableDiagnostics);
+                WorkerConfig.EnableDiagnostics,
+                configureOptions: null);
 
             _builtWorker = (IKafkaConsumerWorker<TKey, TValue>)Activator.CreateInstance(DefaultConsumerWorkerType, this);
 

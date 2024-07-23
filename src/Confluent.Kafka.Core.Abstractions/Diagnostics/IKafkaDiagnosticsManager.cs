@@ -3,7 +3,7 @@ using System.Diagnostics;
 
 namespace Confluent.Kafka.Core.Diagnostics
 {
-    public interface IDiagnosticsManager : IContextPropagator, IKafkaActivityEnricher
+    public interface IKafkaDiagnosticsManager : IContextPropagator, IKafkaActivityEnricher
     {
         Activity StartActivity(string activityName, ActivityKind activityKind, IPropagationContext propagationContext);
 
