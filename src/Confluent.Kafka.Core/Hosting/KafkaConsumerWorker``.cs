@@ -91,21 +91,7 @@ namespace Confluent.Kafka.Core.Hosting
                     {
                         await HandleCompletedWorkItemsAsync().ConfigureAwait(false);
 
-                        hasAvailableSlots = HasAvailableSlots();
-
-                        if (hasAvailableSlots)
-                        {
-                            dispatched = ExecuteInternal(stoppingToken);
-
-                            if (!dispatched)
-                            {
-                                _logger.LogNoAvailableMessages();
-                            }
-                        }
-                        else
-                        {
-                            _logger.LogNoAvailableSlots();
-                        }
+                        ExecuteInternal(stoppingToken);
 
                         HandleConsumptionExceptions();
                     }
@@ -152,17 +138,13 @@ namespace Confluent.Kafka.Core.Hosting
             }
         }
 
-        private bool HasAvailableSlots() => _asyncLock.CurrentCount > 0;
-
-        private bool ExecuteInternal(CancellationToken cancellationToken)
+        private void ExecuteInternal(CancellationToken cancellationToken)
         {
-            var hasAvailableSlots = HasAvailableSlots();
-
-            if (!hasAvailableSlots)
+            if (_asyncLock.CurrentCount <= 0)
             {
                 _logger.LogNoAvailableSlots();
 
-                return false;
+                return;
             }
 
             IEnumerable<ConsumeResult<TKey, TValue>> consumeResults = null;
@@ -174,21 +156,21 @@ namespace Confluent.Kafka.Core.Hosting
             catch (Exception ex)
             {
                 _exceptions.Add(ex);
+
+                return;
             }
 
-            var dispatched = false;
-
-            if (consumeResults is not null && consumeResults.Any())
+            if (consumeResults is null || !consumeResults.Any())
             {
-                foreach (var consumeResult in consumeResults.Where(consumeResult => consumeResult!.Message is not null))
-                {
-                    DispatchWorkItem(consumeResult, cancellationToken);
+                _logger.LogNoAvailableMessages();
 
-                    dispatched = true;
-                }
+                return;
             }
 
-            return dispatched;
+            foreach (var consumeResult in consumeResults.Where(consumeResult => consumeResult!.Message is not null))
+            {
+                DispatchWorkItem(consumeResult, cancellationToken);
+            }
         }
 
         private async Task HandleCompletedWorkItemsAsync()
