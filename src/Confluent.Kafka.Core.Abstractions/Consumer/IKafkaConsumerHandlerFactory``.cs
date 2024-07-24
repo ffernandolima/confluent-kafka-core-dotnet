@@ -17,6 +17,8 @@ namespace Confluent.Kafka.Core.Consumer
 
         Action<IConsumer<TKey, TValue>, List<TopicPartitionOffset>> CreatePartitionsLostHandler();
 
+        Action<IConsumer<TKey, TValue>, CommittedOffsets> CreateOffsetsCommittedHandler();
+
         Func<TValue, object> CreateMessageIdHandler();
     }
 }

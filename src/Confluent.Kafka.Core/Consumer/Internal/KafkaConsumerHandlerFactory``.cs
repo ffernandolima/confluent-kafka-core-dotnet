@@ -4,6 +4,7 @@ using Confluent.Kafka.Core.Models.Internal;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Confluent.Kafka.Core.Consumer.Internal
 {
@@ -41,8 +42,8 @@ namespace Confluent.Kafka.Core.Consumer.Internal
                 return;
             }
 
-            _logger.LogError("[ErrorHandler] -> ConsumerName: {ConsumerName} | Code: {Code} | Reason: {Reason}",
-                consumer.Name, error.Code, error.Reason);
+            _logger.LogError("[ErrorHandler] -> ConsumerName: {ConsumerName} | Error: {Error}",
+                consumer.Name, error);
         };
 
         public Action<IConsumer<TKey, TValue>, LogMessage> CreateLogHandler() => (consumer, logMessage) =>
@@ -89,6 +90,33 @@ namespace Confluent.Kafka.Core.Consumer.Internal
 
             _logger.LogInformation("[PartitionsLostHandler] -> ConsumerName: {ConsumerName} | Losses: [ {Losses} ]",
                 consumer.Name, string.Join(",", losses));
+        };
+
+        public Action<IConsumer<TKey, TValue>, CommittedOffsets> CreateOffsetsCommittedHandler() => (consumer, committedOffsets) =>
+        {
+            if (consumer is null || committedOffsets is null)
+            {
+                return;
+            }
+
+            if (committedOffsets.Error is not null)
+            {
+                var logLevel = committedOffsets.Error.IsError ? LogLevel.Error : LogLevel.Information;
+
+                _logger.Log(logLevel, "[OffsetsCommittedHandler] -> ConsumerName: {ConsumerName} | OverallOperation: {OverallOperation}",
+                    consumer.Name, committedOffsets.Error);
+            }
+
+            if (committedOffsets.Offsets is not null && committedOffsets.Offsets.Count > 0)
+            {
+                foreach (var offset in committedOffsets.Offsets.Where(offset => offset is not null))
+                {
+                    var logLevel = offset.Error is not null && offset.Error.IsError ? LogLevel.Error : LogLevel.Information;
+
+                    _logger.Log(logLevel, "[OffsetsCommittedHandler] -> ConsumerName: {ConsumerName} | PerPartitionOperation: {PerPartitionOperation}",
+                        consumer.Name, offset);
+                }
+            }
         };
 
         public Func<TValue, object> CreateMessageIdHandler() => (messageValue) =>

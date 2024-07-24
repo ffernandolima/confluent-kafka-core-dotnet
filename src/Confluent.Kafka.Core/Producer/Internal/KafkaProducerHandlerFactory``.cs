@@ -40,8 +40,8 @@ namespace Confluent.Kafka.Core.Producer.Internal
                 return;
             }
 
-            _logger.LogError("[ErrorHandler] -> ProducerName: {ProducerName} | Code: {Code} | Reason: {Reason}",
-                producer.Name, error.Code, error.Reason);
+            _logger.LogError("[ErrorHandler] -> ProducerName: {ProducerName} | Error: {Error}",
+                producer.Name, error);
         };
 
         public Action<IProducer<TKey, TValue>, LogMessage> CreateLogHandler() => (producer, logMessage) =>

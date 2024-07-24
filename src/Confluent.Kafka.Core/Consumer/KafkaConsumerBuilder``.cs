@@ -406,6 +406,11 @@ namespace Confluent.Kafka.Core.Consumer
                 SetPartitionsLostHandler(_handlerFactory.CreatePartitionsLostHandler());
             }
 
+            if (OffsetsCommittedHandler is null)
+            {
+                SetOffsetsCommittedHandler(_handlerFactory.CreateOffsetsCommittedHandler());
+            }
+
             _messageIdHandler ??= _handlerFactory.CreateMessageIdHandler();
 
             _interceptors ??= [];
