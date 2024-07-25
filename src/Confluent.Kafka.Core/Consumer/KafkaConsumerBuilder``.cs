@@ -542,7 +542,7 @@ namespace Confluent.Kafka.Core.Consumer
                         partitionsAssignedHandler?.Invoke(consumer, assignments);
                     }
 
-                    return assignments.Select(assignment => new TopicPartitionOffset(assignment, Offset.Unset));
+                    return assignments?.Select(assignment => new TopicPartitionOffset(assignment, Offset.Unset));
                 };
             }
         }
