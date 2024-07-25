@@ -34,9 +34,9 @@ namespace Confluent.Kafka.Core.Hosting.Internal
 
         private object _workerKey;
         private bool _workerConfigured;
-        private IKafkaDiagnosticsManager _diagnosticsManager;
         private IKafkaConsumer<TKey, TValue> _consumer;
         private IRetryHandler<TKey, TValue> _retryHandler;
+        private IKafkaDiagnosticsManager _diagnosticsManager;
         private IIdempotencyHandler<TKey, TValue> _idempotencyHandler;
         private IKafkaProducer<byte[], KafkaMetadataMessage> _retryProducer;
         private IKafkaProducer<byte[], KafkaMetadataMessage> _deadLetterProducer;
@@ -80,7 +80,7 @@ namespace Confluent.Kafka.Core.Hosting.Internal
                 IdempotencyHandler = _idempotencyHandler,
                 RetryProducer = _retryProducer,
                 DeadLetterProducer = _deadLetterProducer,
-                ConsumeResultHandlers = _consumeResultHandlers!.ToArray(),
+                ConsumeResultHandlers = _consumeResultHandlers,
                 ConsumeResultErrorHandler = _consumeResultErrorHandler,
                 MessageOrderGuaranteeKeyHandler = _messageOrderGuaranteeKeyHandler
             };
@@ -202,7 +202,7 @@ namespace Confluent.Kafka.Core.Hosting.Internal
         {
             if (consumeResultHandler is not null)
             {
-                _consumeResultHandlers = (_consumeResultHandlers ?? []).Union([consumeResultHandler]);
+                _consumeResultHandlers = (_consumeResultHandlers ?? []).Union([consumeResultHandler]).ToArray();
             }
             return this;
         }
@@ -216,7 +216,7 @@ namespace Confluent.Kafka.Core.Hosting.Internal
 
             if (consumeResultHandlers is not null && consumeResultHandlers.Any(consumeResultHandler => consumeResultHandler is not null))
             {
-                _consumeResultHandlers = consumeResultHandlers.Where(consumeResultHandler => consumeResultHandler is not null);
+                _consumeResultHandlers = consumeResultHandlers.Where(consumeResultHandler => consumeResultHandler is not null).ToArray();
             }
             return this;
         }

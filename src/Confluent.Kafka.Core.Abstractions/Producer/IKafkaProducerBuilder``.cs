@@ -26,7 +26,7 @@ namespace Confluent.Kafka.Core.Producer
 
         IKafkaProducerBuilder<TKey, TValue> WithLogHandler(Action<IProducer<TKey, TValue>, LogMessage> logHandler);
 
-        IKafkaProducerBuilder<TKey, TValue> WithOAuthBearerTokenRefreshHandler(Action<IProducer<TKey, TValue>, string> oAuthBearerTokenRefreshHandler);
+        IKafkaProducerBuilder<TKey, TValue> WithOAuthBearerTokenRefreshHandler(Action<IClient, string> oAuthBearerTokenRefreshHandler);
 
         IKafkaProducerBuilder<TKey, TValue> WithKeySerializer(ISerializer<TKey> serializer);
 

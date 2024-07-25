@@ -17,5 +17,9 @@ namespace Confluent.Kafka.Core.Producer.Internal
         public Func<TValue, object> MessageIdHandler { get; init; }
         public IRetryHandler<TKey, TValue> RetryHandler { get; init; }
         public IEnumerable<IKafkaProducerInterceptor<TKey, TValue>> Interceptors { get; init; }
+        public Action<IClient, string> OAuthBearerTokenRefreshHandler { get; init; }
+        public ICollection<Action<IProducer<TKey, TValue>, string>> StatisticsHandlers { get; init; }
+        public ICollection<Action<IProducer<TKey, TValue>, Error>> ErrorHandlers { get; init; }
+        public ICollection<Action<IProducer<TKey, TValue>, LogMessage>> LogHandlers { get; init; }
     }
 }

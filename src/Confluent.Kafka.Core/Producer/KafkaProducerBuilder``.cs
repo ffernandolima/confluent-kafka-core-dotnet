@@ -36,6 +36,10 @@ namespace Confluent.Kafka.Core.Producer
         private IKafkaDiagnosticsManager _diagnosticsManager;
         private IKafkaProducerHandlerFactory<TKey, TValue> _handlerFactory;
         private IEnumerable<IKafkaProducerInterceptor<TKey, TValue>> _interceptors;
+        private Action<IClient, string> _oAuthBearerTokenRefreshHandler;
+        private ICollection<Action<IProducer<TKey, TValue>, string>> _statisticsHandlers;
+        private ICollection<Action<IProducer<TKey, TValue>, Error>> _errorHandlers;
+        private ICollection<Action<IProducer<TKey, TValue>, LogMessage>> _logHandlers;
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private IKafkaProducer<TKey, TValue> _builtProducer;
@@ -87,7 +91,11 @@ namespace Confluent.Kafka.Core.Producer
                 ValueSerializer = ValueSerializer,
                 MessageIdHandler = _messageIdHandler,
                 RetryHandler = _retryHandler,
-                Interceptors = _interceptors!.ToArray()
+                Interceptors = _interceptors,
+                OAuthBearerTokenRefreshHandler = _oAuthBearerTokenRefreshHandler,
+                StatisticsHandlers = _statisticsHandlers,
+                ErrorHandlers = _errorHandlers,
+                LogHandlers = _logHandlers
             };
 
             return _builtOptions;
@@ -104,7 +112,7 @@ namespace Confluent.Kafka.Core.Producer
 
         public IKafkaProducerBuilder<TKey, TValue> WithStatisticsHandler(Action<IProducer<TKey, TValue>, string> statisticsHandler)
         {
-            SetStatisticsHandler(statisticsHandler);
+            AttachStatisticsHandler(statisticsHandler);
             return this;
         }
 
@@ -122,19 +130,24 @@ namespace Confluent.Kafka.Core.Producer
 
         public IKafkaProducerBuilder<TKey, TValue> WithErrorHandler(Action<IProducer<TKey, TValue>, Error> errorHandler)
         {
-            SetErrorHandler(errorHandler);
+            AttachErrorHandler(errorHandler);
             return this;
         }
 
         public IKafkaProducerBuilder<TKey, TValue> WithLogHandler(Action<IProducer<TKey, TValue>, LogMessage> logHandler)
         {
-            SetLogHandler(logHandler);
+            AttachLogHandler(logHandler);
             return this;
         }
 
-        public IKafkaProducerBuilder<TKey, TValue> WithOAuthBearerTokenRefreshHandler(Action<IProducer<TKey, TValue>, string> oAuthBearerTokenRefreshHandler)
+        public IKafkaProducerBuilder<TKey, TValue> WithOAuthBearerTokenRefreshHandler(Action<IClient, string> oAuthBearerTokenRefreshHandler)
         {
-            SetOAuthBearerTokenRefreshHandler(oAuthBearerTokenRefreshHandler);
+            if (OAuthBearerTokenRefreshHandler is not null)
+            {
+                throw new InvalidOperationException("OAuthBearer token refresh handler may not be specified more than once.");
+            }
+
+            OAuthBearerTokenRefreshHandler = _oAuthBearerTokenRefreshHandler = oAuthBearerTokenRefreshHandler;
             return this;
         }
 
@@ -243,7 +256,7 @@ namespace Confluent.Kafka.Core.Producer
         {
             if (interceptor is not null)
             {
-                _interceptors = (_interceptors ?? []).Union([interceptor]);
+                _interceptors = (_interceptors ?? []).Union([interceptor]).ToArray();
             }
             return this;
         }
@@ -257,7 +270,7 @@ namespace Confluent.Kafka.Core.Producer
 
             if (interceptors is not null && interceptors.Any(interceptor => interceptor is not null))
             {
-                _interceptors = interceptors.Where(interceptor => interceptor is not null);
+                _interceptors = interceptors.Where(interceptor => interceptor is not null).ToArray();
             }
             return this;
         }
@@ -329,17 +342,17 @@ namespace Confluent.Kafka.Core.Producer
 
             if (StatisticsHandler is null)
             {
-                SetStatisticsHandler(_handlerFactory.CreateStatisticsHandler());
+                AttachStatisticsHandler(_handlerFactory.CreateStatisticsHandler());
             }
 
             if (ErrorHandler is null)
             {
-                SetErrorHandler(_handlerFactory.CreateErrorHandler());
+                AttachErrorHandler(_handlerFactory.CreateErrorHandler());
             }
 
             if (LogHandler is null)
             {
-                SetLogHandler(_handlerFactory.CreateLogHandler());
+                AttachLogHandler(_handlerFactory.CreateLogHandler());
             }
 
             _messageIdHandler ??= _handlerFactory.CreateMessageIdHandler();
@@ -354,6 +367,72 @@ namespace Confluent.Kafka.Core.Producer
             _builtProducer = (IKafkaProducer<TKey, TValue>)Activator.CreateInstance(DefaultProducerType, this);
 
             return _builtProducer;
+        }
+
+        private void AttachStatisticsHandler(Action<IProducer<TKey, TValue>, string> statisticsHandler)
+        {
+            if (StatisticsHandler is not null)
+            {
+                throw new InvalidOperationException("Statistics handler may not be specified more than once.");
+            }
+
+            if (statisticsHandler is not null)
+            {
+                _statisticsHandlers ??= [];
+                _statisticsHandlers.Add(statisticsHandler);
+
+                StatisticsHandler = (consumer, statistics) =>
+                {
+                    foreach (var statisticsHandler in _statisticsHandlers)
+                    {
+                        statisticsHandler?.Invoke(consumer, statistics);
+                    }
+                };
+            }
+        }
+
+        private void AttachErrorHandler(Action<IProducer<TKey, TValue>, Error> errorHandler)
+        {
+            if (ErrorHandler is not null)
+            {
+                throw new InvalidOperationException("Error handler may not be specified more than once.");
+            }
+
+            if (errorHandler is not null)
+            {
+                _errorHandlers ??= [];
+                _errorHandlers.Add(errorHandler);
+
+                ErrorHandler = (consumer, error) =>
+                {
+                    foreach (var errorHandler in _errorHandlers)
+                    {
+                        errorHandler?.Invoke(consumer, error);
+                    }
+                };
+            }
+        }
+
+        private void AttachLogHandler(Action<IProducer<TKey, TValue>, LogMessage> logHandler)
+        {
+            if (LogHandler is not null)
+            {
+                throw new InvalidOperationException("Log handler may not be specified more than once.");
+            }
+
+            if (logHandler is not null)
+            {
+                _logHandlers ??= [];
+                _logHandlers.Add(logHandler);
+
+                LogHandler = (consumer, logMessage) =>
+                {
+                    foreach (var logHandler in _logHandlers)
+                    {
+                        logHandler?.Invoke(consumer, logMessage);
+                    }
+                };
+            }
         }
 
         #endregion IKafkaProducerBuilder Members

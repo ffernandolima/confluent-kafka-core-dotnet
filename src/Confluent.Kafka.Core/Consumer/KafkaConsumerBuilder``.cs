@@ -35,12 +35,20 @@ namespace Confluent.Kafka.Core.Consumer
 
         private object _consumerKey;
         private bool _consumerConfigured;
-        private IKafkaDiagnosticsManager _diagnosticsManager;
         private Func<TValue, object> _messageIdHandler;
         private IRetryHandler<TKey, TValue> _retryHandler;
+        private IKafkaDiagnosticsManager _diagnosticsManager;
         private IKafkaConsumerHandlerFactory<TKey, TValue> _handlerFactory;
         private IKafkaProducer<byte[], KafkaMetadataMessage> _deadLetterProducer;
         private IEnumerable<IKafkaConsumerInterceptor<TKey, TValue>> _interceptors;
+        private Action<IClient, string> _oAuthBearerTokenRefreshHandler;
+        private ICollection<Action<IConsumer<TKey, TValue>, string>> _statisticsHandlers;
+        private ICollection<Action<IConsumer<TKey, TValue>, Error>> _errorHandlers;
+        private ICollection<Action<IConsumer<TKey, TValue>, LogMessage>> _logHandlers;
+        private ICollection<Action<IConsumer<TKey, TValue>, List<TopicPartition>>> _partitionsAssignedHandlers;
+        private ICollection<Action<IConsumer<TKey, TValue>, List<TopicPartitionOffset>>> _partitionsRevokedHandlers;
+        private ICollection<Action<IConsumer<TKey, TValue>, List<TopicPartitionOffset>>> _partitionsLostHandlers;
+        private ICollection<Action<IConsumer<TKey, TValue>, CommittedOffsets>> _offsetsCommittedHandlers;
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private IKafkaConsumer<TKey, TValue> _builtConsumer;
@@ -93,7 +101,15 @@ namespace Confluent.Kafka.Core.Consumer
                 MessageIdHandler = _messageIdHandler,
                 RetryHandler = _retryHandler,
                 DeadLetterProducer = _deadLetterProducer,
-                Interceptors = _interceptors!.ToArray()
+                Interceptors = _interceptors,
+                OAuthBearerTokenRefreshHandler = _oAuthBearerTokenRefreshHandler,
+                StatisticsHandlers = _statisticsHandlers,
+                ErrorHandlers = _errorHandlers,
+                LogHandlers = _logHandlers,
+                PartitionsAssignedHandlers = _partitionsAssignedHandlers,
+                PartitionsRevokedHandlers = _partitionsRevokedHandlers,
+                PartitionsLostHandlers = _partitionsLostHandlers,
+                OffsetsCommittedHandlers = _offsetsCommittedHandlers
             };
 
             return _builtOptions;
@@ -110,25 +126,30 @@ namespace Confluent.Kafka.Core.Consumer
 
         public IKafkaConsumerBuilder<TKey, TValue> WithStatisticsHandler(Action<IConsumer<TKey, TValue>, string> statisticsHandler)
         {
-            SetStatisticsHandler(statisticsHandler);
+            AttachStatisticsHandler(statisticsHandler);
             return this;
         }
 
         public IKafkaConsumerBuilder<TKey, TValue> WithErrorHandler(Action<IConsumer<TKey, TValue>, Error> errorHandler)
         {
-            SetErrorHandler(errorHandler);
+            AttachErrorHandler(errorHandler);
             return this;
         }
 
         public IKafkaConsumerBuilder<TKey, TValue> WithLogHandler(Action<IConsumer<TKey, TValue>, LogMessage> logHandler)
         {
-            SetLogHandler(logHandler);
+            AttachLogHandler(logHandler);
             return this;
         }
 
-        public IKafkaConsumerBuilder<TKey, TValue> WithOAuthBearerTokenRefreshHandler(Action<IConsumer<TKey, TValue>, string> oAuthBearerTokenRefreshHandler)
+        public IKafkaConsumerBuilder<TKey, TValue> WithOAuthBearerTokenRefreshHandler(Action<IClient, string> oAuthBearerTokenRefreshHandler)
         {
-            SetOAuthBearerTokenRefreshHandler(oAuthBearerTokenRefreshHandler);
+            if (OAuthBearerTokenRefreshHandler is not null)
+            {
+                throw new InvalidOperationException("OAuthBearer token refresh handler may not be specified more than once.");
+            }
+
+            OAuthBearerTokenRefreshHandler = _oAuthBearerTokenRefreshHandler = oAuthBearerTokenRefreshHandler;
             return this;
         }
 
@@ -158,43 +179,44 @@ namespace Confluent.Kafka.Core.Consumer
 
         public IKafkaConsumerBuilder<TKey, TValue> WithPartitionsAssignedHandler(Func<IConsumer<TKey, TValue>, List<TopicPartition>, IEnumerable<TopicPartitionOffset>> partitionsAssignedHandler)
         {
-            SetPartitionsAssignedHandler(partitionsAssignedHandler);
+            AttachPartitionsAssignedHandler(partitionsAssignedHandler);
             return this;
         }
 
         public IKafkaConsumerBuilder<TKey, TValue> WithPartitionsAssignedHandler(Action<IConsumer<TKey, TValue>, List<TopicPartition>> partitionsAssignedHandler)
         {
-            SetPartitionsAssignedHandler(partitionsAssignedHandler);
+            AttachPartitionsAssignedHandler(partitionsAssignedHandler);
             return this;
         }
 
         public IKafkaConsumerBuilder<TKey, TValue> WithPartitionsRevokedHandler(Func<IConsumer<TKey, TValue>, List<TopicPartitionOffset>, IEnumerable<TopicPartitionOffset>> partitionsRevokedHandler)
         {
-            SetPartitionsRevokedHandler(partitionsRevokedHandler);
+            AttachPartitionsRevokedHandler(partitionsRevokedHandler);
             return this;
         }
 
         public IKafkaConsumerBuilder<TKey, TValue> WithPartitionsRevokedHandler(Action<IConsumer<TKey, TValue>, List<TopicPartitionOffset>> partitionsRevokedHandler)
         {
-            SetPartitionsRevokedHandler(partitionsRevokedHandler);
+            AttachPartitionsRevokedHandler(partitionsRevokedHandler);
             return this;
         }
 
         public IKafkaConsumerBuilder<TKey, TValue> WithPartitionsLostHandler(Func<IConsumer<TKey, TValue>, List<TopicPartitionOffset>, IEnumerable<TopicPartitionOffset>> partitionsLostHandler)
         {
-            SetPartitionsLostHandler(partitionsLostHandler);
+            AttachPartitionsLostHandler(partitionsLostHandler);
             return this;
         }
 
         public IKafkaConsumerBuilder<TKey, TValue> WithPartitionsLostHandler(Action<IConsumer<TKey, TValue>, List<TopicPartitionOffset>> partitionsLostHandler)
         {
-            SetPartitionsLostHandler(partitionsLostHandler);
+            AttachPartitionsLostHandler(partitionsLostHandler);
             return this;
         }
 
         public IKafkaConsumerBuilder<TKey, TValue> WithOffsetsCommittedHandler(Action<IConsumer<TKey, TValue>, CommittedOffsets> offsetsCommittedHandler)
         {
-            SetOffsetsCommittedHandler(offsetsCommittedHandler);
+
+            AttachOffsetsCommittedHandler(offsetsCommittedHandler);
             return this;
         }
 
@@ -291,7 +313,7 @@ namespace Confluent.Kafka.Core.Consumer
         {
             if (interceptor is not null)
             {
-                _interceptors = (_interceptors ?? []).Union([interceptor]);
+                _interceptors = (_interceptors ?? []).Union([interceptor]).ToArray();
             }
             return this;
         }
@@ -305,7 +327,7 @@ namespace Confluent.Kafka.Core.Consumer
 
             if (interceptors is not null && interceptors.Any(interceptor => interceptor is not null))
             {
-                _interceptors = interceptors.Where(interceptor => interceptor is not null);
+                _interceptors = interceptors.Where(interceptor => interceptor is not null).ToArray();
             }
             return this;
         }
@@ -378,37 +400,37 @@ namespace Confluent.Kafka.Core.Consumer
 
             if (StatisticsHandler is null)
             {
-                SetStatisticsHandler(_handlerFactory.CreateStatisticsHandler());
+                AttachStatisticsHandler(_handlerFactory.CreateStatisticsHandler());
             }
 
             if (ErrorHandler is null)
             {
-                SetErrorHandler(_handlerFactory.CreateErrorHandler());
+                AttachErrorHandler(_handlerFactory.CreateErrorHandler());
             }
 
             if (LogHandler is null)
             {
-                SetLogHandler(_handlerFactory.CreateLogHandler());
+                AttachLogHandler(_handlerFactory.CreateLogHandler());
             }
 
             if (PartitionsAssignedHandler is null)
             {
-                SetPartitionsAssignedHandler(_handlerFactory.CreatePartitionsAssignedHandler());
+                AttachPartitionsAssignedHandler(_handlerFactory.CreatePartitionsAssignedHandler());
             }
 
             if (PartitionsRevokedHandler is null)
             {
-                SetPartitionsRevokedHandler(_handlerFactory.CreatePartitionsRevokedHandler());
+                AttachPartitionsRevokedHandler(_handlerFactory.CreatePartitionsRevokedHandler());
             }
 
             if (PartitionsLostHandler is null)
             {
-                SetPartitionsLostHandler(_handlerFactory.CreatePartitionsLostHandler());
+                AttachPartitionsLostHandler(_handlerFactory.CreatePartitionsLostHandler());
             }
 
             if (OffsetsCommittedHandler is null)
             {
-                SetOffsetsCommittedHandler(_handlerFactory.CreateOffsetsCommittedHandler());
+                AttachOffsetsCommittedHandler(_handlerFactory.CreateOffsetsCommittedHandler());
             }
 
             _messageIdHandler ??= _handlerFactory.CreateMessageIdHandler();
@@ -433,6 +455,257 @@ namespace Confluent.Kafka.Core.Consumer
             }
 
             return _builtConsumer;
+        }
+
+        private void AttachStatisticsHandler(Action<IConsumer<TKey, TValue>, string> statisticsHandler)
+        {
+            if (StatisticsHandler is not null)
+            {
+                throw new InvalidOperationException("Statistics handler may not be specified more than once.");
+            }
+
+            if (statisticsHandler is not null)
+            {
+                _statisticsHandlers ??= [];
+                _statisticsHandlers.Add(statisticsHandler);
+
+                StatisticsHandler = (consumer, statistics) =>
+                {
+                    foreach (var statisticsHandler in _statisticsHandlers)
+                    {
+                        statisticsHandler?.Invoke(consumer, statistics);
+                    }
+                };
+            }
+        }
+
+        private void AttachErrorHandler(Action<IConsumer<TKey, TValue>, Error> errorHandler)
+        {
+            if (ErrorHandler is not null)
+            {
+                throw new InvalidOperationException("Error handler may not be specified more than once.");
+            }
+
+            if (errorHandler is not null)
+            {
+                _errorHandlers ??= [];
+                _errorHandlers.Add(errorHandler);
+
+                ErrorHandler = (consumer, error) =>
+                {
+                    foreach (var errorHandler in _errorHandlers)
+                    {
+                        errorHandler?.Invoke(consumer, error);
+                    }
+                };
+            }
+        }
+
+        private void AttachLogHandler(Action<IConsumer<TKey, TValue>, LogMessage> logHandler)
+        {
+            if (LogHandler is not null)
+            {
+                throw new InvalidOperationException("Log handler may not be specified more than once.");
+            }
+
+            if (logHandler is not null)
+            {
+                _logHandlers ??= [];
+                _logHandlers.Add(logHandler);
+
+                LogHandler = (consumer, logMessage) =>
+                {
+                    foreach (var logHandler in _logHandlers)
+                    {
+                        logHandler?.Invoke(consumer, logMessage);
+                    }
+                };
+            }
+        }
+
+        private void AttachPartitionsAssignedHandler(Action<IConsumer<TKey, TValue>, List<TopicPartition>> partitionsAssignedHandler)
+        {
+            if (PartitionsAssignedHandler is not null)
+            {
+                throw new InvalidOperationException("Partitions assigned handler may not be specified more than once.");
+            }
+
+            if (partitionsAssignedHandler is not null)
+            {
+                _partitionsAssignedHandlers ??= [];
+                _partitionsAssignedHandlers.Add(partitionsAssignedHandler);
+
+                PartitionsAssignedHandler = (consumer, assignments) =>
+                {
+                    foreach (var partitionsAssignedHandler in _partitionsAssignedHandlers)
+                    {
+                        partitionsAssignedHandler?.Invoke(consumer, assignments);
+                    }
+
+                    return assignments.Select(assignment => new TopicPartitionOffset(assignment, Offset.Unset));
+                };
+            }
+        }
+
+        private void AttachPartitionsAssignedHandler(Func<IConsumer<TKey, TValue>, List<TopicPartition>, IEnumerable<TopicPartitionOffset>> partitionsAssignedHandler)
+        {
+            if (PartitionsAssignedHandler is not null)
+            {
+                throw new InvalidOperationException("Partitions assigned handler may not be specified more than once.");
+            }
+
+            if (partitionsAssignedHandler is not null)
+            {
+                IEnumerable<TopicPartitionOffset> offsetAssignments = null;
+
+                _partitionsAssignedHandlers ??= [];
+                _partitionsAssignedHandlers.Add((consumer, assignments) =>
+                {
+                    offsetAssignments = partitionsAssignedHandler.Invoke(consumer, assignments);
+                });
+
+                PartitionsAssignedHandler = (consumer, assignments) =>
+                {
+                    foreach (var partitionsAssignedHandler in _partitionsAssignedHandlers)
+                    {
+                        partitionsAssignedHandler?.Invoke(consumer, assignments);
+                    }
+
+                    return offsetAssignments;
+                };
+            }
+        }
+
+        private void AttachPartitionsRevokedHandler(Action<IConsumer<TKey, TValue>, List<TopicPartitionOffset>> partitionsRevokedHandler)
+        {
+            if (PartitionsRevokedHandler is not null)
+            {
+                throw new InvalidOperationException("Partitions revoked handler may not be specified more than once.");
+            }
+
+            if (partitionsRevokedHandler is not null)
+            {
+                _partitionsRevokedHandlers ??= [];
+                _partitionsRevokedHandlers.Add(partitionsRevokedHandler);
+
+                PartitionsRevokedHandler = (consumer, revokements) =>
+                {
+                    foreach (var partitionsRevokedHandler in _partitionsRevokedHandlers)
+                    {
+                        partitionsRevokedHandler?.Invoke(consumer, revokements);
+                    }
+
+                    return [];
+                };
+            }
+        }
+
+        private void AttachPartitionsRevokedHandler(Func<IConsumer<TKey, TValue>, List<TopicPartitionOffset>, IEnumerable<TopicPartitionOffset>> partitionsRevokedHandler)
+        {
+            if (PartitionsRevokedHandler is not null)
+            {
+                throw new InvalidOperationException("Partitions revoked handler may not be specified more than once.");
+            }
+
+            if (partitionsRevokedHandler is not null)
+            {
+                IEnumerable<TopicPartitionOffset> offsetRevokements = null;
+
+                _partitionsRevokedHandlers ??= [];
+                _partitionsRevokedHandlers.Add((consumer, revokements) =>
+                {
+                    offsetRevokements = partitionsRevokedHandler.Invoke(consumer, revokements);
+                });
+
+                PartitionsRevokedHandler = (consumer, revokements) =>
+                {
+                    foreach (var partitionsRevokedHandler in _partitionsRevokedHandlers)
+                    {
+                        partitionsRevokedHandler?.Invoke(consumer, revokements);
+                    }
+
+                    return offsetRevokements;
+                };
+
+                RevokedOrLostHandlerIsFunc = true;
+            }
+        }
+
+        private void AttachPartitionsLostHandler(Action<IConsumer<TKey, TValue>, List<TopicPartitionOffset>> partitionsLostHandler)
+        {
+            if (PartitionsLostHandler is not null)
+            {
+                throw new InvalidOperationException("Partitions lost handler may not be specified more than once.");
+            }
+
+            if (partitionsLostHandler is not null)
+            {
+                _partitionsLostHandlers ??= [];
+                _partitionsLostHandlers.Add(partitionsLostHandler);
+
+                PartitionsLostHandler = (consumer, losses) =>
+                {
+                    foreach (var partitionsLostHandler in _partitionsLostHandlers)
+                    {
+                        partitionsLostHandler?.Invoke(consumer, losses);
+                    }
+
+                    return [];
+                };
+            }
+        }
+
+        private void AttachPartitionsLostHandler(Func<IConsumer<TKey, TValue>, List<TopicPartitionOffset>, IEnumerable<TopicPartitionOffset>> partitionsLostHandler)
+        {
+            if (PartitionsLostHandler is not null)
+            {
+                throw new InvalidOperationException("Partitions lost handler may not be specified more than once.");
+            }
+
+            if (partitionsLostHandler is not null)
+            {
+                IEnumerable<TopicPartitionOffset> offsetLosses = null;
+
+                _partitionsLostHandlers ??= [];
+                _partitionsLostHandlers.Add((consumer, losses) =>
+                {
+                    offsetLosses = partitionsLostHandler.Invoke(consumer, losses);
+                });
+
+                PartitionsLostHandler = (consumer, losses) =>
+                {
+                    foreach (var partitionsLostHandler in _partitionsLostHandlers)
+                    {
+                        partitionsLostHandler?.Invoke(consumer, losses);
+                    }
+
+                    return offsetLosses;
+                };
+
+                RevokedOrLostHandlerIsFunc = true;
+            }
+        }
+
+        private void AttachOffsetsCommittedHandler(Action<IConsumer<TKey, TValue>, CommittedOffsets> offsetsCommittedHandler)
+        {
+            if (OffsetsCommittedHandler is not null)
+            {
+                throw new InvalidOperationException("Offsets committed handler may not be specified more than once.");
+            }
+
+            if (offsetsCommittedHandler is not null)
+            {
+                _offsetsCommittedHandlers ??= [];
+                _offsetsCommittedHandlers.Add(offsetsCommittedHandler);
+
+                OffsetsCommittedHandler = (consumer, committedOffsets) =>
+                {
+                    foreach (var offsetsCommittedHandler in _offsetsCommittedHandlers)
+                    {
+                        offsetsCommittedHandler?.Invoke(consumer, committedOffsets);
+                    }
+                };
+            }
         }
 
         #endregion IKafkaConsumerBuilder Members

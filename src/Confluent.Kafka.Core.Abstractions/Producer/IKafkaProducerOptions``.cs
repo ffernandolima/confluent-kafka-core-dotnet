@@ -25,5 +25,13 @@ namespace Confluent.Kafka.Core.Producer
         IRetryHandler<TKey, TValue> RetryHandler { get; }
 
         IEnumerable<IKafkaProducerInterceptor<TKey, TValue>> Interceptors { get; }
+
+        Action<IClient, string> OAuthBearerTokenRefreshHandler { get; }
+
+        ICollection<Action<IProducer<TKey, TValue>, string>> StatisticsHandlers { get; }
+
+        ICollection<Action<IProducer<TKey, TValue>, Error>> ErrorHandlers { get; }
+
+        ICollection<Action<IProducer<TKey, TValue>, LogMessage>> LogHandlers { get; }
     }
 }

@@ -29,5 +29,22 @@ namespace Confluent.Kafka.Core.Consumer
         IKafkaProducer<byte[], KafkaMetadataMessage> DeadLetterProducer { get; }
 
         IEnumerable<IKafkaConsumerInterceptor<TKey, TValue>> Interceptors { get; }
+
+        Action<IClient, string> OAuthBearerTokenRefreshHandler { get; }
+
+        ICollection<Action<IConsumer<TKey, TValue>, string>> StatisticsHandlers { get; }
+
+        ICollection<Action<IConsumer<TKey, TValue>, Error>> ErrorHandlers { get; }
+
+        ICollection<Action<IConsumer<TKey, TValue>, LogMessage>> LogHandlers { get; }
+
+        ICollection<Action<IConsumer<TKey, TValue>, List<TopicPartition>>> PartitionsAssignedHandlers { get; }
+
+        ICollection<Action<IConsumer<TKey, TValue>, List<TopicPartitionOffset>>> PartitionsRevokedHandlers { get; }
+
+        ICollection<Action<IConsumer<TKey, TValue>, List<TopicPartitionOffset>>> PartitionsLostHandlers { get; }
+
+        ICollection<Action<IConsumer<TKey, TValue>, CommittedOffsets>> OffsetsCommittedHandlers { get; }
+
     }
 }
