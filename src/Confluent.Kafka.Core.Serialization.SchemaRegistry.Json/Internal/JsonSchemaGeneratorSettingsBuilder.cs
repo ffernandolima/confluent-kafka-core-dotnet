@@ -1,5 +1,6 @@
 ﻿using Confluent.Kafka.Core.Internal;
 using Microsoft.Extensions.Configuration;
+using Namotion.Reflection;
 using Newtonsoft.Json;
 using NJsonSchema;
 using NJsonSchema.Generation;
@@ -145,6 +146,12 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Json.Internal
         public IJsonSchemaGeneratorSettingsBuilder WithResolveExternalXmlDocumentation(bool resolveExternalXmlDocumentation)
         {
             AppendAction(settings => settings.ResolveExternalXmlDocumentation = resolveExternalXmlDocumentation);
+            return this;
+        }
+
+        public IJsonSchemaGeneratorSettingsBuilder WithXmlDocumentationFormatting(XmlDocsFormattingMode xmlDocumentationFormatting)
+        {
+            AppendAction(settings => settings.XmlDocumentationFormatting = xmlDocumentationFormatting);
             return this;
         }
 

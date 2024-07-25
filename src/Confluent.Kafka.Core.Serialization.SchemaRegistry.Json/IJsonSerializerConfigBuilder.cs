@@ -17,6 +17,8 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Json
 
         IJsonSerializerConfigBuilder WithLatestCompatibilityStrict(bool? latestCompatibilityStrict);
 
+        IJsonSerializerConfigBuilder WithUseLatestWithMetadata(IDictionary<string, string> useLatestWithMetadata);
+
         IJsonSerializerConfigBuilder WithSubjectNameStrategy(SubjectNameStrategy? subjectNameStrategy);
 
         IJsonSerializerConfigBuilder WithConfigurationProperty(KeyValuePair<string, string> configurationProperty);

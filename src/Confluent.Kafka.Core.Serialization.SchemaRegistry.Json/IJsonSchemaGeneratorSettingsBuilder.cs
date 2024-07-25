@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Namotion.Reflection;
+using Newtonsoft.Json;
 using NJsonSchema;
 using NJsonSchema.Generation;
 using NJsonSchema.Generation.TypeMappers;
@@ -47,6 +48,8 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Json
         IJsonSchemaGeneratorSettingsBuilder WithUseXmlDocumentation(bool useXmlDocumentation);
 
         IJsonSchemaGeneratorSettingsBuilder WithResolveExternalXmlDocumentation(bool resolveExternalXmlDocumentation);
+
+        IJsonSchemaGeneratorSettingsBuilder WithXmlDocumentationFormatting(XmlDocsFormattingMode xmlDocumentationFormatting);
 
         IJsonSchemaGeneratorSettingsBuilder WithTypeNameGenerator(ITypeNameGenerator typeNameGenerator);
 

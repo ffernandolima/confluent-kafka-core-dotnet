@@ -34,10 +34,6 @@ namespace Confluent.Kafka.Core.Producer
 
         int? MessageSendMaxRetries { get; }
 
-        int? RetryBackoffMs { get; }
-
-        int? RetryBackoffMaxMs { get; }
-
         int? QueueBufferingBackpressureThreshold { get; }
 
         CompressionType? CompressionType { get; }

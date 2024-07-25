@@ -1,6 +1,7 @@
 ﻿using Confluent.SchemaRegistry;
 using Confluent.SchemaRegistry.Serdes;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Avro.Internal
@@ -13,15 +14,16 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Avro.Internal
         public SchemaRegistryAvroSerializer(
            ISchemaRegistryClient schemaRegistryClient,
            AvroSerializerConfig serializerConfig = null,
-           AvroDeserializerConfig deserializerConfig = null)
+           AvroDeserializerConfig deserializerConfig = null,
+           IList<IRuleExecutor> ruleExecutors = null)
         {
             if (schemaRegistryClient is null)
             {
                 throw new ArgumentNullException(nameof(schemaRegistryClient));
             }
 
-            _serializer = new AvroSerializer<T>(schemaRegistryClient, serializerConfig);
-            _deserializer = new AvroDeserializer<T>(schemaRegistryClient, deserializerConfig);
+            _serializer = new AvroSerializer<T>(schemaRegistryClient, serializerConfig, ruleExecutors);
+            _deserializer = new AvroDeserializer<T>(schemaRegistryClient, deserializerConfig, ruleExecutors);
         }
 
         public async Task<byte[]> SerializeAsync(T data, SerializationContext context)

@@ -43,7 +43,8 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Protobuf.Internal
             var serializer = new SchemaRegistryProtobufSerializer<T>(
                 builder.SchemaRegistryClient,
                 builder.SerializerConfig,
-                builder.DeserializerConfig);
+                builder.DeserializerConfig,
+                builder.RuleExecutors);
 
             return serializer;
         }

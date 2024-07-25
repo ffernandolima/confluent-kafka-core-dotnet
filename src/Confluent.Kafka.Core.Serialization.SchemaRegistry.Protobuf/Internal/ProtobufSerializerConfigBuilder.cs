@@ -56,6 +56,12 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Protobuf.Internal
             return this;
         }
 
+        public IProtobufSerializerConfigBuilder WithUseLatestWithMetadata(IDictionary<string, string> useLatestWithMetadata)
+        {
+            AppendAction(config => config.UseLatestWithMetadata = useLatestWithMetadata);
+            return this;
+        }
+
         public IProtobufSerializerConfigBuilder WithSkipKnownTypes(bool? skipKnownTypes)
         {
             AppendAction(config => config.SkipKnownTypes = skipKnownTypes);

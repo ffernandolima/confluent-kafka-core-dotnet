@@ -40,7 +40,8 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Avro.Internal
             var serializer = new SchemaRegistryAvroSerializer<T>(
                 builder.SchemaRegistryClient,
                 builder.SerializerConfig,
-                builder.DeserializerConfig);
+                builder.DeserializerConfig,
+                builder.RuleExecutors);
 
             return serializer;
         }

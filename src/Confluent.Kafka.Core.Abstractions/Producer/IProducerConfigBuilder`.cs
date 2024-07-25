@@ -36,8 +36,6 @@ namespace Confluent.Kafka.Core.Producer
 
         TBuilder WithMessageSendMaxRetries(int? messageSendMaxRetries);
 
-        TBuilder WithRetryBackoffMs(int? retryBackoffMs);
-
         TBuilder WithQueueBufferingBackpressureThreshold(int? queueBufferingBackpressureThreshold);
 
         TBuilder WithCompressionType(CompressionType? compressionType);

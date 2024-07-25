@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Confluent.SchemaRegistry;
+using System;
+using System.Collections.Generic;
 
 namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Protobuf
 {
@@ -13,5 +15,8 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Protobuf
 
         ISchemaRegistryProtobufSerializerBuilder WithDeserializerConfiguration(
             Action<IProtobufDeserializerConfigBuilder> configureDeserializer);
+
+        ISchemaRegistryProtobufSerializerBuilder WithRuleExecutors(
+            IList<IRuleExecutor> ruleExecutors);
     }
 }

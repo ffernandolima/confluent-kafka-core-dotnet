@@ -2,6 +2,7 @@
 using Confluent.SchemaRegistry.Serdes;
 using NJsonSchema.Generation;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Json.Internal
@@ -16,7 +17,8 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Json.Internal
             Schema schema = null,
             JsonSerializerConfig serializerConfig = null,
             JsonDeserializerConfig deserializerConfig = null,
-            JsonSchemaGeneratorSettings schemaGeneratorSettings = null)
+            JsonSchemaGeneratorSettings schemaGeneratorSettings = null,
+            IList<IRuleExecutor> ruleExecutors = null)
         {
             if (schemaRegistryClient is null)
             {
@@ -25,13 +27,13 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Json.Internal
 
             if (schema is not null)
             {
-                _serializer = new JsonSerializer<T>(schemaRegistryClient, schema, serializerConfig, schemaGeneratorSettings);
+                _serializer = new JsonSerializer<T>(schemaRegistryClient, schema, serializerConfig, schemaGeneratorSettings, ruleExecutors);
                 _deserializer = new JsonDeserializer<T>(schemaRegistryClient, schema, deserializerConfig, schemaGeneratorSettings);
             }
             else
             {
-                _serializer = new JsonSerializer<T>(schemaRegistryClient, serializerConfig, schemaGeneratorSettings);
-                _deserializer = new JsonDeserializer<T>(deserializerConfig, schemaGeneratorSettings);
+                _serializer = new JsonSerializer<T>(schemaRegistryClient, serializerConfig, schemaGeneratorSettings, ruleExecutors);
+                _deserializer = new JsonDeserializer<T>(schemaRegistryClient, deserializerConfig, schemaGeneratorSettings, ruleExecutors);
             }
         }
 

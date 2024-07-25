@@ -487,6 +487,30 @@ namespace Confluent.Kafka.Core.Producer.Internal
             return this;
         }
 
+        public IKafkaProducerConfigBuilder WithRetryBackoffMs(int? retryBackoffMs)
+        {
+            AppendAction(config => config.RetryBackoffMs = retryBackoffMs);
+            return this;
+        }
+
+        public IKafkaProducerConfigBuilder WithRetryBackoffMaxMs(int? retryBackoffMaxMs)
+        {
+            AppendAction(config => config.RetryBackoffMaxMs = retryBackoffMaxMs);
+            return this;
+        }
+
+        public IKafkaProducerConfigBuilder WithClientDnsLookup(ClientDnsLookup? clientDnsLookup)
+        {
+            AppendAction(config => config.ClientDnsLookup = clientDnsLookup);
+            return this;
+        }
+
+        public IKafkaProducerConfigBuilder WithEnableMetricsPush(bool? enableMetricsPush)
+        {
+            AppendAction(config => config.EnableMetricsPush = enableMetricsPush);
+            return this;
+        }
+
         #endregion IClientConfigBuilder Members
 
         #region IProducerConfigBuilder Members
@@ -578,12 +602,6 @@ namespace Confluent.Kafka.Core.Producer.Internal
         public IKafkaProducerConfigBuilder WithMessageSendMaxRetries(int? messageSendMaxRetries)
         {
             AppendAction(config => config.MessageSendMaxRetries = messageSendMaxRetries);
-            return this;
-        }
-
-        public IKafkaProducerConfigBuilder WithRetryBackoffMs(int? retryBackoffMs)
-        {
-            AppendAction(config => config.RetryBackoffMs = retryBackoffMs);
             return this;
         }
 

@@ -493,6 +493,30 @@ namespace Confluent.Kafka.Core.Consumer.Internal
             return this;
         }
 
+        public IKafkaConsumerConfigBuilder WithRetryBackoffMs(int? retryBackoffMs)
+        {
+            AppendAction(config => config.RetryBackoffMs = retryBackoffMs);
+            return this;
+        }
+
+        public IKafkaConsumerConfigBuilder WithRetryBackoffMaxMs(int? retryBackoffMaxMs)
+        {
+            AppendAction(config => config.RetryBackoffMaxMs = retryBackoffMaxMs);
+            return this;
+        }
+
+        public IKafkaConsumerConfigBuilder WithClientDnsLookup(ClientDnsLookup? clientDnsLookup)
+        {
+            AppendAction(config => config.ClientDnsLookup = clientDnsLookup);
+            return this;
+        }
+
+        public IKafkaConsumerConfigBuilder WithEnableMetricsPush(bool? enableMetricsPush)
+        {
+            AppendAction(config => config.EnableMetricsPush = enableMetricsPush);
+            return this;
+        }
+
         #endregion IClientConfigBuilder Members
 
         #region IConsumerConfigBuilder Members
@@ -602,6 +626,12 @@ namespace Confluent.Kafka.Core.Consumer.Internal
         public IKafkaConsumerConfigBuilder WithFetchWaitMaxMs(int? fetchWaitMaxMs)
         {
             AppendAction(config => config.FetchWaitMaxMs = fetchWaitMaxMs);
+            return this;
+        }
+
+        public IKafkaConsumerConfigBuilder WithFetchQueueBackoffMs(int? fetchQueueBackoffMs)
+        {
+            AppendAction(config => config.FetchQueueBackoffMs = fetchQueueBackoffMs);
             return this;
         }
 

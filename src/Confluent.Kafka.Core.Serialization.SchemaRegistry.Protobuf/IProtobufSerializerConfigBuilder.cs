@@ -15,6 +15,8 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Protobuf
 
         IProtobufSerializerConfigBuilder WithUseLatestVersion(bool? useLatestVersion);
 
+        IProtobufSerializerConfigBuilder WithUseLatestWithMetadata(IDictionary<string, string> useLatestWithMetadata);
+
         IProtobufSerializerConfigBuilder WithSkipKnownTypes(bool? skipKnownTypes);
 
         IProtobufSerializerConfigBuilder WithUseDeprecatedFormat(bool? useDeprecatedFormat);

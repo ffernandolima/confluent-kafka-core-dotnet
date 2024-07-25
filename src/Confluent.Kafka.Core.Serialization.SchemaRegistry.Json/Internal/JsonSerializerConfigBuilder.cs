@@ -62,6 +62,12 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Json.Internal
             return this;
         }
 
+        public IJsonSerializerConfigBuilder WithUseLatestWithMetadata(IDictionary<string, string> useLatestWithMetadata)
+        {
+            AppendAction(config => config.UseLatestWithMetadata = useLatestWithMetadata);
+            return this;
+        }
+
         public IJsonSerializerConfigBuilder WithSubjectNameStrategy(SubjectNameStrategy? subjectNameStrategy)
         {
             AppendAction(config => config.SubjectNameStrategy = subjectNameStrategy);

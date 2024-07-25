@@ -42,6 +42,8 @@ namespace Confluent.Kafka.Core.Consumer
 
         TBuilder WithFetchWaitMaxMs(int? fetchWaitMaxMs);
 
+        TBuilder WithFetchQueueBackoffMs(int? fetchQueueBackoffMs);
+
         TBuilder WithMaxPartitionFetchBytes(int? maxPartitionFetchBytes);
 
         TBuilder WithFetchMaxBytes(int? fetchMaxBytes);

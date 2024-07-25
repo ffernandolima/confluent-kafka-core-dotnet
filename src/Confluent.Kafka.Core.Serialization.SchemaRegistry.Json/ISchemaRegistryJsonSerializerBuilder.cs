@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Confluent.SchemaRegistry;
+using System;
+using System.Collections.Generic;
 
 namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Json
 {
@@ -19,5 +21,8 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Json
 
         ISchemaRegistryJsonSerializerBuilder WithSchemaGeneratorSettings(
             Action<IJsonSchemaGeneratorSettingsBuilder> configureSchemaGenerator);
+
+        ISchemaRegistryJsonSerializerBuilder WithRuleExecutors(
+            IList<IRuleExecutor> ruleExecutors);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Confluent.SchemaRegistry;
+using System.Collections.Generic;
 
 namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Avro
 {
@@ -14,6 +15,10 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Avro
 
         IAvroSerializerConfigBuilder WithUseLatestVersion(bool? useLatestVersion);
 
+        IAvroSerializerConfigBuilder WithUseLatestWithMetadata(IDictionary<string, string> useLatestWithMetadata);
+
         IAvroSerializerConfigBuilder WithSubjectNameStrategy(SubjectNameStrategy? subjectNameStrategy);
+
+        IAvroSerializerConfigBuilder WithConfigurationProperty(KeyValuePair<string, string> configurationProperty);
     }
 }

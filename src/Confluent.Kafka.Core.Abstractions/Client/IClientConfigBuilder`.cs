@@ -153,5 +153,13 @@
         TBuilder WithPluginLibraryPaths(string pluginLibraryPaths);
 
         TBuilder WithClientRack(string clientRack);
+
+        TBuilder WithRetryBackoffMs(int? retryBackoffMs);
+
+        TBuilder WithRetryBackoffMaxMs(int? retryBackoffMaxMs);
+
+        TBuilder WithClientDnsLookup(ClientDnsLookup? clientDnsLookup);
+
+        TBuilder WithEnableMetricsPush(bool? enableMetricsPush);
     }
 }

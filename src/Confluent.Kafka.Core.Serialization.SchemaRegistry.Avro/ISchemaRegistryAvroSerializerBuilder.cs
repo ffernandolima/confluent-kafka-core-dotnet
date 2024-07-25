@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Confluent.SchemaRegistry;
+using System;
+using System.Collections.Generic;
 
 namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Avro
 {
@@ -13,5 +15,8 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Avro
 
         ISchemaRegistryAvroSerializerBuilder WithDeserializerConfiguration(
             Action<IAvroDeserializerConfigBuilder> configureDeserializer);
+
+        ISchemaRegistryAvroSerializerBuilder WithRuleExecutors(
+            IList<IRuleExecutor> ruleExecutors);
     }
 }

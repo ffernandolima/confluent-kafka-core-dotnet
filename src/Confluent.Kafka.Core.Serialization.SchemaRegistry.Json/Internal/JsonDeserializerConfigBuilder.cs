@@ -1,4 +1,5 @@
 ﻿using Confluent.Kafka.Core.Internal;
+using Confluent.SchemaRegistry;
 using Confluent.SchemaRegistry.Serdes;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -23,6 +24,24 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Json.Internal
                     config = Bind(config, sectionKey);
                 }
             });
+            return this;
+        }
+
+        public IJsonDeserializerConfigBuilder WithUseLatestVersion(bool? useLatestVersion)
+        {
+            AppendAction(config => config.UseLatestVersion = useLatestVersion);
+            return this;
+        }
+
+        public IJsonDeserializerConfigBuilder WithUseLatestWithMetadata(IDictionary<string, string> useLatestWithMetadata)
+        {
+            AppendAction(config => config.UseLatestWithMetadata = useLatestWithMetadata);
+            return this;
+        }
+
+        public IJsonDeserializerConfigBuilder WithSubjectNameStrategy(SubjectNameStrategy? subjectNameStrategy)
+        {
+            AppendAction(config => config.SubjectNameStrategy = subjectNameStrategy);
             return this;
         }
 

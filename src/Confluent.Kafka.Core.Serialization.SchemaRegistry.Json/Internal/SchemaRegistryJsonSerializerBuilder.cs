@@ -4,6 +4,7 @@ using Confluent.SchemaRegistry.Serdes;
 using Microsoft.Extensions.Configuration;
 using NJsonSchema.Generation;
 using System;
+using System.Collections.Generic;
 
 namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Json.Internal
 {
@@ -18,6 +19,7 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Json.Internal
         public JsonSerializerConfig SerializerConfig { get; private set; }
         public JsonDeserializerConfig DeserializerConfig { get; private set; }
         public JsonSchemaGeneratorSettings SchemaGeneratorSettings { get; private set; }
+        public IList<IRuleExecutor> RuleExecutors { get; private set; }
 
         public SchemaRegistryJsonSerializerBuilder(IServiceProvider serviceProvider, IConfiguration configuration)
         {
@@ -70,6 +72,13 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Json.Internal
                 _configuration,
                 configureSchemaGenerator);
 
+            return this;
+        }
+
+        public ISchemaRegistryJsonSerializerBuilder WithRuleExecutors(
+            IList<IRuleExecutor> ruleExecutors)
+        {
+            RuleExecutors = ruleExecutors;
             return this;
         }
 

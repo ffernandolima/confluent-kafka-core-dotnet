@@ -152,6 +152,12 @@
 
         string ClientRack { get; }
 
+        public int? RetryBackoffMs { get; }
+
+        public int? RetryBackoffMaxMs { get; }
+
         ClientDnsLookup? ClientDnsLookup { get; }
+
+        public bool? EnableMetricsPush { get; }
     }
 }

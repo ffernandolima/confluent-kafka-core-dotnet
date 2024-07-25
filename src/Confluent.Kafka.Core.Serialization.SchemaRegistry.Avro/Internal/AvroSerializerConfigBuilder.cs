@@ -3,6 +3,7 @@ using Confluent.SchemaRegistry;
 using Confluent.SchemaRegistry.Serdes;
 using Microsoft.Extensions.Configuration;
 using System;
+using System.Collections.Generic;
 
 namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Avro.Internal
 {
@@ -55,9 +56,21 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Avro.Internal
             return this;
         }
 
+        public IAvroSerializerConfigBuilder WithUseLatestWithMetadata(IDictionary<string, string> useLatestWithMetadata)
+        {
+            AppendAction(config => config.UseLatestWithMetadata = useLatestWithMetadata);
+            return this;
+        }
+
         public IAvroSerializerConfigBuilder WithSubjectNameStrategy(SubjectNameStrategy? subjectNameStrategy)
         {
             AppendAction(config => config.SubjectNameStrategy = subjectNameStrategy);
+            return this;
+        }
+
+        public IAvroSerializerConfigBuilder WithConfigurationProperty(KeyValuePair<string, string> configurationProperty)
+        {
+            AppendAction(config => config.Set(configurationProperty.Key, configurationProperty.Value));
             return this;
         }
 
