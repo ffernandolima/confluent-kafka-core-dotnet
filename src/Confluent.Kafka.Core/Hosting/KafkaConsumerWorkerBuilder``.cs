@@ -40,6 +40,7 @@ namespace Confluent.Kafka.Core.Hosting.Internal
         private IIdempotencyHandler<TKey, TValue> _idempotencyHandler;
         private IKafkaProducer<byte[], KafkaMetadataMessage> _retryProducer;
         private IKafkaProducer<byte[], KafkaMetadataMessage> _deadLetterProducer;
+        private IKafkaConsumerLifecycleWorker<TKey, TValue> _consumerLifecycleWorker;
         private IEnumerable<IConsumeResultHandler<TKey, TValue>> _consumeResultHandlers;
         private IConsumeResultErrorHandler<TKey, TValue> _consumeResultErrorHandler;
         private Func<ConsumeResult<TKey, TValue>, object> _messageOrderGuaranteeKeyHandler;
@@ -80,6 +81,7 @@ namespace Confluent.Kafka.Core.Hosting.Internal
                 IdempotencyHandler = _idempotencyHandler,
                 RetryProducer = _retryProducer,
                 DeadLetterProducer = _deadLetterProducer,
+                ConsumerLifecycleWorker = _consumerLifecycleWorker,
                 ConsumeResultHandlers = _consumeResultHandlers,
                 ConsumeResultErrorHandler = _consumeResultErrorHandler,
                 MessageOrderGuaranteeKeyHandler = _messageOrderGuaranteeKeyHandler
@@ -195,6 +197,17 @@ namespace Confluent.Kafka.Core.Hosting.Internal
 
             _deadLetterProducer = deadLetterProducer;
             _deadLetterProducer?.ValidateAndThrow(KafkaProducerConstants.DeadLetterTopicSuffix);
+            return this;
+        }
+
+        public IKafkaConsumerWorkerBuilder<TKey, TValue> WithConsumerLifecycleWorker(IKafkaConsumerLifecycleWorker<TKey, TValue> consumerLifecycleWorker)
+        {
+            if (_consumerLifecycleWorker is not null)
+            {
+                throw new InvalidOperationException("Consumer lifecycle worker may not be specified more than once.");
+            }
+
+            _consumerLifecycleWorker = consumerLifecycleWorker;
             return this;
         }
 

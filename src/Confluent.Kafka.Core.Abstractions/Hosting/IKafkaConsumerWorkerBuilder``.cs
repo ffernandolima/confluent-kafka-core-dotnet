@@ -38,6 +38,8 @@ namespace Confluent.Kafka.Core.Hosting
 
         IKafkaConsumerWorkerBuilder<TKey, TValue> WithDeadLetterProducer(IKafkaProducer<byte[], KafkaMetadataMessage> deadLetterProducer);
 
+        IKafkaConsumerWorkerBuilder<TKey, TValue> WithConsumerLifecycleWorker(IKafkaConsumerLifecycleWorker<TKey, TValue> consumerLifecycleWorker);
+
         IKafkaConsumerWorkerBuilder<TKey, TValue> WithConsumeResultHandler(IConsumeResultHandler<TKey, TValue> consumeResultHandler);
 
         IKafkaConsumerWorkerBuilder<TKey, TValue> WithConsumeResultHandlers(IEnumerable<IConsumeResultHandler<TKey, TValue>> consumeResultHandlers);

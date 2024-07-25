@@ -61,6 +61,8 @@ namespace Confluent.Kafka.Core.Hosting
 
             _logger.LogWorkerStarting(_serviceName);
 
+            _options.ConsumerLifecycleWorker?.StartAsync(_options, cancellationToken);
+
             _options.IdempotencyHandler?.StartAsync(cancellationToken);
 
             return base.StartAsync(cancellationToken);
@@ -71,6 +73,8 @@ namespace Confluent.Kafka.Core.Hosting
             CheckDisposed();
 
             _logger.LogWorkerStopping(_serviceName);
+
+            _options.ConsumerLifecycleWorker?.StopAsync(_options, cancellationToken);
 
             return base.StopAsync(cancellationToken);
         }

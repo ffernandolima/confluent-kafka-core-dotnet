@@ -25,6 +25,7 @@ namespace Confluent.Kafka.Core.Hosting.Internal
         public IIdempotencyHandler<TKey, TValue> IdempotencyHandler { get; init; }
         public IKafkaProducer<byte[], KafkaMetadataMessage> RetryProducer { get; init; }
         public IKafkaProducer<byte[], KafkaMetadataMessage> DeadLetterProducer { get; init; }
+        public IKafkaConsumerLifecycleWorker<TKey, TValue> ConsumerLifecycleWorker { get; init; }
         public IEnumerable<IConsumeResultHandler<TKey, TValue>> ConsumeResultHandlers { get; init; }
         public IConsumeResultErrorHandler<TKey, TValue> ConsumeResultErrorHandler { get; init; }
         public Func<ConsumeResult<TKey, TValue>, object> MessageOrderGuaranteeKeyHandler { get; init; }
