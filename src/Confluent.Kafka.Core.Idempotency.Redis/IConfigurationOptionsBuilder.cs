@@ -51,6 +51,8 @@ namespace Confluent.Kafka.Core.Idempotency.Redis
 
         IConfigurationOptionsBuilder WithEndPoints(EndPointCollection endPoints);
 
+        IConfigurationOptionsBuilder WithHeartbeatConsistencyChecks(bool heartbeatConsistencyChecks);
+
         IConfigurationOptionsBuilder WithHeartbeatInterval(TimeSpan heartbeatInterval);
 
         IConfigurationOptionsBuilder WithIncludeDetailInExceptions(bool includeDetailInExceptions);
@@ -78,11 +80,9 @@ namespace Confluent.Kafka.Core.Idempotency.Redis
         IConfigurationOptionsBuilder WithSocketManager(SocketManager socketManager);
 
 #if NETCOREAPP3_1_OR_GREATER
-
         IConfigurationOptionsBuilder WithSslClientAuthenticationOptions(
             Func<string, SslClientAuthenticationOptions> sslClientAuthenticationOptions);
 #endif
-
         IConfigurationOptionsBuilder WithSsl(bool ssl);
 
         IConfigurationOptionsBuilder WithSslHost(string sslHost);

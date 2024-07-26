@@ -177,6 +177,12 @@ namespace Confluent.Kafka.Core.Idempotency.Redis.Internal
             return this;
         }
 
+        public IConfigurationOptionsBuilder WithHeartbeatConsistencyChecks(bool heartbeatConsistencyChecks)
+        {
+            AppendAction(options => options.HeartbeatConsistencyChecks = heartbeatConsistencyChecks);
+            return this;
+        }
+
         public IConfigurationOptionsBuilder WithHeartbeatInterval(TimeSpan heartbeatInterval)
         {
             AppendAction(options => options.HeartbeatInterval = heartbeatInterval);
