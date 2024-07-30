@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 
 namespace Confluent.Kafka.Core.Consumer.Internal
 {
@@ -22,30 +20,6 @@ namespace Confluent.Kafka.Core.Consumer.Internal
                 consumerConfig.PartitionAssignments.Any(assignment => assignment is not null);
 
             return hasPartitionAssignments;
-        }
-
-        public static IEnumerable<string> GetCurrentTopics(this IKafkaConsumerConfig consumerConfig)
-        {
-            var currentTopics = (consumerConfig?.TopicSubscriptions ?? [])
-                .Concat(consumerConfig?.PartitionAssignments?.Select(partition => partition?.Topic) ?? [])
-                .Where(topic => !string.IsNullOrWhiteSpace(topic))
-                .Distinct(StringComparer.Ordinal);
-
-            return currentTopics;
-        }
-
-        public static void OnSubscriptionsOrAssignmentsChanged(
-            this IKafkaConsumerConfig consumerConfig,
-            IEnumerable<string> topicSubscriptions,
-            IEnumerable<TopicPartition> partitionAssignments)
-        {
-            if (consumerConfig is not IKafkaConsumerConfigHandler consumerConfigHandler)
-            {
-                throw new InvalidCastException($"{nameof(consumerConfig)} should be of type '{nameof(IKafkaConsumerConfigHandler)}'.");
-            }
-
-            consumerConfigHandler.UpdateTopicSubscriptions(topicSubscriptions);
-            consumerConfigHandler.UpdatePartitionAssignments(partitionAssignments);
         }
     }
 }

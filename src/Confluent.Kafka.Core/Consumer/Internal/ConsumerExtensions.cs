@@ -1,5 +1,7 @@
 ﻿using Confluent.Kafka.Core.Internal;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Confluent.Kafka.Core.Consumer.Internal
 {
@@ -15,6 +17,17 @@ namespace Confluent.Kafka.Core.Consumer.Internal
             }
 
             return kafkaConsumer;
+        }
+
+        public static IEnumerable<string> GetCurrentTopics<TKey, TValue>(this IConsumer<TKey, TValue> consumer)
+        {
+            var currentTopics = (consumer?.Subscription ?? [])
+                .Concat(consumer?.Assignment?.Select(partition => partition?.Topic) ?? [])
+                .Where(topic => !string.IsNullOrWhiteSpace(topic))
+                .Distinct(StringComparer.Ordinal)
+                .ToArray();
+
+            return currentTopics;
         }
     }
 }

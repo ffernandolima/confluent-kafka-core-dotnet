@@ -326,8 +326,6 @@ namespace Confluent.Kafka.Core.Consumer.Internal
             }
 
             _consumer.Subscribe(topic);
-
-            OnSubscriptionsOrAssignmentsChanged();
         }
 
         public void Subscribe(IEnumerable<string> topics)
@@ -342,8 +340,6 @@ namespace Confluent.Kafka.Core.Consumer.Internal
             var subscriptions = topics.Where(topic => !string.IsNullOrWhiteSpace(topic)).Distinct(StringComparer.Ordinal);
 
             _consumer.Subscribe(subscriptions);
-
-            OnSubscriptionsOrAssignmentsChanged();
         }
 
         public void Unsubscribe()
@@ -351,8 +347,6 @@ namespace Confluent.Kafka.Core.Consumer.Internal
             CheckDisposed();
 
             _consumer.Unsubscribe();
-
-            OnSubscriptionsOrAssignmentsChanged();
         }
 
         public void Assign(TopicPartition partition)
@@ -365,8 +359,6 @@ namespace Confluent.Kafka.Core.Consumer.Internal
             }
 
             _consumer.Assign(partition);
-
-            OnSubscriptionsOrAssignmentsChanged();
         }
 
         public void Assign(TopicPartitionOffset offset)
@@ -379,8 +371,6 @@ namespace Confluent.Kafka.Core.Consumer.Internal
             }
 
             _consumer.Assign(offset);
-
-            OnSubscriptionsOrAssignmentsChanged();
         }
 
         public void Assign(IEnumerable<TopicPartition> partitions)
@@ -395,8 +385,6 @@ namespace Confluent.Kafka.Core.Consumer.Internal
             var assignments = partitions.Where(partition => partition is not null).Distinct();
 
             _consumer.Assign(assignments);
-
-            OnSubscriptionsOrAssignmentsChanged();
         }
 
         public void Assign(IEnumerable<TopicPartitionOffset> offsets)
@@ -411,8 +399,6 @@ namespace Confluent.Kafka.Core.Consumer.Internal
             var assignments = offsets.Where(offset => offset is not null).Distinct();
 
             _consumer.Assign(assignments);
-
-            OnSubscriptionsOrAssignmentsChanged();
         }
 
         public void IncrementalAssign(IEnumerable<TopicPartition> partitions)
@@ -427,8 +413,6 @@ namespace Confluent.Kafka.Core.Consumer.Internal
             var assignments = partitions.Where(partition => partition is not null).Distinct();
 
             _consumer.IncrementalAssign(assignments);
-
-            OnSubscriptionsOrAssignmentsChanged();
         }
 
         public void IncrementalAssign(IEnumerable<TopicPartitionOffset> offsets)
@@ -443,8 +427,6 @@ namespace Confluent.Kafka.Core.Consumer.Internal
             var assignments = offsets.Where(offset => offset is not null).Distinct();
 
             _consumer.IncrementalAssign(assignments);
-
-            OnSubscriptionsOrAssignmentsChanged();
         }
 
         public void IncrementalUnassign(IEnumerable<TopicPartition> partitions)
@@ -459,8 +441,6 @@ namespace Confluent.Kafka.Core.Consumer.Internal
             var unassignments = partitions.Where(partition => partition is not null).Distinct();
 
             _consumer.IncrementalUnassign(unassignments);
-
-            OnSubscriptionsOrAssignmentsChanged();
         }
 
         public void Unassign()
@@ -468,8 +448,6 @@ namespace Confluent.Kafka.Core.Consumer.Internal
             CheckDisposed();
 
             _consumer.Unassign();
-
-            OnSubscriptionsOrAssignmentsChanged();
         }
 
         public void StoreOffset(ConsumeResult<TKey, TValue> consumeResult)
@@ -746,11 +724,6 @@ namespace Confluent.Kafka.Core.Consumer.Internal
             _consumer.Close();
         }
 
-        private void OnSubscriptionsOrAssignmentsChanged()
-        {
-            _options.ConsumerConfig!.OnSubscriptionsOrAssignmentsChanged(_consumer.Subscription, _consumer.Assignment);
-        }
-
         private ConsumeResult<TKey, TValue> ConsumeInternal(int millisecondsTimeout)
         {
             ConsumeResult<TKey, TValue> consumeResult;
@@ -948,7 +921,7 @@ namespace Confluent.Kafka.Core.Consumer.Internal
                         _logger.LogMessageConsumptionRetryFailure(
                             exception,
                             retryAttempt,
-                            _options.ConsumerConfig!.GetCurrentTopics());
+                            _consumer.GetCurrentTopics());
                     }
                     break;
             }
