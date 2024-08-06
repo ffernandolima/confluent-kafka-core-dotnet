@@ -55,28 +55,47 @@ namespace Confluent.Kafka.Core.Hosting
             _options = options;
         }
 
-        public override Task StartAsync(CancellationToken cancellationToken)
+        public override async Task StartAsync(CancellationToken cancellationToken)
         {
             CheckDisposed();
 
             _logger.LogWorkerStarting(_serviceName);
 
-            _options.ConsumerLifecycleWorker?.StartAsync(_options, cancellationToken);
+            try
+            {
+                if (_options.ConsumerLifecycleWorker is not null)
+                {
+                    await _options.ConsumerLifecycleWorker.StartAsync(_options, cancellationToken).ConfigureAwait(false);
+                }
 
-            _options.IdempotencyHandler?.StartAsync(cancellationToken);
-
-            return base.StartAsync(cancellationToken);
+                if (_options.IdempotencyHandler is not null)
+                {
+                    await _options.IdempotencyHandler.StartAsync(cancellationToken).ConfigureAwait(false);
+                }
+            }
+            finally
+            {
+                await base.StartAsync(cancellationToken).ConfigureAwait(false);
+            }
         }
 
-        public override Task StopAsync(CancellationToken cancellationToken)
+        public override async Task StopAsync(CancellationToken cancellationToken)
         {
             CheckDisposed();
 
             _logger.LogWorkerStopping(_serviceName);
 
-            _options.ConsumerLifecycleWorker?.StopAsync(_options, cancellationToken);
-
-            return base.StopAsync(cancellationToken);
+            try
+            {
+                if (_options.ConsumerLifecycleWorker is not null)
+                {
+                    await _options.ConsumerLifecycleWorker.StopAsync(_options, cancellationToken).ConfigureAwait(false);
+                }
+            }
+            finally
+            {
+                await base.StopAsync(cancellationToken).ConfigureAwait(false);
+            }
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
