@@ -28,7 +28,7 @@ namespace Confluent.Kafka.Core.Hosting
         public Func<Exception, bool> RetryTopicExceptionFilter { get; set; }
         public bool EnableDeadLetterTopic { get; set; }
         public bool EnableMessageOrderGuarantee { get; set; }
-        public TimeSpan EmptyTopicDelay { get; set; } = new TimeSpan(0, 0, 10);
+        public TimeSpan EmptyTopicDelay { get; set; } = new TimeSpan(0, 0, 5);
         public TimeSpan NotEmptyTopicDelay { get; set; } = new TimeSpan(0, 0, 1);
         public TimeSpan UnavailableProcessingSlotsDelay { get; set; } = new TimeSpan(0, 0, 2);
         public TimeSpan PendingProcessingDelay { get; set; } = new TimeSpan(0, 0, 1);
