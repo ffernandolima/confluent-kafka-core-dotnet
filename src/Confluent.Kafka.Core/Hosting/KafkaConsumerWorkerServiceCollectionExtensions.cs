@@ -43,23 +43,37 @@ namespace Microsoft.Extensions.DependencyInjection
             {
                 var builder = serviceProvider.GetRequiredKeyedService<IKafkaConsumerWorkerBuilder<TKey, TValue>>(workerKey);
 
-                var worker = builder.Build();
+                var consumerWorker = builder.Build();
 
-                return worker;
+                return consumerWorker;
             });
 
             if (workerKey is null)
             {
                 services.TryAddEnumerable(
-                    ServiceDescriptor.Singleton<IHostedService, IKafkaConsumerWorker<TKey, TValue>>(
-                        serviceProvider => serviceProvider.GetRequiredKeyedService<IKafkaConsumerWorker<TKey, TValue>>(workerKey)));
+                    ServiceDescriptor.Singleton<IHostedService, KafkaConsumerService<TKey, TValue>>(
+                        serviceProvider =>
+                        {
+                            var consumerWorker = serviceProvider.GetRequiredService<IKafkaConsumerWorker<TKey, TValue>>();
+
+                            var consumerService = new KafkaConsumerService<TKey, TValue>(consumerWorker);
+
+                            return consumerService;
+                        }));
             }
             else
             {
                 services.TryAddEnumerable(
-                    ServiceDescriptor.KeyedSingleton<IHostedService, IKafkaConsumerWorker<TKey, TValue>>(
+                    ServiceDescriptor.KeyedSingleton<IHostedService, KafkaConsumerService<TKey, TValue>>(
                         workerKey,
-                        (serviceProvider, _) => serviceProvider.GetRequiredKeyedService<IKafkaConsumerWorker<TKey, TValue>>(workerKey)));
+                        (serviceProvider, _) =>
+                        {
+                            var consumerWorker = serviceProvider.GetRequiredKeyedService<IKafkaConsumerWorker<TKey, TValue>>(workerKey);
+
+                            var consumerService = new KafkaConsumerService<TKey, TValue>(consumerWorker);
+
+                            return consumerService;
+                        }));
             }
 
             return services;

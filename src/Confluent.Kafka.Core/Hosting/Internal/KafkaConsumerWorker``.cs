@@ -1,13 +1,11 @@
 ﻿using Confluent.Kafka.Core.Consumer.Internal;
 using Confluent.Kafka.Core.Diagnostics.Internal;
-using Confluent.Kafka.Core.Hosting.Internal;
 using Confluent.Kafka.Core.Internal;
 using Confluent.Kafka.Core.Models;
 using Confluent.Kafka.Core.Models.Internal;
 using Confluent.Kafka.Core.Producer.Internal;
 using Confluent.Kafka.Core.Retry.Internal;
 using Confluent.Kafka.Core.Threading.Internal;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Concurrent;
@@ -17,9 +15,9 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Confluent.Kafka.Core.Hosting
+namespace Confluent.Kafka.Core.Hosting.Internal
 {
-    public sealed class KafkaConsumerWorker<TKey, TValue> : BackgroundService, IKafkaConsumerWorker<TKey, TValue>
+    internal sealed class KafkaConsumerWorker<TKey, TValue> : IKafkaConsumerWorker<TKey, TValue>
     {
         private readonly ILogger _logger;
         private readonly IKafkaConsumerWorkerOptions<TKey, TValue> _options;
@@ -55,50 +53,36 @@ namespace Confluent.Kafka.Core.Hosting
             _options = options;
         }
 
-        public override async Task StartAsync(CancellationToken cancellationToken)
+        public async Task StartAsync(CancellationToken cancellationToken)
         {
             CheckDisposed();
 
             _logger.LogWorkerStarting(_serviceName);
 
-            try
+            if (_options.ConsumerLifecycleWorker is not null)
             {
-                if (_options.ConsumerLifecycleWorker is not null)
-                {
-                    await _options.ConsumerLifecycleWorker.StartAsync(_options, cancellationToken).ConfigureAwait(false);
-                }
-
-                if (_options.IdempotencyHandler is not null)
-                {
-                    await _options.IdempotencyHandler.StartAsync(cancellationToken).ConfigureAwait(false);
-                }
+                await _options.ConsumerLifecycleWorker.StartAsync(_options, cancellationToken).ConfigureAwait(false);
             }
-            finally
+
+            if (_options.IdempotencyHandler is not null)
             {
-                await base.StartAsync(cancellationToken).ConfigureAwait(false);
+                await _options.IdempotencyHandler.StartAsync(cancellationToken).ConfigureAwait(false);
             }
         }
 
-        public override async Task StopAsync(CancellationToken cancellationToken)
+        public async Task StopAsync(CancellationToken cancellationToken)
         {
             CheckDisposed();
 
             _logger.LogWorkerStopping(_serviceName);
 
-            try
+            if (_options.ConsumerLifecycleWorker is not null)
             {
-                if (_options.ConsumerLifecycleWorker is not null)
-                {
-                    await _options.ConsumerLifecycleWorker.StopAsync(_options, cancellationToken).ConfigureAwait(false);
-                }
-            }
-            finally
-            {
-                await base.StopAsync(cancellationToken).ConfigureAwait(false);
+                await _options.ConsumerLifecycleWorker.StopAsync(_options, cancellationToken).ConfigureAwait(false);
             }
         }
 
-        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+        public async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             _logger.LogWorkerExecuting(_serviceName);
 
@@ -673,25 +657,35 @@ namespace Confluent.Kafka.Core.Hosting
 
         private bool _disposed;
 
-        public override void Dispose()
+        private void Dispose(bool disposing)
         {
-            _disposed = true;
-
-            base.Dispose();
-
-            var disposables = new IDisposable[]
+            if (!_disposed)
             {
-                _options.Consumer,
-                _options.IdempotencyHandler,
-                _options.RetryProducer,
-                _options.DeadLetterProducer,
-                _asyncLock
-            };
+                if (disposing)
+                {
+                    var disposables = new IDisposable[]
+                    {
+                        _options.Consumer,
+                        _options.IdempotencyHandler,
+                        _options.RetryProducer,
+                        _options.DeadLetterProducer,
+                        _asyncLock
+                    };
 
-            foreach (var disposable in disposables)
-            {
-                disposable?.Dispose();
+                    foreach (var disposable in disposables)
+                    {
+                        disposable?.Dispose();
+                    }
+                }
+
+                _disposed = true;
             }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
         #endregion IDisposable Members
