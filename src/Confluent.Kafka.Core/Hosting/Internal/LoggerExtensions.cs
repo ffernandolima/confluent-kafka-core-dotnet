@@ -38,7 +38,8 @@ namespace Confluent.Kafka.Core.Hosting.Internal
 
         [LoggerMessage(
             Level = LogLevel.Debug,
-            Message = "The current thread - representing the message #{MessageId} processing - had been blocked for {Elapsed:hh:mm:ss} until it has proceeded.")]
+            Message = "The current thread - representing the message #{MessageId} processing - had been blocked for {Elapsed:hh:mm:ss} until it has proceeded. " +
+                      "Possible reasons: Global degree of parallelism, and/or degree of parallelism by key, and/or configured retry topic delay.")]
         public static partial void LogCurrentThreadBlocked(this ILogger logger, object messageId, TimeSpan elapsed);
 
         [LoggerMessage(
