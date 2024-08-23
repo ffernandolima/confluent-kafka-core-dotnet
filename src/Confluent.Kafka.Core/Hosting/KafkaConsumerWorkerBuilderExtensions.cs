@@ -10,7 +10,7 @@ using System.Reflection;
 
 namespace Confluent.Kafka.Core.Hosting
 {
-    public static partial class KafkaConsumerWorkerBuilderExtensions
+    public static class KafkaConsumerWorkerBuilderExtensions
     {
         public static IKafkaConsumerWorkerBuilder<TKey, TValue> WithConsumer<TKey, TValue>(
             this IKafkaConsumerWorkerBuilder<TKey, TValue> workerBuilder,
