@@ -175,9 +175,9 @@ namespace Confluent.Kafka.Core.Idempotency.Redis.Internal
                     finally
                     {
                         _expirationCts?.Dispose();
-                    }
 
-                    _multiplexer?.Dispose();
+                        _multiplexer?.Dispose();
+                    }
                 }
 
                 _disposed = true;
