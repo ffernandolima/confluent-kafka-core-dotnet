@@ -1,4 +1,5 @@
 ﻿using Confluent.Kafka.Core.Consumer;
+using Confluent.Kafka.Core.Consumer.Internal;
 using Confluent.Kafka.Core.Conversion.Internal;
 using Confluent.Kafka.Core.Diagnostics;
 using Confluent.Kafka.Core.Diagnostics.Internal;
@@ -144,6 +145,7 @@ namespace Confluent.Kafka.Core.Hosting.Retry
             }
 
             _consumer = consumer;
+            _consumer?.ValidateAndThrow(KafkaRetryConstants.RetryTopicSuffix);
             return this;
         }
 
