@@ -4,11 +4,6 @@ namespace Confluent.Kafka.Core.Encoding
 {
     using System.Text;
 
-    public interface IEncodingFactory
-    {
-        Encoding CreateDefault();
-    }
-
     public sealed class EncodingFactory : IEncodingFactory
     {
         private static readonly Lazy<EncodingFactory> Factory = new(
