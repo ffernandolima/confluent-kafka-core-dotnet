@@ -1,4 +1,5 @@
 ﻿using Confluent.Kafka.Core.Consumer.Internal;
+using Confluent.Kafka.Core.Conversion.Internal;
 using Confluent.Kafka.Core.Diagnostics.Internal;
 using Confluent.Kafka.Core.Internal;
 using Confluent.Kafka.Core.Models;
@@ -17,47 +18,41 @@ using System.Threading.Tasks;
 
 namespace Confluent.Kafka.Core.Hosting.Internal
 {
-    internal sealed class KafkaConsumerWorker<TKey, TValue> : IKafkaConsumerWorker<TKey, TValue>
+    internal class KafkaConsumerWorker<TKey, TValue> : IKafkaConsumerWorker<TKey, TValue>
     {
-        private readonly ILogger _logger;
         private readonly IKafkaConsumerWorkerOptions<TKey, TValue> _options;
 
-        private readonly string _serviceName;
-        private readonly AsyncLock _asyncLock;
-        private readonly ConcurrentBag<Exception> _exceptions;
-        private readonly ConcurrentQueue<BackgroundWorkItem<TKey, TValue>> _workItems;
-
-        public IKafkaConsumerWorkerOptions<TKey, TValue> Options
-        {
-            get
-            {
-                CheckDisposed();
-                return _options;
-            }
-        }
+        protected ILogger Logger { get; }
+        protected string ServiceName { get; }
+        protected AsyncLock AsyncLock { get; }
+        protected ConcurrentBag<Exception> Exceptions { get; }
+        protected ConcurrentQueue<BackgroundWorkItem<TKey, TValue>> WorkItems { get; }
 
         public KafkaConsumerWorker(IKafkaConsumerWorkerBuilder<TKey, TValue> builder)
+            : this(
+                  builder?.ToOptions<IKafkaConsumerWorkerOptions<TKey, TValue>>())
+        { }
+
+        public KafkaConsumerWorker(IKafkaConsumerWorkerOptions<TKey, TValue> options)
         {
-            if (builder is null)
+            if (options is null)
             {
-                throw new ArgumentNullException(nameof(builder));
+                throw new ArgumentNullException(nameof(options));
             }
 
-            var options = builder.ToOptions();
-
-            _logger = options.LoggerFactory.CreateLogger(options.WorkerConfig!.EnableLogging, options.WorkerType);
-            _serviceName = options.WorkerType!.ExtractTypeName();
-            _asyncLock = AsyncLockFactory.Instance.CreateAsyncLock(options.ToLockOptions());
-            _exceptions = [];
-            _workItems = [];
+            Logger = options.LoggerFactory.CreateLogger(options.WorkerConfig!.EnableLogging, options.WorkerType);
+            ServiceName = options.WorkerType!.ExtractTypeName();
+            AsyncLock = AsyncLockFactory.Instance.CreateAsyncLock(options.ToLockOptions());
+            Exceptions = [];
+            WorkItems = [];
             _options = options;
         }
 
-        public async Task StartAsync(CancellationToken cancellationToken)
+        public virtual async Task StartAsync(CancellationToken cancellationToken)
         {
             CheckDisposed();
 
-            _logger.LogWorkerStarting(_serviceName);
+            Logger.LogWorkerStarting(ServiceName);
 
             if (_options.ConsumerLifecycleWorker is not null)
             {
@@ -70,11 +65,11 @@ namespace Confluent.Kafka.Core.Hosting.Internal
             }
         }
 
-        public async Task StopAsync(CancellationToken cancellationToken)
+        public virtual async Task StopAsync(CancellationToken cancellationToken)
         {
             CheckDisposed();
 
-            _logger.LogWorkerStopping(_serviceName);
+            Logger.LogWorkerStopping(ServiceName);
 
             if (_options.ConsumerLifecycleWorker is not null)
             {
@@ -82,9 +77,9 @@ namespace Confluent.Kafka.Core.Hosting.Internal
             }
         }
 
-        public async Task ExecuteAsync(CancellationToken stoppingToken)
+        public virtual async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            _logger.LogWorkerExecuting(_serviceName);
+            Logger.LogWorkerExecuting(ServiceName);
 
             try
             {
@@ -104,12 +99,12 @@ namespace Confluent.Kafka.Core.Hosting.Internal
                     }
                     catch (Exception ex)
                     {
-                        _logger.LogWorkerExecutionFailure(ex, _serviceName);
+                        Logger.LogWorkerExecutionFailure(ex, ServiceName);
                     }
 
                     var delay = GetDelay(hasAvailableSlots, dispatched);
 
-                    _logger.LogDelayingUntil(DateTime.UtcNow.Add(delay));
+                    Logger.LogDelayingUntil(DateTime.UtcNow.Add(delay));
 
                     try
                     {
@@ -125,7 +120,7 @@ namespace Confluent.Kafka.Core.Hosting.Internal
             {
                 var delay = _options.WorkerConfig!.PendingProcessingDelay;
 
-                while (!_workItems.IsEmpty || !_exceptions.IsEmpty)
+                while (!WorkItems.IsEmpty || !Exceptions.IsEmpty)
                 {
                     try
                     {
@@ -135,21 +130,21 @@ namespace Confluent.Kafka.Core.Hosting.Internal
                     }
                     catch (Exception ex)
                     {
-                        _logger.LogWorkerExecutionFailure(ex, _serviceName);
+                        Logger.LogWorkerExecutionFailure(ex, ServiceName);
                     }
 
-                    _logger.LogDelayingUntil(DateTime.UtcNow.Add(delay));
+                    Logger.LogDelayingUntil(DateTime.UtcNow.Add(delay));
 
                     await Task.Delay(delay, CancellationToken.None).ConfigureAwait(false);
                 }
             }
         }
 
-        private void ExecuteInternal(CancellationToken cancellationToken)
+        protected virtual void ExecuteInternal(CancellationToken cancellationToken)
         {
-            if (_asyncLock.CurrentCount <= 0)
+            if (AsyncLock.CurrentCount <= 0)
             {
-                _logger.LogNoAvailableSlots();
+                Logger.LogNoAvailableSlots();
 
                 return;
             }
@@ -158,18 +153,18 @@ namespace Confluent.Kafka.Core.Hosting.Internal
 
             try
             {
-                consumeResults = _options.Consumer!.ConsumeBatch(_asyncLock.CurrentCount);
+                consumeResults = _options.Consumer!.ConsumeBatch(AsyncLock.CurrentCount);
             }
             catch (Exception ex)
             {
-                _exceptions.Add(ex);
+                Exceptions.Add(ex);
 
                 return;
             }
 
             if (consumeResults is null || !consumeResults.Any())
             {
-                _logger.LogNoAvailableMessages();
+                Logger.LogNoAvailableMessages();
 
                 return;
             }
@@ -180,18 +175,18 @@ namespace Confluent.Kafka.Core.Hosting.Internal
             }
         }
 
-        private async Task HandleCompletedWorkItemsAsync()
+        protected virtual async Task HandleCompletedWorkItemsAsync()
         {
-            if (_workItems.IsEmpty)
+            if (WorkItems.IsEmpty)
             {
                 return;
             }
 
             try
             {
-                while (_workItems.TryPeek(out BackgroundWorkItem<TKey, TValue> workItem))
+                while (WorkItems.TryPeek(out BackgroundWorkItem<TKey, TValue> workItem))
                 {
-                    if (!workItem.IsCompleted || !_workItems.TryDequeue(out workItem))
+                    if (!workItem.IsCompleted || !WorkItems.TryDequeue(out workItem))
                     {
                         break;
                     }
@@ -223,7 +218,7 @@ namespace Confluent.Kafka.Core.Hosting.Internal
                     }
                 }
 
-                var enumerator = _workItems.GetEnumerator();
+                var enumerator = WorkItems.GetEnumerator();
 
                 while (enumerator.MoveNext())
                 {
@@ -252,7 +247,7 @@ namespace Confluent.Kafka.Core.Hosting.Internal
                     }
                     catch (Exception ex)
                     {
-                        _logger.LogMessageCommitFailure(ex, workItem.MessageId);
+                        Logger.LogMessageCommitFailure(ex, workItem.MessageId);
                     }
                 }
 
@@ -267,37 +262,37 @@ namespace Confluent.Kafka.Core.Hosting.Internal
                     }
                     catch (Exception ex)
                     {
-                        _logger.LogMessageOffsetStorageFailure(ex, workItem.MessageId);
+                        Logger.LogMessageOffsetStorageFailure(ex, workItem.MessageId);
                     }
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogCompletionHandlingFailure(ex);
+                Logger.LogCompletionHandlingFailure(ex);
             }
         }
 
-        private void HandleConsumptionExceptions()
+        protected virtual void HandleConsumptionExceptions()
         {
-            if (_exceptions.IsEmpty)
+            if (Exceptions.IsEmpty)
             {
                 return;
             }
 
             try
             {
-                while (_exceptions.TryTake(out Exception exception))
+                while (Exceptions.TryTake(out Exception exception))
                 {
-                    _logger.LogMessageConsumptionFailure(exception);
+                    Logger.LogMessageConsumptionFailure(exception);
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogExceptionHandlingFailure(ex);
+                Logger.LogExceptionHandlingFailure(ex);
             }
         }
 
-        private void DispatchWorkItem(ConsumeResult<TKey, TValue> consumeResult, CancellationToken cancellationToken)
+        protected virtual void DispatchWorkItem(ConsumeResult<TKey, TValue> consumeResult, CancellationToken cancellationToken)
         {
             TaskActivity taskActivity = null;
 
@@ -317,55 +312,64 @@ namespace Confluent.Kafka.Core.Hosting.Internal
 
                     var lockContext = new AsyncLockContext { [ConsumeResultConstants.ConsumeResult] = consumeResult };
 
-                    using var releaser = await _asyncLock.LockAsync(lockContext, cancellationToken).ConfigureAwait(false);
+                    using var releaser = await AsyncLock.LockAsync(lockContext, cancellationToken).ConfigureAwait(false);
 
-                    _logger.LogCurrentThreadBlocked(messageId, stopwatch.Elapsed);
-
-                    if (_options.WorkerConfig!.EnableIdempotency)
+                    try
                     {
-                        _logger.LogIdempotencyEnabled(messageId);
+                        await BeforeProcessingAsync(consumeResult, cancellationToken).ConfigureAwait(false);
 
-                        if (ShouldBypassIdempotency(consumeResult))
+                        Logger.LogCurrentThreadBlocked(messageId, stopwatch.Elapsed);
+
+                        if (_options.WorkerConfig!.EnableIdempotency)
                         {
-                            _logger.LogIdempotencyBypassed(messageId);
+                            Logger.LogIdempotencyEnabled(messageId);
+
+                            if (ShouldBypassIdempotency(consumeResult))
+                            {
+                                Logger.LogIdempotencyBypassed(messageId);
+                            }
+                            else if (!await _options.IdempotencyHandler!.TryHandleAsync(consumeResult.Message!.Value, cancellationToken)
+                                .ConfigureAwait(false))
+                            {
+                                Logger.LogMessageAlreadyProcessed(messageId);
+
+                                return;
+                            }
                         }
-                        else if (!await _options.IdempotencyHandler!.TryHandleAsync(consumeResult.Message!.Value, cancellationToken)
-                            .ConfigureAwait(false))
+                        else
                         {
-                            _logger.LogMessageAlreadyProcessed(messageId);
+                            Logger.LogIdempotencyDisabled(messageId);
 
-                            return;
+                            if (!ShouldHandleFetchedConsumeResult(consumeResult))
+                            {
+                                Logger.LogMessageProcessingSkip(messageId);
+
+                                return;
+                            }
+                        }
+
+                        if (_options.WorkerConfig!.EnableRetryOnFailure)
+                        {
+                            Logger.LogRetryStrategyEnabled(messageId);
+
+                            await _options.RetryHandler!.HandleAsync(
+                                executeAction: async cancellationToken =>
+                                    await HandleFetchedConsumeResultAsync(consumeResult, cancellationToken).ConfigureAwait(false),
+                                cancellationToken: cancellationToken,
+                                onRetryAction: (exception, timeSpan, retryAttempt) =>
+                                    Logger.LogMessageProcessingRetryFailure(exception, messageId, retryAttempt))
+                            .ConfigureAwait(false);
+                        }
+                        else
+                        {
+                            Logger.LogRetryStrategyDisabled(messageId);
+
+                            await HandleFetchedConsumeResultAsync(consumeResult, cancellationToken).ConfigureAwait(false);
                         }
                     }
-                    else
+                    finally
                     {
-                        _logger.LogIdempotencyDisabled(messageId);
-
-                        if (!ShouldHandleFetchedConsumeResult(consumeResult))
-                        {
-                            _logger.LogMessageProcessingSkip(messageId);
-
-                            return;
-                        }
-                    }
-
-                    if (_options.WorkerConfig!.EnableRetryOnFailure)
-                    {
-                        _logger.LogRetryStrategyEnabled(messageId);
-
-                        await _options.RetryHandler!.HandleAsync(
-                            executeAction: async cancellationToken =>
-                                await HandleFetchedConsumeResultAsync(consumeResult, cancellationToken).ConfigureAwait(false),
-                            cancellationToken: cancellationToken,
-                            onRetryAction: (exception, timeSpan, retryAttempt) =>
-                                _logger.LogMessageProcessingRetryFailure(exception, messageId, retryAttempt))
-                        .ConfigureAwait(false);
-                    }
-                    else
-                    {
-                        _logger.LogRetryStrategyDisabled(messageId);
-
-                        await HandleFetchedConsumeResultAsync(consumeResult, cancellationToken).ConfigureAwait(false);
+                        await AfterProcessingAsync(consumeResult, cancellationToken).ConfigureAwait(false);
                     }
 
                     async Task HandleFetchedConsumeResultAsync(ConsumeResult<TKey, TValue> consumeResult, CancellationToken cancellationToken)
@@ -381,7 +385,7 @@ namespace Confluent.Kafka.Core.Hosting.Internal
             {
                 if (taskActivity is not null)
                 {
-                    _logger.LogWorkItemDispatched(
+                    Logger.LogWorkItemDispatched(
                         messageId,
                         consumeResult.Topic,
                         consumeResult.Partition,
@@ -392,12 +396,16 @@ namespace Confluent.Kafka.Core.Hosting.Internal
                     var workItem = new BackgroundWorkItem<TKey, TValue>(messageId, taskActivity, consumeResult)
                         .AttachContinuation(taskActivity => taskActivity.TraceActivity?.SetEndTime(DateTime.UtcNow));
 
-                    _workItems.Enqueue(workItem);
+                    WorkItems.Enqueue(workItem);
                 }
             }
         }
 
-        private void HandleCompletedWorkItem(BackgroundWorkItem<TKey, TValue> workItem)
+        protected virtual Task BeforeProcessingAsync(ConsumeResult<TKey, TValue> consumeResult, CancellationToken cancellationToken) => Task.CompletedTask;
+
+        protected virtual Task AfterProcessingAsync(ConsumeResult<TKey, TValue> consumeResult, CancellationToken cancellationToken) => Task.CompletedTask;
+
+        protected virtual void HandleCompletedWorkItem(BackgroundWorkItem<TKey, TValue> workItem)
         {
             var messageId = workItem.MessageId;
 
@@ -407,7 +415,7 @@ namespace Confluent.Kafka.Core.Hosting.Internal
 
             try
             {
-                _logger.LogMessageProcessingSuccess(messageId);
+                Logger.LogMessageProcessingSuccess(messageId);
 
                 _options.DiagnosticsManager!.Enrich(activity, consumeResult, _options);
             }
@@ -420,7 +428,7 @@ namespace Confluent.Kafka.Core.Hosting.Internal
             }
         }
 
-        private async Task HandleFaultedWorkItem(BackgroundWorkItem<TKey, TValue> workItem)
+        protected virtual async Task HandleFaultedWorkItem(BackgroundWorkItem<TKey, TValue> workItem)
         {
             var messageId = workItem.MessageId;
 
@@ -432,7 +440,7 @@ namespace Confluent.Kafka.Core.Hosting.Internal
 
             try
             {
-                _logger.LogMessageProcessingFailure(exception, messageId);
+                Logger.LogMessageProcessingFailure(exception, messageId);
 
                 _options.DiagnosticsManager!.Enrich(activity, exception, consumeResult, _options);
 
@@ -460,25 +468,25 @@ namespace Confluent.Kafka.Core.Hosting.Internal
                     }
                     catch (Exception ex)
                     {
-                        _logger.LogErrorHandlerFailure(ex, messageId);
+                        Logger.LogErrorHandlerFailure(ex, messageId);
                     }
                 }
             }
         }
 
-        private bool ShouldProduceRetryMessage(Exception exception, object messageId)
+        protected virtual bool ShouldProduceRetryMessage(Exception exception, object messageId)
         {
             var shouldProduce = _options.WorkerConfig!.RetryTopicSpecification!.IsSatisfiedBy(exception);
 
             if (!shouldProduce)
             {
-                _logger.LogMessageProcessingNotRetriable(messageId);
+                Logger.LogMessageProcessingNotRetriable(messageId);
             }
 
             return shouldProduce;
         }
 
-        private async Task ProduceRetryMessageAsync(ConsumeResult<TKey, TValue> consumeResult, object messageId, Exception exception = null)
+        protected virtual async Task ProduceRetryMessageAsync(ConsumeResult<TKey, TValue> consumeResult, object messageId, Exception exception = null)
         {
             var headers = consumeResult.Message!.Headers?.ToDictionary();
 
@@ -498,11 +506,11 @@ namespace Confluent.Kafka.Core.Hosting.Internal
             }
             catch (Exception ex)
             {
-                _logger.LogRetryProductionFailure(ex, messageId, retryTopic);
+                Logger.LogRetryProductionFailure(ex, messageId, retryTopic);
             }
         }
 
-        private async Task ProduceDeadLetterMessageAsync(ConsumeResult<TKey, TValue> consumeResult, object messageId, Exception exception = null)
+        protected virtual async Task ProduceDeadLetterMessageAsync(ConsumeResult<TKey, TValue> consumeResult, object messageId, Exception exception = null)
         {
             var message = CreateMetadataMessage(consumeResult, messageId, exception);
 
@@ -518,11 +526,11 @@ namespace Confluent.Kafka.Core.Hosting.Internal
             }
             catch (Exception ex)
             {
-                _logger.LogDeadLetterProductionFailure(ex, messageId, deadLetterTopic);
+                Logger.LogDeadLetterProductionFailure(ex, messageId, deadLetterTopic);
             }
         }
 
-        private Message<byte[], KafkaMetadataMessage> CreateMetadataMessage(ConsumeResult<TKey, TValue> consumeResult, object messageId, Exception exception)
+        protected virtual Message<byte[], KafkaMetadataMessage> CreateMetadataMessage(ConsumeResult<TKey, TValue> consumeResult, object messageId, Exception exception)
         {
             var key = _options.KeySerializer?.Serialize(
                 consumeResult.Message!.Key,
@@ -548,9 +556,9 @@ namespace Confluent.Kafka.Core.Hosting.Internal
                     SourcePartition = consumeResult.Partition,
                     SourceOffset = consumeResult.Offset,
                     SourceKey = key,
-                    SourceMessage = value,
+                    SourceValue = value,
                     SourceKeyType = typeof(TKey).AssemblyQualifiedName,
-                    SourceMessageType = typeof(TValue).AssemblyQualifiedName,
+                    SourceValueType = typeof(TValue).AssemblyQualifiedName,
                     ErrorCode = ErrorCode.Unknown,
                     Reason = reason ?? ErrorCode.Unknown.GetReason()
                 },
@@ -560,7 +568,7 @@ namespace Confluent.Kafka.Core.Hosting.Internal
             return message;
         }
 
-        private bool ShouldBypassIdempotency(ConsumeResult<TKey, TValue> consumeResult)
+        protected virtual bool ShouldBypassIdempotency(ConsumeResult<TKey, TValue> consumeResult)
         {
             var headers = consumeResult.Message!.Headers?.ToDictionary();
 
@@ -575,7 +583,7 @@ namespace Confluent.Kafka.Core.Hosting.Internal
             return shouldBypass;
         }
 
-        private bool ShouldHandleFetchedConsumeResult(ConsumeResult<TKey, TValue> consumeResult)
+        protected virtual bool ShouldHandleFetchedConsumeResult(ConsumeResult<TKey, TValue> consumeResult)
         {
             var headers = consumeResult.Message!.Headers?.ToDictionary();
 
@@ -588,14 +596,14 @@ namespace Confluent.Kafka.Core.Hosting.Internal
             return shouldHandle;
         }
 
-        private bool HasRetryCountHeader(IDictionary<string, string> headers)
+        protected virtual bool HasRetryCountHeader(IDictionary<string, string> headers)
         {
             var hasRetryCountHeader = headers is not null && headers.ContainsKey(KafkaRetryConstants.RetryCountKey);
 
             return hasRetryCountHeader;
         }
 
-        private bool HasRetryGroupIdHeader(IDictionary<string, string> headers, out string retryGroupId)
+        protected virtual bool HasRetryGroupIdHeader(IDictionary<string, string> headers, out string retryGroupId)
         {
             retryGroupId = null;
 
@@ -604,14 +612,14 @@ namespace Confluent.Kafka.Core.Hosting.Internal
             return hasRetryGroupIdHeader;
         }
 
-        private bool HasSameGroupId(string retryGroupId)
+        protected virtual bool HasSameGroupId(string retryGroupId)
         {
             var hasSameGroupId = string.Equals(_options.Consumer!.Options!.ConsumerConfig!.GroupId, retryGroupId, StringComparison.Ordinal);
 
             return hasSameGroupId;
         }
 
-        private Activity StartActivity(string topic, IDictionary<string, string> headers)
+        protected virtual Activity StartActivity(string topic, IDictionary<string, string> headers)
         {
             var activityName = $"{topic} {OperationNames.ProcessOperation}";
 
@@ -620,7 +628,7 @@ namespace Confluent.Kafka.Core.Hosting.Internal
             return activity;
         }
 
-        private TimeSpan GetDelay(bool hasAvailableSlots, bool dispatchedTask)
+        protected virtual TimeSpan GetDelay(bool hasAvailableSlots, bool dispatchedTask)
         {
             TimeSpan delay;
 
@@ -650,14 +658,14 @@ namespace Confluent.Kafka.Core.Hosting.Internal
                 return;
             }
 
-            throw new ObjectDisposedException(_serviceName);
+            throw new ObjectDisposedException(ServiceName);
         }
 
         #region IDisposable Members
 
         private bool _disposed;
 
-        private void Dispose(bool disposing)
+        protected virtual void Dispose(bool disposing)
         {
             if (!_disposed)
             {
@@ -669,7 +677,7 @@ namespace Confluent.Kafka.Core.Hosting.Internal
                         _options.IdempotencyHandler,
                         _options.RetryProducer,
                         _options.DeadLetterProducer,
-                        _asyncLock
+                        AsyncLock
                     };
 
                     foreach (var disposable in disposables)
