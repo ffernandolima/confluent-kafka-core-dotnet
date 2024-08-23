@@ -967,9 +967,9 @@ namespace Confluent.Kafka.Core.Consumer.Internal
                         SourcePartition = consumeResult.Partition,
                         SourceOffset = consumeResult.Offset,
                         SourceKey = consumeResult.Message!.Key,
-                        SourceMessage = consumeResult.Message!.Value,
+                        SourceValue = consumeResult.Message!.Value,
                         SourceKeyType = typeof(TKey).AssemblyQualifiedName,
-                        SourceMessageType = typeof(TValue).AssemblyQualifiedName,
+                        SourceValueType = typeof(TValue).AssemblyQualifiedName,
                         ErrorCode = error?.Code ?? ErrorCode.Unknown,
                         Reason = error?.Reason ?? ErrorCode.Unknown.GetReason()
                     },

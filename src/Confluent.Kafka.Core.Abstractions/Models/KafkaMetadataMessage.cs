@@ -24,10 +24,26 @@ namespace Confluent.Kafka.Core.Models
         public Partition SourcePartition { get; init; }
         public Offset SourceOffset { get; init; }
         public byte[] SourceKey { get; init; }
-        public byte[] SourceMessage { get; init; }
+        public byte[] SourceValue { get; init; }
         public string SourceKeyType { get; init; }
-        public string SourceMessageType { get; init; }
+        public string SourceValueType { get; init; }
         public ErrorCode ErrorCode { get; init; }
         public string Reason { get; init; }
+
+        public KafkaMetadataMessage Clone() => new()
+        {
+            Id = Guid.NewGuid(),
+            SourceId = SourceId,
+            SourceTopic = SourceTopic,
+            SourceGroupId = SourceGroupId,
+            SourcePartition = SourcePartition,
+            SourceOffset = SourceOffset,
+            SourceKey = SourceKey,
+            SourceValue = SourceValue,
+            SourceKeyType = SourceKeyType,
+            SourceValueType = SourceValueType,
+            ErrorCode = ErrorCode,
+            Reason = Reason
+        };
     }
 }
