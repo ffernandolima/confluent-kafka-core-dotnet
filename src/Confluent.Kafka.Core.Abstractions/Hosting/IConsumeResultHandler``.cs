@@ -5,6 +5,6 @@ namespace Confluent.Kafka.Core.Hosting
 {
     public interface IConsumeResultHandler<TKey, TValue>
     {
-        Task HandleAsync(ConsumeResult<TKey, TValue> consumeResult, CancellationToken cancellationToken = default);
+        Task HandleAsync(ConsumeResult<TKey, TValue> consumeResult, CancellationToken cancellationToken);
     }
 }
