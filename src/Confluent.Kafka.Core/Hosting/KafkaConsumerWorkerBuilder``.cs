@@ -1,4 +1,5 @@
 ﻿using Confluent.Kafka.Core.Consumer;
+using Confluent.Kafka.Core.Conversion.Internal;
 using Confluent.Kafka.Core.Diagnostics;
 using Confluent.Kafka.Core.Diagnostics.Internal;
 using Confluent.Kafka.Core.Idempotency;
@@ -26,7 +27,7 @@ namespace Confluent.Kafka.Core.Hosting.Internal
 {
     public sealed class KafkaConsumerWorkerBuilder<TKey, TValue> :
         IKafkaConsumerWorkerBuilder<TKey, TValue>,
-        IKafkaConsumerWorkerOptionsConverter<TKey, TValue>
+        IOptionsConverter<IKafkaConsumerWorkerOptions<TKey, TValue>>
     {
         #region Private Fields
 
@@ -66,9 +67,9 @@ namespace Confluent.Kafka.Core.Hosting.Internal
 
         #endregion Ctors
 
-        #region IKafkaConsumerWorkerOptionsConverter Explicity Members
+        #region IOptionsConverter Explicity Members
 
-        IKafkaConsumerWorkerOptions<TKey, TValue> IKafkaConsumerWorkerOptionsConverter<TKey, TValue>.ToOptions()
+        IKafkaConsumerWorkerOptions<TKey, TValue> IOptionsConverter<IKafkaConsumerWorkerOptions<TKey, TValue>>.ToOptions()
         {
             _builtOptions ??= new KafkaConsumerWorkerOptions<TKey, TValue>
             {
@@ -90,7 +91,7 @@ namespace Confluent.Kafka.Core.Hosting.Internal
             return _builtOptions;
         }
 
-        #endregion IKafkaConsumerWorkerOptionsConverter Explicity Members
+        #endregion IOptionsConverter Explicity Members
 
         #region IKafkaConsumerWorkerBuilder Members
 

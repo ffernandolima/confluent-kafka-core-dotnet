@@ -1,4 +1,5 @@
-﻿using Confluent.Kafka.Core.Diagnostics.Internal;
+﻿using Confluent.Kafka.Core.Conversion.Internal;
+using Confluent.Kafka.Core.Diagnostics.Internal;
 using Confluent.Kafka.Core.Internal;
 using Confluent.Kafka.Core.Models;
 using Confluent.Kafka.Core.Models.Internal;
@@ -100,7 +101,7 @@ namespace Confluent.Kafka.Core.Consumer.Internal
                 throw new ArgumentNullException(nameof(builder));
             }
 
-            var options = builder.ToOptions();
+            var options = builder.ToOptions<IKafkaConsumerOptions<TKey, TValue>>();
 
             _logger = options.LoggerFactory.CreateLogger(options.ConsumerConfig!.EnableLogging, options.ConsumerType);
             _consumer = builder.BuildUnderlyingConsumer();

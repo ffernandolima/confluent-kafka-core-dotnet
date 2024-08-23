@@ -1,4 +1,5 @@
-﻿using Confluent.Kafka.Core.Diagnostics;
+﻿using Confluent.Kafka.Core.Conversion.Internal;
+using Confluent.Kafka.Core.Diagnostics;
 using Confluent.Kafka.Core.Diagnostics.Internal;
 using Confluent.Kafka.Core.Internal;
 using Confluent.Kafka.Core.Producer.Internal;
@@ -23,7 +24,7 @@ namespace Confluent.Kafka.Core.Producer
     public class KafkaProducerBuilder<TKey, TValue> : ProducerBuilder<TKey, TValue>,
         IProducerBuilder<TKey, TValue>,
         IKafkaProducerBuilder<TKey, TValue>,
-        IKafkaProducerOptionsConverter<TKey, TValue>
+        IOptionsConverter<IKafkaProducerOptions<TKey, TValue>>
     {
         #region Private Fields
 
@@ -77,9 +78,9 @@ namespace Confluent.Kafka.Core.Producer
 
         #endregion IProducerBuilder Explicity Members
 
-        #region IKafkaProducerOptionsConverter Explicity Members
+        #region IOptionsConverter Explicity Members
 
-        IKafkaProducerOptions<TKey, TValue> IKafkaProducerOptionsConverter<TKey, TValue>.ToOptions()
+        IKafkaProducerOptions<TKey, TValue> IOptionsConverter<IKafkaProducerOptions<TKey, TValue>>.ToOptions()
         {
             _builtOptions ??= new KafkaProducerOptions<TKey, TValue>
             {
@@ -101,7 +102,7 @@ namespace Confluent.Kafka.Core.Producer
             return _builtOptions;
         }
 
-        #endregion IKafkaProducerOptionsConverter Explicity Members
+        #endregion IOptionsConverter Explicity Members
 
         #region IKafkaProducerBuilder Members
 

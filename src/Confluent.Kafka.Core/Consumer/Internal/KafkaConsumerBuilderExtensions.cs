@@ -18,19 +18,5 @@ namespace Confluent.Kafka.Core.Consumer.Internal
 
             return underlyingConsumer;
         }
-
-        internal static IKafkaConsumerOptions<TKey, TValue> ToOptions<TKey, TValue>(this IKafkaConsumerBuilder<TKey, TValue> consumerBuilder)
-        {
-            if (consumerBuilder is not IKafkaConsumerOptionsConverter<TKey, TValue> converter)
-            {
-                var optionsConverterType = typeof(IKafkaConsumerOptionsConverter<TKey, TValue>).ExtractTypeName();
-
-                throw new InvalidCastException($"{nameof(consumerBuilder)} should be of type '{optionsConverterType}'.");
-            }
-
-            var options = converter.ToOptions();
-
-            return options;
-        }
     }
 }

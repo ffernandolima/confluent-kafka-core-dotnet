@@ -1,4 +1,5 @@
-﻿using Confluent.Kafka.Core.Diagnostics.Internal;
+﻿using Confluent.Kafka.Core.Conversion.Internal;
+using Confluent.Kafka.Core.Diagnostics.Internal;
 using Confluent.Kafka.Core.Internal;
 using Confluent.Kafka.Core.Models.Internal;
 using Microsoft.Extensions.Logging;
@@ -63,7 +64,7 @@ namespace Confluent.Kafka.Core.Producer.Internal
                 throw new ArgumentNullException(nameof(builder));
             }
 
-            var options = builder.ToOptions();
+            var options = builder.ToOptions<IKafkaProducerOptions<TKey, TValue>>();
 
             _logger = options.LoggerFactory.CreateLogger(options.ProducerConfig!.EnableLogging, options.ProducerType);
             _producer = builder.BuildUnderlyingProducer();

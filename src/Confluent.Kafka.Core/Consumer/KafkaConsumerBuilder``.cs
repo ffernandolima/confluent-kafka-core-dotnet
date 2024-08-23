@@ -1,4 +1,5 @@
 ﻿using Confluent.Kafka.Core.Consumer.Internal;
+using Confluent.Kafka.Core.Conversion.Internal;
 using Confluent.Kafka.Core.Diagnostics;
 using Confluent.Kafka.Core.Diagnostics.Internal;
 using Confluent.Kafka.Core.Internal;
@@ -27,7 +28,7 @@ namespace Confluent.Kafka.Core.Consumer
     public class KafkaConsumerBuilder<TKey, TValue> : ConsumerBuilder<TKey, TValue>,
         IConsumerBuilder<TKey, TValue>,
         IKafkaConsumerBuilder<TKey, TValue>,
-        IKafkaConsumerOptionsConverter<TKey, TValue>
+        IOptionsConverter<IKafkaConsumerOptions<TKey, TValue>>
     {
         #region Private Fields
 
@@ -86,9 +87,9 @@ namespace Confluent.Kafka.Core.Consumer
 
         #endregion IConsumerBuilder Explicity Members
 
-        #region IKafkaConsumerOptionsConverter Explicity Members
+        #region IOptionsConverter Explicity Members
 
-        IKafkaConsumerOptions<TKey, TValue> IKafkaConsumerOptionsConverter<TKey, TValue>.ToOptions()
+        IKafkaConsumerOptions<TKey, TValue> IOptionsConverter<IKafkaConsumerOptions<TKey, TValue>>.ToOptions()
         {
             _builtOptions ??= new KafkaConsumerOptions<TKey, TValue>
             {
@@ -115,7 +116,7 @@ namespace Confluent.Kafka.Core.Consumer
             return _builtOptions;
         }
 
-        #endregion IKafkaConsumerOptionsConverter Explicity Members
+        #endregion IOptionsConverter Explicity Members
 
         #region IKafkaConsumerBuilder Members
 
