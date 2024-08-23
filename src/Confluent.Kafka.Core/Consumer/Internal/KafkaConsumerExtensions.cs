@@ -22,19 +22,21 @@ namespace Confluent.Kafka.Core.Consumer.Internal
 
             if (consumer.Subscription!.Count > 0 || consumer.Assignment!.Count > 0)
             {
-                var memberNames = new List<string>();
+                List<string> memberNames = null;
 
                 if (consumer.Subscription!.Any(topic => string.IsNullOrWhiteSpace(topic) || !topic.EndsWith(suffix)))
                 {
+                    memberNames ??= [];
                     memberNames.Add(nameof(consumer.Subscription));
                 }
 
                 if (consumer.Assignment!.Any(assignment => string.IsNullOrWhiteSpace(assignment.Topic) || !assignment.Topic.EndsWith(suffix)))
                 {
+                    memberNames ??= [];
                     memberNames.Add(nameof(consumer.Assignment));
                 }
 
-                if (memberNames.Count > 0)
+                if (memberNames is not null && memberNames.Count > 0)
                 {
                     throw new KafkaConsumerConfigException(
                         [
