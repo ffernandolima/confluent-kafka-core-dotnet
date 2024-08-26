@@ -2,7 +2,7 @@
 using Confluent.Kafka.Core.Diagnostics;
 using Confluent.Kafka.Core.Hosting.Internal;
 using Confluent.Kafka.Core.Idempotency;
-using Confluent.Kafka.Core.Mapping;
+using Confluent.Kafka.Core.Mapping.Internal;
 using Confluent.Kafka.Core.Models;
 using Confluent.Kafka.Core.Producer;
 using Confluent.Kafka.Core.Retry;

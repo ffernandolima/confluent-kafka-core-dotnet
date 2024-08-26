@@ -23,7 +23,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.Linq;
 
-namespace Confluent.Kafka.Core.Hosting.Internal
+namespace Confluent.Kafka.Core.Hosting
 {
     public sealed class KafkaConsumerWorkerBuilder<TKey, TValue> :
         IKafkaConsumerWorkerBuilder<TKey, TValue>,

@@ -1,9 +1,9 @@
-﻿using Confluent.Kafka.Core.Hosting.Retry;
+﻿using Confluent.Kafka.Core.Idempotency.Redis;
 using Confluent.Kafka.Core.Idempotency.Redis.Internal;
 using Confluent.Kafka.Core.Models;
 using System;
 
-namespace Confluent.Kafka.Core.Idempotency.Redis
+namespace Confluent.Kafka.Core.Hosting.Retry
 {
     public static class RedisIdempotencyHandlerKafkaRetryConsumerWorkerBuilderExtensions
     {

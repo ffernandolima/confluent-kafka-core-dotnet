@@ -1,7 +1,7 @@
 ﻿using Confluent.Kafka.Core.Conversion.Internal;
 using Confluent.Kafka.Core.Hosting.Internal;
 using Confluent.Kafka.Core.Internal;
-using Confluent.Kafka.Core.Mapping;
+using Confluent.Kafka.Core.Mapping.Internal;
 using Confluent.Kafka.Core.Models;
 using Confluent.Kafka.Core.Models.Internal;
 using Confluent.Kafka.Core.Producer.Internal;

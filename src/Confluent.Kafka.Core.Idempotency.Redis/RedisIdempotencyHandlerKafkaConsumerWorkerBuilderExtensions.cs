@@ -1,8 +1,8 @@
-﻿using Confluent.Kafka.Core.Hosting;
+﻿using Confluent.Kafka.Core.Idempotency.Redis;
 using Confluent.Kafka.Core.Idempotency.Redis.Internal;
 using System;
 
-namespace Confluent.Kafka.Core.Idempotency.Redis
+namespace Confluent.Kafka.Core.Hosting
 {
     public static class RedisIdempotencyHandlerKafkaConsumerWorkerBuilderExtensions
     {

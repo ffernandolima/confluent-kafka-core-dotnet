@@ -1,9 +1,9 @@
-﻿using Confluent.Kafka.Core.Hosting.Retry;
-using Confluent.Kafka.Core.Models;
+﻿using Confluent.Kafka.Core.Models;
+using Confluent.Kafka.Core.Retry.Polly;
 using Confluent.Kafka.Core.Retry.Polly.Internal;
 using System;
 
-namespace Confluent.Kafka.Core.Retry.Polly
+namespace Confluent.Kafka.Core.Hosting.Retry
 {
     public static class PollyRetryHandlerKafkaRetryConsumerWorkerBuilderExtensions
     {

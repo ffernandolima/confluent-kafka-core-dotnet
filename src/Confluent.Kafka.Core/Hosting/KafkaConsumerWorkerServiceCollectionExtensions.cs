@@ -1,5 +1,4 @@
 ﻿using Confluent.Kafka.Core.Hosting;
-using Confluent.Kafka.Core.Hosting.Internal;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;

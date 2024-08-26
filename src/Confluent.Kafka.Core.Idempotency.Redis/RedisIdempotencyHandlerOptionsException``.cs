@@ -1,9 +1,8 @@
-﻿using Confluent.Kafka.Core.Idempotency.Redis;
-using Confluent.Kafka.Core.Internal;
+﻿using Confluent.Kafka.Core.Internal;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace Confluent.Kafka.Core.Retry.Polly
+namespace Confluent.Kafka.Core.Idempotency.Redis
 {
     public sealed class RedisIdempotencyHandlerOptionsException<TKey, TValue> : ValidationException
     {

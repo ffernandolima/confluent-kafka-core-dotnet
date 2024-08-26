@@ -1,4 +1,4 @@
-﻿namespace Confluent.Kafka.Core.Mapping
+﻿namespace Confluent.Kafka.Core.Mapping.Internal
 {
     internal interface IMapper<TDestination>
     {

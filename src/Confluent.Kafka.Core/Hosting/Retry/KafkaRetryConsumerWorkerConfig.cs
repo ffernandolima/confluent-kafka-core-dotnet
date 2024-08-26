@@ -1,6 +1,6 @@
 ﻿using Confluent.Kafka.Core.Hosting.Retry.Internal;
 using Confluent.Kafka.Core.Idempotency.Internal;
-using Confluent.Kafka.Core.Mapping;
+using Confluent.Kafka.Core.Mapping.Internal;
 using Confluent.Kafka.Core.Producer.Internal;
 using Confluent.Kafka.Core.Retry.Internal;
 using Microsoft.Extensions.Configuration;

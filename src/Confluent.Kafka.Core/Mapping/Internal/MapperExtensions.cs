@@ -1,7 +1,7 @@
 ﻿using Confluent.Kafka.Core.Internal;
 using System;
 
-namespace Confluent.Kafka.Core.Mapping
+namespace Confluent.Kafka.Core.Mapping.Internal
 {
     internal static class MapperExtensions
     {
