@@ -4,7 +4,7 @@ using System;
 
 namespace Confluent.Kafka.Core.Producer
 {
-    public static class SchemaRegistryJsonKafkaProducerBuilderExtensions
+    public static class SchemaRegistryJsonSerializerKafkaProducerBuilderExtensions
     {
         public static IKafkaProducerBuilder<TKey, TValue> WithSchemaRegistryJsonSerializer<TKey, TValue>(
             this IKafkaProducerBuilder<TKey, TValue> builder,
