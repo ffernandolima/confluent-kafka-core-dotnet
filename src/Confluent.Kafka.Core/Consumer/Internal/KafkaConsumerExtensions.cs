@@ -30,7 +30,7 @@ namespace Confluent.Kafka.Core.Consumer.Internal
                     memberNames.Add(nameof(consumer.Subscription));
                 }
 
-                if (consumer.Assignment!.Any(assignment => string.IsNullOrWhiteSpace(assignment.Topic) || !assignment.Topic.EndsWith(suffix)))
+                if (consumer.Assignment!.Any(assignment => string.IsNullOrWhiteSpace(assignment.Topic) || !assignment.Topic!.EndsWith(suffix)))
                 {
                     memberNames ??= [];
                     memberNames.Add(nameof(consumer.Assignment));
