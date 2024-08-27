@@ -2,6 +2,7 @@
 using Confluent.Kafka.Core.Conversion.Internal;
 using Confluent.Kafka.Core.Diagnostics;
 using Confluent.Kafka.Core.Diagnostics.Internal;
+using Confluent.Kafka.Core.Hosting.Internal;
 using Confluent.Kafka.Core.Idempotency;
 using Confluent.Kafka.Core.Idempotency.Internal;
 using Confluent.Kafka.Core.Internal;

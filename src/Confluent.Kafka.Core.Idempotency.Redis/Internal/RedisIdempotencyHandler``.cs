@@ -1,5 +1,4 @@
 ﻿using Confluent.Kafka.Core.Internal;
-using Confluent.Kafka.Core.Retry.Polly;
 using Microsoft.Extensions.Logging;
 using StackExchange.Redis;
 using System;
