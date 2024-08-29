@@ -24,8 +24,6 @@ namespace Microsoft.Extensions.DependencyInjection
                 throw new ArgumentNullException(nameof(configureWorker));
             }
 
-            services.AddKafkaDiagnostics();
-
             services.TryAddKeyedSingleton(workerKey, (serviceProvider, _) =>
             {
                 var builder = KafkaConsumerWorkerBuilder<TKey, TValue>.Configure(

@@ -26,8 +26,6 @@ namespace Microsoft.Extensions.DependencyInjection
                 throw new ArgumentNullException(nameof(configureConsumer));
             }
 
-            services.AddKafkaDiagnostics();
-
             services.TryAddKeyedSingleton(consumerKey, (serviceProvider, _) =>
             {
                 var builder = KafkaConsumerBuilder<TKey, TValue>.Configure(
@@ -51,14 +49,6 @@ namespace Microsoft.Extensions.DependencyInjection
 #endif
                 return consumer;
             });
-
-            services.AddKafkaConsumerHandlerFactory<TKey, TValue>((serviceProvider, builder) =>
-            {
-                var consumerBuilder = serviceProvider.GetRequiredKeyedService<IKafkaConsumerBuilder<TKey, TValue>>(consumerKey);
-
-                builder.WithEnableLogging(consumerBuilder.ConsumerConfig!.EnableLogging);
-            },
-            consumerKey);
 
             return services;
         }

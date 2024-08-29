@@ -22,6 +22,8 @@ namespace Microsoft.Extensions.DependencyInjection
 
             configureKafka.Invoke(builder);
 
+            builder.AddKafkaDiagnostics();
+
             return services;
         }
     }

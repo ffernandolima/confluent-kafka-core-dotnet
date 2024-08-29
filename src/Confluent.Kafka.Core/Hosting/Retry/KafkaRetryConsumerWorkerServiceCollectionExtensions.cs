@@ -24,8 +24,6 @@ namespace Confluent.Kafka.Core.Hosting.Retry
                 throw new ArgumentNullException(nameof(configureWorker));
             }
 
-            services.AddKafkaDiagnostics();
-
             services.TryAddKeyedSingleton(workerKey, (serviceProvider, _) =>
             {
                 var builder = KafkaRetryConsumerWorkerBuilder.Configure(

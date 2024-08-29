@@ -26,8 +26,6 @@ namespace Microsoft.Extensions.DependencyInjection
                 throw new ArgumentNullException(nameof(configureProducer));
             }
 
-            services.AddKafkaDiagnostics();
-
             services.TryAddKeyedSingleton(producerKey, (serviceProvider, _) =>
             {
                 var builder = KafkaProducerBuilder<TKey, TValue>.Configure(
@@ -51,14 +49,6 @@ namespace Microsoft.Extensions.DependencyInjection
 #endif
                 return producer;
             });
-
-            services.AddKafkaProducerHandlerFactory<TKey, TValue>((serviceProvider, builder) =>
-            {
-                var producerBuilder = serviceProvider.GetRequiredKeyedService<IKafkaProducerBuilder<TKey, TValue>>(producerKey);
-
-                builder.WithEnableLogging(producerBuilder.ProducerConfig!.EnableLogging);
-            },
-            producerKey);
 
             return services;
         }
