@@ -23,7 +23,7 @@ namespace Confluent.Kafka.Core.Threading.Internal
 
             var semaphoreTasks = new List<Task>();
 
-            for (int i = 0; i < _semaphores.Count; i++)
+            for (var i = 0; i < _semaphores.Count; i++)
             {
                 var semaphore = _semaphores[i];
 
@@ -37,7 +37,7 @@ namespace Confluent.Kafka.Core.Threading.Internal
         {
             CheckDisposed();
 
-            for (int i = _semaphores.Count - 1; i >= 0; i--)
+            for (var i = _semaphores.Count - 1; i >= 0; i--)
             {
                 var semaphore = _semaphores[i];
 
@@ -70,7 +70,7 @@ namespace Confluent.Kafka.Core.Threading.Internal
                 {
                     if (_semaphores is not null && _semaphores.Count > 0)
                     {
-                        for (int i = 0; i < _semaphores.Count; i++)
+                        for (var i = 0; i < _semaphores.Count; i++)
                         {
                             var semaphore = _semaphores[i];
 
