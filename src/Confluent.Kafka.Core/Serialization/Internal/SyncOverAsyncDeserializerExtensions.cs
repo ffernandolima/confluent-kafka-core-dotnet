@@ -12,8 +12,8 @@ namespace Confluent.Kafka.Core.Serialization.Internal
             if (syncOverAsyncDeserializer is not null)
             {
                 innerDeserializer = (IAsyncDeserializer<T>)typeof(SyncOverAsyncDeserializer<T>)
-                    .GetProperty("asyncDeserializer", BindingFlags.NonPublic | BindingFlags.Instance)
-                    .GetValue(syncOverAsyncDeserializer);
+                     .GetProperty("asyncDeserializer", BindingFlags.NonPublic | BindingFlags.Instance)
+                    ?.GetValue(syncOverAsyncDeserializer);
             }
 
             return innerDeserializer;
