@@ -66,7 +66,6 @@ namespace Confluent.Kafka.Core.Hosting.Retry
 
         #endregion Public Methods
 
-
         #region IValidatableObject Members
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
