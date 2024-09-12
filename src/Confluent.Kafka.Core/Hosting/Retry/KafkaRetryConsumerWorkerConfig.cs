@@ -27,10 +27,10 @@ namespace Confluent.Kafka.Core.Hosting.Retry
         public bool EnableRetryOnFailure { get; set; }
         public bool EnableDeadLetterTopic { get; set; }
         public int RetryCount { get; set; } = 1;
-        public TimeSpan EmptyTopicDelay { get; set; } = new TimeSpan(0, 0, 5);
+        public TimeSpan EmptyTopicDelay { get; set; } = new TimeSpan(0, 0, 3);
         public TimeSpan NotEmptyTopicDelay { get; set; } = new TimeSpan(0, 0, 1);
         public TimeSpan UnavailableProcessingSlotsDelay { get; set; } = new TimeSpan(0, 0, 2);
-        public TimeSpan ExceptionDelay { get; set; } = new TimeSpan(0, 0, 10);
+        public TimeSpan ExceptionDelay { get; set; } = new TimeSpan(0, 0, 5);
         public TimeSpan PendingProcessingDelay { get; set; } = new TimeSpan(0, 0, 1);
         public TimeSpan RetryTopicDelay { get; set; } = new TimeSpan(0, 1, 0);
 
