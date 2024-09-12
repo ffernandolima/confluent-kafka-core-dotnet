@@ -27,6 +27,8 @@ namespace Confluent.Kafka.Core.Hosting.Retry
 
         TimeSpan UnavailableProcessingSlotsDelay { get; }
 
+        TimeSpan ExceptionDelay { get; }
+
         TimeSpan PendingProcessingDelay { get; }
 
         TimeSpan RetryTopicDelay { get; }

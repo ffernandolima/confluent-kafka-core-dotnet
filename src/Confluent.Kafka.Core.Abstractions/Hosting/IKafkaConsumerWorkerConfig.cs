@@ -36,6 +36,8 @@ namespace Confluent.Kafka.Core.Hosting
 
         TimeSpan UnavailableProcessingSlotsDelay { get; }
 
+        TimeSpan ExceptionDelay { get; }
+
         TimeSpan PendingProcessingDelay { get; }
     }
 }

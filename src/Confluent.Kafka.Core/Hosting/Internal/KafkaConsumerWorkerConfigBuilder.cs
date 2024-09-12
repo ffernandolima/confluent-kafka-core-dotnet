@@ -102,6 +102,12 @@ namespace Confluent.Kafka.Core.Hosting.Internal
             return this;
         }
 
+        public IKafkaConsumerWorkerConfigBuilder WithExceptionDelay(TimeSpan exceptionDelay)
+        {
+            AppendAction(config => config.ExceptionDelay = exceptionDelay);
+            return this;
+        }
+
         public IKafkaConsumerWorkerConfigBuilder WithPendingProcessingDelay(TimeSpan pendingProcessingDelay)
         {
             AppendAction(config => config.PendingProcessingDelay = pendingProcessingDelay);

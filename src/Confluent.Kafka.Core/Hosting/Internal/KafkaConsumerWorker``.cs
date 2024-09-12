@@ -83,26 +83,26 @@ namespace Confluent.Kafka.Core.Hosting.Internal
 
             try
             {
-                var dispatched = false;
-
-                var hasAvailableSlots = false;
-
                 while (!stoppingToken.IsCancellationRequested)
                 {
+                    ExecutionResult executionResult;
+
                     try
                     {
                         await HandleCompletedWorkItemsAsync().ConfigureAwait(false);
 
-                        ExecuteInternal(stoppingToken);
+                        executionResult = ExecuteInternal(stoppingToken);
 
                         HandleConsumptionExceptions();
                     }
                     catch (Exception ex)
                     {
                         Logger.LogWorkerExecutionFailure(ex, ServiceName);
+
+                        executionResult = ExecutionResult.UnhandledException;
                     }
 
-                    var delay = GetDelay(hasAvailableSlots, dispatched);
+                    var delay = GetDelay(executionResult);
 
                     Logger.LogDelayingUntil(DateTime.UtcNow.Add(delay));
 
@@ -140,39 +140,47 @@ namespace Confluent.Kafka.Core.Hosting.Internal
             }
         }
 
-        protected virtual void ExecuteInternal(CancellationToken cancellationToken)
+        protected virtual ExecutionResult ExecuteInternal(CancellationToken cancellationToken)
         {
             if (AsyncLock.CurrentCount <= 0)
             {
                 Logger.LogNoAvailableSlots();
 
-                return;
+                return ExecutionResult.NoAvailableSlots;
             }
 
-            IEnumerable<ConsumeResult<TKey, TValue>> consumeResults = null;
+            IEnumerable<ConsumeResult<TKey, TValue>> consumeResults;
 
             try
             {
                 consumeResults = _options.Consumer!.ConsumeBatch(AsyncLock.CurrentCount);
             }
+            catch (ArgumentException aex) when (aex.Message == "batchSize cannot be less than or equal to zero.")
+            {
+                Exceptions.Add(aex);
+
+                return ExecutionResult.NoAvailableSlots;
+            }
             catch (Exception ex)
             {
                 Exceptions.Add(ex);
 
-                return;
+                return ExecutionResult.UnhandledException;
             }
 
             if (consumeResults is null || !consumeResults.Any())
             {
                 Logger.LogNoAvailableMessages();
 
-                return;
+                return ExecutionResult.NoAvailableMessages;
             }
 
             foreach (var consumeResult in consumeResults.Where(consumeResult => consumeResult!.Message is not null))
             {
                 DispatchWorkItem(consumeResult, cancellationToken);
             }
+
+            return ExecutionResult.Dispatched;
         }
 
         protected virtual async Task HandleCompletedWorkItemsAsync()
@@ -628,25 +636,16 @@ namespace Confluent.Kafka.Core.Hosting.Internal
             return activity;
         }
 
-        protected virtual TimeSpan GetDelay(bool hasAvailableSlots, bool dispatchedTask)
+        protected virtual TimeSpan GetDelay(ExecutionResult executionResult)
         {
-            TimeSpan delay;
-
-            if (!hasAvailableSlots)
+            var delay = executionResult switch
             {
-                delay = _options.WorkerConfig!.UnavailableProcessingSlotsDelay;
-            }
-            else
-            {
-                if (!dispatchedTask)
-                {
-                    delay = _options.WorkerConfig!.EmptyTopicDelay;
-                }
-                else
-                {
-                    delay = _options.WorkerConfig!.NotEmptyTopicDelay;
-                }
-            }
+                ExecutionResult.NoAvailableSlots => _options.WorkerConfig!.UnavailableProcessingSlotsDelay,
+                ExecutionResult.NoAvailableMessages => _options.WorkerConfig!.EmptyTopicDelay,
+                ExecutionResult.Dispatched => _options.WorkerConfig!.NotEmptyTopicDelay,
+                ExecutionResult.UnhandledException => _options.WorkerConfig!.ExceptionDelay,
+                _ => throw new ArgumentOutOfRangeException(nameof(executionResult))
+            };
 
             return delay;
         }

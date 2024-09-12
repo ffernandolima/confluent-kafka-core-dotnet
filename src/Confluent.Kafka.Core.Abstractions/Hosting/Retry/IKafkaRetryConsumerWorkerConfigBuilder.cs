@@ -28,6 +28,8 @@ namespace Confluent.Kafka.Core.Hosting.Retry
 
         IKafkaRetryConsumerWorkerConfigBuilder WithUnavailableProcessingSlotsDelay(TimeSpan unavailableProcessingSlotsDelay);
 
+        IKafkaRetryConsumerWorkerConfigBuilder WithExceptionDelay(TimeSpan exceptionDelay);
+
         IKafkaRetryConsumerWorkerConfigBuilder WithPendingProcessingDelay(TimeSpan pendingProcessingDelay);
 
         IKafkaRetryConsumerWorkerConfigBuilder WithRetryTopicDelay(TimeSpan retryTopicDelay);

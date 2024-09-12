@@ -90,6 +90,12 @@ namespace Confluent.Kafka.Core.Hosting.Retry.Internal
             return this;
         }
 
+        public IKafkaRetryConsumerWorkerConfigBuilder WithExceptionDelay(TimeSpan exceptionDelay)
+        {
+            AppendAction(config => config.ExceptionDelay = exceptionDelay);
+            return this;
+        }
+
         public IKafkaRetryConsumerWorkerConfigBuilder WithPendingProcessingDelay(TimeSpan pendingProcessingDelay)
         {
             AppendAction(config => config.PendingProcessingDelay = pendingProcessingDelay);

@@ -31,6 +31,7 @@ namespace Confluent.Kafka.Core.Hosting
         public TimeSpan EmptyTopicDelay { get; set; } = new TimeSpan(0, 0, 5);
         public TimeSpan NotEmptyTopicDelay { get; set; } = new TimeSpan(0, 0, 1);
         public TimeSpan UnavailableProcessingSlotsDelay { get; set; } = new TimeSpan(0, 0, 2);
+        public TimeSpan ExceptionDelay { get; set; } = new TimeSpan(0, 0, 10);
         public TimeSpan PendingProcessingDelay { get; set; } = new TimeSpan(0, 0, 1);
         public RetrySpecification RetryTopicSpecification =>
             _retrySpecification ??= RetrySpecification.Create(RetryTopicExceptionFilter, RetryTopicExceptionTypeFilters);
@@ -124,6 +125,13 @@ namespace Confluent.Kafka.Core.Hosting
                 yield return new ValidationResult(
                     $"{nameof(workerConfig.UnavailableProcessingSlotsDelay)} cannot be infinite.",
                     [nameof(workerConfig.UnavailableProcessingSlotsDelay)]);
+            }
+
+            if (workerConfig.ExceptionDelay == Timeout.InfiniteTimeSpan)
+            {
+                yield return new ValidationResult(
+                    $"{nameof(workerConfig.ExceptionDelay)} cannot be infinite.",
+                    [nameof(workerConfig.ExceptionDelay)]);
             }
 
             if (workerConfig.PendingProcessingDelay == Timeout.InfiniteTimeSpan)

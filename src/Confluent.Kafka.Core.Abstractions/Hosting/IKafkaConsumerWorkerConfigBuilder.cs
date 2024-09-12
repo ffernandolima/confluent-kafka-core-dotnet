@@ -32,6 +32,8 @@ namespace Confluent.Kafka.Core.Hosting
 
         IKafkaConsumerWorkerConfigBuilder WithUnavailableProcessingSlotsDelay(TimeSpan unavailableProcessingSlotsDelay);
 
+        IKafkaConsumerWorkerConfigBuilder WithExceptionDelay(TimeSpan exceptionDelay);
+
         IKafkaConsumerWorkerConfigBuilder WithPendingProcessingDelay(TimeSpan pendingProcessingDelay);
 
         IKafkaConsumerWorkerConfig Build();
