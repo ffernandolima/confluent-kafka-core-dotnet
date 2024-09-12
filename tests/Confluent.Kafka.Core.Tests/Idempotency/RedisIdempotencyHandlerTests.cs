@@ -22,18 +22,6 @@ namespace Confluent.Kafka.Core.Tests.Idempotency
 
         public RedisIdempotencyHandlerTests()
         {
-            _multiplexer = ConnectionMultiplexer.Connect("localhost:6379");
-
-            _options = new RedisIdempotencyHandlerOptions<string, Message>
-            {
-                GroupId = "test-group",
-                ConsumerName = "test-consumer",
-                MessageIdHandler = message => message.Id,
-                ExpirationInterval = TimeSpan.FromSeconds(3),
-                ExpirationDelay = TimeSpan.FromMilliseconds(100),
-                EnableLogging = true
-            };
-
             _mockLogger = new Mock<ILogger>();
 
             _mockLogger
@@ -49,6 +37,18 @@ namespace Confluent.Kafka.Core.Tests.Idempotency
             _mockLoggerFactory
                 .Setup(factory => factory.CreateLogger(It.IsAny<string>()))
                 .Returns(_mockLogger.Object);
+
+            _multiplexer = ConnectionMultiplexer.Connect("localhost:6379");
+
+            _options = new RedisIdempotencyHandlerOptions<string, Message>
+            {
+                GroupId = "test-group",
+                ConsumerName = "test-consumer",
+                MessageIdHandler = message => message.Id,
+                ExpirationInterval = TimeSpan.FromSeconds(3),
+                ExpirationDelay = TimeSpan.FromMilliseconds(100),
+                EnableLogging = true
+            };
 
             _handler = new RedisIdempotencyHandler<string, Message>(_mockLoggerFactory.Object, _multiplexer, _options);
         }
