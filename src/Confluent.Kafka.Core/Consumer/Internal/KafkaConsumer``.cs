@@ -333,7 +333,7 @@ namespace Confluent.Kafka.Core.Consumer.Internal
         {
             CheckDisposed();
 
-            if (topics is null || !topics.Any(topic => !string.IsNullOrWhiteSpace(topic)))
+            if (topics is null || topics.All(topic => string.IsNullOrWhiteSpace(topic)))
             {
                 throw new ArgumentException($"{nameof(topics)} cannot be null, empty, or contain null values.", nameof(topics));
             }
@@ -378,7 +378,7 @@ namespace Confluent.Kafka.Core.Consumer.Internal
         {
             CheckDisposed();
 
-            if (partitions is null || !partitions.Any(partition => partition is not null))
+            if (partitions is null || partitions.All(partition => partition is null))
             {
                 throw new ArgumentException($"{nameof(partitions)} cannot be null, empty, or contain null values.", nameof(partitions));
             }
@@ -392,7 +392,7 @@ namespace Confluent.Kafka.Core.Consumer.Internal
         {
             CheckDisposed();
 
-            if (offsets is null || !offsets.Any(offset => offset is not null))
+            if (offsets is null || offsets.All(offset => offset is null))
             {
                 throw new ArgumentException($"{nameof(offsets)} cannot be null, empty, or contain null values.", nameof(offsets));
             }
@@ -406,7 +406,7 @@ namespace Confluent.Kafka.Core.Consumer.Internal
         {
             CheckDisposed();
 
-            if (partitions is null || !partitions.Any(partition => partition is not null))
+            if (partitions is null || partitions.All(partition => partition is null))
             {
                 throw new ArgumentException($"{nameof(partitions)} cannot be null, empty, or contain null values.", nameof(partitions));
             }
@@ -420,7 +420,7 @@ namespace Confluent.Kafka.Core.Consumer.Internal
         {
             CheckDisposed();
 
-            if (offsets is null || !offsets.Any(offset => offset is not null))
+            if (offsets is null || offsets.All(offset => offset is null))
             {
                 throw new ArgumentException($"{nameof(offsets)} cannot be null, empty, or contain null values.", nameof(offsets));
             }
@@ -434,7 +434,7 @@ namespace Confluent.Kafka.Core.Consumer.Internal
         {
             CheckDisposed();
 
-            if (partitions is null || !partitions.Any(partition => partition is not null))
+            if (partitions is null || partitions.All(partition => partition is null))
             {
                 throw new ArgumentException($"{nameof(partitions)} cannot be null, empty, or contain null values.", nameof(partitions));
             }
@@ -488,7 +488,7 @@ namespace Confluent.Kafka.Core.Consumer.Internal
         {
             CheckDisposed();
 
-            if (offsets is null || !offsets.Any(offset => offset is not null))
+            if (offsets is null || offsets.All(offset => offset is null))
             {
                 throw new ArgumentException($"{nameof(offsets)} cannot be null, empty, or contain null values.", nameof(offsets));
             }
@@ -540,7 +540,7 @@ namespace Confluent.Kafka.Core.Consumer.Internal
         {
             CheckDisposed();
 
-            if (partitions is null || !partitions.Any(partition => partition is not null))
+            if (partitions is null || partitions.All(partition => partition is null))
             {
                 throw new ArgumentException($"{nameof(partitions)} cannot be null, empty, or contain null values.", nameof(partitions));
             }
@@ -573,7 +573,7 @@ namespace Confluent.Kafka.Core.Consumer.Internal
         {
             CheckDisposed();
 
-            if (consumeResults is null || !consumeResults.Any(result => result is not null))
+            if (consumeResults is null || consumeResults.All(result => result is null))
             {
                 throw new ArgumentException($"{nameof(consumeResults)} cannot be null, empty, or contain null values.", nameof(consumeResults));
             }
@@ -595,7 +595,7 @@ namespace Confluent.Kafka.Core.Consumer.Internal
         {
             CheckDisposed();
 
-            if (partitions is null || !partitions.Any(partition => partition is not null))
+            if (partitions is null || partitions.All(partition => partition is null))
             {
                 throw new ArgumentException($"{nameof(partitions)} cannot be null, empty, or contain null values.", nameof(partitions));
             }
@@ -609,7 +609,7 @@ namespace Confluent.Kafka.Core.Consumer.Internal
         {
             CheckDisposed();
 
-            if (partitions is null || !partitions.Any(partition => partition is not null))
+            if (partitions is null || partitions.All(partition => partition is null))
             {
                 throw new ArgumentException($"{nameof(partitions)} cannot be null, empty or contain null values.", nameof(partitions));
             }
@@ -637,7 +637,7 @@ namespace Confluent.Kafka.Core.Consumer.Internal
         {
             CheckDisposed();
 
-            if (timestamps is null || !timestamps.Any(timestamp => timestamp is not null))
+            if (timestamps is null || timestamps.All(timestamp => timestamp is null))
             {
                 throw new ArgumentException($"{nameof(timestamps)} cannot be null, empty, or contain null values.", nameof(timestamps));
             }

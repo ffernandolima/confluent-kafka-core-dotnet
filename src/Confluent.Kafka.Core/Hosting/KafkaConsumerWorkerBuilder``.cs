@@ -310,7 +310,7 @@ namespace Confluent.Kafka.Core.Hosting
                 ));
 #endif
 
-            if (_consumeResultHandlers is null || !_consumeResultHandlers.Any(consumeResultHandler => consumeResultHandler is not null))
+            if (_consumeResultHandlers is null || _consumeResultHandlers.All(consumeResultHandler => consumeResultHandler is null))
             {
                 throw new InvalidOperationException("Consume result handlers cannot be null, empty, or contain null values.");
             }

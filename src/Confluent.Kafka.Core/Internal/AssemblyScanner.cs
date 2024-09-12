@@ -21,7 +21,7 @@ namespace Confluent.Kafka.Core.Internal
 
             var assemblyTypes = AppDomain.CurrentDomain
                 .GetAssemblies()
-                .Where(loadedAssembly => !assemblies.Any(assembly => assembly is not null) || assemblies.Contains(loadedAssembly))
+                .Where(loadedAssembly => assemblies.All(assembly => assembly is null) || assemblies.Contains(loadedAssembly))
                 .SelectMany(loadedAssembly => loadedAssembly.GetTypes())
                 .Where(predicate)
                 .ToArray();

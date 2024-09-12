@@ -348,7 +348,7 @@ namespace Confluent.Kafka.Core.Producer.Internal
         {
             CheckDisposed();
 
-            if (offsets is null || !offsets.Any(offset => offset is not null))
+            if (offsets is null || offsets.All(offset => offset is null))
             {
                 throw new ArgumentException($"{nameof(offsets)} cannot be null, empty, or contain null values.", nameof(offsets));
             }
