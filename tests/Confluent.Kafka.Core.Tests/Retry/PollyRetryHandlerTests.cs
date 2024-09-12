@@ -19,9 +19,13 @@ namespace Confluent.Kafka.Core.Tests.Retry
         public PollyRetryHandlerTests()
         {
             _mockLogger = new Mock<ILogger>();
-            _mockLogger.Setup(logger => logger.IsEnabled(LogLevel.Error)).Returns(true);
+
+            _mockLogger
+                .Setup(logger => logger.IsEnabled(LogLevel.Error))
+                .Returns(true);
 
             _mockLoggerFactory = new Mock<ILoggerFactory>();
+
             _mockLoggerFactory
                 .Setup(factory => factory.CreateLogger(It.IsAny<string>()))
                 .Returns(_mockLogger.Object);
