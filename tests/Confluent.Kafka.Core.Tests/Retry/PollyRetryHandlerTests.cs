@@ -22,7 +22,9 @@ namespace Confluent.Kafka.Core.Tests.Retry
             _mockLogger.Setup(logger => logger.IsEnabled(LogLevel.Error)).Returns(true);
 
             _mockLoggerFactory = new Mock<ILoggerFactory>();
-            _mockLoggerFactory.Setup(factory => factory.CreateLogger(It.IsAny<string>())).Returns(_mockLogger.Object);
+            _mockLoggerFactory
+                .Setup(factory => factory.CreateLogger(It.IsAny<string>()))
+                .Returns(_mockLogger.Object);
         }
 
         [Fact]
