@@ -35,9 +35,9 @@ jobs:
       run: dotnet build --configuration Release --no-restore
 
     - name: Start Docker Compose
-      run: docker-compose -f "docker-compose.yml" up -d
+      run: docker compose -f docker-compose.yml up -d
 
     - name: Run tests
       run: dotnet test --configuration Release --no-build --verbosity normal
     - name: Stop Docker Compose
-      run: docker-compose -f "docker-compose.yml" down
+      run: docker compose -f docker-compose.yml down
