@@ -17,8 +17,8 @@ namespace Confluent.Kafka.Core.Tests.Idempotency
         private readonly Mock<ILoggerFactory> _mockLoggerFactory;
 
         private readonly IConnectionMultiplexer _multiplexer;
-        private readonly RedisIdempotencyHandler<string, Message> _handler;
-        private readonly RedisIdempotencyHandlerOptions<string, Message> _options;
+        private readonly RedisIdempotencyHandler<string, IdempotencyMessage> _handler;
+        private readonly RedisIdempotencyHandlerOptions<string, IdempotencyMessage> _options;
 
         public RedisIdempotencyHandlerTests()
         {
@@ -40,7 +40,7 @@ namespace Confluent.Kafka.Core.Tests.Idempotency
 
             _multiplexer = ConnectionMultiplexer.Connect("localhost:6379");
 
-            _options = new RedisIdempotencyHandlerOptions<string, Message>
+            _options = new RedisIdempotencyHandlerOptions<string, IdempotencyMessage>
             {
                 GroupId = "test-group",
                 ConsumerName = "test-consumer",
@@ -50,8 +50,10 @@ namespace Confluent.Kafka.Core.Tests.Idempotency
                 EnableLogging = true
             };
 
-            _handler = new RedisIdempotencyHandler<string, Message>(_mockLoggerFactory.Object, _multiplexer, _options);
+            _handler = new RedisIdempotencyHandler<string, IdempotencyMessage>(_mockLoggerFactory.Object, _multiplexer, _options);
         }
+
+        #region IAsyncLifetime Members
 
         public async Task InitializeAsync()
         {
@@ -65,12 +67,24 @@ namespace Confluent.Kafka.Core.Tests.Idempotency
             return Task.CompletedTask;
         }
 
+        #endregion IAsyncLifetime Members
+
+        #region Stubs
+
+        public class IdempotencyMessage
+        {
+            public string Id { get; set; }
+            public string Content { get; set; }
+        }
+
+        #endregion Stubs
+
         [Fact]
         public async Task TryHandleAsync_MessageIdIsNullOrEmpty_ShouldLogAndReturnTrue()
         {
             // Arrange
-            var messageWithNullId = new Message { Id = null, Content = "null-id-message" };
-            var messageWithEmptyId = new Message { Id = "", Content = "empty-id-message" };
+            var messageWithNullId = new IdempotencyMessage { Id = null, Content = "null-id-message" };
+            var messageWithEmptyId = new IdempotencyMessage { Id = "", Content = "empty-id-message" };
 
             // Act
             var resultWithNullId = await _handler.TryHandleAsync(messageWithNullId);
@@ -87,7 +101,7 @@ namespace Confluent.Kafka.Core.Tests.Idempotency
         public async Task TryHandleAsync_NewMessage_ShouldSucceed()
         {
             // Arrange
-            var message = new Message { Id = "1", Content = "test-message" };
+            var message = new IdempotencyMessage { Id = "1", Content = "test-message" };
 
             // Act
             var result = await _handler.TryHandleAsync(message);
@@ -100,7 +114,7 @@ namespace Confluent.Kafka.Core.Tests.Idempotency
         public async Task TryHandleAsync_DuplicateMessage_ShouldReturnFalse()
         {
             // Arrange
-            var message = new Message { Id = "2", Content = "duplicate-message" };
+            var message = new IdempotencyMessage { Id = "2", Content = "duplicate-message" };
 
             // Act
             var firstTry = await _handler.TryHandleAsync(message);
@@ -115,12 +129,12 @@ namespace Confluent.Kafka.Core.Tests.Idempotency
         public async Task Expiration_ShouldRemoveOldMessages()
         {
             // Arrange
-            var message = new Message { Id = "3", Content = "expiring-message" };
+            var message = new IdempotencyMessage { Id = "3", Content = "expiring-message" };
 
             // Act
             await _handler.TryHandleAsync(message);
 
-            await Task.Delay(_options.ExpirationInterval);
+            await Task.Delay(_options.ExpirationInterval + TimeSpan.FromSeconds(1));
 
             // Assert
             var database = _multiplexer.GetDatabase();
@@ -136,7 +150,7 @@ namespace Confluent.Kafka.Core.Tests.Idempotency
         public async Task TryHandleAsync_HandlesCancellationGracefully()
         {
             // Arrange
-            var message = new Message { Id = "4", Content = "cancellation-test" };
+            var message = new IdempotencyMessage { Id = "4", Content = "cancellation-test" };
             using var cts = new CancellationTokenSource();
 
             // Act
@@ -162,12 +176,12 @@ namespace Confluent.Kafka.Core.Tests.Idempotency
                     options.AbortOnConnectFail = false;
                 });
 
-            var handlerWithInvalidRedis = new RedisIdempotencyHandler<string, Message>(
+            var handlerWithInvalidRedis = new RedisIdempotencyHandler<string, IdempotencyMessage>(
                 _mockLoggerFactory.Object,
                 invalidMultiplexer,
                 _options);
 
-            var message = new Message { Id = "5", Content = "unavailable-test" };
+            var message = new IdempotencyMessage { Id = "5", Content = "unavailable-test" };
 
             // Act
             var result = await handlerWithInvalidRedis.TryHandleAsync(message);

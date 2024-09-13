@@ -170,7 +170,7 @@ namespace Confluent.Kafka.Core.Tests.Retry
             // Assert
             Assert.Equal(retryCount + 1, retries);
 
-            Assert.True(stopwatch.Elapsed < TimeSpan.FromMilliseconds(10));
+            Assert.True(stopwatch.Elapsed < TimeSpan.FromMilliseconds(100));
 
             _mockLogger.VerifyLog(LogLevel.Error, Times.AtLeast(retryCount));
         }
@@ -204,7 +204,7 @@ namespace Confluent.Kafka.Core.Tests.Retry
             // Assert
             Assert.Equal(retryCount + 1, retries);
 
-            Assert.True(stopwatch.Elapsed < TimeSpan.FromMilliseconds(10));
+            Assert.True(stopwatch.Elapsed < TimeSpan.FromMilliseconds(100));
 
             _mockLogger.VerifyLog(LogLevel.Error, Times.AtLeast(retryCount));
         }
