@@ -107,6 +107,8 @@ namespace Confluent.Kafka.Core.Idempotency.Redis.Internal
 
         private async Task<bool> TryAddItemWhenNotExistsAsync(string messageId, CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             var database = _multiplexer.GetDatabase();
 
             var score = ToUnixTimeSeconds(DateTime.UtcNow);
