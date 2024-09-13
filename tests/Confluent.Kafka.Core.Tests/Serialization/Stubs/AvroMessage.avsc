@@ -1,0 +1,15 @@
+﻿{
+  "namespace": "Confluent.Kafka.Core.Tests.Serialization",
+  "name": "AvroMessage",
+  "type": "record",
+  "fields": [
+    {
+      "name": "id",
+      "type": "int"
+    },
+    {
+      "name": "content",
+      "type": "string"
+    }
+  ]
+}
