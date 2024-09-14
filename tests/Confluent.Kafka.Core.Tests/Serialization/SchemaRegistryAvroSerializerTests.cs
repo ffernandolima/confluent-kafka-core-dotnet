@@ -10,6 +10,9 @@ using Xunit;
 
 namespace Confluent.Kafka.Core.Tests.Serialization
 {
+    using Google.Protobuf.Compiler;
+    using System.Collections.Generic;
+    using System.Net;
     using System.Net.Http;
     using System.Text;
 
@@ -52,29 +55,55 @@ namespace Confluent.Kafka.Core.Tests.Serialization
             GC.SuppressFinalize(this);
         }
 
+        public const string SchemaRegistry_V1_JSON = "application/vnd.schemaregistry.v1+json";
+        public const string SchemaRegistry_Default_JSON = "application/vnd.schemaregistry+json";
+        public const string JSON = "application/json";
+
+        public static readonly IReadOnlyList<string> PreferredResponseTypes = new List<string>
+        {
+            SchemaRegistry_V1_JSON,
+            SchemaRegistry_Default_JSON,
+            JSON
+        };
+
+        private static readonly string acceptHeader = string.Join(", ", PreferredResponseTypes);
+
         [Fact]
         public async Task SerializeAsync_HttpClient_Test()
         {
-            var client = new HttpClient
+            try
             {
-                BaseAddress = new Uri("http://" + SchemaRegistryUrl, UriKind.Absolute)
-            };
+                System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
 
-            var message = new AvroMessage { Id = 1, Content = "Test content" };
+                var client = new HttpClient
+                {
+                    BaseAddress = new Uri("http://" + SchemaRegistryUrl, UriKind.Absolute)
+                };
 
-            var request = new HttpRequestMessage(HttpMethod.Post, $"subjects/test-avro-topic-value/versions?normalize=false");
+                var message = new AvroMessage { Id = 1, Content = "Test content" };
 
-            var content = new StringContent(
-                JsonConvert.SerializeObject(message.Schema),
-                Encoding.UTF8,
-                "application/vnd.schemaregistry.v1+json");
+                var request = new HttpRequestMessage(HttpMethod.Post, $"subjects/test-avro-topic-value/versions?normalize=false");
 
-            content.Headers.ContentType!.CharSet = string.Empty;
+                request.Headers.Add("Accept", acceptHeader);
 
-            request.Content = content;
+                var content = new StringContent(
+                    JsonConvert.SerializeObject(message.Schema),
+                    Encoding.UTF8,
+                    SchemaRegistry_V1_JSON);
 
-            var response = await client
-                .SendAsync(request);
+                content.Headers.ContentType!.CharSet = string.Empty;
+
+                request.Content = content;
+
+                var response = await client
+                    .SendAsync(request);
+
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            
         }
 
         [Fact]
