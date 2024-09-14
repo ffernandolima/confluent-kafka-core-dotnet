@@ -37,6 +37,9 @@ jobs:
     - name: Start Docker Compose
       run: docker compose -f docker-compose.yml up -d
 
+    - name: Check containers
+      run: docker ps -a
+
     - name: Check localhost connectivity
       run: curl http://schema-registry:8081
 
