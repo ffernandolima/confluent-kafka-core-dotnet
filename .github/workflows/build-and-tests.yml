@@ -38,7 +38,7 @@ jobs:
       run: docker compose -f docker-compose.yml up -d
 
     - name: Check localhost connectivity
-      run: curl 127.0.0.1:8081
+      run: curl schema-registry:8081
 
     - name: Run tests
       run: dotnet test --configuration Release --no-build --verbosity normal
