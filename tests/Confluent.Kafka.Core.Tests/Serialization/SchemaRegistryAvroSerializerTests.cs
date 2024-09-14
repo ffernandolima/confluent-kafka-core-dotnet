@@ -2,6 +2,7 @@
 using Confluent.Kafka.Core.Serialization.SchemaRegistry.Avro.Internal;
 using Confluent.SchemaRegistry;
 using Confluent.SchemaRegistry.Serdes;
+using Newtonsoft.Json;
 using System;
 using System.IO;
 using System.Threading.Tasks;
@@ -9,6 +10,7 @@ using Xunit;
 
 namespace Confluent.Kafka.Core.Tests.Serialization
 {
+    using System.Net.Http;
     using System.Text;
 
     public class SchemaRegistryAvroSerializerTests : IDisposable
@@ -48,6 +50,31 @@ namespace Confluent.Kafka.Core.Tests.Serialization
             _schemaRegistryClient?.Dispose();
 
             GC.SuppressFinalize(this);
+        }
+
+        [Fact]
+        public async Task SerializeAsync_HttpClient_Test()
+        {
+            var client = new HttpClient
+            {
+                BaseAddress = new Uri("http://" + SchemaRegistryUrl, UriKind.Absolute)
+            };
+
+            var message = new AvroMessage { Id = 1, Content = "Test content" };
+
+            var request = new HttpRequestMessage(HttpMethod.Post, $"subjects/test/versions?normalize=true");
+
+            var content = new StringContent(
+                JsonConvert.SerializeObject(message.Schema),
+                Encoding.UTF8,
+                "application/vnd.schemaregistry.v1+json");
+
+            content.Headers.ContentType!.CharSet = string.Empty;
+
+            request.Content = content;
+
+            var response = await client
+                .SendAsync(request);
         }
 
         [Fact]
