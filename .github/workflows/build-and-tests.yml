@@ -37,8 +37,8 @@ jobs:
     - name: Start Docker Compose
       run: docker compose -f docker-compose.yml up -d
 
-    - name: Wait for availability
-      run: sleep 75s
+    - name: Wait for services availability
+      run: sleep 30s
       shell: bash
 
     - name: Check containers
