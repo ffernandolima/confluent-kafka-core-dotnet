@@ -72,6 +72,8 @@ namespace Confluent.Kafka.Core.Tests.Serialization
             catch (Exception ex)
             {
                 _testOutputHelper.WriteLine(ex.ToString());
+                Console.WriteLine(ex.ToString());
+                throw;
             }
         }
 
