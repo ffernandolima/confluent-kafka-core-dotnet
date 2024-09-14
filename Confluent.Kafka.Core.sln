@@ -94,6 +94,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Idempotency", "Idempotency"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Retry", "Retry", "{00F60606-1756-4212-BC74-347F31B75AA9}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{283EBAB0-38CD-4CB0-9252-F1DA3A19C139}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{47DC6568-0B2E-4AEB-9BE3-7E047DDA9961}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\build-and-tests.yml = .github\workflows\build-and-tests.yml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -175,6 +182,8 @@ Global
 		{DD54AB9E-ABC7-40B7-8825-BB03F7D9F62B} = {AEA90923-B126-43B0-B8EC-DD994B2D645F}
 		{7BDDD1F9-DA86-48D0-8E02-F2867D4417BB} = {AEA90923-B126-43B0-B8EC-DD994B2D645F}
 		{00F60606-1756-4212-BC74-347F31B75AA9} = {AEA90923-B126-43B0-B8EC-DD994B2D645F}
+		{283EBAB0-38CD-4CB0-9252-F1DA3A19C139} = {47B996F0-E478-41D6-BF78-13B5B17644F0}
+		{47DC6568-0B2E-4AEB-9BE3-7E047DDA9961} = {283EBAB0-38CD-4CB0-9252-F1DA3A19C139}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8D4D3665-5C02-47B5-A7EA-A9BAF680BF28}
