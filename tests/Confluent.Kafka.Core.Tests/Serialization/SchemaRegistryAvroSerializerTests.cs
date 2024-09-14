@@ -62,7 +62,7 @@ namespace Confluent.Kafka.Core.Tests.Serialization
 
             var message = new AvroMessage { Id = 1, Content = "Test content" };
 
-            var request = new HttpRequestMessage(HttpMethod.Post, $"subjects/test/versions?normalize=true");
+            var request = new HttpRequestMessage(HttpMethod.Post, $"subjects/test-avro-topic-value/versions?normalize=false");
 
             var content = new StringContent(
                 JsonConvert.SerializeObject(message.Schema),
