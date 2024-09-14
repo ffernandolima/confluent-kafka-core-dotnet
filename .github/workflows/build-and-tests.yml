@@ -40,10 +40,8 @@ jobs:
     - name: Check containers
       run: docker ps -a
 
-    - name: Check localhost connectivity
-      run: curl http://schema-registry:8081
-
     - name: Run tests
-      run: dotnet test --configuration Release --no-build --verbosity normal
+      run: dotnet test --configuration Release --no-build --verbosity detailed
+
     - name: Stop Docker Compose
       run: docker compose -f docker-compose.yml down
