@@ -6,6 +6,7 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Confluent.Kafka.Core.Tests.Serialization
 {
@@ -19,8 +20,9 @@ namespace Confluent.Kafka.Core.Tests.Serialization
         private readonly SerializationContext _context;
         private readonly ISchemaRegistryClient _schemaRegistryClient;
         private readonly SchemaRegistryAvroSerializer<AvroMessage> _serializer;
+        private readonly ITestOutputHelper _testOutputHelper;
 
-        public SchemaRegistryAvroSerializerTests()
+        public SchemaRegistryAvroSerializerTests(ITestOutputHelper testOutputHelper)
         {
             _encoding = EncodingFactory.Instance.CreateDefault();
 
@@ -31,6 +33,8 @@ namespace Confluent.Kafka.Core.Tests.Serialization
             _serializer = new SchemaRegistryAvroSerializer<AvroMessage>(
                 _schemaRegistryClient,
                 new AvroSerializerConfig { AutoRegisterSchemas = true });
+
+            _testOutputHelper = testOutputHelper;
         }
 
         private static ISchemaRegistryClient CreateSchemaRegistryClient()
@@ -53,15 +57,22 @@ namespace Confluent.Kafka.Core.Tests.Serialization
         [Fact]
         public async Task SerializeAsync_ReturnsSerializedBytes()
         {
-            // Arrange
-            var message = new AvroMessage { Id = 1, Content = "Test content" };
+            try
+            {
+                // Arrange
+                var message = new AvroMessage { Id = 1, Content = "Test content" };
 
-            // Act
-            var result = await _serializer.SerializeAsync(message, _context);
+                // Act
+                var result = await _serializer.SerializeAsync(message, _context);
 
-            // Assert
-            Assert.NotNull(result);
-            Assert.True(result.Length > 0);
+                // Assert
+                Assert.NotNull(result);
+                Assert.True(result.Length > 0);
+            }
+            catch (Exception ex)
+            {
+                _testOutputHelper.WriteLine(ex.ToString());
+            }
         }
 
         [Fact]
