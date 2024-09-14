@@ -41,7 +41,7 @@ jobs:
       run: docker ps -a
 
     - name: Run tests
-      run: dotnet test --configuration Release --no-build --verbosity detailed
+      run: dotnet test --configuration Release --no-build --verbosity normal
 
     - name: Stop Docker Compose
       run: docker compose -f docker-compose.yml down
