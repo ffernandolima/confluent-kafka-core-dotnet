@@ -1,8 +1,4 @@
-﻿networks:
-  services-network:
-    driver: bridge
-
-services:
+﻿services:
     redis:
         image: redis:latest
         hostname: redis
@@ -20,8 +16,6 @@ services:
         environment:
             ZOOKEEPER_CLIENT_PORT: 2181
             ZOOKEEPER_TICK_TIME: 2000
-        networks:
-            - services-network
 
     kafka:
         image: confluentinc/cp-kafka:latest
@@ -51,8 +45,6 @@ services:
             CONFLUENT_METRICS_REPORTER_TOPIC_REPLICAS: 1
             CONFLUENT_METRICS_ENABLE: 'true'
             CONFLUENT_SUPPORT_CUSTOMER_ID: 'anonymous'
-        networks:
-            - services-network
 
     schema-registry:
         image: confluentinc/cp-schema-registry:latest
@@ -66,8 +58,6 @@ services:
             SCHEMA_REGISTRY_HOST_NAME: schema-registry
             SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: 'kafka:29092'
             SCHEMA_REGISTRY_LISTENERS: http://0.0.0.0:8081
-        networks:
-            - services-network
     
     control-center:
         image: confluentinc/cp-enterprise-control-center:latest
@@ -86,5 +76,3 @@ services:
             CONTROL_CENTER_MONITORING_INTERCEPTOR_TOPIC_PARTITIONS: 1
             CONFLUENT_METRICS_TOPIC_REPLICATION: 1
             PORT: 9021
-        networks:
-            - services-network
