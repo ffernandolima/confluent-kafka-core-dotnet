@@ -18,6 +18,9 @@ jobs:
     - name: Check Docker version
       run: docker --version
 
+    - name: Start Docker Compose
+      run: docker compose -f docker-compose.yml up -d
+
     - name: Setup .NET 6
       uses: actions/setup-dotnet@v4
       with:
@@ -34,11 +37,8 @@ jobs:
     - name: Build solution
       run: dotnet build --configuration Release --no-restore
 
-    - name: Start Docker Compose
-      run: docker compose -f docker-compose.yml up -d
-
     - name: Wait for services availability
-      run: sleep 30s
+      run: sleep 10s
       shell: bash
 
     - name: Check containers
