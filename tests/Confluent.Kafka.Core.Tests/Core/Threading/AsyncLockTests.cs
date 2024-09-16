@@ -157,8 +157,8 @@ namespace Confluent.Kafka.Core.Tests.Core.Threading
 
             var asyncLock = new AsyncLock(options);
 
-            var context1 = new AsyncLockContext { ["key"] = "lock1" };
-            var context2 = new AsyncLockContext { ["key"] = "lock1" };
+            var context1 = new AsyncLockContext { ["key"] = "lock" };
+            var context2 = new AsyncLockContext { ["key"] = "lock" };
 
             var token = CancellationToken.None;
 
