@@ -37,4 +37,10 @@
 		<ProjectReference Include="..\Confluent.Kafka.Core.Abstractions\Confluent.Kafka.Core.Abstractions.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+		<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+			<_Parameter1>Confluent.Kafka.Core.Tests</_Parameter1>
+		</AssemblyAttribute>
+	</ItemGroup>
+
 </Project>
