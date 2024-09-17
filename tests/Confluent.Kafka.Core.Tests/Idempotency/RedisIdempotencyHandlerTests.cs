@@ -17,8 +17,8 @@ namespace Confluent.Kafka.Core.Tests.Idempotency
         private readonly Mock<ILoggerFactory> _mockLoggerFactory;
 
         private readonly IConnectionMultiplexer _multiplexer;
-        private readonly RedisIdempotencyHandler<string, IdempotencyMessage> _handler;
-        private readonly RedisIdempotencyHandlerOptions<string, IdempotencyMessage> _options;
+        private readonly RedisIdempotencyHandler<Null, IdempotencyMessage> _handler;
+        private readonly RedisIdempotencyHandlerOptions<Null, IdempotencyMessage> _options;
 
         public RedisIdempotencyHandlerTests()
         {
@@ -40,7 +40,7 @@ namespace Confluent.Kafka.Core.Tests.Idempotency
 
             _multiplexer = ConnectionMultiplexer.Connect("localhost:6379");
 
-            _options = new RedisIdempotencyHandlerOptions<string, IdempotencyMessage>
+            _options = new RedisIdempotencyHandlerOptions<Null, IdempotencyMessage>
             {
                 GroupId = "test-group",
                 ConsumerName = "test-consumer",
@@ -50,7 +50,7 @@ namespace Confluent.Kafka.Core.Tests.Idempotency
                 EnableLogging = true
             };
 
-            _handler = new RedisIdempotencyHandler<string, IdempotencyMessage>(_mockLoggerFactory.Object, _multiplexer, _options);
+            _handler = new RedisIdempotencyHandler<Null, IdempotencyMessage>(_mockLoggerFactory.Object, _multiplexer, _options);
         }
 
         #region IAsyncLifetime Members
@@ -176,7 +176,7 @@ namespace Confluent.Kafka.Core.Tests.Idempotency
                     options.AbortOnConnectFail = false;
                 });
 
-            var handlerWithInvalidRedis = new RedisIdempotencyHandler<string, IdempotencyMessage>(
+            var handlerWithInvalidRedis = new RedisIdempotencyHandler<Null, IdempotencyMessage>(
                 _mockLoggerFactory.Object,
                 invalidMultiplexer,
                 _options);

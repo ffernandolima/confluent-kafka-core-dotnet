@@ -42,7 +42,7 @@ namespace Confluent.Kafka.Core.Tests.Retry
                 ExceptionFilter = ex => ex is InvalidOperationException
             };
 
-            var handler = new PollyRetryHandler<int, int>(_mockLoggerFactory.Object, retryOptions);
+            var handler = new PollyRetryHandler<Null, string>(_mockLoggerFactory.Object, retryOptions);
             var retries = 0;
 
             // Act
@@ -70,7 +70,7 @@ namespace Confluent.Kafka.Core.Tests.Retry
                 ExceptionFilter = ex => ex is InvalidOperationException
             };
 
-            var handler = new PollyRetryHandler<int, int>(_mockLoggerFactory.Object, retryOptions);
+            var handler = new PollyRetryHandler<Null, string>(_mockLoggerFactory.Object, retryOptions);
             var retries = 0;
 
             // Act
@@ -97,7 +97,7 @@ namespace Confluent.Kafka.Core.Tests.Retry
                 ExceptionFilter = ex => ex is InvalidOperationException
             };
 
-            var handler = new PollyRetryHandler<int, int>(_mockLoggerFactory.Object, retryOptions);
+            var handler = new PollyRetryHandler<Null, string>(_mockLoggerFactory.Object, retryOptions);
             var retries = 0;
 
             // Act
@@ -124,7 +124,7 @@ namespace Confluent.Kafka.Core.Tests.Retry
                 ExceptionFilter = ex => ex is InvalidOperationException
             };
 
-            var handler = new PollyRetryHandler<int, int>(_mockLoggerFactory.Object, retryOptions);
+            var handler = new PollyRetryHandler<Null, string>(_mockLoggerFactory.Object, retryOptions);
             var retries = 0;
 
             // Act
@@ -153,7 +153,7 @@ namespace Confluent.Kafka.Core.Tests.Retry
                 ExceptionFilter = ex => ex is InvalidOperationException
             };
 
-            var handler = new PollyRetryHandler<int, int>(_mockLoggerFactory.Object, retryOptions);
+            var handler = new PollyRetryHandler<Null, string>(_mockLoggerFactory.Object, retryOptions);
             var retries = 0;
             var stopwatch = new Stopwatch();
 
@@ -187,7 +187,7 @@ namespace Confluent.Kafka.Core.Tests.Retry
                 ExceptionFilter = ex => ex is InvalidOperationException
             };
 
-            var handler = new PollyRetryHandler<int, int>(_mockLoggerFactory.Object, retryOptions);
+            var handler = new PollyRetryHandler<Null, string>(_mockLoggerFactory.Object, retryOptions);
             var retries = 0;
             var stopwatch = new Stopwatch();
 
@@ -222,7 +222,7 @@ namespace Confluent.Kafka.Core.Tests.Retry
                 ExceptionFilter = ex => ex is InvalidOperationException
             };
 
-            var handler = new PollyRetryHandler<int, int>(_mockLoggerFactory.Object, retryOptions);
+            var handler = new PollyRetryHandler<Null, string>(_mockLoggerFactory.Object, retryOptions);
             var retries = 0;
             var stopwatch = new Stopwatch();
 
@@ -257,7 +257,7 @@ namespace Confluent.Kafka.Core.Tests.Retry
                 ExceptionFilter = ex => ex is InvalidOperationException
             };
 
-            var handler = new PollyRetryHandler<int, int>(_mockLoggerFactory.Object, retryOptions);
+            var handler = new PollyRetryHandler<Null, string>(_mockLoggerFactory.Object, retryOptions);
             var retries = 0;
             var stopwatch = new Stopwatch();
 
@@ -292,7 +292,7 @@ namespace Confluent.Kafka.Core.Tests.Retry
                 ExceptionFilter = ex => ex is InvalidOperationException
             };
 
-            var handler = new PollyRetryHandler<int, int>(_mockLoggerFactory.Object, retryOptions);
+            var handler = new PollyRetryHandler<Null, string>(_mockLoggerFactory.Object, retryOptions);
             var retries = 0;
             var stopwatch = new Stopwatch();
 
@@ -329,7 +329,7 @@ namespace Confluent.Kafka.Core.Tests.Retry
                 ExceptionFilter = ex => ex is InvalidOperationException
             };
 
-            var handler = new PollyRetryHandler<int, int>(_mockLoggerFactory.Object, retryOptions);
+            var handler = new PollyRetryHandler<Null, string>(_mockLoggerFactory.Object, retryOptions);
             var retries = 0;
             var stopwatch = new Stopwatch();
 
@@ -366,7 +366,7 @@ namespace Confluent.Kafka.Core.Tests.Retry
                 ExceptionFilter = ex => ex is InvalidOperationException,
             };
 
-            var handler = new PollyRetryHandler<int, int>(_mockLoggerFactory.Object, retryOptions);
+            var handler = new PollyRetryHandler<Null, string>(_mockLoggerFactory.Object, retryOptions);
             var retries = 0;
             var stopwatch = new Stopwatch();
 
@@ -401,7 +401,7 @@ namespace Confluent.Kafka.Core.Tests.Retry
                 ExceptionFilter = ex => ex is InvalidOperationException,
             };
 
-            var handler = new PollyRetryHandler<int, int>(_mockLoggerFactory.Object, retryOptions);
+            var handler = new PollyRetryHandler<Null, string>(_mockLoggerFactory.Object, retryOptions);
             var retries = 0;
             var stopwatch = new Stopwatch();
 
