@@ -218,11 +218,6 @@ namespace Confluent.Kafka.Core.Producer.Internal
                 throw new ArgumentNullException(nameof(message));
             }
 
-            if (!cancellationToken.CanBeCanceled)
-            {
-                throw new ArgumentException($"{nameof(cancellationToken)} should be capable of being canceled.", nameof(cancellationToken));
-            }
-
             DeliveryResult<TKey, TValue> deliveryResult = null;
 
             if (!_options.ProducerConfig!.EnableRetryOnFailure)
@@ -275,11 +270,6 @@ namespace Confluent.Kafka.Core.Producer.Internal
         public void Flush(CancellationToken cancellationToken = default)
         {
             CheckDisposed();
-
-            if (!cancellationToken.CanBeCanceled)
-            {
-                throw new ArgumentException($"{nameof(cancellationToken)} should be capable of being canceled.", nameof(cancellationToken));
-            }
 
             _producer.Flush(cancellationToken);
         }
