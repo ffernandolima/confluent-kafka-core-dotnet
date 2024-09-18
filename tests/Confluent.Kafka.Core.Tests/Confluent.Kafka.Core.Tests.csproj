@@ -7,24 +7,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="coverlet.collector" Version="6.0.2">
-			<PrivateAssets>all</PrivateAssets>
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
-		<PackageReference Include="GitHubActionsTestLogger" Version="2.4.1">
-		  <PrivateAssets>all</PrivateAssets>
-		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
-		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
-		<PackageReference Include="Moq" Version="4.20.72" />
-		<PackageReference Include="xunit" Version="2.9.0" />
-		<PackageReference Include="xunit.runner.visualstudio" Version="2.8.2">
-			<PrivateAssets>all</PrivateAssets>
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
-	</ItemGroup>
-
-	<ItemGroup>
 		<ProjectReference Include="..\..\src\Confluent.Kafka.Core\Confluent.Kafka.Core.csproj" />
 		<ProjectReference Include="..\..\src\Confluent.Kafka.Core.Idempotency.Redis\Confluent.Kafka.Core.Idempotency.Redis.csproj" />
 		<ProjectReference Include="..\..\src\Confluent.Kafka.Core.OpenTelemetry\Confluent.Kafka.Core.OpenTelemetry.csproj" />
@@ -35,6 +17,24 @@
 		<ProjectReference Include="..\..\src\Confluent.Kafka.Core.Serialization.SchemaRegistry.Avro\Confluent.Kafka.Core.Serialization.SchemaRegistry.Avro.csproj" />
 		<ProjectReference Include="..\..\src\Confluent.Kafka.Core.Serialization.SchemaRegistry.Json\Confluent.Kafka.Core.Serialization.SchemaRegistry.Json.csproj" />
 		<ProjectReference Include="..\..\src\Confluent.Kafka.Core.Serialization.SchemaRegistry.Protobuf\Confluent.Kafka.Core.Serialization.SchemaRegistry.Protobuf.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="coverlet.collector" Version="6.0.2">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="GitHubActionsTestLogger" Version="2.4.1">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
+		<PackageReference Include="Moq" Version="4.20.72" />
+		<PackageReference Include="xunit" Version="2.9.0" />
+		<PackageReference Include="xunit.runner.visualstudio" Version="2.8.2">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
 	</ItemGroup>
 
 </Project>

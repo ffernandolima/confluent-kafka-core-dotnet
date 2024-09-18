@@ -15,7 +15,7 @@ namespace Confluent.Kafka.Core.Tests.Core.Producer
     {
         private const int Partitions = 3;
         private const string Servers = "localhost:9092";
-        private const string Topic = "test-partitioning-topic";
+        private const string Topic = "production-test-partitioning-topic";
 
         private readonly Mock<ILogger> _mockLogger;
         private readonly Mock<ILoggerFactory> _mockLoggerFactory;

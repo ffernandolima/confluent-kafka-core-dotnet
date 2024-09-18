@@ -35,7 +35,7 @@ namespace Confluent.Kafka.Core.Tests.Core.Producer
             _producerConfig = new KafkaProducerConfig
             {
                 BootstrapServers = "localhost:9092",
-                DefaultTopic = "test-topic",
+                DefaultTopic = "production-test-topic",
                 DefaultTimeout = TimeSpan.FromSeconds(1),
                 PollAfterProducing = true
             };
