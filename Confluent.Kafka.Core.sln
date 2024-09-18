@@ -101,6 +101,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{
 		.github\workflows\build-and-tests.yml = .github\workflows\build-and-tests.yml
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Confluent.Kafka.Core.Shared.Tests", "tests\Confluent.Kafka.Core.Shared.Tests\Confluent.Kafka.Core.Shared.Tests.csproj", "{9577AAD1-F4EA-4651-9A61-406C56329080}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -155,6 +157,10 @@ Global
 		{99B717E9-F57A-4302-9057-9419F1C7FCD4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{99B717E9-F57A-4302-9057-9419F1C7FCD4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{99B717E9-F57A-4302-9057-9419F1C7FCD4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9577AAD1-F4EA-4651-9A61-406C56329080}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9577AAD1-F4EA-4651-9A61-406C56329080}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9577AAD1-F4EA-4651-9A61-406C56329080}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9577AAD1-F4EA-4651-9A61-406C56329080}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -184,6 +190,7 @@ Global
 		{00F60606-1756-4212-BC74-347F31B75AA9} = {AEA90923-B126-43B0-B8EC-DD994B2D645F}
 		{283EBAB0-38CD-4CB0-9252-F1DA3A19C139} = {47B996F0-E478-41D6-BF78-13B5B17644F0}
 		{47DC6568-0B2E-4AEB-9BE3-7E047DDA9961} = {283EBAB0-38CD-4CB0-9252-F1DA3A19C139}
+		{9577AAD1-F4EA-4651-9A61-406C56329080} = {26052A88-8DD7-49D7-A91A-EA596096C853}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8D4D3665-5C02-47B5-A7EA-A9BAF680BF28}

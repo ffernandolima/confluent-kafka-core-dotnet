@@ -1,0 +1,40 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFrameworks>net6.0;net8.0</TargetFrameworks>
+		<IsPackable>false</IsPackable>
+		<LangVersion>latest</LangVersion>
+	</PropertyGroup>
+
+	<ItemGroup Label="Builders">
+		<Compile Include="..\..\src\Shared\Builders\FunctionalBuilder``.cs" Link="Internal\FunctionalBuilder``.cs" />
+		<Compile Include="..\..\src\Shared\Builders\IFunctionalBuilder``.cs" Link="Internal\IFunctionalBuilder``.cs" />
+		<Compile Include="..\..\src\Shared\Builders\FunctionalBuilder```.cs" Link="Internal\FunctionalBuilder```.cs" />
+		<Compile Include="..\..\src\Shared\Builders\IFunctionalBuilder```.cs" Link="Internal\IFunctionalBuilder```.cs" />
+	</ItemGroup>
+
+	<ItemGroup Label="Extensions">
+		<Compile Include="..\..\src\Shared\Extensions\TypeExtensions.cs" Link="Internal\TypeExtensions.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="coverlet.collector" Version="6.0.2">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="GitHubActionsTestLogger" Version="2.4.1">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="8.0.2" />
+		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
+		<PackageReference Include="Moq" Version="4.20.72" />
+		<PackageReference Include="xunit" Version="2.9.0" />
+		<PackageReference Include="xunit.runner.visualstudio" Version="2.8.2">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+	</ItemGroup>
+
+</Project>
