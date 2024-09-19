@@ -1,6 +1,7 @@
 ﻿using Confluent.Kafka.Admin;
 using Confluent.Kafka.Core.Producer;
 using Confluent.Kafka.Core.Tests.Core.Diagnostics;
+using Confluent.Kafka.Core.Tests.Extensions;
 using Microsoft.Extensions.Logging;
 using Moq;
 using System;
@@ -128,6 +129,8 @@ namespace Confluent.Kafka.Core.Tests.Core.Producer
             Assert.Equal(partition1, partition2);
 
             Assert.True(activities.Count > 0);
+
+            _mockLogger.VerifyLog(LogLevel.Error, Times.Never());
         }
 
         [Fact]
@@ -160,6 +163,8 @@ namespace Confluent.Kafka.Core.Tests.Core.Producer
             Assert.Equal(partition1, partition2);
 
             Assert.True(activities.Count > 0);
+
+            _mockLogger.VerifyLog(LogLevel.Error, Times.Never());
         }
     }
 }

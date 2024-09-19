@@ -1,5 +1,6 @@
 ﻿using Confluent.Kafka.Core.Producer;
 using Confluent.Kafka.Core.Tests.Core.Diagnostics;
+using Confluent.Kafka.Core.Tests.Extensions;
 using Microsoft.Extensions.Logging;
 using Moq;
 using System;
@@ -73,6 +74,8 @@ namespace Confluent.Kafka.Core.Tests.Core.Producer
 
             // Assert
             Assert.True(activities.Count > 0);
+
+            _mockLogger.VerifyLog(LogLevel.Error, Times.Never());
         }
 
         [Fact]
@@ -97,6 +100,8 @@ namespace Confluent.Kafka.Core.Tests.Core.Producer
             _producer.Flush(_producerConfig.DefaultTimeout);
 
             Assert.True(activities.Count > 0);
+
+            _mockLogger.VerifyLog(LogLevel.Error, Times.Never());
         }
 
         [Fact]
@@ -122,6 +127,8 @@ namespace Confluent.Kafka.Core.Tests.Core.Producer
             _producer.Flush(_producerConfig.DefaultTimeout);
 
             Assert.True(activities.Count > 0);
+
+            _mockLogger.VerifyLog(LogLevel.Error, Times.Never());
         }
 
         [Fact]
@@ -140,6 +147,8 @@ namespace Confluent.Kafka.Core.Tests.Core.Producer
             Assert.Equal(message.Key, deliveryResult.Message.Key);
             Assert.Equal(message.Value, deliveryResult.Message.Value);
             Assert.True(activities.Count > 0);
+
+            _mockLogger.VerifyLog(LogLevel.Error, Times.Never());
         }
 
         [Fact]
@@ -159,6 +168,8 @@ namespace Confluent.Kafka.Core.Tests.Core.Producer
             Assert.Equal(message.Key, deliveryResult.Message.Key);
             Assert.Equal(message.Value, deliveryResult.Message.Value);
             Assert.True(activities.Count > 0);
+
+            _mockLogger.VerifyLog(LogLevel.Error, Times.Never());
         }
 
         [Fact]
@@ -179,6 +190,8 @@ namespace Confluent.Kafka.Core.Tests.Core.Producer
             Assert.Equal(message.Key, deliveryResult.Message.Key);
             Assert.Equal(message.Value, deliveryResult.Message.Value);
             Assert.True(activities.Count > 0);
+
+            _mockLogger.VerifyLog(LogLevel.Error, Times.Never());
         }
 
         [Fact]
