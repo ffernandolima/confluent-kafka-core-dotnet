@@ -85,7 +85,7 @@ namespace Confluent.Kafka.Core.Tests.Core.Producer
             var activities = new List<Activity>();
             using var listener = KafkaActivityListener.StartListening(activities.Add);
 
-            var topic = "test-topic";
+            var topic = "production-test-topic";
             var message = new Message<Null, string> { Value = "value2" };
 
             // Act
@@ -111,7 +111,7 @@ namespace Confluent.Kafka.Core.Tests.Core.Producer
             var activities = new List<Activity>();
             using var listener = KafkaActivityListener.StartListening(activities.Add);
 
-            var topic = "test-topic";
+            var topic = "production-test-topic";
             var partition = new Partition(0);
             var message = new Message<Null, string> { Value = "value3" };
 
@@ -158,7 +158,7 @@ namespace Confluent.Kafka.Core.Tests.Core.Producer
             var activities = new List<Activity>();
             using var listener = KafkaActivityListener.StartListening(activities.Add);
 
-            var topic = "test-topic";
+            var topic = "production-test-topic";
             var message = new Message<Null, string> { Value = "value5" };
 
             // Act
@@ -179,7 +179,7 @@ namespace Confluent.Kafka.Core.Tests.Core.Producer
             var activities = new List<Activity>();
             using var listener = KafkaActivityListener.StartListening(activities.Add);
 
-            var topic = "test-topic";
+            var topic = "production-test-topic";
             var partition = new Partition(0);
             var message = new Message<Null, string> { Value = "value6" };
 
