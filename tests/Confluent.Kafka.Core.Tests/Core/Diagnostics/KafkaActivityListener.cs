@@ -5,7 +5,7 @@ namespace Confluent.Kafka.Core.Tests.Core.Diagnostics
 {
     internal static class KafkaActivityListener
     {
-        public static ActivityListener StartListening(Action<Activity> onListen)
+        public static ActivityListener StartListening(Action<Activity> onListen = null)
         {
             static bool ShouldListenTo(ActivitySource source) => source.Name == "Confluent.Kafka.Core";
 
