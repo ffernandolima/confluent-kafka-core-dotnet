@@ -7,11 +7,9 @@ namespace Confluent.Kafka.Core.Tests.Core.Diagnostics
     {
         public static ActivityListener StartListening(Action<Activity> onListen = null)
         {
-            static bool ShouldListenTo(ActivitySource source) => source.Name == "Confluent.Kafka.Core";
-
             var activityListener = new ActivityListener
             {
-                ShouldListenTo = ShouldListenTo,
+                ShouldListenTo = source => source.Name == "Confluent.Kafka.Core",
                 SampleUsingParentId = (ref ActivityCreationOptions<string> activityOptions) => ActivitySamplingResult.AllData,
                 Sample = (ref ActivityCreationOptions<ActivityContext> activityOptions) => ActivitySamplingResult.AllData,
                 ActivityStarted = activity => { },
