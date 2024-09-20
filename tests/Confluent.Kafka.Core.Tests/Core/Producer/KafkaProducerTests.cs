@@ -1,5 +1,6 @@
 ﻿using Confluent.Kafka.Core.Producer;
 using Confluent.Kafka.Core.Tests.Core.Diagnostics;
+using Confluent.Kafka.Core.Tests.Core.Fixtures;
 using Confluent.Kafka.Core.Tests.Extensions;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -11,7 +12,7 @@ using Xunit;
 
 namespace Confluent.Kafka.Core.Tests.Core.Producer
 {
-    public sealed class KafkaProducerTests : IDisposable
+    public sealed class KafkaProducerTests : IAsyncLifetime
     {
         private const string BootstrapServers = "localhost:9092";
         private const string Topic = "production-test-topic";
@@ -21,6 +22,8 @@ namespace Confluent.Kafka.Core.Tests.Core.Producer
 
         private readonly KafkaProducerConfig _producerConfig;
         private readonly IKafkaProducer<Null, string> _producer;
+
+        private readonly KafkaTopicFixture _kafkaTopicFixture;
 
         public KafkaProducerTests()
         {
@@ -47,14 +50,27 @@ namespace Confluent.Kafka.Core.Tests.Core.Producer
             _producer = new KafkaProducerBuilder<Null, string>(_producerConfig)
                 .WithLoggerFactory(_mockLoggerFactory.Object)
                 .Build();
+
+            _kafkaTopicFixture = new KafkaTopicFixture(
+                BootstrapServers,
+                [Topic]);
         }
 
-        public void Dispose()
+        #region IAsyncLifetime Members
+
+        public async Task InitializeAsync()
+        {
+            await _kafkaTopicFixture.InitializeAsync();
+        }
+
+        public async Task DisposeAsync()
         {
             _producer?.Dispose();
 
-            GC.SuppressFinalize(this);
+            await _kafkaTopicFixture.DisposeAsync();
         }
+
+        #endregion IAsyncLifetime Members
 
         [Fact]
         public void Produce_WithMessage_ProducesMessageSuccessfully()
@@ -88,11 +104,10 @@ namespace Confluent.Kafka.Core.Tests.Core.Producer
             var activities = new List<Activity>();
             using var listener = KafkaActivityListener.StartListening(activities.Add);
 
-            var topic = "production-test-topic";
             var message = new Message<Null, string> { Value = "value2" };
 
             // Act
-            _producer.Produce(topic, message, deliveryReport =>
+            _producer.Produce(Topic, message, deliveryReport =>
             {
                 // Assert
                 Assert.False(deliveryReport.Error.IsError, "Delivery should be successful");
@@ -114,12 +129,11 @@ namespace Confluent.Kafka.Core.Tests.Core.Producer
             var activities = new List<Activity>();
             using var listener = KafkaActivityListener.StartListening(activities.Add);
 
-            var topic = "production-test-topic";
             var partition = new Partition(0);
             var message = new Message<Null, string> { Value = "value3" };
 
             // Act
-            _producer.Produce(topic, partition, message, deliveryReport =>
+            _producer.Produce(Topic, partition, message, deliveryReport =>
             {
                 // Assert
                 Assert.False(deliveryReport.Error.IsError, "Delivery should be successful");
@@ -161,11 +175,10 @@ namespace Confluent.Kafka.Core.Tests.Core.Producer
             var activities = new List<Activity>();
             using var listener = KafkaActivityListener.StartListening(activities.Add);
 
-            var topic = "production-test-topic";
             var message = new Message<Null, string> { Value = "value5" };
 
             // Act
-            var deliveryResult = await _producer.ProduceAsync(topic, message);
+            var deliveryResult = await _producer.ProduceAsync(Topic, message);
 
             // Assert
             Assert.Equal(message.Key, deliveryResult.Message.Key);
@@ -182,12 +195,11 @@ namespace Confluent.Kafka.Core.Tests.Core.Producer
             var activities = new List<Activity>();
             using var listener = KafkaActivityListener.StartListening(activities.Add);
 
-            var topic = "production-test-topic";
             var partition = new Partition(0);
             var message = new Message<Null, string> { Value = "value6" };
 
             // Act
-            var deliveryResult = await _producer.ProduceAsync(topic, partition, message);
+            var deliveryResult = await _producer.ProduceAsync(Topic, partition, message);
 
             // Assert
             Assert.Equal(message.Key, deliveryResult.Message.Key);
