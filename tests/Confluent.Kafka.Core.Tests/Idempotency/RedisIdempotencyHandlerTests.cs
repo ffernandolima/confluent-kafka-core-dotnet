@@ -13,6 +13,8 @@ namespace Confluent.Kafka.Core.Tests.Idempotency
 {
     public class RedisIdempotencyHandlerTests : IAsyncLifetime
     {
+        private const string ConnectionUrl = "localhost:6379";
+
         private readonly Mock<ILogger> _mockLogger;
         private readonly Mock<ILoggerFactory> _mockLoggerFactory;
 
@@ -38,7 +40,7 @@ namespace Confluent.Kafka.Core.Tests.Idempotency
                 .Setup(factory => factory.CreateLogger(It.IsAny<string>()))
                 .Returns(_mockLogger.Object);
 
-            _multiplexer = ConnectionMultiplexer.Connect("localhost:6379");
+            _multiplexer = ConnectionMultiplexer.Connect(ConnectionUrl);
 
             _options = new RedisIdempotencyHandlerOptions<Null, IdempotencyMessage>
             {

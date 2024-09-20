@@ -13,6 +13,9 @@ namespace Confluent.Kafka.Core.Tests.Core.Producer
 {
     public class KafkaProducerTests : IDisposable
     {
+        private const string BootstrapServers = "localhost:9092";
+        private const string Topic = "production-test-topic";
+
         private readonly Mock<ILogger> _mockLogger;
         private readonly Mock<ILoggerFactory> _mockLoggerFactory;
 
@@ -35,8 +38,8 @@ namespace Confluent.Kafka.Core.Tests.Core.Producer
 
             _producerConfig = new KafkaProducerConfig
             {
-                BootstrapServers = "localhost:9092",
-                DefaultTopic = "production-test-topic",
+                BootstrapServers = BootstrapServers,
+                DefaultTopic = Topic,
                 DefaultTimeout = TimeSpan.FromSeconds(1),
                 PollAfterProducing = true
             };

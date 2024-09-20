@@ -1,6 +1,6 @@
-﻿using Confluent.Kafka.Admin;
-using Confluent.Kafka.Core.Producer;
+﻿using Confluent.Kafka.Core.Producer;
 using Confluent.Kafka.Core.Tests.Core.Diagnostics;
+using Confluent.Kafka.Core.Tests.Core.Fixtures;
 using Confluent.Kafka.Core.Tests.Extensions;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -14,8 +14,7 @@ namespace Confluent.Kafka.Core.Tests.Core.Producer
 {
     public class KafkaProducerPartitioningTests : IAsyncLifetime
     {
-        private const int Partitions = 3;
-        private const string Servers = "localhost:9092";
+        private const string BootstrapServers = "localhost:9092";
         private const string Topic = "production-partitioning-test-topic";
 
         private readonly Mock<ILogger> _mockLogger;
@@ -23,6 +22,8 @@ namespace Confluent.Kafka.Core.Tests.Core.Producer
 
         private readonly KafkaProducerConfig _producerConfig;
         private readonly IKafkaProducer<string, string> _producer;
+
+        private readonly KafkaTopicFixture _kafkaTopicFixture;
 
         public KafkaProducerPartitioningTests()
         {
@@ -40,7 +41,7 @@ namespace Confluent.Kafka.Core.Tests.Core.Producer
 
             _producerConfig = new KafkaProducerConfig
             {
-                BootstrapServers = Servers,
+                BootstrapServers = BootstrapServers,
                 DefaultTopic = Topic,
                 DefaultTimeout = TimeSpan.FromSeconds(1),
                 PollAfterProducing = true
@@ -49,35 +50,25 @@ namespace Confluent.Kafka.Core.Tests.Core.Producer
             _producer = new KafkaProducerBuilder<string, string>(_producerConfig)
                 .WithLoggerFactory(_mockLoggerFactory.Object)
                 .Build();
+
+            _kafkaTopicFixture = new KafkaTopicFixture(
+                BootstrapServers,
+                [Topic],
+                numPartitions: 3);
         }
 
         #region IAsyncLifetime Members
 
         public async Task InitializeAsync()
         {
-            using var adminClient = new AdminClientBuilder(
-                new AdminClientConfig { BootstrapServers = Servers }).Build();
-
-            try
-            {
-                var topicSpecification = new TopicSpecification
-                {
-                    Name = Topic,
-                    NumPartitions = Partitions,
-                    ReplicationFactor = 1
-                };
-
-                await adminClient.CreateTopicsAsync([topicSpecification]);
-            }
-            catch (Exception ex) when (ex.Message.StartsWith("An error occurred creating topics"))
-            { }
+            await _kafkaTopicFixture.InitializeAsync();
         }
 
-        public Task DisposeAsync()
+        public async Task DisposeAsync()
         {
             _producer?.Dispose();
 
-            return Task.CompletedTask;
+            await _kafkaTopicFixture.DisposeAsync();
         }
 
         #endregion IAsyncLifetime Members
