@@ -11,7 +11,7 @@ using Xunit;
 
 namespace Confluent.Kafka.Core.Tests.Core.Producer
 {
-    public class KafkaProducerTests : IDisposable
+    public sealed class KafkaProducerTests : IDisposable
     {
         private const string BootstrapServers = "localhost:9092";
         private const string Topic = "production-test-topic";

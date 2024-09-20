@@ -12,7 +12,7 @@ using Xunit;
 
 namespace Confluent.Kafka.Core.Tests.Core.Producer
 {
-    public class KafkaProducerPartitioningTests : IAsyncLifetime
+    public sealed class KafkaProducerPartitioningTests : IAsyncLifetime
     {
         private const string BootstrapServers = "localhost:9092";
         private const string Topic = "production-partitioning-test-topic";

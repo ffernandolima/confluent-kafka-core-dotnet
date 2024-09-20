@@ -11,7 +11,7 @@ using Xunit;
 
 namespace Confluent.Kafka.Core.Tests.Retry
 {
-    public class PollyRetryHandlerTests
+    public sealed class PollyRetryHandlerTests
     {
         private readonly Mock<ILogger> _mockLogger;
         private readonly Mock<ILoggerFactory> _mockLoggerFactory;

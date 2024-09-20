@@ -11,7 +11,7 @@ namespace Confluent.Kafka.Core.Tests.Serialization
 {
     using System.Text;
 
-    public class SchemaRegistryAvroSerializerTests : IDisposable
+    public sealed class SchemaRegistryAvroSerializerTests : IDisposable
     {
         private const string SchemaRegistryUrl = "localhost:8081";
 

@@ -11,7 +11,7 @@ using Xunit;
 
 namespace Confluent.Kafka.Core.Tests.Idempotency
 {
-    public class RedisIdempotencyHandlerTests : IAsyncLifetime
+    public sealed class RedisIdempotencyHandlerTests : IAsyncLifetime
     {
         private const string ConnectionUrl = "localhost:6379";
 

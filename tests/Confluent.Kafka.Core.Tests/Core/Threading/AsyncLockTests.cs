@@ -6,7 +6,7 @@ using Xunit;
 
 namespace Confluent.Kafka.Core.Tests.Core.Threading
 {
-    public class AsyncLockTests
+    public sealed class AsyncLockTests
     {
         [Fact]
         public async Task LockAsync_ShouldAcquireLock()

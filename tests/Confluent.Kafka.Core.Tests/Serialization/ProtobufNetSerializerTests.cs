@@ -9,7 +9,7 @@ namespace Confluent.Kafka.Core.Tests.Serialization
 {
     using System.Text;
 
-    public class ProtobufNetSerializerTests
+    public sealed class ProtobufNetSerializerTests
     {
         private readonly Encoding _encoding;
         private readonly SerializationContext _context;

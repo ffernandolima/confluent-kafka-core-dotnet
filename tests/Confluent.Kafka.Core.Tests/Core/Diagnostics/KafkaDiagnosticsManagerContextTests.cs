@@ -7,7 +7,7 @@ using Xunit;
 
 namespace Confluent.Kafka.Core.Tests.Core.Diagnostics
 {
-    public class KafkaDiagnosticsManagerContextTests : IDisposable
+    public sealed class KafkaDiagnosticsManagerContextTests : IDisposable
     {
         private readonly ActivityListener _listener;
         private readonly Dictionary<string, string> _carrier;

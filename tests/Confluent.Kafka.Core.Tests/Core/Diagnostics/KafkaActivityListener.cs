@@ -3,7 +3,7 @@ using System.Diagnostics;
 
 namespace Confluent.Kafka.Core.Tests.Core.Diagnostics
 {
-    internal static class KafkaActivityListener
+    public static class KafkaActivityListener
     {
         public static ActivityListener StartListening(Action<Activity> onListen = null)
         {

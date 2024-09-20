@@ -8,7 +8,7 @@ namespace Confluent.Kafka.Core.Tests.Serialization
 {
     using System.Text;
 
-    public class JsonCoreSerializerTests
+    public sealed class JsonCoreSerializerTests
     {
         private readonly Encoding _encoding;
         private readonly SerializationContext _context;

@@ -16,7 +16,7 @@ namespace Confluent.Kafka.Core.Tests.Core.Diagnostics
 {
     using System.Text;
 
-    public class KafkaDiagnosticsManagerEnrichmentTests : IDisposable
+    public sealed class KafkaDiagnosticsManagerEnrichmentTests : IDisposable
     {
         private readonly Encoding _encoding;
         private readonly ActivityListener _listener;
