@@ -77,7 +77,13 @@ namespace Confluent.Kafka.Core.Tests.Core.Producer
         {
             // Arrange
             var activities = new List<Activity>();
-            using var listener = KafkaActivityListener.StartListening(activities.Add);
+            using var listener = KafkaActivityListener.StartListening(activity =>
+            {
+                if (activity.Kind == ActivityKind.Producer)
+                {
+                    activities.Add(activity);
+                }
+            });
 
             var message = new Message<Null, string> { Value = "value1" };
 
@@ -92,7 +98,7 @@ namespace Confluent.Kafka.Core.Tests.Core.Producer
             _producer.Flush(_producerConfig.DefaultTimeout);
 
             // Assert
-            Assert.True(activities.Count > 0);
+            Assert.NotEmpty(activities);
 
             _mockLogger.VerifyLog(LogLevel.Error, Times.Never());
         }
@@ -102,7 +108,13 @@ namespace Confluent.Kafka.Core.Tests.Core.Producer
         {
             // Arrange
             var activities = new List<Activity>();
-            using var listener = KafkaActivityListener.StartListening(activities.Add);
+            using var listener = KafkaActivityListener.StartListening(activity =>
+            {
+                if (activity.Kind == ActivityKind.Producer)
+                {
+                    activities.Add(activity);
+                }
+            });
 
             var message = new Message<Null, string> { Value = "value2" };
 
@@ -117,7 +129,7 @@ namespace Confluent.Kafka.Core.Tests.Core.Producer
 
             _producer.Flush(_producerConfig.DefaultTimeout);
 
-            Assert.True(activities.Count > 0);
+            Assert.NotEmpty(activities);
 
             _mockLogger.VerifyLog(LogLevel.Error, Times.Never());
         }
@@ -127,7 +139,13 @@ namespace Confluent.Kafka.Core.Tests.Core.Producer
         {
             // Arrange
             var activities = new List<Activity>();
-            using var listener = KafkaActivityListener.StartListening(activities.Add);
+            using var listener = KafkaActivityListener.StartListening(activity =>
+            {
+                if (activity.Kind == ActivityKind.Producer)
+                {
+                    activities.Add(activity);
+                }
+            });
 
             var partition = new Partition(0);
             var message = new Message<Null, string> { Value = "value3" };
@@ -143,7 +161,7 @@ namespace Confluent.Kafka.Core.Tests.Core.Producer
 
             _producer.Flush(_producerConfig.DefaultTimeout);
 
-            Assert.True(activities.Count > 0);
+            Assert.NotEmpty(activities);
 
             _mockLogger.VerifyLog(LogLevel.Error, Times.Never());
         }
@@ -153,7 +171,13 @@ namespace Confluent.Kafka.Core.Tests.Core.Producer
         {
             // Arrange
             var activities = new List<Activity>();
-            using var listener = KafkaActivityListener.StartListening(activities.Add);
+            using var listener = KafkaActivityListener.StartListening(activity =>
+            {
+                if (activity.Kind == ActivityKind.Producer)
+                {
+                    activities.Add(activity);
+                }
+            });
 
             var message = new Message<Null, string> { Value = "value4" };
 
@@ -163,7 +187,8 @@ namespace Confluent.Kafka.Core.Tests.Core.Producer
             // Assert
             Assert.Equal(message.Key, deliveryResult.Message.Key);
             Assert.Equal(message.Value, deliveryResult.Message.Value);
-            Assert.True(activities.Count > 0);
+
+            Assert.NotEmpty(activities);
 
             _mockLogger.VerifyLog(LogLevel.Error, Times.Never());
         }
@@ -173,7 +198,13 @@ namespace Confluent.Kafka.Core.Tests.Core.Producer
         {
             // Arrange
             var activities = new List<Activity>();
-            using var listener = KafkaActivityListener.StartListening(activities.Add);
+            using var listener = KafkaActivityListener.StartListening(activity =>
+            {
+                if (activity.Kind == ActivityKind.Producer)
+                {
+                    activities.Add(activity);
+                }
+            });
 
             var message = new Message<Null, string> { Value = "value5" };
 
@@ -183,7 +214,8 @@ namespace Confluent.Kafka.Core.Tests.Core.Producer
             // Assert
             Assert.Equal(message.Key, deliveryResult.Message.Key);
             Assert.Equal(message.Value, deliveryResult.Message.Value);
-            Assert.True(activities.Count > 0);
+
+            Assert.NotEmpty(activities);
 
             _mockLogger.VerifyLog(LogLevel.Error, Times.Never());
         }
@@ -193,7 +225,13 @@ namespace Confluent.Kafka.Core.Tests.Core.Producer
         {
             // Arrange
             var activities = new List<Activity>();
-            using var listener = KafkaActivityListener.StartListening(activities.Add);
+            using var listener = KafkaActivityListener.StartListening(activity =>
+            {
+                if (activity.Kind == ActivityKind.Producer)
+                {
+                    activities.Add(activity);
+                }
+            });
 
             var partition = new Partition(0);
             var message = new Message<Null, string> { Value = "value6" };
@@ -204,7 +242,8 @@ namespace Confluent.Kafka.Core.Tests.Core.Producer
             // Assert
             Assert.Equal(message.Key, deliveryResult.Message.Key);
             Assert.Equal(message.Value, deliveryResult.Message.Value);
-            Assert.True(activities.Count > 0);
+
+            Assert.NotEmpty(activities);
 
             _mockLogger.VerifyLog(LogLevel.Error, Times.Never());
         }
