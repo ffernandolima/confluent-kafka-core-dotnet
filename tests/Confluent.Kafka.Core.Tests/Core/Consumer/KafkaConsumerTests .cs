@@ -479,7 +479,7 @@ namespace Confluent.Kafka.Core.Tests.Core.Consumer
                     BootstrapServers = BootstrapServers,
                     GroupId = "test-consumer-group",
                     AutoOffsetReset = AutoOffsetReset.Earliest,
-                    TopicSubscriptions = topics,
+                    PartitionAssignments = topics?.Select(topic => new TopicPartition(topic, new Partition(0))),
                     EnableDeadLetterTopic = enableDeadLetterTopic ?? false,
                     DefaultTimeout = defaultTimeout ?? DefaultTimeout,
                     DefaultBatchSize = defaultBatchSize ?? 100
