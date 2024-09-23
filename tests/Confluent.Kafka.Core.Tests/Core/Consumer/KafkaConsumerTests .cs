@@ -140,9 +140,9 @@ namespace Confluent.Kafka.Core.Tests.Core.Consumer
                 }
             });
 
-            await ProduceAsync(topic, "test-value");
-
             using var consumer = CreateConsumer<Null, string>([topic]);
+
+            await ProduceAsync(topic, "test-value");
 
             // Act
             var result = consumer.Consume(DefaultTimeout, DefaultRetryCount);
@@ -176,10 +176,10 @@ namespace Confluent.Kafka.Core.Tests.Core.Consumer
                 }
             });
 
+            using var consumer = CreateConsumer<Null, string>(topics);
+
             await ProduceAsync(topics[0], "test-value");
             await ProduceAsync(topics[1], "test-value");
-
-            using var consumer = CreateConsumer<Null, string>(topics);
 
             // Act
             var result1 = consumer.Consume(DefaultTimeout, DefaultRetryCount);
@@ -269,14 +269,14 @@ namespace Confluent.Kafka.Core.Tests.Core.Consumer
                 }
             });
 
+            using var consumer = CreateConsumer<Null, string>(
+                [topic],
+                defaultBatchSize: 5);
+
             for (var i = 0; i < 10; i++)
             {
                 await ProduceAsync(topic, $"test-value-{i}");
             }
-
-            using var consumer = CreateConsumer<Null, string>(
-                [topic],
-                defaultBatchSize: 5);
 
             // Act
             var results = consumer.ConsumeBatch(DefaultTimeout, DefaultRetryCount);
@@ -305,9 +305,9 @@ namespace Confluent.Kafka.Core.Tests.Core.Consumer
                 }
             });
 
-            await ProduceAsync(topic, "test-value");
-
             using var consumer = CreateConsumer<Null, string>([topic]);
+
+            await ProduceAsync(topic, "test-value");
 
             // Act
             var results = consumer.ConsumeBatch(DefaultTimeout, DefaultRetryCount);
@@ -337,15 +337,15 @@ namespace Confluent.Kafka.Core.Tests.Core.Consumer
                 }
             });
 
+            using var consumer = CreateConsumer<Null, string>(
+                [topic],
+                defaultTimeout: TimeSpan.FromSeconds(3));
+
             Task.Run(async () =>
             {
                 await Task.Delay(1000);
                 await ProduceAsync(topic, "delayed-value");
             });
-
-            using var consumer = CreateConsumer<Null, string>(
-                [topic],
-                defaultTimeout: TimeSpan.FromSeconds(3));
 
             // Act
             var results = consumer.ConsumeBatch(DefaultTimeout, DefaultRetryCount);
@@ -376,8 +376,6 @@ namespace Confluent.Kafka.Core.Tests.Core.Consumer
                 }
             });
 
-            await ProduceAsync(topic, "faulty-message");
-
             using var consumer = CreateConsumer<Null, Message>(
                 [topic],
                 enableDeadLetterTopic: true,
@@ -386,6 +384,8 @@ namespace Confluent.Kafka.Core.Tests.Core.Consumer
             using var deadLetterConsumer = CreateConsumer<byte[], KafkaMetadataMessage>(
                 [deadLetterTopic],
                 deserializer: CreateJsonCoreSerializer<KafkaMetadataMessage>());
+
+            await ProduceAsync(topic, "faulty-message");
 
             // Act
             Assert.Throws<ConsumeException>(() => consumer.Consume(DefaultTimeout, DefaultRetryCount));
@@ -419,8 +419,6 @@ namespace Confluent.Kafka.Core.Tests.Core.Consumer
                 }
             });
 
-            await ProduceAsync(topic, "faulty-message");
-
             using var consumer = CreateConsumer<Null, Message>(
                 [topic],
                 enableDeadLetterTopic: true,
@@ -429,6 +427,8 @@ namespace Confluent.Kafka.Core.Tests.Core.Consumer
             using var deadLetterConsumer = CreateConsumer<byte[], KafkaMetadataMessage>(
                 [deadLetterTopic],
                 deserializer: CreateJsonCoreSerializer<KafkaMetadataMessage>());
+
+            await ProduceAsync(topic, "faulty-message");
 
             // Act
             Assert.Throws<ConsumeException>(() => consumer.ConsumeBatch(DefaultTimeout, DefaultRetryCount));
