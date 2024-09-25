@@ -17,10 +17,11 @@ namespace Confluent.Kafka.Core.Tests.Core.Producer
         private const string BootstrapServers = "localhost:9092";
         private const string Topic = "production-test-topic";
 
+        private static readonly TimeSpan DefaultTimeout = TimeSpan.FromSeconds(1);
+
         private readonly Mock<ILogger> _mockLogger;
         private readonly Mock<ILoggerFactory> _mockLoggerFactory;
 
-        private readonly KafkaProducerConfig _producerConfig;
         private readonly IKafkaProducer<Null, string> _producer;
 
         private readonly KafkaTopicFixture _kafkaTopicFixture;
@@ -39,15 +40,14 @@ namespace Confluent.Kafka.Core.Tests.Core.Producer
                 .Setup(factory => factory.CreateLogger(It.IsAny<string>()))
                 .Returns(_mockLogger.Object);
 
-            _producerConfig = new KafkaProducerConfig
-            {
-                BootstrapServers = BootstrapServers,
-                DefaultTopic = Topic,
-                DefaultTimeout = TimeSpan.FromSeconds(1),
-                PollAfterProducing = true
-            };
-
-            _producer = new KafkaProducerBuilder<Null, string>(_producerConfig)
+            _producer = new KafkaProducerBuilder<Null, string>(
+                new KafkaProducerConfig
+                {
+                    BootstrapServers = BootstrapServers,
+                    DefaultTopic = Topic,
+                    DefaultTimeout = DefaultTimeout,
+                    PollAfterProducing = true
+                })
                 .WithLoggerFactory(_mockLoggerFactory.Object)
                 .Build();
 
@@ -95,7 +95,7 @@ namespace Confluent.Kafka.Core.Tests.Core.Producer
                 Assert.Equal(message.Value, deliveryReport.Message.Value);
             });
 
-            _producer.Flush(_producerConfig.DefaultTimeout);
+            _producer.Flush(DefaultTimeout);
 
             // Assert
             Assert.NotEmpty(activities);
@@ -127,7 +127,7 @@ namespace Confluent.Kafka.Core.Tests.Core.Producer
                 Assert.Equal(message.Value, deliveryReport.Message.Value);
             });
 
-            _producer.Flush(_producerConfig.DefaultTimeout);
+            _producer.Flush(DefaultTimeout);
 
             Assert.NotEmpty(activities);
 
@@ -159,7 +159,7 @@ namespace Confluent.Kafka.Core.Tests.Core.Producer
                 Assert.Equal(message.Value, deliveryReport.Message.Value);
             });
 
-            _producer.Flush(_producerConfig.DefaultTimeout);
+            _producer.Flush(DefaultTimeout);
 
             Assert.NotEmpty(activities);
 

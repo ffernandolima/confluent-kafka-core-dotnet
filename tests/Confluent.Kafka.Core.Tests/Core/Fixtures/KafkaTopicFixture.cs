@@ -16,7 +16,11 @@ namespace Confluent.Kafka.Core.Tests.Core.Fixtures
 
         private readonly IAdminClient _adminClient;
 
-        public KafkaTopicFixture(string bootstrapServers, IEnumerable<string> topics, int numPartitions = 1, short replicationFactor = 1)
+        public KafkaTopicFixture(
+            string bootstrapServers,
+            IEnumerable<string> topics,
+            int numPartitions = 1,
+            short replicationFactor = 1)
         {
             _numPartitions = numPartitions;
             _replicationFactor = replicationFactor;

@@ -52,7 +52,10 @@ namespace Confluent.Kafka.Core.Tests.Idempotency
                 EnableLogging = true
             };
 
-            _handler = new RedisIdempotencyHandler<Null, IdempotencyMessage>(_mockLoggerFactory.Object, _multiplexer, _options);
+            _handler = new RedisIdempotencyHandler<Null, IdempotencyMessage>(
+                _mockLoggerFactory.Object,
+                _multiplexer,
+                _options);
         }
 
         #region IAsyncLifetime Members
