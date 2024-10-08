@@ -54,7 +54,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Confluent.SchemaRegistry.Serdes.Avro" Version="2.5.0" />
+		<PackageReference Include="Confluent.SchemaRegistry.Serdes.Avro" Version="2.5.3" />
 	</ItemGroup>
 
 	<ItemGroup>
