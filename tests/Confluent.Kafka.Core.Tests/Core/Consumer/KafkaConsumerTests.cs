@@ -1,4 +1,5 @@
 ﻿using Confluent.Kafka.Core.Consumer;
+using Confluent.Kafka.Core.Diagnostics.Internal;
 using Confluent.Kafka.Core.Encoding;
 using Confluent.Kafka.Core.Models;
 using Confluent.Kafka.Core.Producer;
@@ -95,6 +96,9 @@ namespace Confluent.Kafka.Core.Tests.Core.Consumer
             [Description("consumption-empty-test-topic")]
             ConsumptionEmptyTestTopic,
 
+            [Description("consumption-canceled-test-topic")]
+            ConsumptionCanceledTestTopic,
+
             [Description("batch-consumption-test-topic")]
             BatchConsumptionTestTopic,
 
@@ -134,7 +138,8 @@ namespace Confluent.Kafka.Core.Tests.Core.Consumer
             var activities = new List<Activity>();
             using var listener = KafkaActivityListener.StartListening(activity =>
             {
-                if (activity.Kind == ActivityKind.Consumer)
+                var topicKvp = activity?.Tags.SingleOrDefault(tag => tag.Key == SemanticConventions.Messaging.DestinationName) ?? default;
+                if (topicKvp.Value == topic && activity.Kind == ActivityKind.Consumer)
                 {
                     activities.Add(activity);
                 }
@@ -170,7 +175,8 @@ namespace Confluent.Kafka.Core.Tests.Core.Consumer
             var activities = new List<Activity>();
             using var listener = KafkaActivityListener.StartListening(activity =>
             {
-                if (activity.Kind == ActivityKind.Consumer)
+                var topicKvp = activity?.Tags.SingleOrDefault(tag => tag.Key == SemanticConventions.Messaging.DestinationName) ?? default;
+                if (topics.Contains(topicKvp.Value) && activity.Kind == ActivityKind.Consumer)
                 {
                     activities.Add(activity);
                 }
@@ -209,7 +215,8 @@ namespace Confluent.Kafka.Core.Tests.Core.Consumer
             var activities = new List<Activity>();
             using var listener = KafkaActivityListener.StartListening(activity =>
             {
-                if (activity.Kind == ActivityKind.Consumer)
+                var topicKvp = activity?.Tags.SingleOrDefault(tag => tag.Key == SemanticConventions.Messaging.DestinationName) ?? default;
+                if (topicKvp.Value == topic && activity.Kind == ActivityKind.Consumer)
                 {
                     activities.Add(activity);
                 }
@@ -232,16 +239,19 @@ namespace Confluent.Kafka.Core.Tests.Core.Consumer
         public void Consume_WithCancellationToken_ShouldThrowOperationCanceledException()
         {
             // Arrange
+            var topic = KafkaTopic.ConsumptionCanceledTestTopic.GetDescription();
+
             var activities = new List<Activity>();
             using var listener = KafkaActivityListener.StartListening(activity =>
             {
-                if (activity.Kind == ActivityKind.Consumer)
+                var topicKvp = activity?.Tags.SingleOrDefault(tag => tag.Key == SemanticConventions.Messaging.DestinationName) ?? default;
+                if (topicKvp.Value == topic && activity.Kind == ActivityKind.Consumer)
                 {
                     activities.Add(activity);
                 }
             });
 
-            using var consumer = CreateConsumer<Null, string>();
+            using var consumer = CreateConsumer<Null, string>([topic]);
 
             var cts = new CancellationTokenSource();
             cts.Cancel();
@@ -263,7 +273,8 @@ namespace Confluent.Kafka.Core.Tests.Core.Consumer
             var activities = new List<Activity>();
             using var listener = KafkaActivityListener.StartListening(activity =>
             {
-                if (activity.Kind == ActivityKind.Consumer)
+                var topicKvp = activity?.Tags.SingleOrDefault(tag => tag.Key == SemanticConventions.Messaging.DestinationName) ?? default;
+                if (topicKvp.Value == topic && activity.Kind == ActivityKind.Consumer)
                 {
                     activities.Add(activity);
                 }
@@ -299,7 +310,8 @@ namespace Confluent.Kafka.Core.Tests.Core.Consumer
             var activities = new List<Activity>();
             using var listener = KafkaActivityListener.StartListening(activity =>
             {
-                if (activity.Kind == ActivityKind.Consumer)
+                var topicKvp = activity?.Tags.SingleOrDefault(tag => tag.Key == SemanticConventions.Messaging.DestinationName) ?? default;
+                if (topicKvp.Value == topic && activity.Kind == ActivityKind.Consumer)
                 {
                     activities.Add(activity);
                 }
@@ -331,7 +343,8 @@ namespace Confluent.Kafka.Core.Tests.Core.Consumer
             var activities = new List<Activity>();
             using var listener = KafkaActivityListener.StartListening(activity =>
             {
-                if (activity.Kind == ActivityKind.Consumer)
+                var topicKvp = activity?.Tags.SingleOrDefault(tag => tag.Key == SemanticConventions.Messaging.DestinationName) ?? default;
+                if (topicKvp.Value == topic && activity.Kind == ActivityKind.Consumer)
                 {
                     activities.Add(activity);
                 }
@@ -370,7 +383,8 @@ namespace Confluent.Kafka.Core.Tests.Core.Consumer
             var activities = new List<Activity>();
             using var listener = KafkaActivityListener.StartListening(activity =>
             {
-                if (activity.Kind == ActivityKind.Consumer)
+                var topicKvp = activity?.Tags.SingleOrDefault(tag => tag.Key == SemanticConventions.Messaging.DestinationName) ?? default;
+                if ((topicKvp.Value == topic || topicKvp.Value == deadLetterTopic) && activity.Kind == ActivityKind.Consumer)
                 {
                     activities.Add(activity);
                 }
@@ -413,7 +427,8 @@ namespace Confluent.Kafka.Core.Tests.Core.Consumer
             var activities = new List<Activity>();
             using var listener = KafkaActivityListener.StartListening(activity =>
             {
-                if (activity.Kind == ActivityKind.Consumer)
+                var topicKvp = activity?.Tags.SingleOrDefault(tag => tag.Key == SemanticConventions.Messaging.DestinationName) ?? default;
+                if ((topicKvp.Value == topic || topicKvp.Value == deadLetterTopic) && activity.Kind == ActivityKind.Consumer)
                 {
                     activities.Add(activity);
                 }
