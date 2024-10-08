@@ -22,11 +22,11 @@ namespace Confluent.Kafka.Core.Hosting.Internal
     {
         private readonly IKafkaConsumerWorkerOptions<TKey, TValue> _options;
 
-        protected ILogger Logger { get; }
-        protected string ServiceName { get; }
-        protected AsyncLock AsyncLock { get; }
-        protected ConcurrentBag<Exception> Exceptions { get; }
-        protected ConcurrentQueue<BackgroundWorkItem<TKey, TValue>> WorkItems { get; }
+        protected internal ILogger Logger { get; }
+        protected internal string ServiceName { get; }
+        protected internal AsyncLock AsyncLock { get; }
+        protected internal ConcurrentBag<Exception> Exceptions { get; }
+        protected internal ConcurrentQueue<BackgroundWorkItem<TKey, TValue>> WorkItems { get; }
 
         public KafkaConsumerWorker(IKafkaConsumerWorkerBuilder<TKey, TValue> builder)
             : this(
