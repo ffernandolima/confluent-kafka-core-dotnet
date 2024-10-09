@@ -1,5 +1,4 @@
 ﻿using Confluent.Kafka.Core.Consumer;
-using Confluent.Kafka.Core.Diagnostics.Internal;
 using Confluent.Kafka.Core.Encoding;
 using Confluent.Kafka.Core.Hosting;
 using Confluent.Kafka.Core.Hosting.Internal;
@@ -133,8 +132,7 @@ namespace Confluent.Kafka.Core.Tests.Core.Hosting
             var activities = new List<Activity>();
             using var listener = KafkaActivityListener.StartListening(activity =>
             {
-                var topicKvp = activity?.Tags.SingleOrDefault(tag => tag.Key == SemanticConventions.Messaging.DestinationName) ?? default;
-                if (topicKvp.Value == topic && activity.Kind == ActivityKind.Consumer)
+                if (activity.HasTopic(topic) && activity.IsConsumerKind())
                 {
                     activities.Add(activity);
                 }
@@ -174,8 +172,7 @@ namespace Confluent.Kafka.Core.Tests.Core.Hosting
             var activities = new List<Activity>();
             using var listener = KafkaActivityListener.StartListening(activity =>
             {
-                var topicKvp = activity?.Tags.SingleOrDefault(tag => tag.Key == SemanticConventions.Messaging.DestinationName) ?? default;
-                if ((topicKvp.Value == topic || topicKvp.Value == retryTopic) && activity.Kind == ActivityKind.Consumer)
+                if (activity.HasTopic(topic, retryTopic) && activity.IsConsumerKind())
                 {
                     activities.Add(activity);
                 }
@@ -225,8 +222,7 @@ namespace Confluent.Kafka.Core.Tests.Core.Hosting
             var activities = new List<Activity>();
             using var listener = KafkaActivityListener.StartListening(activity =>
             {
-                var topicKvp = activity?.Tags.SingleOrDefault(tag => tag.Key == SemanticConventions.Messaging.DestinationName) ?? default;
-                if ((topicKvp.Value == topic || topicKvp.Value == deadLetterTopic) && activity.Kind == ActivityKind.Consumer)
+                if (activity.HasTopic(topic, deadLetterTopic) && activity.IsConsumerKind())
                 {
                     activities.Add(activity);
                 }

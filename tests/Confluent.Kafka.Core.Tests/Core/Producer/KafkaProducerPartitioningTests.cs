@@ -1,6 +1,6 @@
-﻿using Confluent.Kafka.Core.Diagnostics.Internal;
-using Confluent.Kafka.Core.Producer;
+﻿using Confluent.Kafka.Core.Producer;
 using Confluent.Kafka.Core.Tests.Core.Diagnostics;
+using Confluent.Kafka.Core.Tests.Core.Extensions;
 using Confluent.Kafka.Core.Tests.Core.Fixtures;
 using Confluent.Kafka.Core.Tests.Extensions;
 using Microsoft.Extensions.Logging;
@@ -8,7 +8,6 @@ using Moq;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -82,8 +81,7 @@ namespace Confluent.Kafka.Core.Tests.Core.Producer
             var activities = new List<Activity>();
             using var listener = KafkaActivityListener.StartListening(activity =>
             {
-                var topicKvp = activity?.Tags.SingleOrDefault(tag => tag.Key == SemanticConventions.Messaging.DestinationName) ?? default;
-                if (topicKvp.Value == Topic && activity.Kind == ActivityKind.Producer)
+                if (activity.HasTopic(Topic) && activity.IsProducerKind())
                 {
                     activities.Add(activity);
                 }
@@ -140,8 +138,7 @@ namespace Confluent.Kafka.Core.Tests.Core.Producer
             var activities = new List<Activity>();
             using var listener = KafkaActivityListener.StartListening(activity =>
             {
-                var topicKvp = activity?.Tags.SingleOrDefault(tag => tag.Key == SemanticConventions.Messaging.DestinationName) ?? default;
-                if (topicKvp.Value == Topic && activity.Kind == ActivityKind.Producer)
+                if (activity.HasTopic(Topic) && activity.IsProducerKind())
                 {
                     activities.Add(activity);
                 }
