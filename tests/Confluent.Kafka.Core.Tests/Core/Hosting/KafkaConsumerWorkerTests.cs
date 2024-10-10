@@ -4,6 +4,8 @@ using Confluent.Kafka.Core.Hosting;
 using Confluent.Kafka.Core.Hosting.Internal;
 using Confluent.Kafka.Core.Models;
 using Confluent.Kafka.Core.Producer;
+using Confluent.Kafka.Core.Producer.Internal;
+using Confluent.Kafka.Core.Retry.Internal;
 using Confluent.Kafka.Core.Serialization.JsonCore.Internal;
 using Confluent.Kafka.Core.Tests.Core.Diagnostics;
 using Confluent.Kafka.Core.Tests.Core.Extensions;
@@ -32,6 +34,7 @@ namespace Confluent.Kafka.Core.Tests.Core.Hosting
 
         private static readonly int DefaultRetryCount = 1;
         private static readonly TimeSpan DefaultTimeout = TimeSpan.FromSeconds(1);
+        private static readonly TimeSpan DefaultDelay = TimeSpan.FromSeconds(3);
 
         private readonly Mock<ILogger> _mockLogger;
         private readonly Mock<ILoggerFactory> _mockLoggerFactory;
@@ -91,13 +94,13 @@ namespace Confluent.Kafka.Core.Tests.Core.Hosting
             [Description("faulty-processing-test-topic-1")]
             FaultyProcessingTestTopic1,
 
-            [Description("faulty-processing-test-topic-1.Retry")]
+            [Description($"faulty-processing-test-topic-1{KafkaRetryConstants.RetryTopicSuffix}")]
             FaultyProcessingTestTopic1Retry,
 
             [Description("faulty-processing-test-topic-2")]
             FaultyProcessingTestTopic2,
 
-            [Description("faulty-processing-test-topic-2.DeadLetter")]
+            [Description($"faulty-processing-test-topic-2{KafkaProducerConstants.DeadLetterTopicSuffix}")]
             FaultyProcessingTestTopic2DeadLetter,
         }
 
@@ -147,7 +150,7 @@ namespace Confluent.Kafka.Core.Tests.Core.Hosting
             var workerImpl = worker.ToImplementation<KafkaConsumerWorker<Null, string>>();
 
             // Act
-            var cts = new CancellationTokenSource(TimeSpan.FromSeconds(3));
+            var cts = new CancellationTokenSource(DefaultDelay);
 
             await worker.StartAsync(cts.Token);
             await worker.ExecuteAsync(cts.Token);
@@ -192,7 +195,7 @@ namespace Confluent.Kafka.Core.Tests.Core.Hosting
             var workerImpl = worker.ToImplementation<KafkaConsumerWorker<Null, string>>();
 
             // Act
-            var cts = new CancellationTokenSource(TimeSpan.FromSeconds(3));
+            var cts = new CancellationTokenSource(DefaultDelay);
 
             await worker.StartAsync(cts.Token);
             await worker.ExecuteAsync(cts.Token);
@@ -242,7 +245,7 @@ namespace Confluent.Kafka.Core.Tests.Core.Hosting
             var workerImpl = worker.ToImplementation<KafkaConsumerWorker<Null, string>>();
 
             // Act
-            var cts = new CancellationTokenSource(TimeSpan.FromSeconds(3));
+            var cts = new CancellationTokenSource(DefaultDelay);
 
             await worker.StartAsync(cts.Token);
             await worker.ExecuteAsync(cts.Token);
@@ -282,7 +285,6 @@ namespace Confluent.Kafka.Core.Tests.Core.Hosting
             {
                 builder.WithRetryProducer(
                     CreateProducer<byte[], KafkaMetadataMessage>(
-                        pollAfterProducing: true,
                         serializer: CreateJsonCoreSerializer<KafkaMetadataMessage>()));
             }
 
@@ -290,7 +292,6 @@ namespace Confluent.Kafka.Core.Tests.Core.Hosting
             {
                 builder.WithDeadLetterProducer(
                     CreateProducer<byte[], KafkaMetadataMessage>(
-                        pollAfterProducing: true,
                         serializer: CreateJsonCoreSerializer<KafkaMetadataMessage>()));
             }
 

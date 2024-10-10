@@ -2,6 +2,7 @@
 using Confluent.Kafka.Core.Encoding;
 using Confluent.Kafka.Core.Models;
 using Confluent.Kafka.Core.Producer;
+using Confluent.Kafka.Core.Producer.Internal;
 using Confluent.Kafka.Core.Serialization.JsonCore.Internal;
 using Confluent.Kafka.Core.Tests.Core.Diagnostics;
 using Confluent.Kafka.Core.Tests.Core.Extensions;
@@ -113,10 +114,10 @@ namespace Confluent.Kafka.Core.Tests.Core.Consumer
             [Description("wrong-format-batch-consumption-test-topic")]
             WrongFormatBatchConsumptionTestTopic,
 
-            [Description("wrong-format-consumption-test-topic.DeadLetter")]
+            [Description($"wrong-format-consumption-test-topic{KafkaProducerConstants.DeadLetterTopicSuffix}")]
             WrongFormatConsumptionTestTopicDeadLetter,
 
-            [Description("wrong-format-batch-consumption-test-topic.DeadLetter")]
+            [Description($"wrong-format-batch-consumption-test-topic{KafkaProducerConstants.DeadLetterTopicSuffix}")]
             WrongFormatBatchConsumptionTestTopicDeadLetter
         }
 
