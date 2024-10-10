@@ -490,8 +490,8 @@ namespace Confluent.Kafka.Core.Tests.Core.Consumer
                     DefaultTimeout = defaultTimeout ?? DefaultTimeout,
                     DefaultBatchSize = defaultBatchSize ?? 100
                 })
-            .WithLoggerFactory(_mockLoggerFactory.Object)
-            .WithValueDeserializer(deserializer);
+                .WithLoggerFactory(_mockLoggerFactory.Object)
+                .WithValueDeserializer(deserializer);
 
             if (enableDeadLetterTopic ?? false)
             {

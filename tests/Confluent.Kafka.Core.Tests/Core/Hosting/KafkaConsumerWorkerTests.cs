@@ -337,9 +337,9 @@ namespace Confluent.Kafka.Core.Tests.Core.Hosting
                     PartitionAssignments = topics?.Select(topic => new TopicPartition(topic, new Partition(0))),
                     DefaultTimeout = defaultTimeout ?? DefaultTimeout,
                 })
-            .WithLoggerFactory(_mockLoggerFactory.Object)
-            .WithValueDeserializer(deserializer)
-            .Build();
+                .WithLoggerFactory(_mockLoggerFactory.Object)
+                .WithValueDeserializer(deserializer)
+                .Build();
 
             return consumer;
         }

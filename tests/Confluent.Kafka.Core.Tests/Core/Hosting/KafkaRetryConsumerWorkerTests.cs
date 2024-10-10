@@ -24,7 +24,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Confluent.Kafka.Core.Tests.Core.Hosting.Retry
+namespace Confluent.Kafka.Core.Tests.Core.Hosting
 {
     using System.Text;
 
@@ -324,9 +324,9 @@ namespace Confluent.Kafka.Core.Tests.Core.Hosting.Retry
                     PartitionAssignments = topics?.Select(topic => new TopicPartition(topic, new Partition(0))),
                     DefaultTimeout = defaultTimeout ?? DefaultTimeout,
                 })
-            .WithLoggerFactory(_mockLoggerFactory.Object)
-            .WithValueDeserializer(deserializer)
-            .Build();
+                .WithLoggerFactory(_mockLoggerFactory.Object)
+                .WithValueDeserializer(deserializer)
+                .Build();
 
             return consumer;
         }
@@ -352,7 +352,7 @@ namespace Confluent.Kafka.Core.Tests.Core.Hosting.Retry
                 {
                     Value = new KafkaMetadataMessage
                     {
-                        SourceTopic = topic.Replace(KafkaRetryConstants.RetryTopicSuffix, string.Empty),
+                        SourceTopic = topic?.Replace(KafkaRetryConstants.RetryTopicSuffix, string.Empty),
                         SourceValue = _encoding.GetBytes(value)
                     },
                     Headers = headers
