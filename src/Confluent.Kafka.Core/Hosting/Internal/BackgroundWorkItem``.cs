@@ -52,12 +52,5 @@ namespace Confluent.Kafka.Core.Hosting.Internal
         {
             IsHandled = true;
         }
-
-        public BackgroundWorkItem<TKey, TValue> AttachContinuation<TResult>(Func<TaskActivity, TResult> continuationFunction)
-        {
-            TaskActivity.ContinueWith(continuationFunction, TaskContinuationOptions.AttachedToParent);
-
-            return this;
-        }
     }
 }

@@ -310,13 +310,11 @@ namespace Confluent.Kafka.Core.Hosting.Internal
 
             try
             {
-                taskActivity = TaskActivity.Run(async activitySetter =>
+                taskActivity = TaskActivity.Run(async () =>
                 {
                     var stopwatch = Stopwatch.StartNew();
 
                     var activity = StartActivity(consumeResult.Topic, headers);
-
-                    activitySetter?.Invoke(activity);
 
                     var lockContext = new AsyncLockContext { [ConsumeResultConstants.ConsumeResult] = consumeResult };
 
@@ -341,7 +339,7 @@ namespace Confluent.Kafka.Core.Hosting.Internal
                             {
                                 Logger.LogMessageAlreadyProcessed(messageId);
 
-                                return;
+                                return activity;
                             }
                         }
                         else
@@ -352,7 +350,7 @@ namespace Confluent.Kafka.Core.Hosting.Internal
                             {
                                 Logger.LogMessageProcessingSkip(messageId);
 
-                                return;
+                                return activity;
                             }
                         }
 
@@ -380,6 +378,8 @@ namespace Confluent.Kafka.Core.Hosting.Internal
                         await AfterProcessingAsync(consumeResult, cancellationToken).ConfigureAwait(false);
                     }
 
+                    return activity;
+
                     async Task HandleFetchedConsumeResultAsync(ConsumeResult<TKey, TValue> consumeResult, CancellationToken cancellationToken)
                     {
                         foreach (var consumeResultHandler in _options.ConsumeResultHandlers)
@@ -401,8 +401,7 @@ namespace Confluent.Kafka.Core.Hosting.Internal
                         consumeResult.Message!.Value,
                         headers);
 
-                    var workItem = new BackgroundWorkItem<TKey, TValue>(messageId, taskActivity, consumeResult)
-                        .AttachContinuation(taskActivity => taskActivity.TraceActivity?.SetEndTime(DateTime.UtcNow));
+                    var workItem = new BackgroundWorkItem<TKey, TValue>(messageId, taskActivity, consumeResult);
 
                     WorkItems.Enqueue(workItem);
                 }

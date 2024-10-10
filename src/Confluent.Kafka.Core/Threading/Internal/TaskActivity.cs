@@ -9,40 +9,31 @@ namespace Confluent.Kafka.Core.Threading.Internal
         public Task ExecutingTask { get; private set; }
         public Activity TraceActivity { get; private set; }
 
-        public TaskActivity(Task executingTask, Activity traceActivity)
+        public TaskActivity(Task executingTask, Activity traceActivity = null)
         {
             ExecutingTask = executingTask ?? throw new ArgumentNullException(nameof(executingTask));
             TraceActivity = traceActivity;
         }
 
-        public static TaskActivity Run(Func<Action<Activity>, Task> function)
+        public static TaskActivity Run(Func<Task<Activity>> function)
         {
             if (function is null)
             {
                 throw new ArgumentNullException(nameof(function));
             }
 
-            Activity executingActivity = null;
+            var executingTask = Task.Run(function.Invoke);
 
-            void ActivitySetter(Activity createdActivity) => executingActivity = createdActivity;
+            var taskActivity = new TaskActivity(executingTask);
 
-            var executingTask = Task.Run(() => function.Invoke(ActivitySetter));
+            executingTask.ContinueWith(completedTask =>
+            {
+                taskActivity.TraceActivity = completedTask?.Result;
+                taskActivity.TraceActivity?.SetEndTime(DateTime.UtcNow);
 
-            var taskActivity = new TaskActivity(executingTask, executingActivity);
+            }, TaskContinuationOptions.AttachedToParent);
 
             return taskActivity;
-        }
-
-        public Task<TResult> ContinueWith<TResult>(Func<TaskActivity, TResult> continuationFunction, TaskContinuationOptions continuationOptions)
-        {
-            if (continuationFunction is null)
-            {
-                throw new ArgumentNullException(nameof(continuationFunction));
-            }
-
-            var continuationTask = ExecutingTask.ContinueWith(_ => continuationFunction.Invoke(this), continuationOptions);
-
-            return continuationTask;
         }
     }
 }
