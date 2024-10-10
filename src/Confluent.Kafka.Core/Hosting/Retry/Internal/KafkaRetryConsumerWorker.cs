@@ -202,7 +202,7 @@ namespace Confluent.Kafka.Core.Hosting.Retry.Internal
 
                 var deadLetterTopic = !string.IsNullOrWhiteSpace(producerConfig!.DefaultTopic)
                     ? producerConfig!.DefaultTopic
-                    : $"{consumeResult.Topic}{KafkaProducerConstants.DeadLetterTopicSuffix}";
+                    : $"{consumeResult.Message!.Value!.SourceTopic}{KafkaProducerConstants.DeadLetterTopicSuffix}";
 
                 _logger.LogProducingDeadLetterMessage(consumeResult.Message!.Value!.SourceId, deadLetterTopic, retryCount);
 
