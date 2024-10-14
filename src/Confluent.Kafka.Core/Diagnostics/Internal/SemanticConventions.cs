@@ -1,7 +1,7 @@
 ﻿namespace Confluent.Kafka.Core.Diagnostics.Internal
 {
     /// <summary>
-    /// Semantic Conventions v1.23.0
+    /// Semantic Conventions v1.23.1
     /// </summary>
     internal static class SemanticConventions
     {
