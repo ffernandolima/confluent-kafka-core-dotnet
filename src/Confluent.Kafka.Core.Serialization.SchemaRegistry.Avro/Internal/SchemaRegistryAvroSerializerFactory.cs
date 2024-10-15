@@ -41,7 +41,7 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Avro.Internal
                 builder.SchemaRegistryClient,
                 builder.SerializerConfig,
                 builder.DeserializerConfig,
-                builder.RuleExecutors);
+                builder.RuleRegistry);
 
             return serializer;
         }

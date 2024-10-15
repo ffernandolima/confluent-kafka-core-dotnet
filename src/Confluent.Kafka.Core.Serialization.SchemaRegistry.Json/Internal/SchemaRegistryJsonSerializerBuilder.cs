@@ -2,9 +2,12 @@
 using Confluent.SchemaRegistry;
 using Confluent.SchemaRegistry.Serdes;
 using Microsoft.Extensions.Configuration;
+#if NET8_0_OR_GREATER
+using NJsonSchema.NewtonsoftJson.Generation;
+#else
 using NJsonSchema.Generation;
+#endif
 using System;
-using System.Collections.Generic;
 
 namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Json.Internal
 {
@@ -18,8 +21,12 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Json.Internal
         public RegisteredSchema RegisteredSchema { get; private set; }
         public JsonSerializerConfig SerializerConfig { get; private set; }
         public JsonDeserializerConfig DeserializerConfig { get; private set; }
+#if NET8_0_OR_GREATER
+        public NewtonsoftJsonSchemaGeneratorSettings SchemaGeneratorSettings { get; private set; }
+#else
         public JsonSchemaGeneratorSettings SchemaGeneratorSettings { get; private set; }
-        public IList<IRuleExecutor> RuleExecutors { get; private set; }
+#endif
+        public RuleRegistry RuleRegistry { get; private set; }
 
         public SchemaRegistryJsonSerializerBuilder(IServiceProvider serviceProvider, IConfiguration configuration)
         {
@@ -65,6 +72,17 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Json.Internal
             return this;
         }
 
+#if NET8_0_OR_GREATER
+        public ISchemaRegistryJsonSerializerBuilder WithSchemaGeneratorSettings(
+            Action<INewtonsoftJsonSchemaGeneratorSettingsBuilder> configureSchemaGenerator)
+        {
+            SchemaGeneratorSettings = NewtonsoftJsonSchemaGeneratorSettingsBuilder.Build(
+                _configuration,
+                configureSchemaGenerator);
+
+            return this;
+        }
+#else
         public ISchemaRegistryJsonSerializerBuilder WithSchemaGeneratorSettings(
             Action<IJsonSchemaGeneratorSettingsBuilder> configureSchemaGenerator)
         {
@@ -74,11 +92,11 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Json.Internal
 
             return this;
         }
-
-        public ISchemaRegistryJsonSerializerBuilder WithRuleExecutors(
-            IList<IRuleExecutor> ruleExecutors)
+#endif
+        public ISchemaRegistryJsonSerializerBuilder WithRuleRegistry(
+            RuleRegistry ruleRegistry)
         {
-            RuleExecutors = ruleExecutors;
+            RuleRegistry = ruleRegistry;
             return this;
         }
 

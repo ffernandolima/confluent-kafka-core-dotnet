@@ -3,7 +3,6 @@ using Confluent.SchemaRegistry;
 using Confluent.SchemaRegistry.Serdes;
 using Microsoft.Extensions.Configuration;
 using System;
-using System.Collections.Generic;
 
 namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Avro.Internal
 {
@@ -15,7 +14,7 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Avro.Internal
         public ISchemaRegistryClient SchemaRegistryClient { get; private set; }
         public AvroSerializerConfig SerializerConfig { get; private set; }
         public AvroDeserializerConfig DeserializerConfig { get; private set; }
-        public IList<IRuleExecutor> RuleExecutors { get; private set; }
+        public RuleRegistry RuleRegistry { get; private set; }
 
         public SchemaRegistryAvroSerializerBuilder(IServiceProvider serviceProvider, IConfiguration configuration)
         {
@@ -50,10 +49,10 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Avro.Internal
             return this;
         }
 
-        public ISchemaRegistryAvroSerializerBuilder WithRuleExecutors(
-            IList<IRuleExecutor> ruleExecutors)
+        public ISchemaRegistryAvroSerializerBuilder WithRuleRegistry(
+            RuleRegistry ruleRegistry)
         {
-            RuleExecutors = ruleExecutors;
+            RuleRegistry = ruleRegistry;
             return this;
         }
 

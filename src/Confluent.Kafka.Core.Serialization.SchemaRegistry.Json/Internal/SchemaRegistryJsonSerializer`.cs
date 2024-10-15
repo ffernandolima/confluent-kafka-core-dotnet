@@ -1,8 +1,11 @@
 ﻿using Confluent.SchemaRegistry;
 using Confluent.SchemaRegistry.Serdes;
+#if NET8_0_OR_GREATER
+using NJsonSchema.NewtonsoftJson.Generation;
+#else
 using NJsonSchema.Generation;
+#endif
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Json.Internal
@@ -17,8 +20,12 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Json.Internal
             Schema schema = null,
             JsonSerializerConfig serializerConfig = null,
             JsonDeserializerConfig deserializerConfig = null,
+#if NET8_0_OR_GREATER
+            NewtonsoftJsonSchemaGeneratorSettings schemaGeneratorSettings = null,
+#else
             JsonSchemaGeneratorSettings schemaGeneratorSettings = null,
-            IList<IRuleExecutor> ruleExecutors = null)
+#endif
+            RuleRegistry ruleRegistry = null)
         {
             if (schemaRegistryClient is null)
             {
@@ -27,13 +34,13 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Json.Internal
 
             if (schema is not null)
             {
-                _serializer = new JsonSerializer<T>(schemaRegistryClient, schema, serializerConfig, schemaGeneratorSettings, ruleExecutors);
+                _serializer = new JsonSerializer<T>(schemaRegistryClient, schema, serializerConfig, schemaGeneratorSettings, ruleRegistry);
                 _deserializer = new JsonDeserializer<T>(schemaRegistryClient, schema, deserializerConfig, schemaGeneratorSettings);
             }
             else
             {
-                _serializer = new JsonSerializer<T>(schemaRegistryClient, serializerConfig, schemaGeneratorSettings, ruleExecutors);
-                _deserializer = new JsonDeserializer<T>(schemaRegistryClient, deserializerConfig, schemaGeneratorSettings, ruleExecutors);
+                _serializer = new JsonSerializer<T>(schemaRegistryClient, serializerConfig, schemaGeneratorSettings, ruleRegistry);
+                _deserializer = new JsonDeserializer<T>(schemaRegistryClient, deserializerConfig, schemaGeneratorSettings, ruleRegistry);
             }
         }
 

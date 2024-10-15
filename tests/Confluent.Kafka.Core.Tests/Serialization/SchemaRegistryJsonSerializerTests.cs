@@ -2,7 +2,11 @@
 using Confluent.Kafka.Core.Serialization.SchemaRegistry.Json.Internal;
 using Confluent.SchemaRegistry;
 using Confluent.SchemaRegistry.Serdes;
+#if NET8_0_OR_GREATER
+using NJsonSchema.NewtonsoftJson.Generation;
+#else
 using NJsonSchema.Generation;
+#endif
 using System;
 using System.IO;
 using System.Threading.Tasks;
@@ -30,9 +34,13 @@ namespace Confluent.Kafka.Core.Tests.Serialization
             _schemaRegistryClient = CreateSchemaRegistryClient();
 
             _serializer = new SchemaRegistryJsonSerializer<JsonMessage>(
-                _schemaRegistryClient,
-                serializerConfig: new JsonSerializerConfig { AutoRegisterSchemas = true },
-                schemaGeneratorSettings: new JsonSchemaGeneratorSettings { FlattenInheritanceHierarchy = true });
+            _schemaRegistryClient,
+            serializerConfig: new JsonSerializerConfig { AutoRegisterSchemas = true },
+#if NET8_0_OR_GREATER
+            schemaGeneratorSettings: new NewtonsoftJsonSchemaGeneratorSettings { FlattenInheritanceHierarchy = true });
+#else
+            schemaGeneratorSettings: new JsonSchemaGeneratorSettings { FlattenInheritanceHierarchy = true });
+#endif
         }
 
         private static ISchemaRegistryClient CreateSchemaRegistryClient()

@@ -45,7 +45,7 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Json.Internal
                 builder.SerializerConfig,
                 builder.DeserializerConfig,
                 builder.SchemaGeneratorSettings,
-                builder.RuleExecutors);
+                builder.RuleRegistry);
 
             return serializer;
         }

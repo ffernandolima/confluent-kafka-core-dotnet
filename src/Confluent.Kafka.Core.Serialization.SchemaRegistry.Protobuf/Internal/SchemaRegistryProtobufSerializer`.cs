@@ -2,7 +2,6 @@
 using Confluent.SchemaRegistry.Serdes;
 using Google.Protobuf;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Protobuf.Internal
@@ -17,15 +16,15 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Protobuf.Internal
             ISchemaRegistryClient schemaRegistryClient,
             ProtobufSerializerConfig serializerConfig = null,
             ProtobufDeserializerConfig deserializerConfig = null,
-            IList<IRuleExecutor> ruleExecutors = null)
+            RuleRegistry ruleRegistry = null)
         {
             if (schemaRegistryClient is null)
             {
                 throw new ArgumentNullException(nameof(schemaRegistryClient));
             }
 
-            _serializer = new ProtobufSerializer<T>(schemaRegistryClient, serializerConfig, ruleExecutors);
-            _deserializer = new ProtobufDeserializer<T>(schemaRegistryClient, deserializerConfig, ruleExecutors);
+            _serializer = new ProtobufSerializer<T>(schemaRegistryClient, serializerConfig, ruleRegistry);
+            _deserializer = new ProtobufDeserializer<T>(schemaRegistryClient, deserializerConfig, ruleRegistry);
         }
 
         public async Task<byte[]> SerializeAsync(T data, SerializationContext context)
