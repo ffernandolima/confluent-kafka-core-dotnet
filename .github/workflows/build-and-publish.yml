@@ -1,0 +1,36 @@
+name: build-and-publish
+
+env:
+  PROJECT: Confluent.Kafka.Core
+  NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+  NUGET_SOURCE: ${{ secrets.NUGET_SOURCE }}
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 6
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 6.0.x
+
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+        
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build solution
+        run: dotnet build --configuration Release --no-restore
+
+      #- name: Push packages
+      #  run: dotnet nuget push "**/$PROJECT*.nupkg" -k $NUGET_API_KEY -s $NUGET_SOURCE --skip-duplicate
