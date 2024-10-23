@@ -1,6 +1,6 @@
-# Kafka Core
+# Kafka Core :rocket:
 
-:rocket: Kafka Core empowers developers to effortlessly build robust .NET applications on top of Confluent Kafka, focusing on simplicity, maintainability, and extensibility. With intuitive abstractions and builders, it introduces powerful features that enhance functionality and extend the official library's capabilities.
+Kafka Core empowers developers to effortlessly build robust .NET applications on top of Confluent Kafka, focusing on simplicity, maintainability, and extensibility. With intuitive abstractions and builders, it introduces powerful features that enhance functionality and extend the official library's capabilities.
 
 ## Status :green_circle::yellow_circle::red_circle:
 
