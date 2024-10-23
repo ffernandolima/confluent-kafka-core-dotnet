@@ -1,4 +1,4 @@
-# Kafka Core :rocket:
+# Kafka Core :rocket: · ![NuGet Version](https://img.shields.io/nuget/v/Confluent.Kafka.Core)
 
 Kafka Core empowers developers to effortlessly build robust .NET applications on top of Confluent Kafka, focusing on simplicity, maintainability, and extensibility. With intuitive abstractions and builders, it introduces powerful features that enhance functionality and extend the official library's capabilities.
 
