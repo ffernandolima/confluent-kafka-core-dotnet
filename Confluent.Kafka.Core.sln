@@ -105,9 +105,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Confluent.Kafka.Core.Shared
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{35B675E2-9122-407A-932E-C66F5A4534B6}"
 	ProjectSection(SolutionItems) = preProject
-		Features.md = Features.md
-		Packages.md = Packages.md
-		Usage.md = Usage.md
+		docs\Features.md = docs\Features.md
+		docs\Packages.md = docs\Packages.md
+		docs\Usage.md = docs\Usage.md
 	EndProjectSection
 EndProject
 Global
