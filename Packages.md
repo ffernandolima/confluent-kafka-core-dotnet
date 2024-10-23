@@ -1,0 +1,25 @@
+| [Main](/README.md) > Packages |
+|-------------------------------|
+
+### Packages :package:
+
+| :package: Package Name                                           | :1234: Version                                                                                              | :arrow_down: Downloads                                                                                         |
+|------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------|
+| Confluent.Kafka.Core                                             | ![NuGet Version](https://img.shields.io/nuget/v/Confluent.Kafka.Core)                                       | ![NuGet Downloads](https://img.shields.io/nuget/dt/Confluent.Kafka.Core)                                       |
+| Confluent.Kafka.Core.Abstractions                                | ![NuGet Version](https://img.shields.io/nuget/v/Confluent.Kafka.Core.Abstractions)                          | ![NuGet Downloads](https://img.shields.io/nuget/dt/Confluent.Kafka.Core.Abstractions)                          |
+| **Idempotency**                                                  |                                                                                                             |                                                                                                                |
+| Confluent.Kafka.Core.Idempotency.Redis                           | ![NuGet Version](https://img.shields.io/nuget/v/Confluent.Kafka.Core.Idempotency.Redis)                     | ![NuGet Downloads](https://img.shields.io/nuget/dt/Confluent.Kafka.Core.Idempotency.Redis)                     |
+| **Retry**                                                        |                                                                                                             |                                                                                                                |
+| Confluent.Kafka.Core.Retry.Polly                                 | ![NuGet Version](https://img.shields.io/nuget/v/Confluent.Kafka.Core.Retry.Polly)                           | ![NuGet Downloads](https://img.shields.io/nuget/dt/Confluent.Kafka.Core.Retry.Polly)                           |
+| **OpenTelemetry**                                                |                                                                                                             |                                                                                                                |
+| Confluent.Kafka.Core.OpenTelemetry                               | ![NuGet Version](https://img.shields.io/nuget/v/Confluent.Kafka.Core.OpenTelemetry)                         | ![NuGet Downloads](https://img.shields.io/nuget/dt/Confluent.Kafka.Core.OpenTelemetry)                         |
+| **Serialization**                                                |                                                                                                             |                                                                                                                |
+| Confluent.Kafka.Core.Serialization.JsonCore                      | ![NuGet Version](https://img.shields.io/nuget/v/Confluent.Kafka.Core.Serialization.JsonCore)                | ![NuGet Downloads](https://img.shields.io/nuget/dt/Confluent.Kafka.Core.Serialization.JsonCore)                |
+| Confluent.Kafka.Core.Serialization.NewtonsoftJson                | ![NuGet Version](https://img.shields.io/nuget/v/Confluent.Kafka.Core.Serialization.NewtonsoftJson)          | ![NuGet Downloads](https://img.shields.io/nuget/dt/Confluent.Kafka.Core.Serialization.NewtonsoftJson)          |
+| Confluent.Kafka.Core.Serialization.ProtobufNet                   | ![NuGet Version](https://img.shields.io/nuget/v/Confluent.Kafka.Core.Serialization.ProtobufNet)             | ![NuGet Downloads](https://img.shields.io/nuget/dt/Confluent.Kafka.Core.Serialization.ProtobufNet)             |
+| Confluent.Kafka.Core.Serialization.SchemaRegistry.Avro           | ![NuGet Version](https://img.shields.io/nuget/v/Confluent.Kafka.Core.Serialization.SchemaRegistry.Avro)     | ![NuGet Downloads](https://img.shields.io/nuget/dt/Confluent.Kafka.Core.Serialization.SchemaRegistry.Avro)     |
+| Confluent.Kafka.Core.Serialization.SchemaRegistry.Json           | ![NuGet Version](https://img.shields.io/nuget/v/Confluent.Kafka.Core.Serialization.SchemaRegistry.Json)     | ![NuGet Downloads](https://img.shields.io/nuget/dt/Confluent.Kafka.Core.Serialization.SchemaRegistry.Json)     |
+| Confluent.Kafka.Core.Serialization.SchemaRegistry.Protobuf       | ![NuGet Version](https://img.shields.io/nuget/v/Confluent.Kafka.Core.Serialization.SchemaRegistry.Protobuf) | ![NuGet Downloads](https://img.shields.io/nuget/dt/Confluent.Kafka.Core.Serialization.SchemaRegistry.Protobuf) |
+
+| [Main](/README.md) > Packages |
+|-------------------------------|
