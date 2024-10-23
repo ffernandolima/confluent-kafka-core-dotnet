@@ -2,9 +2,9 @@ name: build-and-tests
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "*" ]
   pull_request:
-    branches: [ "main" ]
+    types: ["opened", "synchronize", "reopened"]
 
 jobs:
   build-and-test:
