@@ -13,7 +13,7 @@ Kafka Core empowers developers to effortlessly build robust .NET applications on
 - [Features](/docs/Features.md)
 - [Usage](/docs/Usage.md)
 
-## Contributing :handshake::skin-tone-2:
+## Contributing :handshake:
 
 We welcome contributions to Kafka Core! Please follow these guidelines when contributing:
 
@@ -25,7 +25,7 @@ We welcome contributions to Kafka Core! Please follow these guidelines when cont
 
 Please ensure that your pull request is focused on a single issue and includes relevant tests.
 
-## Authors :man_technologist::skin-tone-2:
+## Authors :man_technologist:
 
 - [ffernandolima](https://github.com/ffernandolima)
 
@@ -35,7 +35,7 @@ We are available through [Issues](https://github.com/ffernandolima/confluent-kaf
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
-## Donate :heart_hands::skin-tone-2:
+## Donate :heart_hands:
 
 If you would like to show your support for this project, then please feel free to buy me a coffee.
 
