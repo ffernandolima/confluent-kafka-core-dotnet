@@ -21,5 +21,5 @@
 - **:scroll: Schema Registry Support**: Seamlessly integrate with schema registries for better data governance.
 - **:computer: Broad Compatibility**: Fully supports .NET Framework, .NET Core, and .NET 5 and above, ensuring versatility in deployment.
 
-| [Main](/README.md) > Features |
-|-------------------------------|
+| [Go Back](/README.md) |
+|-----------------------| 
