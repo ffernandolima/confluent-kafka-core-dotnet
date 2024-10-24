@@ -97,7 +97,7 @@ For enabling Dead Letter Topic (DLT) functionality, the following configuration 
              }).AddKafkaRetryConsumerWorker((_, builder) =>
                    // ...
                    builder.WithWorkerConfiguration(builder =>
-                       builder.WithEnableDeadLetterTopic(true))
+                       builder.WithEnableDeadLetterTopic(true)) // Enables DLT
                            .WithDeadLetterProducer(builder =>
                                builder.WithProducerConfiguration(builder =>
                                    builder.WithBootstrapServers("localhost:9092"))
