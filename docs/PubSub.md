@@ -25,8 +25,7 @@ Here's an example of how to use a Producer in your .NET application:
 
 By default, producers are going to be registered as ```Singleton```.
 
-
-### Producer configurations :gear:
+### Producer Configurations :gear:
 
 Some configurations should be pointed out once they enable custom behaviors:
 
@@ -53,7 +52,7 @@ Here's an example of how to use a Consumer in your .NET application:
 
 By default, consumers are going to be registered as ```Singleton```.
 
-### Consumer configurations :gear:
+### Consumer Configurations :gear:
 
 Some configurations should be pointed out once they enable custom behaviors:
 
