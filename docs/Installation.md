@@ -1,3 +1,6 @@
+| [Main](/README.md) > Installation |
+|-----------------------------------|
+
 ### Installation :hammer_and_wrench:
 
 1. **Confluent.Kafka.Core**  
@@ -67,4 +70,6 @@
 - Ensure you have the .NET SDK installed on your machine to run these commands.
 - You can also install these packages using the NuGet Package Manager in Visual Studio by searching for each package name.
 - After installation, you can start integrating these packages into your Kafka-related .NET project.
-  
+
+| [Go Back](/README.md) |
+|-----------------------| 
