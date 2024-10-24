@@ -107,5 +107,5 @@ Note: If DLT functionality is not required, this configuration can be omitted, s
 
 Some configurations should be pointed out once they enable custom behaviors:
 
-| [Go Back](/README.md) |
-|-----------------------| 
+| [Go Back](/docs/Usage.md) |
+|---------------------------| 

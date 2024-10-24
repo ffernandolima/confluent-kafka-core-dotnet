@@ -56,5 +56,5 @@ By default, consumers are going to be registered as **Singleton**.
 
 Some configurations should be pointed out once they enable custom behaviors:
 
-| [Go Back](/README.md) |
-|-----------------------| 
+| [Go Back](/docs/Usage.md) |
+|---------------------------| 
