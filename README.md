@@ -6,6 +6,7 @@ Kafka Core empowers developers to effortlessly build robust .NET applications on
 
 [![build-and-tests Workflow Status](https://github.com/ffernandolima/confluent-kafka-core-dotnet/actions/workflows/build-and-tests.yml/badge.svg?branch=main)](https://github.com/ffernandolima/confluent-kafka-core-dotnet/actions/workflows/build-and-tests.yml/badge.svg?branch=main)
 [![build-and-publish Workflow Status](https://github.com/ffernandolima/confluent-kafka-core-dotnet/actions/workflows/build-and-publish.yml/badge.svg?branch=main)](https://github.com/ffernandolima/confluent-kafka-core-dotnet/actions/workflows/build-and-publish.yml/badge.svg?branch=main)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/cde90714d28e49c3b121434aa82f2399)](https://app.codacy.com?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 
 ## Documentation :open_book:
 
