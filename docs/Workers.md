@@ -91,17 +91,15 @@ For enabling Dead Letter Topic (DLT) functionality, the following configuration 
 ```C#
  IServiceCollection services = new ServiceCollection()
      .AddKafka(builder =>
-         builder.AddKafkaConsumerWorker<Null, string>((_, builder) => 
-             {
-                 // ...
-             }).AddKafkaRetryConsumerWorker((_, builder) =>
-                   // ...
-                   builder.WithWorkerConfiguration(builder =>
-                       builder.WithEnableDeadLetterTopic(true)) // Enables DLT
-                           .WithDeadLetterProducer(builder =>
-                               builder.WithProducerConfiguration(builder =>
-                                   builder.WithBootstrapServers("localhost:9092"))
-                                          .WithJsonCoreValueSerializer()))); // Set your desired deserializer.
+         builder.AddKafkaConsumerWorker<Null, string>((_, builder) => { /*...*/ })
+                .AddKafkaRetryConsumerWorker((_, builder) =>
+                    // ...
+                    builder.WithWorkerConfiguration(builder =>
+                        builder.WithEnableDeadLetterTopic(true)) // Enables DLT
+                            .WithDeadLetterProducer(builder =>
+                                builder.WithProducerConfiguration(builder =>
+                                    builder.WithBootstrapServers("localhost:9092"))
+                                           .WithJsonCoreValueSerializer()))); // Set your desired deserializer.
 ```
 Note: If DLT functionality is not required, this configuration can be omitted, similar to the retry topic configuration.
 
