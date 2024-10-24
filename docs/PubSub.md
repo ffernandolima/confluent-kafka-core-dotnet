@@ -23,7 +23,7 @@ Here's an example of how to use a Producer in your .NET application:
  await producer.ProduceAsync("test-topic", new Message<Null, string> { Value = "test" });
 ```
 
-By default, producers are going to be registered as ```Singleton```.
+By default, producers are going to be registered as **Singleton**.
 
 ### Producer Configurations :gear:
 
@@ -50,7 +50,7 @@ Here's an example of how to use a Consumer in your .NET application:
  var consumeResult = consumer.Consume();
 ```
 
-By default, consumers are going to be registered as ```Singleton```.
+By default, consumers are going to be registered as **Singleton**.
 
 ### Consumer Configurations :gear:
 
