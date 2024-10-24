@@ -109,7 +109,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{35B675E2-9
 		docs\Features.md = docs\Features.md
 		docs\Installation.md = docs\Installation.md
 		docs\Packages.md = docs\Packages.md
+		docs\PubSub.md = docs\PubSub.md
+		docs\Serialization.md = docs\Serialization.md
 		docs\Usage.md = docs\Usage.md
+		docs\Workers.md = docs\Workers.md
 	EndProjectSection
 EndProject
 Global
