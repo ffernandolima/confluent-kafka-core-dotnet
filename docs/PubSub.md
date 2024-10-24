@@ -1,7 +1,7 @@
 | [Main](/README.md) > [Usage](/docs/Usage.md) > Producers/Consumers |
 |--------------------------------------------------------------------|
 
-#### Producers :factory:
+### Producers :factory:
 
 Here's an example of how to use a Producer in your .NET application:
 
@@ -26,11 +26,11 @@ Here's an example of how to use a Producer in your .NET application:
 By default, producers are going to be registered as ```Singleton```.
 
 
-#### Producer configurations :gear:
+### Producer configurations :gear:
 
 Some configurations should be pointed out once they enable custom behaviors:
 
-#### Consumers :zap:
+### Consumers :zap:
 
 Here's an example of how to use a Consumer in your .NET application:
 
@@ -53,7 +53,7 @@ Here's an example of how to use a Consumer in your .NET application:
 
 By default, consumers are going to be registered as ```Singleton```.
 
-#### Consumer configurations :gear:
+### Consumer configurations :gear:
 
 Some configurations should be pointed out once they enable custom behaviors:
 
