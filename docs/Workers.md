@@ -41,7 +41,7 @@ Some configurations should be pointed out once they enable custom behaviors:
 
 ### Retry Worker :repeat:
 
-For cases where asynchronous retries through a retry topic are desired, the following configuration should be applied. This configuration introduces an internal worker responsible for orchestrating the async retry process. It sends faulted messages to the source topic for reprocessing, or, if Dead Letter Topic (DLT) functionality is enabled, routes the failed messages directly to the DLT after exhausting all retry attempts. If asynchronous retries are not required, this configuration should be omitted.
+In cases where asynchronous retries through a retry topic are necessary, the following configuration enables a separate BackgroundService that manages the retry process in the background. This internal worker orchestrates the retry flow by re-sending faulted messages to the source topic for reprocessing. If Dead Letter Topic (DLT) functionality is enabled, messages that have exhausted all retry attempts are automatically routed to the DLT. If asynchronous retries are not needed, this configuration can be omitted. 
 
 ```C#
 public sealed class ConsumeResultHandler : IConsumeResultHandler<Null, string>
