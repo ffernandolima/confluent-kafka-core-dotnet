@@ -3,7 +3,7 @@
 
 ### Producers :factory:
 
-Here's an example of how to use a Producer in your .NET application:
+Here's an example of how to use a Producer in your application:
 
 ```C#
  IServiceCollection services = new ServiceCollection()
@@ -31,7 +31,7 @@ Some configurations should be pointed out once they enable custom behaviors:
 
 ### Consumers :zap:
 
-Here's an example of how to use a Consumer in your .NET application:
+Here's an example of how to use a Consumer in your application:
 
 ```C#
  IServiceCollection services = new ServiceCollection()

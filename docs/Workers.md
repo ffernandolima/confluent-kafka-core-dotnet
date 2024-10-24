@@ -3,7 +3,7 @@
 
 ### Workers :cyclone:
 
-Here's an example of how to use a Worker in your .NET application:
+Here's an example of how to use a Worker in your application:
 
 ```C#
 public sealed class ConsumeResultHandler : IConsumeResultHandler<Null, string>

@@ -31,7 +31,7 @@
    ```
 
 6. **Confluent.Kafka.Core.Serialization.JsonCore**  
-   For integrating with the System.Text.Json library for message serialization and deserialization. This is useful for working with JSON data in Kafka.
+   For integrating with the System.Text.Json (JsonCore) library for message serialization and deserialization. This is useful for working with JSON data in Kafka.
    ```bash
    dotnet add package Confluent.Kafka.Core.Serialization.JsonCore
    ```
