@@ -31,7 +31,7 @@ public sealed class ConsumeResultHandler : IConsumeResultHandler<Null, string>
                     .WithConsumeResultHandler(ConsumeResultHandler.Create())));
 ```
 
-For enabling DLT functionality, the following configuration should be added to the setup. This configuration routes faulted messages directly to the Dead Letter Topic (DLT) for further inspection or handling:
+For enabling Dead Letter Topic (DLT) functionality, the following configuration should be added to the setup. This configuration routes faulted messages directly to the DLT for further inspection or handling:
 
 ```C#
 IServiceCollection services = new ServiceCollection()
@@ -86,7 +86,7 @@ In cases where asynchronous retries through a retry topic are necessary, the fol
 
 By default, retry workers are going to be registered as **Singleton**.
 
-For enabling DLT functionality, the following configuration should be added to the setup. This ensures that messages which have exhausted all retry attempts are routed to the Dead Letter Topic (DLT) for further inspection or handling:
+For enabling Dead Letter Topic (DLT) functionality, the following configuration should be added to the setup. This ensures that messages which have exhausted all retry attempts are routed to the DLT for further inspection or handling:
 
 ```C#
  IServiceCollection services = new ServiceCollection()
