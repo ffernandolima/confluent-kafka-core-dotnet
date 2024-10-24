@@ -12,6 +12,7 @@ Kafka Core empowers developers to effortlessly build robust .NET applications on
 
 - [Packages](/docs/Packages.md)
 - [Features](/docs/Features.md)
+- [Installation](/docs/Installation.md)
 - [Usage](/docs/Usage.md)
 
 ## Contributing :handshake:
