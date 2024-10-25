@@ -120,7 +120,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{FB4FEA16-9
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Idempotency", "Idempotency", "{0416079D-54F0-4044-BEBD-3D3BCD2DA6A7}"
 	ProjectSection(SolutionItems) = preProject
-		docs\Idempotency\Idempotency.md = docs\Idempotency\Idempotency.md
+		docs\Idempotency\RedisIdempotency.md = docs\Idempotency\RedisIdempotency.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "OpenTelemetry", "OpenTelemetry", "{CB999B46-7EAD-496D-A951-D2393E707F6D}"
@@ -130,7 +130,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "OpenTelemetry", "OpenTeleme
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Retry", "Retry", "{C9A6C508-44C3-4BEC-B7C3-884BACF8F406}"
 	ProjectSection(SolutionItems) = preProject
-		docs\Retry\BlockingRetry.md = docs\Retry\BlockingRetry.md
+		docs\Retry\PollyBlockingRetry.md = docs\Retry\PollyBlockingRetry.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Serialization", "Serialization", "{78283E4C-0429-4FA1-BBBE-BEDEE92EA0F9}"
