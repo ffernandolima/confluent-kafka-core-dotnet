@@ -3,12 +3,12 @@
 
 ### Usage :wrench:
 
-- [Producers/Consumers](/docs/PubSub.md)
-- [Background Workers](/docs/Workers.md)
-- [Serialization](/docs/Serialization.md)
-- [Blocking Retry](/docs/BlockingRetry.md)
-- [Idempotency](/docs/Idempotency.md)
-- [Open Telemetry](/docs/OpenTelemetry.md)
+- [Producers/Consumers](/docs/Core/PubSub.md)
+- [Background Workers](/docs/Core/Workers.md)
+- [Serialization](/docs/Serialization/Serialization.md)
+- [Blocking Retry](/docs/Retry/BlockingRetry.md)
+- [Idempotency](/docs/Idempotency/Idempotency.md)
+- [Open Telemetry](/docs/OpenTelemetry/OpenTelemetry.md)
 
 | [Go Back](/README.md) |
 |-----------------------| 
