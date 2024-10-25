@@ -106,16 +106,42 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Confluent.Kafka.Core.Shared
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{35B675E2-9122-407A-932E-C66F5A4534B6}"
 	ProjectSection(SolutionItems) = preProject
-		docs\BlockingRetry.md = docs\BlockingRetry.md
 		docs\Features.md = docs\Features.md
-		docs\Idempotency.md = docs\Idempotency.md
 		docs\Installation.md = docs\Installation.md
-		docs\OpenTelemetry.md = docs\OpenTelemetry.md
 		docs\Packages.md = docs\Packages.md
-		docs\PubSub.md = docs\PubSub.md
-		docs\Serialization.md = docs\Serialization.md
 		docs\Usage.md = docs\Usage.md
-		docs\Workers.md = docs\Workers.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{FB4FEA16-9163-4CA3-AEA6-EB4AD86A2065}"
+	ProjectSection(SolutionItems) = preProject
+		docs\Core\PubSub.md = docs\Core\PubSub.md
+		docs\Core\Workers.md = docs\Core\Workers.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Idempotency", "Idempotency", "{0416079D-54F0-4044-BEBD-3D3BCD2DA6A7}"
+	ProjectSection(SolutionItems) = preProject
+		docs\Idempotency\Idempotency.md = docs\Idempotency\Idempotency.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "OpenTelemetry", "OpenTelemetry", "{CB999B46-7EAD-496D-A951-D2393E707F6D}"
+	ProjectSection(SolutionItems) = preProject
+		docs\OpenTelemetry\OpenTelemetry.md = docs\OpenTelemetry\OpenTelemetry.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Retry", "Retry", "{C9A6C508-44C3-4BEC-B7C3-884BACF8F406}"
+	ProjectSection(SolutionItems) = preProject
+		docs\Retry\BlockingRetry.md = docs\Retry\BlockingRetry.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Serialization", "Serialization", "{78283E4C-0429-4FA1-BBBE-BEDEE92EA0F9}"
+	ProjectSection(SolutionItems) = preProject
+		docs\Serialization\JsonCore.md = docs\Serialization\JsonCore.md
+		docs\Serialization\JsonNET.md = docs\Serialization\JsonNET.md
+		docs\Serialization\ProtobufNet.md = docs\Serialization\ProtobufNet.md
+		docs\Serialization\SchemaRegistryAvro.md = docs\Serialization\SchemaRegistryAvro.md
+		docs\Serialization\SchemaRegistryJson.md = docs\Serialization\SchemaRegistryJson.md
+		docs\Serialization\SchemaRegistryProtobuf.md = docs\Serialization\SchemaRegistryProtobuf.md
+		docs\Serialization\Serialization.md = docs\Serialization\Serialization.md
 	EndProjectSection
 EndProject
 Global
@@ -207,6 +233,11 @@ Global
 		{47DC6568-0B2E-4AEB-9BE3-7E047DDA9961} = {283EBAB0-38CD-4CB0-9252-F1DA3A19C139}
 		{9577AAD1-F4EA-4651-9A61-406C56329080} = {26052A88-8DD7-49D7-A91A-EA596096C853}
 		{35B675E2-9122-407A-932E-C66F5A4534B6} = {47B996F0-E478-41D6-BF78-13B5B17644F0}
+		{FB4FEA16-9163-4CA3-AEA6-EB4AD86A2065} = {35B675E2-9122-407A-932E-C66F5A4534B6}
+		{0416079D-54F0-4044-BEBD-3D3BCD2DA6A7} = {35B675E2-9122-407A-932E-C66F5A4534B6}
+		{CB999B46-7EAD-496D-A951-D2393E707F6D} = {35B675E2-9122-407A-932E-C66F5A4534B6}
+		{C9A6C508-44C3-4BEC-B7C3-884BACF8F406} = {35B675E2-9122-407A-932E-C66F5A4534B6}
+		{78283E4C-0429-4FA1-BBBE-BEDEE92EA0F9} = {35B675E2-9122-407A-932E-C66F5A4534B6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8D4D3665-5C02-47B5-A7EA-A9BAF680BF28}
