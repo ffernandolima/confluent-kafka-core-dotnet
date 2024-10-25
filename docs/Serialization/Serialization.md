@@ -8,6 +8,7 @@
 - [Newtonsoft.Json (Json.NET)](/docs/Serialization/JsonNET.md)
 - [protobuf-net](/docs/Serialization/ProtobufNet.md)
 - [SchemaRegistry.Avro](/docs/Serialization/SchemaRegistryAvro.md)
+- [SchemaRegistry.Protobuf](/docs/Serialization/SchemaRegistryProtobuf.md)
 
 
 | [Go Back](/docs/Usage.md) |
