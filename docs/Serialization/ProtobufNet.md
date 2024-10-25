@@ -25,7 +25,7 @@ IServiceCollection services = new ServiceCollection()
             // ...
                 builder.WithProtobufNetValueSerializer(builder => 
                     builder.WithAutomaticRuntimeMap(true) // Maps object fields and properties automatically
-                          /*.With...*/))); // Additional options can be added here.
+                         /*.With...*/))); // Additional options can be added here
 ```
 
 And here's an example for configuring a Kafka consumer:
@@ -37,7 +37,7 @@ IServiceCollection services = new ServiceCollection()
             // ...
                 builder.WithProtobufNetValueDeserializer(builder => 
                     builder.WithAutomaticRuntimeMap(true) // Maps object fields and properties automatically
-                          /*.With...*/))); // Additional options can be added here.
+                         /*.With...*/))); // Additional options can be added here
 ```
 
 ### Configuration Methods

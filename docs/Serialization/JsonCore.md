@@ -27,7 +27,7 @@ IServiceCollection services = new ServiceCollection()
                     builder.WithReferenceHandler(ReferenceHandler.IgnoreCycles) // Handles circular references
                            .WithPropertyNamingPolicy(JsonNamingPolicy.CamelCase) // Uses camelCase naming
                            .WithDefaultIgnoreCondition(JsonIgnoreCondition.WhenWritingNull) // Ignores null properties
-                          /*.With...*/))); // Additional options can be added here.
+                          /*.With...*/))); // Additional options can be added here
 ```
 
 And here's an example for configuring a Kafka consumer:
@@ -41,7 +41,7 @@ IServiceCollection services = new ServiceCollection()
                     builder.WithReferenceHandler(ReferenceHandler.IgnoreCycles) // Handles circular references
                            .WithPropertyNamingPolicy(JsonNamingPolicy.CamelCase) // Uses camelCase naming
                            .WithDefaultIgnoreCondition(JsonIgnoreCondition.WhenWritingNull) // Ignores null properties
-                          /*.With...*/))); // Additional options can be added here.
+                          /*.With...*/))); // Additional options can be added here
 ```
 
 ### Configuration Methods

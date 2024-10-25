@@ -30,7 +30,7 @@ IServiceCollection services = new ServiceCollection()
                            .WithDateFormatHandling(DateFormatHandling.IsoDateFormat) // Uses ISO date format
                            .WithContractResolver(new CamelCasePropertyNamesContractResolver()) // Camel case property names
                            .WithConverters([new IsoDateTimeConverter { DateTimeStyles = DateTimeStyles.AssumeUniversal }]) // Custom date handling
-                         /*.With...*/));
+                         /*.With...*/)); // Additional settings can be added here
 ```
 
 And here's an example for configuring a Kafka consumer:
@@ -47,7 +47,7 @@ IServiceCollection services = new ServiceCollection()
                            .WithDateFormatHandling(DateFormatHandling.IsoDateFormat) // Uses ISO date format
                            .WithContractResolver(new CamelCasePropertyNamesContractResolver()) // Camel case property names
                            .WithConverters([new IsoDateTimeConverter { DateTimeStyles = DateTimeStyles.AssumeUniversal }]) // Custom date handling
-                         /*.With...*/));
+                         /*.With...*/)); // Additional settings can be added here
 ```
 
 ### Configuration Methods

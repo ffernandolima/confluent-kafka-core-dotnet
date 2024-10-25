@@ -7,6 +7,7 @@
 - [System.Text.Json (JsonCore)](/docs/Serialization/JsonCore.md)
 - [Newtonsoft.Json (Json.NET)](/docs/Serialization/JsonNET.md)
 - [protobuf-net](/docs/Serialization/ProtobufNet.md)
+- [SchemaRegistry.Avro](/docs/Serialization/SchemaRegistryAvro.md)
 
 
 | [Go Back](/docs/Usage.md) |
