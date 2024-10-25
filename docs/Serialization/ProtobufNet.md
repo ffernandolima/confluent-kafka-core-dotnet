@@ -3,7 +3,7 @@
 
 ### protobuf-net
 
-The protobuf-net integration allows you to leverage the protobuf-net library for serializing and deserializing messages in Kafka producers and consumers. This serializer offers flexibility and control options for serializing data using protocol buffers to suit your application's needs.
+The protobuf-net integration allows you to leverage the protobuf-net library for serializing and deserializing messages in Kafka producers and consumers. This serializer offers flexibility and control over options for serializing data using protocol buffers to suit your application's needs.
 
 ### Installation
 
