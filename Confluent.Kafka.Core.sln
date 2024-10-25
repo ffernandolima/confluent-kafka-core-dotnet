@@ -139,6 +139,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Serialization", "Serializat
 		docs\Serialization\JsonNET.md = docs\Serialization\JsonNET.md
 		docs\Serialization\ProtobufNet.md = docs\Serialization\ProtobufNet.md
 		docs\Serialization\SchemaRegistryAvro.md = docs\Serialization\SchemaRegistryAvro.md
+		docs\Serialization\SchemaRegistryJson.md = docs\Serialization\SchemaRegistryJson.md
 		docs\Serialization\SchemaRegistryProtobuf.md = docs\Serialization\SchemaRegistryProtobuf.md
 		docs\Serialization\Serialization.md = docs\Serialization\Serialization.md
 	EndProjectSection
