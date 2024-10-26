@@ -1,5 +1,5 @@
-| [Main](/README.md) > [Usage](/docs/Usage.md) > OpenTelemetry |
-|--------------------------------------------------------------|
+| [Main](/README.md) > [Usage](/docs/Usage.md) > Distributed Tracing and OpenTelemetry |
+|--------------------------------------------------------------------------------------|
 
 ### Distributed Tracing and OpenTelemetry :globe_with_meridians:
 
@@ -11,7 +11,7 @@
 
 ### Installation
 
-the Distributed Tracing implementation is part of the Kafka Core.
+The Distributed Tracing implementation is part of the Kafka Core.
 
 To install the package and start integrating with OpenTelemetry:
 ```bash
