@@ -53,7 +53,7 @@ In this configuration, a BackgroundService is automatically added and started wh
 
 ### Worker Configurations :gear:
 
-Some configurations should be pointed out once they enable custom behaviors:
+Some configurations should be pointed out as they enable custom behaviors:
 
 | Configuration                           | Description                                                                                                                                                      |
 |-----------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -124,7 +124,7 @@ Note: If DLT functionality is not required, this configuration can be omitted, s
 
 ### Retry Worker Configurations :gear:
 
-Some configurations should be pointed out once they enable custom behaviors:
+Some configurations should be pointed out as they enable custom behaviors:
 
 | Configuration                          | Description                                                                                                                                                      |
 |----------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------|

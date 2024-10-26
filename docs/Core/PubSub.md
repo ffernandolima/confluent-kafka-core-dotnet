@@ -27,7 +27,7 @@ By default, producers are going to be registered as **Singleton**.
 
 ### Producer Configurations :gear:
 
-Some configurations should be pointed out once they enable custom behaviors:
+Some configurations should be pointed out as they enable custom behaviors:
 
 | Configuration                           | Description                                                                                                          |
 |-----------------------------------------|----------------------------------------------------------------------------------------------------------------------|
@@ -65,7 +65,7 @@ By default, consumers are going to be registered as **Singleton**.
 
 ### Consumer Configurations :gear:
 
-Some configurations should be pointed out once they enable custom behaviors:
+Some configurations should be pointed out as they enable custom behaviors:
 
 | Configuration                           | Description                                                                                                           |
 |-----------------------------------------|-----------------------------------------------------------------------------------------------------------------------|
