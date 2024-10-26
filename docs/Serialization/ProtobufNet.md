@@ -19,36 +19,46 @@ There are multiple ways to configure the protobuf-net serializer for your Kafka 
 Here's an example for configuring a Kafka producer:
 
 ```C#
-IServiceCollection services = new ServiceCollection()
-    .AddKafka(builder =>
-        builder.AddKafkaProducer<Null, Message>((_, builder) =>
-            // ...
-                builder.WithProtobufNetValueSerializer(builder => 
-                    builder.WithAutomaticRuntimeMap(true) // Maps object fields and properties automatically
-                         /*.With...*/))); // Additional options can be added here
+// Web
+var builder = WebApplication.CreateBuilder(args);
+
+// Non-Web
+var builder = Host.CreateApplicationBuilder(args);
+
+builder.Services.AddKafka(builder =>
+    builder.AddKafkaProducer<Null, Message>((_, builder) =>
+        // ...
+            builder.WithProtobufNetValueSerializer(builder => 
+                builder.WithAutomaticRuntimeMap(true) // Maps object fields and properties automatically
+                     /*.With...*/))); // Additional options can be added here
 ```
 
 And here's an example for configuring a Kafka consumer:
 
 ```C#
-IServiceCollection services = new ServiceCollection()
-    .AddKafka(builder =>
-        builder.AddKafkaConsumer<Null, Message>((_, builder) =>
-            // ...
-                builder.WithProtobufNetValueDeserializer(builder => 
-                    builder.WithAutomaticRuntimeMap(true) // Maps object fields and properties automatically
-                         /*.With...*/))); // Additional options can be added here
+// Web
+var builder = WebApplication.CreateBuilder(args);
+
+// Non-Web
+var builder = Host.CreateApplicationBuilder(args);
+
+builder.Services.AddKafka(builder =>
+    builder.AddKafkaConsumer<Null, Message>((_, builder) =>
+        // ...
+            builder.WithProtobufNetValueDeserializer(builder => 
+                builder.WithAutomaticRuntimeMap(true) // Maps object fields and properties automatically
+                     /*.With...*/))); // Additional options can be added here
 ```
 
 ### Configuration Methods
 
-- WithProtobufNetSerializer: Sets the serializer for both the Key and Value.
-- WithProtobufNetKeySerializer: Sets the serializer for the Key only.
-- WithProtobufNetValueSerializer: Sets the serializer for the Value only.
+- `WithProtobufNetSerializer`: Sets the serializer for both the Key and Value.
+- `WithProtobufNetKeySerializer`: Sets the serializer for the Key only.
+- `WithProtobufNetValueSerializer`: Sets the serializer for the Value only.
 
-- WithProtobufNetDeserializer: Sets the deserializer for both the Key and Value.
-- WithProtobufNetKeyDeserializer: Sets the deserializer for the Key only.
-- WithProtobufNetValueDeserializer: Sets the deserializer for the Value only.
+- `WithProtobufNetDeserializer`: Sets the deserializer for both the Key and Value.
+- `WithProtobufNetKeyDeserializer`: Sets the deserializer for the Key only.
+- `WithProtobufNetValueDeserializer`: Sets the deserializer for the Value only.
 
 | [Go Back](/docs/Serialization/Serialization.md) |
 |-------------------------------------------------| 

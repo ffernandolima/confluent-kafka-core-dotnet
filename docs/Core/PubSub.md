@@ -6,13 +6,18 @@
 Here's an example of how to use a Producer in your application:
 
 ```C#
- IServiceCollection services = new ServiceCollection()
-     .AddKafka(builder =>
-         builder.AddKafkaProducer<Null, string>((_, builder) =>
-             builder.WithProducerConfiguration(builder =>
-                 builder.WithBootstrapServers("localhost:9092"))));
+// Web
+var builder = WebApplication.CreateBuilder(args);
 
- using var serviceProvider = services.BuildServiceProvider();
+// Non-Web
+var builder = Host.CreateApplicationBuilder(args);
+
+builder.Services.AddKafka(builder =>
+    builder.AddKafkaProducer<Null, string>((_, builder) =>
+        builder.WithProducerConfiguration(builder =>
+            builder.WithBootstrapServers("localhost:9092"))));
+
+ using var serviceProvider = builder.Services.BuildServiceProvider();
 
  var producer = serviceProvider.GetRequiredService<IKafkaProducer<Null, string>>();
 
@@ -27,7 +32,7 @@ By default, producers are going to be registered as **Singleton**.
 
 ### Producer Configurations :gear:
 
-Some configurations should be pointed out once they enable custom behaviors:
+Some configurations should be pointed out as they enable custom behaviors:
 
 | Configuration                           | Description                                                                                                          |
 |-----------------------------------------|----------------------------------------------------------------------------------------------------------------------|
@@ -45,16 +50,21 @@ Some configurations should be pointed out once they enable custom behaviors:
 Here's an example of how to use a Consumer in your application:
 
 ```C#
- IServiceCollection services = new ServiceCollection()
-     .AddKafka(builder =>
-         builder.AddKafkaConsumer<Null, string>((_, builder) =>
-            builder.WithConsumerConfiguration(builder =>
-                builder.WithBootstrapServers("localhost:9092")
-                       .WithGroupId("test-consumer-group")
-                       .WithAutoOffsetReset(AutoOffsetReset.Earliest)
-                       .WithTopicSubscriptions(["test-topic"])));
+// Web
+var builder = WebApplication.CreateBuilder(args);
 
- using var serviceProvider = services.BuildServiceProvider();
+// Non-Web
+var builder = Host.CreateApplicationBuilder(args);
+
+builder.Services.AddKafka(builder =>
+    builder.AddKafkaConsumer<Null, string>((_, builder) =>
+       builder.WithConsumerConfiguration(builder =>
+           builder.WithBootstrapServers("localhost:9092")
+                  .WithGroupId("test-consumer-group")
+                  .WithAutoOffsetReset(AutoOffsetReset.Earliest)
+                  .WithTopicSubscriptions(["test-topic"])));
+
+ using var serviceProvider = builder.Services.BuildServiceProvider();
 
  var consumer = serviceProvider.GetRequiredService<IKafkaConsumer<Null, string>>();
 
@@ -65,7 +75,7 @@ By default, consumers are going to be registered as **Singleton**.
 
 ### Consumer Configurations :gear:
 
-Some configurations should be pointed out once they enable custom behaviors:
+Some configurations should be pointed out as they enable custom behaviors:
 
 | Configuration                           | Description                                                                                                           |
 |-----------------------------------------|-----------------------------------------------------------------------------------------------------------------------|

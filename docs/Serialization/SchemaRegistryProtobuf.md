@@ -19,44 +19,54 @@ There are multiple ways to configure the SchemaRegistry.Protobuf serializer for 
 Here's an example for configuring a Kafka producer:
 
 ```C#
-IServiceCollection services = new ServiceCollection()
-    .AddKafka(builder =>
-        builder.AddKafkaProducer<Null, Message>((_, builder) =>
-            // ...
-                builder.WithSchemaRegistryProtobufValueSerializer(builder =>
-                    builder.WithSchemaRegistryClient(builder =>
-                        builder.WithSchemaRegistryConfiguration(builder =>
-                            builder.WithUrl("http://localhost:8081"))) // Configures Schema Registry client
-                           .WithSerializerConfiguration(builder =>
-                               builder.WithAutoRegisterSchemas(true)) // Automatically registers new schemas
-                         /*.With...*/))); // Additional configs can be added here
+// Web
+var builder = WebApplication.CreateBuilder(args);
+
+// Non-Web
+var builder = Host.CreateApplicationBuilder(args);
+
+builder.Services.AddKafka(builder =>
+    builder.AddKafkaProducer<Null, Message>((_, builder) =>
+        // ...
+            builder.WithSchemaRegistryProtobufValueSerializer(builder =>
+                builder.WithSchemaRegistryClient(builder =>
+                    builder.WithSchemaRegistryConfiguration(builder =>
+                        builder.WithUrl("http://localhost:8081"))) // Configures Schema Registry client
+                       .WithSerializerConfiguration(builder =>
+                           builder.WithAutoRegisterSchemas(true)) // Automatically registers new schemas
+                     /*.With...*/))); // Additional configs can be added here
 ```
 
 And here's an example for configuring a Kafka consumer:
 
 ```C#
-IServiceCollection services = new ServiceCollection()
-    .AddKafka(builder =>
-        builder.AddKafkaConsumer<Null, Message>((_, builder) =>
-            // ...
-                builder.WithSchemaRegistryProtobufValueDeserializer(builder =>
-                    builder.WithSchemaRegistryClient(builder =>
-                        builder.WithSchemaRegistryConfiguration(builder =>
-                            builder.WithUrl("http://localhost:8081"))) // Configures Schema Registry client
-                           .WithDeserializerConfiguration(builder =>
-                               { /*...*/ }) // Additional deserializer configs can be added here                               
-                          /*.With...*/))); // Additional configs can be added here
+// Web
+var builder = WebApplication.CreateBuilder(args);
+
+// Non-Web
+var builder = Host.CreateApplicationBuilder(args);
+
+builder.Services.AddKafka(builder =>
+    builder.AddKafkaConsumer<Null, Message>((_, builder) =>
+        // ...
+            builder.WithSchemaRegistryProtobufValueDeserializer(builder =>
+                builder.WithSchemaRegistryClient(builder =>
+                    builder.WithSchemaRegistryConfiguration(builder =>
+                        builder.WithUrl("http://localhost:8081"))) // Configures Schema Registry client
+                       .WithDeserializerConfiguration(builder =>
+                           { /*...*/ }) // Additional deserializer configs can be added here                               
+                      /*.With...*/))); // Additional configs can be added here
 ```
 
 ### Configuration Methods
 
-- WithSchemaRegistryProtobufSerializer: Sets the serializer for both the Key and Value.
-- WithSchemaRegistryProtobufKeySerializer: Sets the serializer for the Key only.
-- WithSchemaRegistryProtobufValueSerializer: Sets the serializer for the Value only.
+- `WithSchemaRegistryProtobufSerializer`: Sets the serializer for both the Key and Value.
+- `WithSchemaRegistryProtobufKeySerializer`: Sets the serializer for the Key only.
+- `WithSchemaRegistryProtobufValueSerializer`: Sets the serializer for the Value only.
 
-- WithSchemaRegistryProtobufDeserializer: Sets the deserializer for both the Key and Value.
-- WithSchemaRegistryProtobufKeyDeserializer: Sets the deserializer for the Key only.
-- WithSchemaRegistryProtobufValueDeserializer: Sets the deserializer for the Value only.
+- `WithSchemaRegistryProtobufDeserializer`: Sets the deserializer for both the Key and Value.
+- `WithSchemaRegistryProtobufKeyDeserializer`: Sets the deserializer for the Key only.
+- `WithSchemaRegistryProtobufValueDeserializer`: Sets the deserializer for the Value only.
 
 | [Go Back](/docs/Serialization/Serialization.md) |
 |-------------------------------------------------|

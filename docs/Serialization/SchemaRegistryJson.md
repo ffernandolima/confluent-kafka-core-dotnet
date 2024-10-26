@@ -20,44 +20,54 @@ There are multiple ways to configure the SchemaRegistry.Json serializer for your
 Here's an example for configuring a Kafka producer:
 
 ```C#
-IServiceCollection services = new ServiceCollection()
-    .AddKafka(builder =>
-        builder.AddKafkaProducer<Null, Message>((_, builder) =>
-            // ...
-                builder.WithSchemaRegistryJsonValueSerializer(builder =>
-                    builder.WithSchemaRegistryClient(builder =>
-                        builder.WithSchemaRegistryConfiguration(builder =>
-                            builder.WithUrl("http://localhost:8081"))) // Configures Schema Registry client
-                           .WithSerializerConfiguration(builder =>
-                               builder.WithAutoRegisterSchemas(true)) // Automatically registers new schemas
-                         /*.With...*/))); // Additional configs can be added here
+// Web
+var builder = WebApplication.CreateBuilder(args);
+
+// Non-Web
+var builder = Host.CreateApplicationBuilder(args);
+
+builder.Services.AddKafka(builder =>
+    builder.AddKafkaProducer<Null, Message>((_, builder) =>
+        // ...
+            builder.WithSchemaRegistryJsonValueSerializer(builder =>
+                builder.WithSchemaRegistryClient(builder =>
+                    builder.WithSchemaRegistryConfiguration(builder =>
+                        builder.WithUrl("http://localhost:8081"))) // Configures Schema Registry client
+                       .WithSerializerConfiguration(builder =>
+                           builder.WithAutoRegisterSchemas(true)) // Automatically registers new schemas
+                     /*.With...*/))); // Additional configs can be added here
 ```
 
 And here's an example for configuring a Kafka consumer:
 
 ```C#
-IServiceCollection services = new ServiceCollection()
-    .AddKafka(builder =>
-        builder.AddKafkaConsumer<Null, Message>((_, builder) =>
-            // ...
-                builder.WithSchemaRegistryJsonValueDeserializer(builder =>
-                    builder.WithSchemaRegistryClient(builder =>
-                        builder.WithSchemaRegistryConfiguration(builder =>
-                            builder.WithUrl("http://localhost:8081"))) // Configures Schema Registry client
-                           .WithDeserializerConfiguration(builder =>
-                               { /*...*/ }) // Additional deserializer configs can be added here                               
-                          /*.With...*/))); // Additional configs can be added here
+// Web
+var builder = WebApplication.CreateBuilder(args);
+
+// Non-Web
+var builder = Host.CreateApplicationBuilder(args);
+
+builder.Services.AddKafka(builder =>
+    builder.AddKafkaConsumer<Null, Message>((_, builder) =>
+        // ...
+            builder.WithSchemaRegistryJsonValueDeserializer(builder =>
+                builder.WithSchemaRegistryClient(builder =>
+                    builder.WithSchemaRegistryConfiguration(builder =>
+                        builder.WithUrl("http://localhost:8081"))) // Configures Schema Registry client
+                       .WithDeserializerConfiguration(builder =>
+                           { /*...*/ }) // Additional deserializer configs can be added here                               
+                      /*.With...*/))); // Additional configs can be added here
 ```
 
 ### Configuration Methods
 
-- WithSchemaRegistryJsonSerializer: Sets the serializer for both the Key and Value.
-- WithSchemaRegistryJsonKeySerializer: Sets the serializer for the Key only.
-- WithSchemaRegistryJsonValueSerializer: Sets the serializer for the Value only.
+- `WithSchemaRegistryJsonSerializer`: Sets the serializer for both the Key and Value.
+- `WithSchemaRegistryJsonKeySerializer`: Sets the serializer for the Key only.
+- `WithSchemaRegistryJsonValueSerializer`: Sets the serializer for the Value only.
 
-- WithSchemaRegistryJsonDeserializer: Sets the deserializer for both the Key and Value.
-- WithSchemaRegistryJsonKeyDeserializer: Sets the deserializer for the Key only.
-- WithSchemaRegistryJsonValueDeserializer: Sets the deserializer for the Value only.
+- `WithSchemaRegistryJsonDeserializer`: Sets the deserializer for both the Key and Value.
+- `WithSchemaRegistryJsonKeyDeserializer`: Sets the deserializer for the Key only.
+- `WithSchemaRegistryJsonValueDeserializer`: Sets the deserializer for the Value only.
 
 | [Go Back](/docs/Serialization/Serialization.md) |
 |-------------------------------------------------|

@@ -8,7 +8,7 @@
 - [Serialization](/docs/Serialization/Serialization.md)
 - [Blocking Retry](/docs/Retry/PollyBlockingRetry.md)
 - [Idempotency](/docs/Idempotency/RedisIdempotency.md)
-- [OpenTelemetry](/docs/OpenTelemetry/OpenTelemetry.md)
+- [Distributed Tracing and OpenTelemetry](/docs/OpenTelemetry/OpenTelemetry.md)
 
 | [Go Back](/README.md) |
 |-----------------------| 
