@@ -39,6 +39,14 @@ IServiceCollection services = new ServiceCollection()
 
 While it's not required to add custom tags, the options provided can be used to enhance tracings with additional information.
 
+To integrate with OpenTelemetry:
+
+```C#
+IServiceCollection services = new ServiceCollection()
+    .AddOpenTelemetry()
+    .WithTracing(builder => builder.AddKafkaCoreInstrumentation()); // Adds Confluent.Kafka.Core source 
+```
+
 ### Semantic Conventions
 
 The library automatically includes all the tags defined by the OpenTelemetry semantic conventions for messaging. For more information, refer to the following links:
