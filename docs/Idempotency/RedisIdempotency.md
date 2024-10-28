@@ -35,6 +35,23 @@ IServiceCollection services = new ServiceCollection()
                            /*.With...*/)))); // Additional options can be added here
 ```
 
+To add the Redis idempotency handler to a Kafka retry worker:
+
+```C#
+IServiceCollection services = new ServiceCollection()
+    .AddKafka(builder =>
+        builder.AddKafkaRetryConsumerWorker((_, builder) =>
+            builder.WithRedisIdempotencyHandler(builder =>
+                builder.WithRedisClient(builder =>
+                    builder.WithEndPoints([EndPointCollection.TryParse("localhost:6379")])
+                           .WithAbortOnConnectFail(false)
+                           /*.With...*/) // Additional options can be added here
+                .WithHandlerOptions(builder =>
+                    builder.WithGroupId("test-group")
+                           .WithConsumerName("test-consumer")
+                           .WithMessageIdHandler(message => message.Id)
+                           /*.With...*/)))); // Additional options can be added here
+```
 
 ### Recommended Interface for Message Value
 
