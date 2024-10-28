@@ -12,7 +12,7 @@ To install the package and start integrating with System.Text.Json:
 dotnet add package Confluent.Kafka.Core.Serialization.JsonCore
 ```
 
-### Usage and Options Configuration :bar_chart:
+### Usage and Options Configuration :jigsaw:
 
 There are multiple ways to configure the JsonCore serializer for your Kafka producer and consumer, allowing you to set the serializer for either the Key, the Value, or both, depending on your use case. The System.Text.Json library offers many options for configuring how JSON is handled in your messages. These options can be passed through the JsonCore serializer, providing fine-grained control over serialization and deserialization behavior. The options configuration is optional, and if not provided, default options will be assumed internally.
 

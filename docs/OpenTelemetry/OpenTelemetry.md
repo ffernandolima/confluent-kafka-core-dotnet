@@ -18,7 +18,7 @@ To install the package and start integrating with OpenTelemetry:
 dotnet add package Confluent.Kafka.Core.OpenTelemetry
 ```
 
-### Usage and Custom Enrichment :bar_chart:
+### Usage and Custom Enrichment :jigsaw:
 
 To enable distributed tracing, call the `AddKafkaDiagnostics` method while registering Kafka Core services into the Microsoft built-in container. Below are some examples:
 

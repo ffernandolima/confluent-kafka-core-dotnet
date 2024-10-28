@@ -12,7 +12,7 @@ To install the package and start integrating with protobuf-net:
 dotnet add package Confluent.Kafka.Core.Serialization.ProtobufNet
 ```
 
-### Usage and Options Configuration :bar_chart:
+### Usage and Options Configuration :jigsaw:
 
 There are multiple ways to configure the protobuf-net serializer for your Kafka producer and consumer, allowing you to set the serializer for either the Key, the Value, or both, depending on your use case. The protobuf-net library offers some options for configuring how your messages are serialized using protocol buffers. These options can be passed through the protobuf-net serializer, providing fine-grained control over serialization and deserialization behavior. The options configuration is optional, and if not provided, default options will be assumed internally.
 

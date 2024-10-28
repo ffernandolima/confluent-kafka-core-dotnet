@@ -14,7 +14,7 @@ To install the package and start integrating with Redis:
 dotnet add package Confluent.Kafka.Core.Idempotency.Redis
 ```
 
-### Usage and Configuration :bar_chart:
+### Usage and Configuration :jigsaw:
 To configure the idempotency handler, use the `WithRedisIdempotencyHandler` method. This handler can be added to both worker and retry worker for idempotent processing.
 
 To add the Redis idempotency handler to a Kafka worker:
@@ -65,7 +65,7 @@ builder.Services.AddKafka(builder =>
                        /*.With...*/)))); // Additional options can be added here
 ```
 
-### Recommended Interface for Message Value :envelope_with_arrow:
+### Recommended Interface for Message Value :e-mail:
 
 It is strongly recommended to implement the `IMessageValue` interface from the namespace `Confluent.Kafka.Core.Models` within the message value to create a standard and simplify message Id discovery. This interface includes the `Id` property as a `Guid` and can be used with the `MessageIdHandler`.
 
