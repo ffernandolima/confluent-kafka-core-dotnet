@@ -1,7 +1,7 @@
 | [Main](/README.md) > [Usage](/docs/Usage.md) > [Serialization](/docs/Serialization/Serialization.md) > SchemaRegistry.Protobuf |
 |--------------------------------------------------------------------------------------------------------------------------------|
 
-### SchemaRegistry.Protobuf
+### SchemaRegistry.Protobuf :outbox_tray:
 
 The SchemaRegistry.Protobuf integration allows you to leverage the Confluent.SchemaRegistry.Serdes.Protobuf library for serializing and deserializing messages in Kafka producers and consumers. This serializer ensures schema compatibility and version management, providing a flexible and efficient way to handle Protobuf-encoded messages while working with the Confluent Schema Registry.
 

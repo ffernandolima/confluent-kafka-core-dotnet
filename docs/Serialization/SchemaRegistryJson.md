@@ -1,7 +1,7 @@
 | [Main](/README.md) > [Usage](/docs/Usage.md) > [Serialization](/docs/Serialization/Serialization.md) > SchemaRegistry.Json |
 |----------------------------------------------------------------------------------------------------------------------------|
 
-### SchemaRegistry.Json
+### SchemaRegistry.Json :outbox_tray:
 
 The SchemaRegistry.Json integration allows you to leverage the Confluent.SchemaRegistry.Serdes.Json library for serializing and deserializing messages in Kafka producers and consumers. This serializer ensures schema compatibility and version management, providing a flexible and efficient way to handle JSON-encoded messages while working with the Confluent Schema Registry.
 

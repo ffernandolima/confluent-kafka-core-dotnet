@@ -1,7 +1,7 @@
 | [Main](/README.md) > [Usage](/docs/Usage.md) > [Serialization](/docs/Serialization/Serialization.md) > SchemaRegistry.Avro |
 |----------------------------------------------------------------------------------------------------------------------------|
 
-### SchemaRegistry.Avro
+### SchemaRegistry.Avro :outbox_tray:
 
 The SchemaRegistry.Avro integration allows you to leverage the Confluent.SchemaRegistry.Serdes.Avro library for serializing and deserializing messages in Kafka producers and consumers. This serializer ensures schema compatibility and version management, providing a flexible and efficient way to handle Avro-encoded messages.
 

@@ -1,7 +1,7 @@
 | [Main](/README.md) > [Usage](/docs/Usage.md) > [Serialization](/docs/Serialization/Serialization.md) > protobuf-net |
 |---------------------------------------------------------------------------------------------------------------------|
 
-### protobuf-net
+### protobuf-net :outbox_tray:
 
 The protobuf-net integration allows you to leverage the protobuf-net library for serializing and deserializing messages in Kafka producers and consumers. This serializer offers flexibility and control over options for serializing data using protocol buffers to suit your application's needs.
 

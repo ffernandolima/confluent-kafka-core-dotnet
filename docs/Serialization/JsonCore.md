@@ -1,7 +1,7 @@
 | [Main](/README.md) > [Usage](/docs/Usage.md) > [Serialization](/docs/Serialization/Serialization.md) > JsonCore |
 |-----------------------------------------------------------------------------------------------------------------|
 
-### System.Text.Json (JsonCore)
+### System.Text.Json (JsonCore) :outbox_tray:
 
 The JsonCore integration allows you to leverage the System.Text.Json library for serializing and deserializing messages in Kafka producers and consumers. This serializer offers flexibility and control over JSON serialization options to suit your application's needs.
 
