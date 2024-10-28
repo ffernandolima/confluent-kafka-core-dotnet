@@ -20,7 +20,7 @@ In the examples below, the Add... placeholder can be replaced with:
 
 - `AddKafkaProducer` for Producers.
 - `AddKafkaConsumer` for Consumers.
-- `AddKafkaConsumerWorker` for Worker Consumers.
+- `AddKafkaConsumerWorker` for Consumer Workers.
 - `AddKafkaRetryConsumerWorker` for Retry Workers.
 
 These examples illustrate how to configure immediate retries, fixed delays, exponential backoff, and a few other variations that might be useful.
