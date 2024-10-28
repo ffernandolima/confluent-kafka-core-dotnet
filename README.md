@@ -1,11 +1,11 @@
-# Kafka Core :rocket: · ![NuGet Version](https://img.shields.io/nuget/v/Confluent.Kafka.Core)
+# Kafka Core :rocket: · [![NuGet Version](https://img.shields.io/nuget/v/Confluent.Kafka.Core)](https://www.nuget.org/packages/Confluent.Kafka.Core)
 
 Kafka Core empowers developers to effortlessly build robust .NET applications on top of Confluent Kafka, focusing on simplicity, maintainability, and extensibility. With intuitive abstractions and builders, it introduces powerful features that enhance functionality and extend the official library's capabilities.
 
 ## Status :green_circle::yellow_circle::red_circle:
 
-[![build-and-tests Workflow Status](https://github.com/ffernandolima/confluent-kafka-core-dotnet/actions/workflows/build-and-tests.yml/badge.svg?branch=main)](https://github.com/ffernandolima/confluent-kafka-core-dotnet/actions/workflows/build-and-tests.yml/badge.svg?branch=main)
-[![build-and-publish Workflow Status](https://github.com/ffernandolima/confluent-kafka-core-dotnet/actions/workflows/build-and-publish.yml/badge.svg?branch=main)](https://github.com/ffernandolima/confluent-kafka-core-dotnet/actions/workflows/build-and-publish.yml/badge.svg?branch=main)
+[![build-and-tests Workflow Status](https://github.com/ffernandolima/confluent-kafka-core-dotnet/actions/workflows/build-and-tests.yml/badge.svg?branch=main)](https://github.com/ffernandolima/confluent-kafka-core-dotnet/actions/workflows/build-and-tests.yml?branch=main)
+[![build-and-publish Workflow Status](https://github.com/ffernandolima/confluent-kafka-core-dotnet/actions/workflows/build-and-publish.yml/badge.svg?branch=main)](https://github.com/ffernandolima/confluent-kafka-core-dotnet/actions/workflows/build-and-publish.yml?branch=main)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/cde90714d28e49c3b121434aa82f2399)](https://app.codacy.com?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 
 ## Documentation :open_book:
