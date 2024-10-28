@@ -49,7 +49,7 @@ IServiceCollection services = new ServiceCollection()
                 .WithHandlerOptions(builder =>
                     builder.WithGroupId("test-group")
                            .WithConsumerName("test-consumer")
-                           .WithMessageIdHandler(message => message.Id)
+                           .WithMessageIdHandler(message => message.Id.ToString())
                            /*.With...*/)))); // Additional options can be added here
 ```
 
