@@ -41,10 +41,11 @@ var builder = WebApplication.CreateBuilder(args);
 // Non-Web
 var builder = Host.CreateApplicationBuilder(args);
 
-builder.Services.AddKafka(builder => builder.AddKafkaDiagnostics(builder =>
-    builder.WithConsumptionEnrichment((activity, context) => 
-        activity.SetTag("custom-consumption-tag", "consumption-value"))
-         /*.With...*/)); // Additional options can be added here
+builder.Services.AddKafka(builder => 
+    builder.AddKafkaDiagnostics(builder =>
+        builder.WithConsumptionEnrichment((activity, context) => 
+            activity.SetTag("custom-consumption-tag", "consumption-value"))
+             /*.With...*/)); // Additional options can be added here
 ```
 
 While it's not required to add custom tags, the options provided can be used to enhance tracings with additional information.

@@ -4,16 +4,16 @@
 ### Installation :hammer_and_wrench:
 
 1. **Confluent.Kafka.Core**  
-   For building Kafka producers and consumers. This package includes the core functionalities necessary to interact with Kafka.
+   For building Kafka producers, consumers and workers. This package includes the core functionalities necessary to interact with Kafka.
    ```bash
    dotnet add package Confluent.Kafka.Core
    ```
 
 2. **Confluent.Kafka.Core.Abstractions**  
-   **Note:** This package does not need to be installed directly, as it will be included with the other packages. It provides the interfaces and abstractions used throughout the Kafka client libraries.
+   **Note:** This package does not need to be installed directly, as it will be included with the other packages. It provides the interfaces and abstractions used throughout the Kafka Core library.
 
 3. **Confluent.Kafka.Core.Idempotency.Redis**  
-   For implementing idempotency using Redis as the backing store. This helps ensure that messages are processed only once.
+   For implementing idempotency using Redis as the backing store. This helps ensure that messages are processed only once (Idempotent Consumer).
    ```bash
    dotnet add package Confluent.Kafka.Core.Idempotency.Redis
    ```

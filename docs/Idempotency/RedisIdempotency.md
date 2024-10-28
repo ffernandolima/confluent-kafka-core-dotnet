@@ -73,7 +73,7 @@ It is strongly recommended to implement the `IMessageValue` interface from the n
 
 Some configurations should be pointed out as they enable custom behaviors:
 
-| Property             | Description                                                                                                                                                                                   |
+| Configuration        | Description                                                                                                                                                                                   |
 |----------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `GroupId`            | The identifier for the consumer group to which this handler belongs.                                                                                                                          |
 | `ConsumerName`       | The name of the consumer to which this handler belongs.                                                                                                                                       |
