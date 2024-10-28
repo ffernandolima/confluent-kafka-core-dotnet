@@ -20,37 +20,49 @@ To configure the idempotency handler, use the `WithRedisIdempotencyHandler` meth
 To add the Redis idempotency handler to a Kafka worker:
 
 ```C#
-IServiceCollection services = new ServiceCollection()
-    .AddKafka(builder =>
-        builder.AddKafkaConsumerWorker<Null, Message>((_, builder) =>
-            builder.WithRedisIdempotencyHandler(builder =>
-                builder.WithRedisClient(builder =>
-                    builder.WithEndPoints([EndPointCollection.TryParse("localhost:6379")])
-                           .WithAbortOnConnectFail(false)
-                           /*.With...*/) // Additional options can be added here
-                .WithHandlerOptions(builder =>
-                    builder.WithGroupId("test-group")
-                           .WithConsumerName("test-consumer")
-                           .WithMessageIdHandler(message => message.Id)
-                           /*.With...*/)))); // Additional options can be added here
+// Web
+var builder = WebApplication.CreateBuilder(args);
+
+// Non-Web
+var builder = Host.CreateApplicationBuilder(args);
+
+builder.Services.AddKafka(builder =>
+    builder.AddKafkaConsumerWorker<Null, Message>((_, builder) =>
+        // ...
+        builder.WithRedisIdempotencyHandler(builder =>
+            builder.WithRedisClient(builder =>
+                builder.WithEndPoints([EndPointCollection.TryParse("localhost:6379")])
+                       .WithAbortOnConnectFail(false)
+                       /*.With...*/) // Additional options can be added here
+            .WithHandlerOptions(builder =>
+                builder.WithGroupId("test-group")
+                       .WithConsumerName("test-consumer")
+                       .WithMessageIdHandler(message => message.Id)
+                       /*.With...*/)))); // Additional options can be added here
 ```
 
 To add the Redis idempotency handler to a Kafka retry worker:
 
 ```C#
-IServiceCollection services = new ServiceCollection()
-    .AddKafka(builder =>
-        builder.AddKafkaRetryConsumerWorker((_, builder) =>
-            builder.WithRedisIdempotencyHandler(builder =>
-                builder.WithRedisClient(builder =>
-                    builder.WithEndPoints([EndPointCollection.TryParse("localhost:6379")])
-                           .WithAbortOnConnectFail(false)
-                           /*.With...*/) // Additional options can be added here
-                .WithHandlerOptions(builder =>
-                    builder.WithGroupId("test-group")
-                           .WithConsumerName("test-consumer")
-                           .WithMessageIdHandler(message => message.Id.ToString())
-                           /*.With...*/)))); // Additional options can be added here
+// Web
+var builder = WebApplication.CreateBuilder(args);
+
+// Non-Web
+var builder = Host.CreateApplicationBuilder(args);
+
+builder.Services.AddKafka(builder =>
+    builder.AddKafkaRetryConsumerWorker((_, builder) =>
+        // ...
+        builder.WithRedisIdempotencyHandler(builder =>
+            builder.WithRedisClient(builder =>
+                builder.WithEndPoints([EndPointCollection.TryParse("localhost:6379")])
+                       .WithAbortOnConnectFail(false)
+                       /*.With...*/) // Additional options can be added here
+            .WithHandlerOptions(builder =>
+                builder.WithGroupId("test-group")
+                       .WithConsumerName("test-consumer")
+                       .WithMessageIdHandler(message => message.Id.ToString())
+                       /*.With...*/)))); // Additional options can be added here
 ```
 
 ### Recommended Interface for Message Value
@@ -61,14 +73,14 @@ It is strongly recommended to implement the `IMessageValue` interface from the n
 
 Some configurations should be pointed out as they enable custom behaviors:
 
-| Property             | Description                                                                                                                                                                                 |
-|----------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `GroupId`            | The identifier for the consumer group to which this handler belongs.                                                                                                                        |
-| `ConsumerName`       | The name of the consumer to which this handler belongs.                                                                                                                                     |
-| `ExpirationInterval` | The duration after which processed messages are considered expired and eligible for removal. Default is 7 days.                                                                             |
-| `ExpirationDelay`    | The delay used by the background task that processes eligible messages for removal. This delay is the period the task waits before checking for new eligible messages. Default is 1 minute. |
-| `MessageIdHandler`   | A function that extracts the unique message Id from the message value.                                                                                                                      |
-| `EnableLogging`      | Indicates whether logging is enabled for this handler. Default is `true`.                                                                                                                   |
+| Property             | Description                                                                                                                                                                                   |
+|----------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `GroupId`            | The identifier for the consumer group to which this handler belongs.                                                                                                                          |
+| `ConsumerName`       | The name of the consumer to which this handler belongs.                                                                                                                                       |
+| `ExpirationInterval` | The duration after which processed messages are considered expired and eligible for removal. Default is `7 days`.                                                                             |
+| `ExpirationDelay`    | The delay used by the background task that processes eligible messages for removal. This delay is the period the task waits before checking for new eligible messages. Default is `1 minute`. |
+| `MessageIdHandler`   | A function that extracts the unique message Id from the message value.                                                                                                                        |
+| `EnableLogging`      | Indicates whether logging is enabled for this handler. Default is `true`.                                                                                                                     |
 
 Note: `GroupId` and `ConsumerName` will be used to create a unique key for storing processed messages in Redis, formatted as:
 `Idempotency:GroupIds:{GroupId}:Consumers:{ConsumerName}.`

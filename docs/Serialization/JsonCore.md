@@ -19,29 +19,39 @@ There are multiple ways to configure the JsonCore serializer for your Kafka prod
 Here's an example for configuring a Kafka producer:
 
 ```C#
-IServiceCollection services = new ServiceCollection()
-    .AddKafka(builder =>
-        builder.AddKafkaProducer<Null, Message>((_, builder) =>
-            // ...
-                builder.WithJsonCoreValueSerializer(builder => 
-                    builder.WithReferenceHandler(ReferenceHandler.IgnoreCycles) // Handles circular references
-                           .WithPropertyNamingPolicy(JsonNamingPolicy.CamelCase) // Uses camelCase naming
-                           .WithDefaultIgnoreCondition(JsonIgnoreCondition.WhenWritingNull) // Ignores null properties
-                          /*.With...*/))); // Additional options can be added here
+// Web
+var builder = WebApplication.CreateBuilder(args);
+
+// Non-Web
+var builder = Host.CreateApplicationBuilder(args);
+
+builder.Services.AddKafka(builder =>
+    builder.AddKafkaProducer<Null, Message>((_, builder) =>
+        // ...
+            builder.WithJsonCoreValueSerializer(builder => 
+                builder.WithReferenceHandler(ReferenceHandler.IgnoreCycles) // Handles circular references
+                       .WithPropertyNamingPolicy(JsonNamingPolicy.CamelCase) // Uses camelCase naming
+                       .WithDefaultIgnoreCondition(JsonIgnoreCondition.WhenWritingNull) // Ignores null properties
+                      /*.With...*/))); // Additional options can be added here
 ```
 
 And here's an example for configuring a Kafka consumer:
 
 ```C#
-IServiceCollection services = new ServiceCollection()
-    .AddKafka(builder =>
-        builder.AddKafkaConsumer<Null, Message>((_, builder) =>
-            // ...
-                builder.WithJsonCoreValueDeserializer(builder => 
-                    builder.WithReferenceHandler(ReferenceHandler.IgnoreCycles) // Handles circular references
-                           .WithPropertyNamingPolicy(JsonNamingPolicy.CamelCase) // Uses camelCase naming
-                           .WithDefaultIgnoreCondition(JsonIgnoreCondition.WhenWritingNull) // Ignores null properties
-                          /*.With...*/))); // Additional options can be added here
+// Web
+var builder = WebApplication.CreateBuilder(args);
+
+// Non-Web
+var builder = Host.CreateApplicationBuilder(args);
+
+builder.Services.AddKafka(builder =>
+    builder.AddKafkaConsumer<Null, Message>((_, builder) =>
+        // ...
+            builder.WithJsonCoreValueDeserializer(builder => 
+                builder.WithReferenceHandler(ReferenceHandler.IgnoreCycles) // Handles circular references
+                       .WithPropertyNamingPolicy(JsonNamingPolicy.CamelCase) // Uses camelCase naming
+                       .WithDefaultIgnoreCondition(JsonIgnoreCondition.WhenWritingNull) // Ignores null properties
+                      /*.With...*/))); // Additional options can be added here
 ```
 
 ### Configuration Methods

@@ -23,18 +23,28 @@ dotnet add package Confluent.Kafka.Core.OpenTelemetry
 To enable distributed tracing, call the `AddKafkaDiagnostics` method while registering Kafka Core services into the Microsoft built-in container. Below are some examples:
 
 ```C#
-IServiceCollection services = new ServiceCollection()
-    .AddKafka(builder => builder.AddKafkaDiagnostics());
+// Web
+var builder = WebApplication.CreateBuilder(args);
+
+// Non-Web
+var builder = Host.CreateApplicationBuilder(args);
+
+builder.Services.AddKafka(builder => builder.AddKafkaDiagnostics());
 ```
 
 The tracing can be customized by using options to add custom tags. Here's an example:
 
 ```C#
-IServiceCollection services = new ServiceCollection()
-    .AddKafka(builder => builder.AddKafkaDiagnostics(builder =>
-        builder.WithConsumptionEnrichment((activity, context) => 
-            activity.SetTag("custom-consumption-tag", "consumption-value"))
-             /*.With...*/)); // Additional options can be added here
+// Web
+var builder = WebApplication.CreateBuilder(args);
+
+// Non-Web
+var builder = Host.CreateApplicationBuilder(args);
+
+builder.Services.AddKafka(builder => builder.AddKafkaDiagnostics(builder =>
+    builder.WithConsumptionEnrichment((activity, context) => 
+        activity.SetTag("custom-consumption-tag", "consumption-value"))
+         /*.With...*/)); // Additional options can be added here
 ```
 
 While it's not required to add custom tags, the options provided can be used to enhance tracings with additional information.
@@ -42,8 +52,13 @@ While it's not required to add custom tags, the options provided can be used to 
 To integrate with OpenTelemetry:
 
 ```C#
-IServiceCollection services = new ServiceCollection()
-    .AddOpenTelemetry()
+// Web
+var builder = WebApplication.CreateBuilder(args);
+
+// Non-Web
+var builder = Host.CreateApplicationBuilder(args);
+
+builder.Services.AddOpenTelemetry()
     .WithTracing(builder => builder.AddKafkaCoreInstrumentation()); // Adds Confluent.Kafka.Core source 
 ```
 

@@ -19,33 +19,43 @@ There are multiple ways to configure the SchemaRegistry.Avro serializer for your
 Here's an example for configuring a Kafka producer:
 
 ```C#
-IServiceCollection services = new ServiceCollection()
-    .AddKafka(builder =>
-        builder.AddKafkaProducer<Null, Message>((_, builder) =>
-            // ...
-                builder.WithSchemaRegistryAvroValueSerializer(builder =>
-                    builder.WithSchemaRegistryClient(builder =>
-                        builder.WithSchemaRegistryConfiguration(builder =>
-                            builder.WithUrl("http://localhost:8081"))) // Configures Schema Registry client
-                           .WithSerializerConfiguration(builder =>
-                               builder.WithAutoRegisterSchemas(true)) // Automatically registers new schemas
-                         /*.With...*/))); // Additional configs can be added here
+// Web
+var builder = WebApplication.CreateBuilder(args);
+
+// Non-Web
+var builder = Host.CreateApplicationBuilder(args);
+
+builder.Services.AddKafka(builder =>
+    builder.AddKafkaProducer<Null, Message>((_, builder) =>
+        // ...
+            builder.WithSchemaRegistryAvroValueSerializer(builder =>
+                builder.WithSchemaRegistryClient(builder =>
+                    builder.WithSchemaRegistryConfiguration(builder =>
+                        builder.WithUrl("http://localhost:8081"))) // Configures Schema Registry client
+                       .WithSerializerConfiguration(builder =>
+                           builder.WithAutoRegisterSchemas(true)) // Automatically registers new schemas
+                     /*.With...*/))); // Additional configs can be added here
 ```
 
 And here's an example for configuring a Kafka consumer:
 
 ```C#
-IServiceCollection services = new ServiceCollection()
-    .AddKafka(builder =>
-        builder.AddKafkaConsumer<Null, Message>((_, builder) =>
-            // ...
-                builder.WithSchemaRegistryAvroValueDeserializer(builder =>
-                    builder.WithSchemaRegistryClient(builder =>
-                        builder.WithSchemaRegistryConfiguration(builder =>
-                            builder.WithUrl("http://localhost:8081"))) // Configures Schema Registry client
-                           .WithDeserializerConfiguration(builder =>
-                               { /*...*/ }) // Additional deserializer configs can be added here                               
-                          /*.With...*/))); // Additional configs can be added here
+// Web
+var builder = WebApplication.CreateBuilder(args);
+
+// Non-Web
+var builder = Host.CreateApplicationBuilder(args);
+
+builder.Services.AddKafka(builder =>
+    builder.AddKafkaConsumer<Null, Message>((_, builder) =>
+        // ...
+            builder.WithSchemaRegistryAvroValueDeserializer(builder =>
+                builder.WithSchemaRegistryClient(builder =>
+                    builder.WithSchemaRegistryConfiguration(builder =>
+                        builder.WithUrl("http://localhost:8081"))) // Configures Schema Registry client
+                       .WithDeserializerConfiguration(builder =>
+                           { /*...*/ }) // Additional deserializer configs can be added here                               
+                      /*.With...*/))); // Additional configs can be added here
 ```
 
 ### Configuration Methods

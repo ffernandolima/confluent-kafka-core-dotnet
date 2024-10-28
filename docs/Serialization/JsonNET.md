@@ -19,35 +19,45 @@ There are multiple ways to configure the Json.NET serializer for your Kafka prod
 Here's an example for configuring a Kafka producer:
 
 ```C#
-IServiceCollection services = new ServiceCollection()
-    .AddKafka(builder =>
-        builder.AddKafkaProducer<Null, Message>((_, builder) =>
-            // ...
-                builder.WithNewtonsoftJsonValueSerializer(builder => 
-                    builder.WithNullValueHandling(NullValueHandling.Ignore) // Ignores null values
-                           .WithReferenceLoopHandling(ReferenceLoopHandling.Ignore) // Ignores reference loops
-                           .WithMetadataPropertyHandling(MetadataPropertyHandling.Ignore) // Ignores metadata properties
-                           .WithDateFormatHandling(DateFormatHandling.IsoDateFormat) // Uses ISO date format
-                           .WithContractResolver(new CamelCasePropertyNamesContractResolver()) // Camel case property names
-                           .WithConverters([new IsoDateTimeConverter { DateTimeStyles = DateTimeStyles.AssumeUniversal }]) // Custom date handling
-                         /*.With...*/)); // Additional settings can be added here
+// Web
+var builder = WebApplication.CreateBuilder(args);
+
+// Non-Web
+var builder = Host.CreateApplicationBuilder(args);
+
+builder.Services.AddKafka(builder =>
+    builder.AddKafkaProducer<Null, Message>((_, builder) =>
+        // ...
+            builder.WithNewtonsoftJsonValueSerializer(builder => 
+                builder.WithNullValueHandling(NullValueHandling.Ignore) // Ignores null values
+                       .WithReferenceLoopHandling(ReferenceLoopHandling.Ignore) // Ignores reference loops
+                       .WithMetadataPropertyHandling(MetadataPropertyHandling.Ignore) // Ignores metadata properties
+                       .WithDateFormatHandling(DateFormatHandling.IsoDateFormat) // Uses ISO date format
+                       .WithContractResolver(new CamelCasePropertyNamesContractResolver()) // Camel case property names
+                       .WithConverters([new IsoDateTimeConverter { DateTimeStyles = DateTimeStyles.AssumeUniversal }]) // Custom date handling
+                     /*.With...*/)); // Additional settings can be added here
 ```
 
 And here's an example for configuring a Kafka consumer:
 
 ```C#
-IServiceCollection services = new ServiceCollection()
-    .AddKafka(builder =>
-        builder.AddKafkaConsumer<Null, Message>((_, builder) =>
-            // ...
-                builder.WithNewtonsoftJsonValueDeserializer(builder => 
-                    builder.WithNullValueHandling(NullValueHandling.Ignore) // Ignores null values
-                           .WithReferenceLoopHandling(ReferenceLoopHandling.Ignore) // Ignores reference loops
-                           .WithMetadataPropertyHandling(MetadataPropertyHandling.Ignore) // Ignores metadata properties
-                           .WithDateFormatHandling(DateFormatHandling.IsoDateFormat) // Uses ISO date format
-                           .WithContractResolver(new CamelCasePropertyNamesContractResolver()) // Camel case property names
-                           .WithConverters([new IsoDateTimeConverter { DateTimeStyles = DateTimeStyles.AssumeUniversal }]) // Custom date handling
-                         /*.With...*/)); // Additional settings can be added here
+// Web
+var builder = WebApplication.CreateBuilder(args);
+
+// Non-Web
+var builder = Host.CreateApplicationBuilder(args);
+
+builder.Services.AddKafka(builder =>
+    builder.AddKafkaConsumer<Null, Message>((_, builder) =>
+        // ...
+            builder.WithNewtonsoftJsonValueDeserializer(builder => 
+                builder.WithNullValueHandling(NullValueHandling.Ignore) // Ignores null values
+                       .WithReferenceLoopHandling(ReferenceLoopHandling.Ignore) // Ignores reference loops
+                       .WithMetadataPropertyHandling(MetadataPropertyHandling.Ignore) // Ignores metadata properties
+                       .WithDateFormatHandling(DateFormatHandling.IsoDateFormat) // Uses ISO date format
+                       .WithContractResolver(new CamelCasePropertyNamesContractResolver()) // Camel case property names
+                       .WithConverters([new IsoDateTimeConverter { DateTimeStyles = DateTimeStyles.AssumeUniversal }]) // Custom date handling
+                     /*.With...*/)); // Additional settings can be added here
 ```
 
 ### Configuration Methods
