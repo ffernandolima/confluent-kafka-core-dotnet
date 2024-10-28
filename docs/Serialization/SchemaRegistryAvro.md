@@ -50,13 +50,13 @@ IServiceCollection services = new ServiceCollection()
 
 ### Configuration Methods
 
-- WithSchemaRegistryAvroSerializer: Sets the serializer for both the Key and Value.
-- WithSchemaRegistryAvroKeySerializer: Sets the serializer for the Key only.
-- WithSchemaRegistryAvroValueSerializer: Sets the serializer for the Value only.
+- `WithSchemaRegistryAvroSerializer`: Sets the serializer for both the Key and Value.
+- `WithSchemaRegistryAvroKeySerializer`: Sets the serializer for the Key only.
+- `WithSchemaRegistryAvroValueSerializer`: Sets the serializer for the Value only.
 
-- WithSchemaRegistryAvroDeserializer: Sets the deserializer for both the Key and Value.
-- WithSchemaRegistryAvroKeyDeserializer: Sets the deserializer for the Key only.
-- WithSchemaRegistryAvroValueDeserializer: Sets the deserializer for the Value only.
+- `WithSchemaRegistryAvroDeserializer`: Sets the deserializer for both the Key and Value.
+- `WithSchemaRegistryAvroKeyDeserializer`: Sets the deserializer for the Key only.
+- `WithSchemaRegistryAvroValueDeserializer`: Sets the deserializer for the Value only.
 
 | [Go Back](/docs/Serialization/Serialization.md) |
 |-------------------------------------------------| 

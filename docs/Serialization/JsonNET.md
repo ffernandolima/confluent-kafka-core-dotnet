@@ -52,13 +52,13 @@ IServiceCollection services = new ServiceCollection()
 
 ### Configuration Methods
 
-- WithNewtonsoftJsonSerializer: Sets the serializer for both the Key and Value.
-- WithNewtonsoftJsonKeySerializer: Sets the serializer for the Key only.
-- WithNewtonsoftJsonValueSerializer: Sets the serializer for the Value only.
+- `WithNewtonsoftJsonSerializer`: Sets the serializer for both the Key and Value.
+- `WithNewtonsoftJsonKeySerializer`: Sets the serializer for the Key only.
+- `WithNewtonsoftJsonValueSerializer`: Sets the serializer for the Value only.
 
-- WithNewtonsoftJsonDeserializer: Sets the deserializer for both the Key and Value.
-- WithNewtonsoftJsonKeyDeserializer: Sets the deserializer for the Key only.
-- WithNewtonsoftJsonValueDeserializer: Sets the deserializer for the Value only.
+- `WithNewtonsoftJsonDeserializer`: Sets the deserializer for both the Key and Value.
+- `WithNewtonsoftJsonKeyDeserializer`: Sets the deserializer for the Key only.
+- `WithNewtonsoftJsonValueDeserializer`: Sets the deserializer for the Value only.
 
 | [Go Back](/docs/Serialization/Serialization.md) |
 |-------------------------------------------------| 

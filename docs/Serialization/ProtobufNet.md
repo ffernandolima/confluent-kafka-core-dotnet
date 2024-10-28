@@ -42,13 +42,13 @@ IServiceCollection services = new ServiceCollection()
 
 ### Configuration Methods
 
-- WithProtobufNetSerializer: Sets the serializer for both the Key and Value.
-- WithProtobufNetKeySerializer: Sets the serializer for the Key only.
-- WithProtobufNetValueSerializer: Sets the serializer for the Value only.
+- `WithProtobufNetSerializer`: Sets the serializer for both the Key and Value.
+- `WithProtobufNetKeySerializer`: Sets the serializer for the Key only.
+- `WithProtobufNetValueSerializer`: Sets the serializer for the Value only.
 
-- WithProtobufNetDeserializer: Sets the deserializer for both the Key and Value.
-- WithProtobufNetKeyDeserializer: Sets the deserializer for the Key only.
-- WithProtobufNetValueDeserializer: Sets the deserializer for the Value only.
+- `WithProtobufNetDeserializer`: Sets the deserializer for both the Key and Value.
+- `WithProtobufNetKeyDeserializer`: Sets the deserializer for the Key only.
+- `WithProtobufNetValueDeserializer`: Sets the deserializer for the Value only.
 
 | [Go Back](/docs/Serialization/Serialization.md) |
 |-------------------------------------------------| 

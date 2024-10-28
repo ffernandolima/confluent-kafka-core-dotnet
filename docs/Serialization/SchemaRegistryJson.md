@@ -51,13 +51,13 @@ IServiceCollection services = new ServiceCollection()
 
 ### Configuration Methods
 
-- WithSchemaRegistryJsonSerializer: Sets the serializer for both the Key and Value.
-- WithSchemaRegistryJsonKeySerializer: Sets the serializer for the Key only.
-- WithSchemaRegistryJsonValueSerializer: Sets the serializer for the Value only.
+- `WithSchemaRegistryJsonSerializer`: Sets the serializer for both the Key and Value.
+- `WithSchemaRegistryJsonKeySerializer`: Sets the serializer for the Key only.
+- `WithSchemaRegistryJsonValueSerializer`: Sets the serializer for the Value only.
 
-- WithSchemaRegistryJsonDeserializer: Sets the deserializer for both the Key and Value.
-- WithSchemaRegistryJsonKeyDeserializer: Sets the deserializer for the Key only.
-- WithSchemaRegistryJsonValueDeserializer: Sets the deserializer for the Value only.
+- `WithSchemaRegistryJsonDeserializer`: Sets the deserializer for both the Key and Value.
+- `WithSchemaRegistryJsonKeyDeserializer`: Sets the deserializer for the Key only.
+- `WithSchemaRegistryJsonValueDeserializer`: Sets the deserializer for the Value only.
 
 | [Go Back](/docs/Serialization/Serialization.md) |
 |-------------------------------------------------|

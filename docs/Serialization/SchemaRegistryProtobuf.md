@@ -50,13 +50,13 @@ IServiceCollection services = new ServiceCollection()
 
 ### Configuration Methods
 
-- WithSchemaRegistryProtobufSerializer: Sets the serializer for both the Key and Value.
-- WithSchemaRegistryProtobufKeySerializer: Sets the serializer for the Key only.
-- WithSchemaRegistryProtobufValueSerializer: Sets the serializer for the Value only.
+- `WithSchemaRegistryProtobufSerializer`: Sets the serializer for both the Key and Value.
+- `WithSchemaRegistryProtobufKeySerializer`: Sets the serializer for the Key only.
+- `WithSchemaRegistryProtobufValueSerializer`: Sets the serializer for the Value only.
 
-- WithSchemaRegistryProtobufDeserializer: Sets the deserializer for both the Key and Value.
-- WithSchemaRegistryProtobufKeyDeserializer: Sets the deserializer for the Key only.
-- WithSchemaRegistryProtobufValueDeserializer: Sets the deserializer for the Value only.
+- `WithSchemaRegistryProtobufDeserializer`: Sets the deserializer for both the Key and Value.
+- `WithSchemaRegistryProtobufKeyDeserializer`: Sets the deserializer for the Key only.
+- `WithSchemaRegistryProtobufValueDeserializer`: Sets the deserializer for the Value only.
 
 | [Go Back](/docs/Serialization/Serialization.md) |
 |-------------------------------------------------|
