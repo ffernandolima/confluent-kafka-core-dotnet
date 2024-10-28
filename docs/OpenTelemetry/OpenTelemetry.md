@@ -20,7 +20,7 @@ dotnet add package Confluent.Kafka.Core.OpenTelemetry
 
 ### Usage and Custom Enrichment
 
-To enable distributed tracing, call the AddKafkaDiagnostics method while registering Kafka Core services into the Microsoft built-in container. Below are some examples:
+To enable distributed tracing, call the `AddKafkaDiagnostics` method while registering Kafka Core services into the Microsoft built-in container. Below are some examples:
 
 ```C#
 IServiceCollection services = new ServiceCollection()
