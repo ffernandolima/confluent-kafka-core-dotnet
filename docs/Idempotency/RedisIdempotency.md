@@ -54,7 +54,7 @@ Some configurations should be pointed out as they enable custom behaviors:
 | `EnableLogging`      | Indicates whether logging is enabled for this handler. Default is `true`.                                                                                                                   |
 
 Note: `GroupId` and `ConsumerName` will be used to create a unique key for storing processed messages in Redis, formatted as:
-`Idempotency:GroupIds:{_options.GroupId}:Consumers:{_options.ConsumerName}.`
+`Idempotency:GroupIds:{GroupId}:Consumers:{ConsumerName}.`
 
 | [Go Back](/docs/Usage.md) |
 |---------------------------| 
