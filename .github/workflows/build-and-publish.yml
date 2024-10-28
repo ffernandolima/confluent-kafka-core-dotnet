@@ -5,13 +5,11 @@ env:
   NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
   NUGET_SOURCE: ${{ secrets.NUGET_SOURCE }}
 
-on:
-  push:
-    branches: [ "main" ]
+on: 
+  workflow_call:
 
 jobs:
   build-and-publish:
-    needs: build-and-test
     runs-on: ubuntu-latest
 
     steps:

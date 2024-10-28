@@ -48,3 +48,8 @@ jobs:
 
     - name: Stop Docker Compose
       run: docker compose -f docker-compose.yml down
+
+  build-and-publish:    
+    needs: build-and-test
+    if: github.ref == 'refs/heads/main'
+    uses: ./.github/workflows/build-and-publish.yml
