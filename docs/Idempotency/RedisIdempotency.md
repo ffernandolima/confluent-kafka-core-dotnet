@@ -7,14 +7,14 @@ The Idempotent Consumer leverages Redis to ensure message processing idempotency
 
 By implementing Redis-based idempotency, the Idempotent Consumer can track which messages have been processed using unique identifiers. When a message is received, the consumer checks if it has already been processed based on its identifier. If it has, the consumer can skip processing, ensuring that the system remains consistent and reliable.
 
-### Installation
+### Installation :hammer_and_wrench:
 
 To install the package and start integrating with Redis:
 ```bash
 dotnet add package Confluent.Kafka.Core.Idempotency.Redis
 ```
 
-### Usage and Configuration
+### Usage and Configuration :bar_chart:
 To configure the idempotency handler, use the `WithRedisIdempotencyHandler` method. This handler can be added to both worker and retry worker for idempotent processing.
 
 To add the Redis idempotency handler to a Kafka worker:
@@ -65,7 +65,7 @@ builder.Services.AddKafka(builder =>
                        /*.With...*/)))); // Additional options can be added here
 ```
 
-### Recommended Interface for Message Value
+### Recommended Interface for Message Value :envelope_with_arrow:
 
 It is strongly recommended to implement the `IMessageValue` interface from the namespace `Confluent.Kafka.Core.Models` within the message value to create a standard and simplify message Id discovery. This interface includes the `Id` property as a `Guid` and can be used with the `MessageIdHandler`.
 

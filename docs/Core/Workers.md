@@ -84,7 +84,7 @@ Some configurations should be pointed out as they enable custom behaviors:
 | `ExceptionDelay`                        | The delay after an exception occurs during message processing.                                                                                                   |
 | `PendingProcessingDelay`                | The delay when waiting for pending message processing.                                                                                                           |
 
-### Retry Worker (Non-Blocking Retry) :repeat:
+### Retry Worker (Non-Blocking Retry) :cyclone::repeat:
 
 In cases where asynchronous retries through a retry topic are necessary, the following configuration enables a separate `BackgroundService` that manages the retry process in the background. This internal worker orchestrates the retry flow by re-sending faulted messages to the source topic for reprocessing. If Dead Letter Topic (DLT) functionality is enabled, messages that have exhausted all retry attempts are automatically routed to the DLT. If asynchronous retries are not needed, this configuration can be omitted. 
 

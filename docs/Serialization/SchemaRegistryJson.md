@@ -5,7 +5,7 @@
 
 The SchemaRegistry.Json integration allows you to leverage the Confluent.SchemaRegistry.Serdes.Json library for serializing and deserializing messages in Kafka producers and consumers. This serializer ensures schema compatibility and version management, providing a flexible and efficient way to handle JSON-encoded messages while working with the Confluent Schema Registry.
 
-### Installation
+### Installation :hammer_and_wrench:
 
 To install the package and start integrating with Confluent.SchemaRegistry.Serdes.Json:
 
@@ -13,7 +13,7 @@ To install the package and start integrating with Confluent.SchemaRegistry.Serde
 dotnet add package Confluent.Kafka.Core.Serialization.SchemaRegistry.Json
 ```
 
-### Usage and Configuration
+### Usage and Configuration :bar_chart:
 
 There are multiple ways to configure the SchemaRegistry.Json serializer for your Kafka producer and consumer, allowing you to set the serializer for either the Key, the Value, or both, depending on your use case. It provides several configurations for controlling how your messages interact with the Confluent Schema Registry. These configurations can be passed to the SchemaRegistry.Json serializer, allowing for fine-grained control over schema registration, compatibility checks, and both serialization and deserialization behaviors. The Schema Registry client configuration is required, but the other configurations are optional, and if not provided, default configurations will be assumed internally.
 
@@ -59,7 +59,7 @@ builder.Services.AddKafka(builder =>
                       /*.With...*/))); // Additional configs can be added here
 ```
 
-### Configuration Methods
+### Configuration Methods :nut_and_bolt:
 
 - `WithSchemaRegistryJsonSerializer`: Sets the serializer for both the Key and Value.
 - `WithSchemaRegistryJsonKeySerializer`: Sets the serializer for the Key only.

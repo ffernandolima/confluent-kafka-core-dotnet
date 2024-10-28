@@ -66,7 +66,7 @@
     dotnet add package Confluent.Kafka.Core.Serialization.SchemaRegistry.Protobuf
     ```
 
-### Additional Notes
+### Additional Notes :spiral_notepad:
 - Ensure you have the .NET SDK installed on your machine to run these commands.
 - You can also install these packages using the NuGet Package Manager in Visual Studio by searching for each package name.
 - After installation, you can start integrating these packages into your Kafka-related .NET project.

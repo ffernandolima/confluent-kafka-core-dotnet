@@ -5,14 +5,14 @@
 
 The Json.NET integration allows you to leverage the Newtonsoft.Json library for serializing and deserializing messages in Kafka producers and consumers. This serializer offers flexibility and control over JSON serialization settings to suit your application's needs.
 
-### Installation
+### Installation :hammer_and_wrench:
 
 To install the package and start integrating with Newtonsoft.Json:
 ```bash
 dotnet add package Confluent.Kafka.Core.Serialization.NewtonsoftJson
 ```
 
-### Usage and Settings Configuration
+### Usage and Settings Configuration :bar_chart:
 
 There are multiple ways to configure the Json.NET serializer for your Kafka producer and consumer, allowing you to set the serializer for either the Key, the Value, or both, depending on your use case. The Newtonsoft.Json library offers many settings for configuring how JSON is handled in your messages. These settings can be passed through the Json.NET serializer, providing fine-grained control over serialization and deserialization behavior. The settings configuration is optional, and if not provided, default settings will be assumed internally.
 
@@ -60,7 +60,7 @@ builder.Services.AddKafka(builder =>
                      /*.With...*/)); // Additional settings can be added here
 ```
 
-### Configuration Methods
+### Configuration Methods :nut_and_bolt:
 
 - `WithNewtonsoftJsonSerializer`: Sets the serializer for both the Key and Value.
 - `WithNewtonsoftJsonKeySerializer`: Sets the serializer for the Key only.

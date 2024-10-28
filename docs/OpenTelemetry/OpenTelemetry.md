@@ -3,13 +3,13 @@
 
 ### Distributed Tracing and OpenTelemetry :globe_with_meridians:
 
-### Features
+### Features :bulb:
 
 - **Distributed Tracing**: Utilizes the `System.Diagnostics` implementation for tracing, which is part of the Kafka Core.
 - **OpenTelemetry Integration**: Registers the `Confluent.Kafka.Core` source with the `TracerProviderBuilder` from the OpenTelemetry API.
 - **Automatic Semantic Conventions**: By default, the library adds all tags from the OpenTelemetry semantic conventions for messaging.
 
-### Installation
+### Installation :hammer_and_wrench:
 
 The Distributed Tracing implementation is part of the Kafka Core.
 
@@ -18,7 +18,7 @@ To install the package and start integrating with OpenTelemetry:
 dotnet add package Confluent.Kafka.Core.OpenTelemetry
 ```
 
-### Usage and Custom Enrichment
+### Usage and Custom Enrichment :bar_chart:
 
 To enable distributed tracing, call the `AddKafkaDiagnostics` method while registering Kafka Core services into the Microsoft built-in container. Below are some examples:
 
@@ -62,14 +62,14 @@ builder.Services.AddOpenTelemetry()
     .WithTracing(builder => builder.AddKafkaCoreInstrumentation()); // Adds Confluent.Kafka.Core source 
 ```
 
-### Semantic Conventions
+### Semantic Conventions :open_book:
 
 The library automatically includes all the tags defined by the OpenTelemetry semantic conventions for messaging. For more information, refer to the following links:
 
 - [OpenTelemetry Messaging Spans](https://github.com/open-telemetry/semantic-conventions/blob/v1.23.1/docs/messaging/messaging-spans.md)
 - [OpenTelemetry Kafka Span Attributes](https://github.com/open-telemetry/semantic-conventions/blob/v1.23.1/docs/messaging/kafka.md#span-attributes)
 
-### Additional Resources
+### Additional Resources :spiral_notepad:
 
 - [Microsoft Distributed Tracing Documentation](https://learn.microsoft.com/en-us/dotnet/core/diagnostics/distributed-tracing)
 

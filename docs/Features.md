@@ -15,7 +15,7 @@
 - **:repeat: Customizable Blocking Retry Pattern**: Tailor your retry logic with precision, choosing from various blocking strategies that fit your specific use cases while ensuring reliable message processing. Choose from Immediate, Regular, Exponential, and more.
 - **:stop_sign: Graceful Shutdown**: Safely terminate processes without losing in-flight messages.
 - **:recycle: Idempotent Consumer Pattern**: Guarantee that message processing is safe and repeatable, preventing duplicate actions.
-- **:hammer_and_wrench: Support for Multiple Serializers**: Easily switch between various serialization formats based on your requirements.
+- **:outbox_tray: Support for Multiple Serializers**: Easily switch between various serialization formats based on your requirements.
 - **:scroll: Schema Registry Support**: Seamlessly integrate with schema registries for better data governance.
 - **:computer: Broad Compatibility**: Fully supports .NET Framework, .NET Core, and .NET 5 and above, ensuring versatility in deployment.
 

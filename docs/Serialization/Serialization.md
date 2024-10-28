@@ -1,7 +1,7 @@
 | [Main](/README.md) > [Usage](/docs/Usage.md) > Serialization |
 |--------------------------------------------------------------|
 
-### Serialization :hammer_and_wrench:
+### Serialization :outbox_tray:
 
 
 - [System.Text.Json (JsonCore)](/docs/Serialization/JsonCore.md)

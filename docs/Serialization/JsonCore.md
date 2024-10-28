@@ -5,14 +5,14 @@
 
 The JsonCore integration allows you to leverage the System.Text.Json library for serializing and deserializing messages in Kafka producers and consumers. This serializer offers flexibility and control over JSON serialization options to suit your application's needs.
 
-### Installation
+### Installation :hammer_and_wrench:
 
 To install the package and start integrating with System.Text.Json:
 ```bash
 dotnet add package Confluent.Kafka.Core.Serialization.JsonCore
 ```
 
-### Usage and Options Configuration
+### Usage and Options Configuration :bar_chart:
 
 There are multiple ways to configure the JsonCore serializer for your Kafka producer and consumer, allowing you to set the serializer for either the Key, the Value, or both, depending on your use case. The System.Text.Json library offers many options for configuring how JSON is handled in your messages. These options can be passed through the JsonCore serializer, providing fine-grained control over serialization and deserialization behavior. The options configuration is optional, and if not provided, default options will be assumed internally.
 
@@ -54,7 +54,7 @@ builder.Services.AddKafka(builder =>
                       /*.With...*/))); // Additional options can be added here
 ```
 
-### Configuration Methods
+### Configuration Methods :nut_and_bolt:
 
 - `WithJsonCoreSerializer`: Sets the serializer for both the Key and Value.
 - `WithJsonCoreKeySerializer`: Sets the serializer for the Key only.
