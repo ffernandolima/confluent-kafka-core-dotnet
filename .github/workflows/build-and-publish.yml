@@ -2,11 +2,14 @@ name: build-and-publish
 
 env:
   PROJECT: Confluent.Kafka.Core
-  NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
-  NUGET_SOURCE: ${{ secrets.NUGET_SOURCE }}
 
 on: 
   workflow_call:
+    secrets:
+      NUGET_API_KEY:
+        required: true
+      NUGET_SOURCE:
+        required: true
 
 jobs:
   build-and-publish:

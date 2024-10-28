@@ -53,3 +53,6 @@ jobs:
     needs: build-and-test
     if: github.ref == 'refs/heads/main'
     uses: ./.github/workflows/build-and-publish.yml
+    secrets:
+      NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+      NUGET_SOURCE: ${{ secrets.NUGET_SOURCE }}
