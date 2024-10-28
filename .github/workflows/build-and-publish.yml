@@ -1,10 +1,11 @@
 name: build-and-publish
 
-env:
-  PROJECT: Confluent.Kafka.Core
-
 on: 
   workflow_call:
+    inputs:
+      PROJECT:
+        required: true
+        type: string
     secrets:
       NUGET_API_KEY:
         required: true
@@ -36,4 +37,4 @@ jobs:
         run: dotnet build --configuration Release --no-restore
 
       - name: Push packages
-        run: dotnet nuget push "**/$PROJECT*.nupkg" -k $NUGET_API_KEY -s $NUGET_SOURCE --skip-duplicate
+        run: dotnet nuget push "**/${{ inputs.PROJECT }}*.nupkg" -k ${{ secrets.NUGET_API_KEY }} -s ${{ secrets.NUGET_SOURCE }} --skip-duplicate

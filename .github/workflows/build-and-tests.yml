@@ -53,6 +53,8 @@ jobs:
     needs: build-and-test
     if: github.ref == 'refs/heads/main'
     uses: ./.github/workflows/build-and-publish.yml
+    with:
+      PROJECT: Confluent.Kafka.Core
     secrets:
       NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
       NUGET_SOURCE: ${{ secrets.NUGET_SOURCE }}
