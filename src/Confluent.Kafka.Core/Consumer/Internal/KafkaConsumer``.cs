@@ -274,7 +274,7 @@ namespace Confluent.Kafka.Core.Consumer.Internal
                 throw new ArgumentException($"{nameof(timeout)} cannot be infinite.", nameof(timeout));
             }
 
-            var tokenSource = new CancellationTokenSource(timeout);
+            using var tokenSource = new CancellationTokenSource(timeout);
 
             var consumeResults = ConsumeBatch(batchSize, tokenSource.Token);
 

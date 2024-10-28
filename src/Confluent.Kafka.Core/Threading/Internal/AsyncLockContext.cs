@@ -4,7 +4,7 @@ namespace Confluent.Kafka.Core.Threading.Internal
 {
     internal sealed class AsyncLockContext
     {
-        public static AsyncLockContext Empty = new();
+        public static readonly AsyncLockContext Empty = new();
 
         public IDictionary<object, object> Items { get; } = new Dictionary<object, object>();
 

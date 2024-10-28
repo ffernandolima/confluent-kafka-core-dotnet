@@ -362,7 +362,7 @@ namespace Confluent.Kafka.Core.Hosting.Internal
                                 executeAction: async cancellationToken =>
                                     await HandleFetchedConsumeResultAsync(consumeResult, cancellationToken).ConfigureAwait(false),
                                 cancellationToken: cancellationToken,
-                                onRetryAction: (exception, timeSpan, retryAttempt) =>
+                                onRetryAction: (exception, _, retryAttempt) =>
                                     Logger.LogMessageProcessingRetryFailure(exception, messageId, retryAttempt))
                             .ConfigureAwait(false);
                         }

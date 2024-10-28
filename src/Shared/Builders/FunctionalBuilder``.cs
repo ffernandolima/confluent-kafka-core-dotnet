@@ -8,7 +8,7 @@ namespace Confluent.Kafka.Core.Internal
             where TSubject : class
             where TSelf : FunctionalBuilder<TSubject, TSelf>
     {
-        public FunctionalBuilder(
+        protected FunctionalBuilder(
             TSubject seedSubject = null,
             IConfiguration configuration = null)
             : base(seedSubject: seedSubject, configuration)

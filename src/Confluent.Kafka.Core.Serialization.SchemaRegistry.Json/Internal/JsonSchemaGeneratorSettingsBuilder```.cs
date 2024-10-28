@@ -19,7 +19,7 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Json.Internal
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected abstract TService BuilderInstance { get; }
 
-        public JsonSchemaGeneratorSettingsBuilder(IConfiguration configuration = null)
+        protected JsonSchemaGeneratorSettingsBuilder(IConfiguration configuration = null)
             : base(seedSubject: null, configuration)
         { }
 

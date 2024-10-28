@@ -21,7 +21,7 @@ namespace Confluent.Kafka.Core.Internal
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private TSubject _builtSubject;
 
-        public FunctionalBuilder(
+        protected FunctionalBuilder(
             TSubject seedSubject = null,
             IConfiguration configuration = null)
         {
@@ -34,7 +34,7 @@ namespace Confluent.Kafka.Core.Internal
                 : Activator.CreateInstance<TSubject>();
         }
 
-        public FunctionalBuilder(
+        protected FunctionalBuilder(
             TSubjectAbs seedSubjectAbs = null,
             IConfiguration configuration = null)
             : this((TSubject)seedSubjectAbs, configuration)
