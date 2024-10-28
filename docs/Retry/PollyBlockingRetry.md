@@ -37,6 +37,7 @@ var builder = Host.CreateApplicationBuilder(args);
 
 builder.Services.AddKafka(builder =>
     builder.Add...((_, builder) =>
+        // ... 
         builder.WithPollyRetryHandler(builder => 
             builder.WithDelayProvider(_ => TimeSpan.Zero) // No delay
                    .WithRetryCount(3) // Retry up to 3 times
@@ -55,6 +56,7 @@ var builder = Host.CreateApplicationBuilder(args);
 
 builder.Services.AddKafka(builder =>
     builder.Add...((_, builder) =>
+        // ... 
         builder.WithPollyRetryHandler(builder => 
             builder.WithDelayProvider(_ => TimeSpan.FromSeconds(5)) // Fixed 5 seconds delay
                    .WithRetryCount(3) // Retry up to 3 times
@@ -73,6 +75,7 @@ var builder = Host.CreateApplicationBuilder(args);
 
 builder.Services.AddKafka(builder =>
     builder.Add...((_, builder) =>
+        // ... 
         builder.WithPollyRetryHandler(builder => 
             builder.WithDelayProvider(retryAttempt => TimeSpan.FromMilliseconds(Math.Pow(2, retryAttempt) * 100)) // Exponential backoff
                    .WithRetryCount(5) // Retry up to 5 times
@@ -91,6 +94,7 @@ var builder = Host.CreateApplicationBuilder(args);
 
 builder.Services.AddKafka(builder =>
     builder.Add...((_, builder) =>
+        // ... 
         builder.WithPollyRetryHandler(builder => 
             builder.WithDelayProvider(retryAttempt => TimeSpan.FromSeconds(retryAttempt)) // Linear backoff (1s, 2s, 3s, ...)
                    .WithRetryCount(3) // Retry up to 3 times
@@ -109,6 +113,7 @@ var builder = Host.CreateApplicationBuilder(args);
 
 builder.Services.AddKafka(builder =>
     builder.Add...((_, builder) =>
+        // ... 
         builder.WithPollyRetryHandler(builder => 
             builder.WithDelayProvider(_ => TimeSpan.FromSeconds(1)) // 1 second delay between retries
                    .WithRetryCount(int.MaxValue) // Retry indefinitely
@@ -127,6 +132,7 @@ var builder = Host.CreateApplicationBuilder(args);
 
 builder.Services.AddKafka(builder =>
     builder.Add...((_, builder) =>
+        // ... 
         builder.WithPollyRetryHandler(builder => 
             builder.WithExceptionFilter(ex => ex is TimeoutException) // Retry only on TimeoutException
                    .WithDelayProvider(_ => TimeSpan.FromSeconds(2)) // 2 seconds delay
