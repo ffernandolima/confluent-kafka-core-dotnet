@@ -49,7 +49,7 @@ Note: DLT will only take effect if the retry topic is not enabled. If the retry 
 
 By default, workers are going to be registered as **Singleton**.
 
-In this configuration, a BackgroundService is automatically added and started when the host starts. This worker will run in the background and handle tasks like consuming Kafka messages, ensuring that your application processes data as soon as it's available, without needing manual intervention. For more information on hosted services and background workers, refer to the official [ASP.NET Core Hosted Services documentation](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/host/hosted-services?view=aspnetcore-8.0&tabs=visual-studio).
+In this configuration, a `BackgroundService` is automatically added and started when the host starts. This worker will run in the background and handle tasks like consuming Kafka messages, ensuring that your application processes data as soon as it's available, without needing manual intervention. For more information on hosted services and background workers, refer to the official [ASP.NET Core Hosted Services documentation](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/host/hosted-services?view=aspnetcore-8.0&tabs=visual-studio).
 
 ### Worker Configurations :gear:
 
@@ -76,7 +76,7 @@ Some configurations should be pointed out as they enable custom behaviors:
 
 ### Retry Worker (Non-Blocking Retry) :repeat:
 
-In cases where asynchronous retries through a retry topic are necessary, the following configuration enables a separate BackgroundService that manages the retry process in the background. This internal worker orchestrates the retry flow by re-sending faulted messages to the source topic for reprocessing. If Dead Letter Topic (DLT) functionality is enabled, messages that have exhausted all retry attempts are automatically routed to the DLT. If asynchronous retries are not needed, this configuration can be omitted. 
+In cases where asynchronous retries through a retry topic are necessary, the following configuration enables a separate `BackgroundService` that manages the retry process in the background. This internal worker orchestrates the retry flow by re-sending faulted messages to the source topic for reprocessing. If Dead Letter Topic (DLT) functionality is enabled, messages that have exhausted all retry attempts are automatically routed to the DLT. If asynchronous retries are not needed, this configuration can be omitted. 
 
 ```C#
  IServiceCollection services = new ServiceCollection()

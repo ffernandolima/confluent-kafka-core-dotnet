@@ -15,9 +15,9 @@ dotnet add package Confluent.Kafka.Core.Idempotency.Redis
 ```
 
 ### Usage and Configuration
-To configure the idempotency handler, use the `WithRedisIdempotencyHandler` method. This handler can be added to both the background worker and the background retry worker for idempotent processing.
+To configure the idempotency handler, use the `WithRedisIdempotencyHandler` method. This handler can be added to both worker and retry worker for idempotent processing.
 
-To add the Redis idempotency handler to a Kafka consumer worker:
+To add the Redis idempotency handler to a Kafka worker:
 
 ```C#
 IServiceCollection services = new ServiceCollection()
