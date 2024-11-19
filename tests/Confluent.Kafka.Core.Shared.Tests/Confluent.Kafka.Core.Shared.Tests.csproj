@@ -7,9 +7,9 @@
 	</PropertyGroup>
 
 	<ItemGroup Label="Builders">
-		<Compile Include="..\..\src\Shared\Builders\FunctionalBuilder``.cs" Link="Internal\FunctionalBuilder``.cs" />
-		<Compile Include="..\..\src\Shared\Builders\IFunctionalBuilder``.cs" Link="Internal\IFunctionalBuilder``.cs" />
-		<Compile Include="..\..\src\Shared\Builders\FunctionalBuilder```.cs" Link="Internal\FunctionalBuilder```.cs" />
+		<Compile Include="..\..\src\Shared\Builders\FunctionalBuilder``.cs"   Link="Internal\FunctionalBuilder``.cs" />
+		<Compile Include="..\..\src\Shared\Builders\IFunctionalBuilder``.cs"  Link="Internal\IFunctionalBuilder``.cs" />
+		<Compile Include="..\..\src\Shared\Builders\FunctionalBuilder```.cs"  Link="Internal\FunctionalBuilder```.cs" />
 		<Compile Include="..\..\src\Shared\Builders\IFunctionalBuilder```.cs" Link="Internal\IFunctionalBuilder```.cs" />
 	</ItemGroup>
 

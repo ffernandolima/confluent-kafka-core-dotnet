@@ -21,9 +21,9 @@
 	</PropertyGroup>
 
 	<ItemGroup Label="Builders">
-		<Compile Include="..\Shared\Builders\FunctionalBuilder``.cs" Link="Internal\FunctionalBuilder``.cs" />
-		<Compile Include="..\Shared\Builders\IFunctionalBuilder``.cs" Link="Internal\IFunctionalBuilder``.cs" />
-		<Compile Include="..\Shared\Builders\FunctionalBuilder```.cs" Link="Internal\FunctionalBuilder```.cs" />
+		<Compile Include="..\Shared\Builders\FunctionalBuilder``.cs"   Link="Internal\FunctionalBuilder``.cs" />
+		<Compile Include="..\Shared\Builders\IFunctionalBuilder``.cs"  Link="Internal\IFunctionalBuilder``.cs" />
+		<Compile Include="..\Shared\Builders\FunctionalBuilder```.cs"  Link="Internal\FunctionalBuilder```.cs" />
 		<Compile Include="..\Shared\Builders\IFunctionalBuilder```.cs" Link="Internal\IFunctionalBuilder```.cs" />
 	</ItemGroup>
 
