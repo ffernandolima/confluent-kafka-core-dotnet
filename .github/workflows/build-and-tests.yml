@@ -37,7 +37,7 @@ jobs:
       run: dotnet build --configuration Release --no-restore
 
     - name: Wait for services availability
-      run: sleep 10s
+      run: sleep 15s
       shell: bash
 
     - name: Check containers
