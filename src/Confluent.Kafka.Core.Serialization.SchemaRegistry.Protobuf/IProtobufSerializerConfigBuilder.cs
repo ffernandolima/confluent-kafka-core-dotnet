@@ -25,6 +25,8 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Protobuf
 
         IProtobufSerializerConfigBuilder WithReferenceSubjectNameStrategy(ReferenceSubjectNameStrategy? referenceSubjectNameStrategy);
 
+        IProtobufSerializerConfigBuilder WithCustomReferenceSubjectNameStrategy(ICustomReferenceSubjectNameStrategy customReferenceSubjectNameStrategy);
+
         IProtobufSerializerConfigBuilder WithConfigurationProperty(KeyValuePair<string, string> configurationProperty);
     }
 }

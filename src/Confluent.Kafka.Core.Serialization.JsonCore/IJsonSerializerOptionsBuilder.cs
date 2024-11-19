@@ -16,6 +16,8 @@ namespace Confluent.Kafka.Core.Serialization.JsonCore
 
         IJsonSerializerOptionsBuilder WithTypeInfoResolverChain(IList<IJsonTypeInfoResolver> typeInfoResolverChain);
 
+        IJsonSerializerOptionsBuilder WithAllowOutOfOrderMetadataProperties(bool allowOutOfOrderMetadataProperties);
+
         IJsonSerializerOptionsBuilder WithAllowTrailingCommas(bool allowTrailingCommas);
 
         IJsonSerializerOptionsBuilder WithDefaultBufferSize(int defaultBufferSize);
@@ -50,6 +52,16 @@ namespace Confluent.Kafka.Core.Serialization.JsonCore
 
         IJsonSerializerOptionsBuilder WithWriteIndented(bool writeIndented);
 
+        IJsonSerializerOptionsBuilder WithIndentCharacter(char indentCharacter);
+
+        IJsonSerializerOptionsBuilder WithIndentSize(int indentSize);
+
         IJsonSerializerOptionsBuilder WithReferenceHandler(ReferenceHandler referenceHandler);
+
+        IJsonSerializerOptionsBuilder WithNewLine(string newLine);
+
+        IJsonSerializerOptionsBuilder WithRespectNullableAnnotations(bool respectNullableAnnotations);
+
+        IJsonSerializerOptionsBuilder WithRespectRequiredConstructorParameters(bool respectRequiredConstructorParameters);
     }
 }

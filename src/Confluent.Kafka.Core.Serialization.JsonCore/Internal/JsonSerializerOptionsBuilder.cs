@@ -83,6 +83,12 @@ namespace Confluent.Kafka.Core.Serialization.JsonCore.Internal
             return this;
         }
 
+        public IJsonSerializerOptionsBuilder WithAllowOutOfOrderMetadataProperties(bool allowOutOfOrderMetadataProperties)
+        {
+            AppendAction(options => options.AllowOutOfOrderMetadataProperties = allowOutOfOrderMetadataProperties);
+            return this;
+        }
+
         public IJsonSerializerOptionsBuilder WithAllowTrailingCommas(bool allowTrailingCommas)
         {
             AppendAction(options => options.AllowTrailingCommas = allowTrailingCommas);
@@ -185,9 +191,39 @@ namespace Confluent.Kafka.Core.Serialization.JsonCore.Internal
             return this;
         }
 
+        public IJsonSerializerOptionsBuilder WithIndentCharacter(char indentCharacter)
+        {
+            AppendAction(options => options.IndentCharacter = indentCharacter);
+            return this;
+        }
+
+        public IJsonSerializerOptionsBuilder WithIndentSize(int indentSize)
+        {
+            AppendAction(options => options.IndentSize = indentSize);
+            return this;
+        }
+
         public IJsonSerializerOptionsBuilder WithReferenceHandler(ReferenceHandler referenceHandler)
         {
             AppendAction(options => options.ReferenceHandler = referenceHandler);
+            return this;
+        }
+
+        public IJsonSerializerOptionsBuilder WithNewLine(string newLine)
+        {
+            AppendAction(options => options.NewLine = newLine);
+            return this;
+        }
+
+        public IJsonSerializerOptionsBuilder WithRespectNullableAnnotations(bool respectNullableAnnotations)
+        {
+            AppendAction(options => options.RespectNullableAnnotations = respectNullableAnnotations);
+            return this;
+        }
+
+        public IJsonSerializerOptionsBuilder WithRespectRequiredConstructorParameters(bool respectRequiredConstructorParameters)
+        {
+            AppendAction(options => options.RespectRequiredConstructorParameters = respectRequiredConstructorParameters);
             return this;
         }
 

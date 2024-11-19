@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>netstandard2.0;netstandard2.1;net6.0;net8.0</TargetFrameworks>
+		<TargetFrameworks>netstandard2.0;netstandard2.1;net8.0;net9.0</TargetFrameworks>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<NoWarn>1701;1702;1705;1591</NoWarn>
@@ -16,14 +16,14 @@
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<RepositoryType>git</RepositoryType>
 		<PackageTags>Apache;Kafka;Confluent;librdkafka;Serialization;SchemaRegistry;Confluent.SchemaRegistry.Serdes.Protobuf</PackageTags>
-		<Version>1.0.0</Version>
+		<Version>1.0.1</Version>
 		<LangVersion>latest</LangVersion>
 	</PropertyGroup>
 
 	<ItemGroup Label="Builders">
-		<Compile Include="..\Shared\Builders\FunctionalBuilder``.cs"   Link="Internal\FunctionalBuilder``.cs" />
-		<Compile Include="..\Shared\Builders\IFunctionalBuilder``.cs"  Link="Internal\IFunctionalBuilder``.cs" />
-		<Compile Include="..\Shared\Builders\FunctionalBuilder```.cs"  Link="Internal\FunctionalBuilder```.cs" />
+		<Compile Include="..\Shared\Builders\FunctionalBuilder``.cs" Link="Internal\FunctionalBuilder``.cs" />
+		<Compile Include="..\Shared\Builders\IFunctionalBuilder``.cs" Link="Internal\IFunctionalBuilder``.cs" />
+		<Compile Include="..\Shared\Builders\FunctionalBuilder```.cs" Link="Internal\FunctionalBuilder```.cs" />
 		<Compile Include="..\Shared\Builders\IFunctionalBuilder```.cs" Link="Internal\IFunctionalBuilder```.cs" />
 	</ItemGroup>
 
@@ -32,20 +32,20 @@
 	</ItemGroup>
 
 	<ItemGroup Label="SchemaRegistry">
-		<Compile Include="..\Shared\SchemaRegistry\Internal\ISchemaRegistryClientFactory.cs"           Link="SchemaRegistry\Internal\ISchemaRegistryClientFactory.cs" />
-		<Compile Include="..\Shared\SchemaRegistry\Internal\RegisteredSchemaBuilder.cs"                Link="SchemaRegistry\Internal\RegisteredSchemaBuilder.cs" />
-		<Compile Include="..\Shared\SchemaRegistry\Internal\SchemaBuilder.cs"                          Link="SchemaRegistry\Internal\SchemaBuilder.cs" />
-		<Compile Include="..\Shared\SchemaRegistry\Internal\SchemaRegistryClientBuilder.cs"            Link="SchemaRegistry\Internal\SchemaRegistryClientBuilder.cs" />
-		<Compile Include="..\Shared\SchemaRegistry\Internal\SchemaRegistryClientConstants.cs"          Link="SchemaRegistry\Internal\SchemaRegistryClientConstants.cs" />
-		<Compile Include="..\Shared\SchemaRegistry\Internal\SchemaRegistryClientFactory.cs"            Link="SchemaRegistry\Internal\SchemaRegistryClientFactory.cs" />
-		<Compile Include="..\Shared\SchemaRegistry\Internal\SchemaRegistryConfigBuilder.cs"            Link="SchemaRegistry\Internal\SchemaRegistryConfigBuilder.cs" />
-		<Compile Include="..\Shared\SchemaRegistry\Internal\UnregisteredSchemaBuilder.cs"              Link="SchemaRegistry\Internal\UnregisteredSchemaBuilder.cs" />
-		<Compile Include="..\Shared\SchemaRegistry\IRegisteredSchemaBuilder.cs"                        Link="SchemaRegistry\IRegisteredSchemaBuilder.cs" />
-		<Compile Include="..\Shared\SchemaRegistry\ISchemaBuilder.cs"                                  Link="SchemaRegistry\ISchemaBuilder.cs" />
-		<Compile Include="..\Shared\SchemaRegistry\ISchemaBuilder`.cs"                                 Link="SchemaRegistry\ISchemaBuilder`.cs" />
-		<Compile Include="..\Shared\SchemaRegistry\ISchemaRegistryClientBuilder.cs"                    Link="SchemaRegistry\ISchemaRegistryClientBuilder.cs" />
-		<Compile Include="..\Shared\SchemaRegistry\ISchemaRegistryConfigBuilder.cs"                    Link="SchemaRegistry\ISchemaRegistryConfigBuilder.cs" />
-		<Compile Include="..\Shared\SchemaRegistry\IUnregisteredSchemaBuilder.cs"                      Link="SchemaRegistry\IUnregisteredSchemaBuilder.cs" />
+		<Compile Include="..\Shared\SchemaRegistry\Internal\ISchemaRegistryClientFactory.cs" Link="SchemaRegistry\Internal\ISchemaRegistryClientFactory.cs" />
+		<Compile Include="..\Shared\SchemaRegistry\Internal\RegisteredSchemaBuilder.cs" Link="SchemaRegistry\Internal\RegisteredSchemaBuilder.cs" />
+		<Compile Include="..\Shared\SchemaRegistry\Internal\SchemaBuilder.cs" Link="SchemaRegistry\Internal\SchemaBuilder.cs" />
+		<Compile Include="..\Shared\SchemaRegistry\Internal\SchemaRegistryClientBuilder.cs" Link="SchemaRegistry\Internal\SchemaRegistryClientBuilder.cs" />
+		<Compile Include="..\Shared\SchemaRegistry\Internal\SchemaRegistryClientConstants.cs" Link="SchemaRegistry\Internal\SchemaRegistryClientConstants.cs" />
+		<Compile Include="..\Shared\SchemaRegistry\Internal\SchemaRegistryClientFactory.cs" Link="SchemaRegistry\Internal\SchemaRegistryClientFactory.cs" />
+		<Compile Include="..\Shared\SchemaRegistry\Internal\SchemaRegistryConfigBuilder.cs" Link="SchemaRegistry\Internal\SchemaRegistryConfigBuilder.cs" />
+		<Compile Include="..\Shared\SchemaRegistry\Internal\UnregisteredSchemaBuilder.cs" Link="SchemaRegistry\Internal\UnregisteredSchemaBuilder.cs" />
+		<Compile Include="..\Shared\SchemaRegistry\IRegisteredSchemaBuilder.cs" Link="SchemaRegistry\IRegisteredSchemaBuilder.cs" />
+		<Compile Include="..\Shared\SchemaRegistry\ISchemaBuilder.cs" Link="SchemaRegistry\ISchemaBuilder.cs" />
+		<Compile Include="..\Shared\SchemaRegistry\ISchemaBuilder`.cs" Link="SchemaRegistry\ISchemaBuilder`.cs" />
+		<Compile Include="..\Shared\SchemaRegistry\ISchemaRegistryClientBuilder.cs" Link="SchemaRegistry\ISchemaRegistryClientBuilder.cs" />
+		<Compile Include="..\Shared\SchemaRegistry\ISchemaRegistryConfigBuilder.cs" Link="SchemaRegistry\ISchemaRegistryConfigBuilder.cs" />
+		<Compile Include="..\Shared\SchemaRegistry\IUnregisteredSchemaBuilder.cs" Link="SchemaRegistry\IUnregisteredSchemaBuilder.cs" />
 		<Compile Include="..\Shared\SchemaRegistry\SchemaRegistryClientServiceCollectionExtensions.cs" Link="SchemaRegistry\SchemaRegistryClientServiceCollectionExtensions.cs" />
 	</ItemGroup>
 
@@ -54,7 +54,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Confluent.SchemaRegistry.Serdes.Protobuf" Version="2.6.0" />
+		<PackageReference Include="Confluent.SchemaRegistry.Serdes.Protobuf" Version="2.6.1" />
 	</ItemGroup>
 
 	<ItemGroup>

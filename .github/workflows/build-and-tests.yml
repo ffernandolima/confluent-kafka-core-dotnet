@@ -20,15 +20,15 @@ jobs:
     - name: Start Docker Compose
       run: docker compose -f docker-compose.yml up -d
 
-    - name: Setup .NET 6
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: 6.0.x
-      
     - name: Setup .NET 8
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8.0.x
+      
+    - name: Setup .NET 9
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 9.0.x
 
     - name: Restore dependencies
       run: dotnet restore
