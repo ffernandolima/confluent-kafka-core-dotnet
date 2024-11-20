@@ -43,10 +43,10 @@ jobs:
     - name: Check containers
       run: docker ps -a
 
-    - name: Run tests (.NET 8)
+    - name: Run tests .NET 8
       run: dotnet test --framework net8.0 --configuration Release --no-build --verbosity normal --logger GitHubActions
 
-    - name: Run tests (.NET 9)
+    - name: Run tests .NET 9
       run: dotnet test --framework net9.0 --configuration Release --no-build --verbosity normal --logger GitHubActions
 
     - name: Stop Docker Compose
