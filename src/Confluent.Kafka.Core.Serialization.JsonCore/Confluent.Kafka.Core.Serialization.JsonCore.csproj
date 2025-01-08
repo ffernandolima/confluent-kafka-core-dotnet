@@ -16,7 +16,7 @@
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<RepositoryType>git</RepositoryType>
 		<PackageTags>Apache;Kafka;Confluent;librdkafka;Serialization;System.Text.Json;JsonCore</PackageTags>
-		<Version>1.0.1</Version>
+		<Version>1.0.2</Version>
 		<LangVersion>latest</LangVersion>
 	</PropertyGroup>
 

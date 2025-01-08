@@ -13,6 +13,8 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Json
 
         IJsonDeserializerConfigBuilder WithSubjectNameStrategy(SubjectNameStrategy? subjectNameStrategy);
 
+        IJsonDeserializerConfigBuilder WithValidate(bool? validate);
+
         IJsonDeserializerConfigBuilder WithConfigurationProperty(KeyValuePair<string, string> configurationProperty);
     }
 }
