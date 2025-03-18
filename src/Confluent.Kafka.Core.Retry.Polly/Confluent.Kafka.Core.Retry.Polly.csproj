@@ -16,7 +16,7 @@
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<RepositoryType>git</RepositoryType>
 		<PackageTags>Apache;Kafka;Confluent;librdkafka;Retry;Polly</PackageTags>
-		<Version>1.0.2</Version>
+		<Version>1.0.3</Version>
 		<LangVersion>latest</LangVersion>
 	</PropertyGroup>
 
@@ -38,7 +38,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Polly" Version="8.5.0" />
+		<PackageReference Include="Polly" Version="8.5.2" />
 	</ItemGroup>
 
 	<ItemGroup>

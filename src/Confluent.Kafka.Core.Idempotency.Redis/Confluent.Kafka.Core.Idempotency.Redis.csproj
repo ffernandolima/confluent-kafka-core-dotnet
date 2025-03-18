@@ -16,7 +16,7 @@
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<RepositoryType>git</RepositoryType>
 		<PackageTags>Apache;Kafka;Confluent;librdkafka;Idempotency;Redis</PackageTags>
-		<Version>1.0.2</Version>
+		<Version>1.0.3</Version>
 		<LangVersion>latest</LangVersion>
 	</PropertyGroup>
 
@@ -39,7 +39,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="StackExchange.Redis" Version="2.8.24" />
+		<PackageReference Include="StackExchange.Redis" Version="2.8.31" />
 	</ItemGroup>
 
 	<ItemGroup>
