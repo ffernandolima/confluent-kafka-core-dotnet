@@ -13,6 +13,8 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Json
 
         IJsonSerializerConfigBuilder WithNormalizeSchemas(bool? normalizeSchemas);
 
+        IJsonSerializerConfigBuilder WithUseSchemaId(int? useSchemaId);
+
         IJsonSerializerConfigBuilder WithUseLatestVersion(bool? useLatestVersion);
 
         IJsonSerializerConfigBuilder WithLatestCompatibilityStrict(bool? latestCompatibilityStrict);

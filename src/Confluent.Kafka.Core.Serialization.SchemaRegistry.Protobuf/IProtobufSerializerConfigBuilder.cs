@@ -13,6 +13,8 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Protobuf
 
         IProtobufSerializerConfigBuilder WithNormalizeSchemas(bool? normalizeSchemas);
 
+        IProtobufSerializerConfigBuilder WithUseSchemaId(int? useSchemaId);
+
         IProtobufSerializerConfigBuilder WithUseLatestVersion(bool? useLatestVersion);
 
         IProtobufSerializerConfigBuilder WithUseLatestWithMetadata(IDictionary<string, string> useLatestWithMetadata);

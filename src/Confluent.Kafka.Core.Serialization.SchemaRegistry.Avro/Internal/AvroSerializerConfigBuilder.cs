@@ -50,6 +50,12 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Avro.Internal
             return this;
         }
 
+        public IAvroSerializerConfigBuilder WithUseSchemaId(int? useSchemaId)
+        {
+            AppendAction(config => config.UseSchemaId = useSchemaId);
+            return this;
+        }
+
         public IAvroSerializerConfigBuilder WithUseLatestVersion(bool? useLatestVersion)
         {
             AppendAction(config => config.UseLatestVersion = useLatestVersion);

@@ -16,13 +16,13 @@
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<RepositoryType>git</RepositoryType>
 		<PackageTags>Apache;Kafka;Confluent;librdkafka;Abstractions</PackageTags>
-		<Version>1.0.3</Version>
+		<Version>1.0.4</Version>
 		<LangVersion>latest</LangVersion>
 		<RootNamespace>Confluent.Kafka.Core</RootNamespace>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Confluent.Kafka" Version="2.8.0" />
+		<PackageReference Include="Confluent.Kafka" Version="2.9.0" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="9.0.3" />
 		<PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="9.0.3" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.3" />

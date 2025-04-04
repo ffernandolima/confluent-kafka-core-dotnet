@@ -50,6 +50,12 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Protobuf.Internal
             return this;
         }
 
+        public IProtobufSerializerConfigBuilder WithUseSchemaId(int? useSchemaId)
+        {
+            AppendAction(config => config.UseSchemaId = useSchemaId);
+            return this;
+        }
+
         public IProtobufSerializerConfigBuilder WithUseLatestVersion(bool? useLatestVersion)
         {
             AppendAction(config => config.UseLatestVersion = useLatestVersion);

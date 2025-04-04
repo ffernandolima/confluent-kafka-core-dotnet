@@ -43,6 +43,24 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Internal
             return this;
         }
 
+        public ISchemaRegistryConfigBuilder WithMaxRetries(int? maxRetries)
+        {
+            AppendAction(config => config.MaxRetries = maxRetries);
+            return this;
+        }
+
+        public ISchemaRegistryConfigBuilder WithRetriesWaitMs(int? retriesWaitMs)
+        {
+            AppendAction(config => config.RetriesWaitMs = retriesWaitMs);
+            return this;
+        }
+
+        public ISchemaRegistryConfigBuilder WithRetriesMaxWaitMs(int? retriesMaxWaitMs)
+        {
+            AppendAction(config => config.RetriesMaxWaitMs = retriesMaxWaitMs);
+            return this;
+        }
+
         public ISchemaRegistryConfigBuilder WithSslCaLocation(string sslCaLocation)
         {
             AppendAction(config => config.SslCaLocation = sslCaLocation);
@@ -73,9 +91,63 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Internal
             return this;
         }
 
+        public ISchemaRegistryConfigBuilder WithLatestCacheTtlSecs(int? latestCacheTtlSecs)
+        {
+            AppendAction(config => config.LatestCacheTtlSecs = latestCacheTtlSecs);
+            return this;
+        }
+
         public ISchemaRegistryConfigBuilder WithBasicAuthUserInfo(string basicAuthUserInfo)
         {
             AppendAction(config => config.BasicAuthUserInfo = basicAuthUserInfo);
+            return this;
+        }
+
+        public ISchemaRegistryConfigBuilder WithBearerAuthCredentialsSource(BearerAuthCredentialsSource? bearerAuthCredentialsSource)
+        {
+            AppendAction(config => config.BearerAuthCredentialsSource = bearerAuthCredentialsSource);
+            return this;
+        }
+
+        public ISchemaRegistryConfigBuilder WithBearerAuthToken(string bearerAuthToken)
+        {
+            AppendAction(config => config.BearerAuthToken = bearerAuthToken);
+            return this;
+        }
+
+        public ISchemaRegistryConfigBuilder WithBearerAuthLogicalCluster(string bearerAuthLogicalCluster)
+        {
+            AppendAction(config => config.BearerAuthLogicalCluster = bearerAuthLogicalCluster);
+            return this;
+        }
+
+        public ISchemaRegistryConfigBuilder WithBearerAuthIdentityPoolId(string bearerAuthIdentityPoolId)
+        {
+            AppendAction(config => config.BearerAuthIdentityPoolId = bearerAuthIdentityPoolId);
+            return this;
+        }
+
+        public ISchemaRegistryConfigBuilder WithBearerAuthClientId(string bearerAuthClientId)
+        {
+            AppendAction(config => config.BearerAuthClientId = bearerAuthClientId);
+            return this;
+        }
+
+        public ISchemaRegistryConfigBuilder WithBearerAuthClientSecret(string bearerAuthClientSecret)
+        {
+            AppendAction(config => config.BearerAuthClientSecret = bearerAuthClientSecret);
+            return this;
+        }
+
+        public ISchemaRegistryConfigBuilder WithBearerAuthScope(string bearerAuthScope)
+        {
+            AppendAction(config => config.BearerAuthScope = bearerAuthScope);
+            return this;
+        }
+
+        public ISchemaRegistryConfigBuilder WithBearerAuthTokenEndpointUrl(string bearerAuthTokenEndpointUrl)
+        {
+            AppendAction(config => config.BearerAuthTokenEndpointUrl = bearerAuthTokenEndpointUrl);
             return this;
         }
 

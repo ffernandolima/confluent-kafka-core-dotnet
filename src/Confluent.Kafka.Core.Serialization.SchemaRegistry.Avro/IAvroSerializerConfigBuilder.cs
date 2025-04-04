@@ -13,6 +13,8 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Avro
 
         IAvroSerializerConfigBuilder WithNormalizeSchemas(bool? normalizeSchemas);
 
+        IAvroSerializerConfigBuilder WithUseSchemaId(int? useSchemaId);
+
         IAvroSerializerConfigBuilder WithUseLatestVersion(bool? useLatestVersion);
 
         IAvroSerializerConfigBuilder WithUseLatestWithMetadata(IDictionary<string, string> useLatestWithMetadata);

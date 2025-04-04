@@ -50,6 +50,12 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Json.Internal
             return this;
         }
 
+        public IJsonSerializerConfigBuilder WithUseSchemaId(int? useSchemaId)
+        {
+            AppendAction(config => config.UseSchemaId = useSchemaId);
+            return this;
+        }
+
         public IJsonSerializerConfigBuilder WithUseLatestVersion(bool? useLatestVersion)
         {
             AppendAction(config => config.UseLatestVersion = useLatestVersion);
