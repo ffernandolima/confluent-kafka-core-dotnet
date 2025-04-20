@@ -16,7 +16,7 @@
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<RepositoryType>git</RepositoryType>
 		<PackageTags>Apache;Kafka;Confluent;librdkafka;Serialization;SchemaRegistry;Confluent.SchemaRegistry.Serdes.Protobuf</PackageTags>
-		<Version>1.0.4</Version>
+		<Version>1.0.5</Version>
 		<LangVersion>latest</LangVersion>
 	</PropertyGroup>
 
@@ -54,8 +54,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Confluent.SchemaRegistry.Serdes.Protobuf" Version="2.9.0" />
-		<PackageReference Include="protobuf-net.Reflection" Version="3.2.12" PrivateAssets="contentfiles;analyzers;build;compile">
+		<PackageReference Include="Confluent.SchemaRegistry.Serdes.Protobuf" Version="2.10.0" />
+		<PackageReference Include="protobuf-net.Reflection" Version="3.2.52" PrivateAssets="contentfiles;analyzers;build;compile">
 			<Aliases>ProtobufNet</Aliases>
 		</PackageReference>
 	</ItemGroup>

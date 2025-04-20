@@ -16,7 +16,7 @@
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<RepositoryType>git</RepositoryType>
 		<PackageTags>Apache;Kafka;Confluent;librdkafka;Serialization;SchemaRegistry;Confluent.SchemaRegistry.Serdes.Json</PackageTags>
-		<Version>1.0.4</Version>
+		<Version>1.0.5</Version>
 		<LangVersion>latest</LangVersion>
 	</PropertyGroup>
 
@@ -54,7 +54,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Confluent.SchemaRegistry.Serdes.Json" Version="2.9.0" />
+		<PackageReference Include="Confluent.SchemaRegistry.Serdes.Json" Version="2.10.0" />
 	</ItemGroup>
 
 	<ItemGroup>
