@@ -72,7 +72,7 @@ builder.Services.AddKafka(builder =>
  var consumeResult = consumer.Consume();
  
  // Batch consumption
- var consumeResultd = consumer.ConsumeBatch();
+ var consumeResults = consumer.ConsumeBatch();
 ```
 
 By default, consumers are going to be registered as **Singleton**.
