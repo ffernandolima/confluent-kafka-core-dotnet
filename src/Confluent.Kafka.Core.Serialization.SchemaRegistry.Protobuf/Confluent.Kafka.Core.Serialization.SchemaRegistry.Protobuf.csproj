@@ -54,8 +54,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Confluent.SchemaRegistry.Serdes.Protobuf" Version="2.10.0" />
-		<PackageReference Include="protobuf-net.Reflection" Version="3.2.52" PrivateAssets="contentfiles;analyzers;build;compile">
+		<PackageReference Include="Confluent.SchemaRegistry.Serdes.Protobuf" />
+		<PackageReference Include="protobuf-net.Reflection" PrivateAssets="contentfiles;analyzers;build;compile">
 			<Aliases>ProtobufNet</Aliases>
 		</PackageReference>
 	</ItemGroup>
