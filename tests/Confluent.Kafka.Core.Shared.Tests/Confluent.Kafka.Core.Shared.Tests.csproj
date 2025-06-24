@@ -1,40 +1,40 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-	<PropertyGroup>
-		<TargetFrameworks>net8.0;net9.0</TargetFrameworks>
-		<IsPackable>false</IsPackable>
-		<LangVersion>latest</LangVersion>
-	</PropertyGroup>
+    <PropertyGroup>
+        <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
+        <IsPackable>false</IsPackable>
+        <LangVersion>latest</LangVersion>
+    </PropertyGroup>
 
-	<ItemGroup Label="Builders">
-		<Compile Include="..\..\src\Shared\Builders\FunctionalBuilder``.cs"   Link="Internal\FunctionalBuilder``.cs" />
-		<Compile Include="..\..\src\Shared\Builders\IFunctionalBuilder``.cs"  Link="Internal\IFunctionalBuilder``.cs" />
-		<Compile Include="..\..\src\Shared\Builders\FunctionalBuilder```.cs"  Link="Internal\FunctionalBuilder```.cs" />
-		<Compile Include="..\..\src\Shared\Builders\IFunctionalBuilder```.cs" Link="Internal\IFunctionalBuilder```.cs" />
-	</ItemGroup>
+    <ItemGroup Label="Builders">
+        <Compile Include="..\..\src\Shared\Builders\FunctionalBuilder``.cs"   Link="Internal\FunctionalBuilder``.cs" />
+        <Compile Include="..\..\src\Shared\Builders\IFunctionalBuilder``.cs"  Link="Internal\IFunctionalBuilder``.cs" />
+        <Compile Include="..\..\src\Shared\Builders\FunctionalBuilder```.cs"  Link="Internal\FunctionalBuilder```.cs" />
+        <Compile Include="..\..\src\Shared\Builders\IFunctionalBuilder```.cs" Link="Internal\IFunctionalBuilder```.cs" />
+    </ItemGroup>
 
-	<ItemGroup Label="Extensions">
-		<Compile Include="..\..\src\Shared\Extensions\TypeExtensions.cs" Link="Internal\TypeExtensions.cs" />
-	</ItemGroup>
+    <ItemGroup Label="Extensions">
+        <Compile Include="..\..\src\Shared\Extensions\TypeExtensions.cs" Link="Internal\TypeExtensions.cs" />
+    </ItemGroup>
 
-	<ItemGroup>
-		<PackageReference Include="coverlet.collector">
-			<PrivateAssets>all</PrivateAssets>
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
-		<PackageReference Include="GitHubActionsTestLogger">
-			<PrivateAssets>all</PrivateAssets>
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
-		<PackageReference Include="Microsoft.Extensions.Configuration" />
-		<PackageReference Include="Microsoft.Extensions.Configuration.Binder" />
-		<PackageReference Include="Microsoft.NET.Test.Sdk" />
-		<PackageReference Include="Moq" />
-		<PackageReference Include="xunit" />
-		<PackageReference Include="xunit.runner.visualstudio">
-			<PrivateAssets>all</PrivateAssets>
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
-	</ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="coverlet.collector">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="GitHubActionsTestLogger">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.Extensions.Configuration" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.Binder" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" />
+        <PackageReference Include="Moq" />
+        <PackageReference Include="xunit" />
+        <PackageReference Include="xunit.runner.visualstudio">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
 
 </Project>
