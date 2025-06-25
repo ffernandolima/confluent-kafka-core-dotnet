@@ -7,44 +7,48 @@
         ports:
           - "6379:6379"
 
-    zookeeper:
-        image: confluentinc/cp-zookeeper:latest
-        hostname: zookeeper
-        container_name: zookeeper
-        ports:
-            - "2181:2181"
-        environment:
-            ZOOKEEPER_CLIENT_PORT: 2181
-            ZOOKEEPER_TICK_TIME: 2000
-
     kafka:
         image: confluentinc/cp-kafka:latest
         hostname: kafka
         container_name: kafka
-        depends_on:
-            - zookeeper
         ports:
             - "9092:9092"
-            - "9101:9101"
+            - "9093:9093"
         environment:
-            KAFKA_BROKER_ID: 1
-            KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
-            KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092
-            KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
-            KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+            # KRaft mode configuration
+            KAFKA_NODE_ID: 1
+            KAFKA_PROCESS_ROLES: 'broker,controller'
+            KAFKA_CONTROLLER_QUORUM_VOTERS: '1@kafka:9093'
+            KAFKA_CONTROLLER_LISTENER_NAMES: 'CONTROLLER'
+            KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: 'CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT'
+            KAFKA_LISTENERS: 'PLAINTEXT://kafka:29092,PLAINTEXT_HOST://0.0.0.0:9092,CONTROLLER://kafka:9093'
+            KAFKA_ADVERTISED_LISTENERS: 'PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092'
+            KAFKA_INTER_BROKER_LISTENER_NAME: 'PLAINTEXT'
+            
+            # KRaft cluster ID (required for KRaft mode)
+            CLUSTER_ID: 'MkU3OEVBNTcwNTJENDM2Qk'
+            
+            # Topic and replication settings
             KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
             KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
-            KAFKA_CONFLUENT_LICENSE_TOPIC_REPLICATION_FACTOR: 1
-            KAFKA_CONFLUENT_BALANCER_TOPIC_REPLICATION_FACTOR: 1
             KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
             KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+            
+            # Confluent specific settings
+            KAFKA_CONFLUENT_LICENSE_TOPIC_REPLICATION_FACTOR: 1
+            KAFKA_CONFLUENT_BALANCER_TOPIC_REPLICATION_FACTOR: 1
+            KAFKA_CONFLUENT_SCHEMA_REGISTRY_URL: http://schema-registry:8081
+            
+            # Metrics and monitoring
             KAFKA_JMX_PORT: 9101
             KAFKA_JMX_HOSTNAME: localhost
-            KAFKA_CONFLUENT_SCHEMA_REGISTRY_URL: http://schema-registry:8081
             CONFLUENT_METRICS_REPORTER_BOOTSTRAP_SERVERS: 'kafka:29092'
             CONFLUENT_METRICS_REPORTER_TOPIC_REPLICAS: 1
             CONFLUENT_METRICS_ENABLE: 'true'
             CONFLUENT_SUPPORT_CUSTOMER_ID: 'anonymous'
+            
+            # KRaft log directory
+            KAFKA_LOG_DIRS: '/tmp/kraft-combined-logs'
 
     schema-registry:
         image: confluentinc/cp-schema-registry:latest
