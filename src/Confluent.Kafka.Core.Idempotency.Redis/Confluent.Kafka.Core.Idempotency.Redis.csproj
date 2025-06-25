@@ -1,51 +1,51 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-	<PropertyGroup>
-		<TargetFrameworks>netstandard2.0;netstandard2.1;net8.0;net9.0</TargetFrameworks>
-		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-		<GenerateDocumentationFile>true</GenerateDocumentationFile>
-		<NoWarn>1701;1702;1705;1591</NoWarn>
-		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-		<AssemblyName>Confluent.Kafka.Core.Idempotency.Redis</AssemblyName>
-		<PackageId>Confluent.Kafka.Core.Idempotency.Redis</PackageId>
-		<Authors>Lima Technology Services;Fernando Luiz de Lima</Authors>
-		<Copyright>Copyright © Lima Technology Services;Fernando Luiz de Lima</Copyright>
-		<Description>Provides idempotency implementation through Redis for Apache Kafka .NET client.</Description>
-		<PackageProjectUrl>https://github.com/ffernandolima/confluent-kafka-core-dotnet</PackageProjectUrl>
-		<RepositoryUrl>https://github.com/ffernandolima/confluent-kafka-core-dotnet</RepositoryUrl>
-		<PackageLicenseExpression>MIT</PackageLicenseExpression>
-		<RepositoryType>git</RepositoryType>
-		<PackageTags>Apache;Kafka;Confluent;librdkafka;Idempotency;Redis</PackageTags>
-		<Version>1.0.5</Version>
-		<LangVersion>latest</LangVersion>
-	</PropertyGroup>
+    <PropertyGroup>
+        <TargetFrameworks>netstandard2.0;netstandard2.1;net8.0;net9.0</TargetFrameworks>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <NoWarn>1701;1702;1705;1591</NoWarn>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <AssemblyName>Confluent.Kafka.Core.Idempotency.Redis</AssemblyName>
+        <PackageId>Confluent.Kafka.Core.Idempotency.Redis</PackageId>
+        <Authors>Lima Technology Services;Fernando Luiz de Lima</Authors>
+        <Copyright>Copyright © Lima Technology Services;Fernando Luiz de Lima</Copyright>
+        <Description>Provides idempotency implementation through Redis for Apache Kafka .NET client.</Description>
+        <PackageProjectUrl>https://github.com/ffernandolima/confluent-kafka-core-dotnet</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/ffernandolima/confluent-kafka-core-dotnet</RepositoryUrl>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <RepositoryType>git</RepositoryType>
+        <PackageTags>Apache;Kafka;Confluent;librdkafka;Idempotency;Redis</PackageTags>
+        <Version>1.0.5</Version>
+        <LangVersion>latest</LangVersion>
+    </PropertyGroup>
 
-	<ItemGroup Label="Builders">
-		<Compile Include="..\Shared\Builders\FunctionalBuilder``.cs"   Link="Internal\FunctionalBuilder``.cs" />
-		<Compile Include="..\Shared\Builders\IFunctionalBuilder``.cs"  Link="Internal\IFunctionalBuilder``.cs" />
-		<Compile Include="..\Shared\Builders\FunctionalBuilder```.cs"  Link="Internal\FunctionalBuilder```.cs" />
-		<Compile Include="..\Shared\Builders\IFunctionalBuilder```.cs" Link="Internal\IFunctionalBuilder```.cs" />
-	</ItemGroup>
+    <ItemGroup Label="Builders">
+        <Compile Include="..\Shared\Builders\FunctionalBuilder``.cs"   Link="Internal\FunctionalBuilder``.cs" />
+        <Compile Include="..\Shared\Builders\IFunctionalBuilder``.cs"  Link="Internal\IFunctionalBuilder``.cs" />
+        <Compile Include="..\Shared\Builders\FunctionalBuilder```.cs"  Link="Internal\FunctionalBuilder```.cs" />
+        <Compile Include="..\Shared\Builders\IFunctionalBuilder```.cs" Link="Internal\IFunctionalBuilder```.cs" />
+    </ItemGroup>
 
-	<ItemGroup Label="Extensions">
-		<Compile Include="..\Shared\Extensions\LoggerFactoryExtensions.cs"     Link="Internal\LoggerFactoryExtensions.cs" />
-		<Compile Include="..\Shared\Extensions\TaskExtensions.cs"              Link="Internal\TaskExtensions.cs" />
-		<Compile Include="..\Shared\Extensions\TypeExtensions.cs"              Link="Internal\TypeExtensions.cs" />
-		<Compile Include="..\Shared\Extensions\ValidatableObjectExtensions.cs" Link="Internal\ValidatableObjectExtensions.cs" />
-	</ItemGroup>
+    <ItemGroup Label="Extensions">
+        <Compile Include="..\Shared\Extensions\LoggerFactoryExtensions.cs"     Link="Internal\LoggerFactoryExtensions.cs" />
+        <Compile Include="..\Shared\Extensions\TaskExtensions.cs"              Link="Internal\TaskExtensions.cs" />
+        <Compile Include="..\Shared\Extensions\TypeExtensions.cs"              Link="Internal\TypeExtensions.cs" />
+        <Compile Include="..\Shared\Extensions\ValidatableObjectExtensions.cs" Link="Internal\ValidatableObjectExtensions.cs" />
+    </ItemGroup>
 
-	<ItemGroup>
-		<ProjectReference Include="..\Confluent.Kafka.Core.Abstractions\Confluent.Kafka.Core.Abstractions.csproj" />
-	</ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\Confluent.Kafka.Core.Abstractions\Confluent.Kafka.Core.Abstractions.csproj" />
+    </ItemGroup>
 
-	<ItemGroup>
-		<PackageReference Include="StackExchange.Redis" Version="2.8.31" />
-	</ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="StackExchange.Redis" />
+    </ItemGroup>
 
-	<ItemGroup>
-		<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
-			<_Parameter1>Confluent.Kafka.Core.Tests</_Parameter1>
-		</AssemblyAttribute>
-	</ItemGroup>
+    <ItemGroup>
+        <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+            <_Parameter1>Confluent.Kafka.Core.Tests</_Parameter1>
+        </AssemblyAttribute>
+    </ItemGroup>
 
 </Project>

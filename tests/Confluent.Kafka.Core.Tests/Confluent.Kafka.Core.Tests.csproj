@@ -1,40 +1,40 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-	<PropertyGroup>
-		<TargetFrameworks>net8.0;net9.0</TargetFrameworks>
-		<IsPackable>false</IsPackable>
-		<LangVersion>latest</LangVersion>
-	</PropertyGroup>
+    <PropertyGroup>
+        <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
+        <IsPackable>false</IsPackable>
+        <LangVersion>latest</LangVersion>
+    </PropertyGroup>
 
-	<ItemGroup>
-		<ProjectReference Include="..\..\src\Confluent.Kafka.Core\Confluent.Kafka.Core.csproj" />
-		<ProjectReference Include="..\..\src\Confluent.Kafka.Core.Idempotency.Redis\Confluent.Kafka.Core.Idempotency.Redis.csproj" />
-		<ProjectReference Include="..\..\src\Confluent.Kafka.Core.OpenTelemetry\Confluent.Kafka.Core.OpenTelemetry.csproj" />
-		<ProjectReference Include="..\..\src\Confluent.Kafka.Core.Retry.Polly\Confluent.Kafka.Core.Retry.Polly.csproj" />
-		<ProjectReference Include="..\..\src\Confluent.Kafka.Core.Serialization.JsonCore\Confluent.Kafka.Core.Serialization.JsonCore.csproj" />
-		<ProjectReference Include="..\..\src\Confluent.Kafka.Core.Serialization.NewtonsoftJson\Confluent.Kafka.Core.Serialization.NewtonsoftJson.csproj" />
-		<ProjectReference Include="..\..\src\Confluent.Kafka.Core.Serialization.ProtobufNet\Confluent.Kafka.Core.Serialization.ProtobufNet.csproj" />
-		<ProjectReference Include="..\..\src\Confluent.Kafka.Core.Serialization.SchemaRegistry.Avro\Confluent.Kafka.Core.Serialization.SchemaRegistry.Avro.csproj" />
-		<ProjectReference Include="..\..\src\Confluent.Kafka.Core.Serialization.SchemaRegistry.Json\Confluent.Kafka.Core.Serialization.SchemaRegistry.Json.csproj" />
-		<ProjectReference Include="..\..\src\Confluent.Kafka.Core.Serialization.SchemaRegistry.Protobuf\Confluent.Kafka.Core.Serialization.SchemaRegistry.Protobuf.csproj" />
-	</ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\..\src\Confluent.Kafka.Core\Confluent.Kafka.Core.csproj" />
+        <ProjectReference Include="..\..\src\Confluent.Kafka.Core.Idempotency.Redis\Confluent.Kafka.Core.Idempotency.Redis.csproj" />
+        <ProjectReference Include="..\..\src\Confluent.Kafka.Core.OpenTelemetry\Confluent.Kafka.Core.OpenTelemetry.csproj" />
+        <ProjectReference Include="..\..\src\Confluent.Kafka.Core.Retry.Polly\Confluent.Kafka.Core.Retry.Polly.csproj" />
+        <ProjectReference Include="..\..\src\Confluent.Kafka.Core.Serialization.JsonCore\Confluent.Kafka.Core.Serialization.JsonCore.csproj" />
+        <ProjectReference Include="..\..\src\Confluent.Kafka.Core.Serialization.NewtonsoftJson\Confluent.Kafka.Core.Serialization.NewtonsoftJson.csproj" />
+        <ProjectReference Include="..\..\src\Confluent.Kafka.Core.Serialization.ProtobufNet\Confluent.Kafka.Core.Serialization.ProtobufNet.csproj" />
+        <ProjectReference Include="..\..\src\Confluent.Kafka.Core.Serialization.SchemaRegistry.Avro\Confluent.Kafka.Core.Serialization.SchemaRegistry.Avro.csproj" />
+        <ProjectReference Include="..\..\src\Confluent.Kafka.Core.Serialization.SchemaRegistry.Json\Confluent.Kafka.Core.Serialization.SchemaRegistry.Json.csproj" />
+        <ProjectReference Include="..\..\src\Confluent.Kafka.Core.Serialization.SchemaRegistry.Protobuf\Confluent.Kafka.Core.Serialization.SchemaRegistry.Protobuf.csproj" />
+    </ItemGroup>
 
-	<ItemGroup>
-		<PackageReference Include="coverlet.collector" Version="6.0.4">
-			<PrivateAssets>all</PrivateAssets>
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
-		<PackageReference Include="GitHubActionsTestLogger" Version="2.4.1">
-			<PrivateAssets>all</PrivateAssets>
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
-		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.13.0" />
-		<PackageReference Include="Moq" Version="4.20.72" />
-		<PackageReference Include="xunit" Version="2.9.3" />
-		<PackageReference Include="xunit.runner.visualstudio" Version="3.0.2">
-			<PrivateAssets>all</PrivateAssets>
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
-	</ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="coverlet.collector">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="GitHubActionsTestLogger">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" />
+        <PackageReference Include="Moq" />
+        <PackageReference Include="xunit" />
+        <PackageReference Include="xunit.runner.visualstudio">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
 
 </Project>
