@@ -45,9 +45,9 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Protobuf.Internal
             return this;
         }
 
-        public IProtobufDeserializerConfigBuilder WithSchemaIdStrategy(SchemaIdDeserializerStrategy? SchemaIdStrategy)
+        public IProtobufDeserializerConfigBuilder WithSchemaIdStrategy(SchemaIdDeserializerStrategy? schemaIdStrategy)
         {
-            AppendAction(config => config.SchemaIdStrategy = SchemaIdStrategy);
+            AppendAction(config => config.SchemaIdStrategy = schemaIdStrategy);
             return this;
         }
 

@@ -80,9 +80,9 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Json.Internal
             return this;
         }
 
-        public IJsonSerializerConfigBuilder WithSchemaIdStrategy(SchemaIdSerializerStrategy? SchemaIdStrategy)
+        public IJsonSerializerConfigBuilder WithSchemaIdStrategy(SchemaIdSerializerStrategy? schemaIdStrategy)
         {
-            AppendAction(config => config.SchemaIdStrategy = SchemaIdStrategy);
+            AppendAction(config => config.SchemaIdStrategy = schemaIdStrategy);
             return this;
         }
 

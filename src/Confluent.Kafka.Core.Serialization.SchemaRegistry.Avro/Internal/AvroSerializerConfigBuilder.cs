@@ -74,9 +74,9 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Avro.Internal
             return this;
         }
 
-        public IAvroSerializerConfigBuilder WithSchemaIdStrategy(SchemaIdSerializerStrategy? SchemaIdStrategy)
+        public IAvroSerializerConfigBuilder WithSchemaIdStrategy(SchemaIdSerializerStrategy? schemaIdStrategy)
         {
-            AppendAction(config => config.SchemaIdStrategy = SchemaIdStrategy);
+            AppendAction(config => config.SchemaIdStrategy = schemaIdStrategy);
             return this;
         }
 
