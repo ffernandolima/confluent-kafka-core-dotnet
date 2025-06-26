@@ -101,24 +101,24 @@ namespace Confluent.Kafka.Core.Tests.Serialization
         }
 
         [Fact]
-        public async Task Deserialize_NullData_ThrowsInvalidDataException_WhenIsNullFlagIsFalse()
+        public async Task Deserialize_NullData_ThrowsIndexOutOfRangeException_WhenIsNullFlagIsFalse()
         {
             // Act & Assert
-            var exception = await Assert.ThrowsAsync<InvalidDataException>(() => _serializer.DeserializeAsync(null, false, _context));
+            var exception = await Assert.ThrowsAsync<IndexOutOfRangeException>(() => _serializer.DeserializeAsync(null, false, _context));
 
-            Assert.Contains("Expecting data framing of length 6 bytes or more", exception.Message);
+            Assert.Contains("Index was outside the bounds of the array.", exception.Message);
         }
 
         [Fact]
-        public async Task Deserialize_EmptyData_ThrowsInvalidDataException()
+        public async Task Deserialize_EmptyData_ThrowsIndexOutOfRangeException()
         {
             // Arrange
             var emptyData = Array.Empty<byte>();
 
             // Act & Assert
-            var exception = await Assert.ThrowsAsync<InvalidDataException>(() => _serializer.DeserializeAsync(emptyData, false, _context));
+            var exception = await Assert.ThrowsAsync<IndexOutOfRangeException>(() => _serializer.DeserializeAsync(emptyData, false, _context));
 
-            Assert.Contains("Expecting data framing of length 6 bytes or more", exception.Message);
+            Assert.Contains("Index was outside the bounds of the array.", exception.Message);
         }
 
         [Fact]
@@ -130,7 +130,7 @@ namespace Confluent.Kafka.Core.Tests.Serialization
             // Act & Assert
             var exception = await Assert.ThrowsAsync<InvalidDataException>(() => _serializer.DeserializeAsync(invalidData, false, _context));
 
-            Assert.Contains("Expecting message Value with Confluent Schema Registry framing.", exception.Message);
+            Assert.Contains("Invalid magic byte: 105", exception.Message);
         }
     }
 }

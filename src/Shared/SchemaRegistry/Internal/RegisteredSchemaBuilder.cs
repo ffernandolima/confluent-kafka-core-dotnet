@@ -19,6 +19,7 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Internal
             Subject,
             Version,
             Id,
+            Guid,
             SchemaString,
             SchemaType,
             SchemaReferences
@@ -30,6 +31,7 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Internal
             { RegisteredSchemaParameter.Subject,          typeof(string)                },
             { RegisteredSchemaParameter.Version,          typeof(int)                   },
             { RegisteredSchemaParameter.Id,               typeof(int)                   },
+            { RegisteredSchemaParameter.Guid,             typeof(string)                },
             { RegisteredSchemaParameter.SchemaString,     typeof(string)                },
             { RegisteredSchemaParameter.SchemaType,       typeof(SchemaType)            },
             { RegisteredSchemaParameter.SchemaReferences, typeof(List<SchemaReference>) }
@@ -90,6 +92,12 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Internal
         public IRegisteredSchemaBuilder WithId(int id)
         {
             AppendParameter(parameters => parameters[(int)RegisteredSchemaParameter.Id] = id);
+            return this;
+        }
+
+        public IRegisteredSchemaBuilder WithGuid(string guid)
+        {
+            AppendParameter(parameters => parameters[(int)RegisteredSchemaParameter.Guid] = guid);
             return this;
         }
 

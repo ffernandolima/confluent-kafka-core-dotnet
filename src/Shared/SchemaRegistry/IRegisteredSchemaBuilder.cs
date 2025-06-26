@@ -7,5 +7,7 @@
         IRegisteredSchemaBuilder WithVersion(int version);
 
         IRegisteredSchemaBuilder WithId(int id);
+
+        IRegisteredSchemaBuilder WithGuid(string guid);
     }
 }

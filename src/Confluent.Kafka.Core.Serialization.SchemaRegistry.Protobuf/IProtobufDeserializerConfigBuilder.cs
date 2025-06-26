@@ -13,6 +13,8 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Protobuf
 
         IProtobufDeserializerConfigBuilder WithSubjectNameStrategy(SubjectNameStrategy? subjectNameStrategy);
 
+        IProtobufDeserializerConfigBuilder WithSchemaIdStrategy(SchemaIdDeserializerStrategy? schemaIdStrategy);
+
         IProtobufDeserializerConfigBuilder WithUseDeprecatedFormat(bool? useDeprecatedFormat);
 
         IProtobufDeserializerConfigBuilder WithConfigurationProperty(KeyValuePair<string, string> configurationProperty);
