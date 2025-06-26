@@ -86,6 +86,12 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Protobuf.Internal
             return this;
         }
 
+        public IProtobufSerializerConfigBuilder WithSchemaIdStrategy(SchemaIdSerializerStrategy? SchemaIdStrategy)
+        {
+            AppendAction(config => config.SchemaIdStrategy = SchemaIdStrategy);
+            return this;
+        }
+
         public IProtobufSerializerConfigBuilder WithReferenceSubjectNameStrategy(ReferenceSubjectNameStrategy? referenceSubjectNameStrategy)
         {
             AppendAction(config => config.ReferenceSubjectNameStrategy = referenceSubjectNameStrategy);

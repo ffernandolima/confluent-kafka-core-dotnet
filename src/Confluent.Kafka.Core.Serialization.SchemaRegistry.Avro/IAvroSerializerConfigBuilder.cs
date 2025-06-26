@@ -21,6 +21,8 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Avro
 
         IAvroSerializerConfigBuilder WithSubjectNameStrategy(SubjectNameStrategy? subjectNameStrategy);
 
+        IAvroSerializerConfigBuilder WithSchemaIdStrategy(SchemaIdSerializerStrategy? SchemaIdStrategy);
+
         IAvroSerializerConfigBuilder WithConfigurationProperty(KeyValuePair<string, string> configurationProperty);
     }
 }
