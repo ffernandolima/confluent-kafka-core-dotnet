@@ -32,7 +32,7 @@ namespace Confluent.Kafka.Core.Tests.Core.Hosting
     {
         private const string BootstrapServers = "localhost:9092";
 
-        private static readonly int DefaultRetryCount = 1;
+        private static readonly int DefaultRetryCount = 5;
         private static readonly TimeSpan DefaultTimeout = TimeSpan.FromSeconds(1);
         private static readonly TimeSpan DefaultDelay = TimeSpan.FromSeconds(3);
 
