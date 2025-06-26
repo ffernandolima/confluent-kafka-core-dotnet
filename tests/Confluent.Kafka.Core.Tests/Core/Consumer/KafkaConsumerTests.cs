@@ -29,7 +29,7 @@ namespace Confluent.Kafka.Core.Tests.Core.Consumer
     {
         private const string BootstrapServers = "localhost:9092";
 
-        private static readonly int DefaultRetryCount = 5;
+        private static readonly int DefaultRetryCount = 3;
         private static readonly TimeSpan DefaultTimeout = TimeSpan.FromSeconds(1);
 
         private readonly Mock<ILogger> _mockLogger;
