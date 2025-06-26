@@ -365,6 +365,8 @@ namespace Confluent.Kafka.Core.Tests.Core.Hosting
                 {
                     Value = _encoding.GetBytes(value)
                 });
+
+            _producer.Flush(DefaultTimeout);
         }
     }
 }

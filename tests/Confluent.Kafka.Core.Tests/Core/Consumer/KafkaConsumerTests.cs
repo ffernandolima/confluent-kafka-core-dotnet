@@ -527,6 +527,8 @@ namespace Confluent.Kafka.Core.Tests.Core.Consumer
                 {
                     Value = _encoding.GetBytes(value)
                 });
+
+            _producer.Flush(DefaultTimeout);
         }
     }
 }

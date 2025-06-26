@@ -357,6 +357,8 @@ namespace Confluent.Kafka.Core.Tests.Core.Hosting
                     },
                     Headers = headers
                 });
+
+            _producer.Flush(DefaultTimeout);
         }
     }
 }
