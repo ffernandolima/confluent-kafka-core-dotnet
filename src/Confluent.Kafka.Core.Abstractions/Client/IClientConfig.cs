@@ -18,6 +18,10 @@
 
         int? MaxInFlight { get; }
 
+        MetadataRecoveryStrategy? MetadataRecoveryStrategy { get; }
+
+        int? MetadataRecoveryRebootstrapTriggerMs { get; }
+
         int? TopicMetadataRefreshIntervalMs { get; }
 
         int? MetadataMaxAgeMs { get; }
@@ -98,6 +102,10 @@
 
         string SslCaLocation { get; }
 
+        string HttpsCaLocation { get; }
+
+        string HttpsCaPem { get; }
+
         string SslCaPem { get; }
 
         string SslCaCertificateStores { get; }
@@ -148,16 +156,42 @@
 
         string SaslOauthbearerTokenEndpointUrl { get; }
 
+        SaslOauthbearerGrantType? SaslOauthbearerGrantType { get; }
+
+        SaslOauthbearerAssertionAlgorithm? SaslOauthbearerAssertionAlgorithm { get; }
+
+        string SaslOauthbearerAssertionPrivateKeyFile { get; }
+
+        string SaslOauthbearerAssertionPrivateKeyPassphrase { get; }
+
+        string SaslOauthbearerAssertionPrivateKeyPem { get; }
+
+        string SaslOauthbearerAssertionFile { get; }
+
+        string SaslOauthbearerAssertionClaimAud { get; }
+
+        int? SaslOauthbearerAssertionClaimExpSeconds { get; }
+
+        string SaslOauthbearerAssertionClaimIss { get; }
+
+        bool? SaslOauthbearerAssertionClaimJtiInclude { get; }
+
+        int? SaslOauthbearerAssertionClaimNbfSeconds { get; }
+
+        string SaslOauthbearerAssertionClaimSub { get; }
+
+        string SaslOauthbearerAssertionJwtTemplateFile { get; }
+
         string PluginLibraryPaths { get; }
 
         string ClientRack { get; }
 
-        public int? RetryBackoffMs { get; }
+        int? RetryBackoffMs { get; }
 
-        public int? RetryBackoffMaxMs { get; }
+        int? RetryBackoffMaxMs { get; }
 
         ClientDnsLookup? ClientDnsLookup { get; }
 
-        public bool? EnableMetricsPush { get; }
+        bool? EnableMetricsPush { get; }
     }
 }
