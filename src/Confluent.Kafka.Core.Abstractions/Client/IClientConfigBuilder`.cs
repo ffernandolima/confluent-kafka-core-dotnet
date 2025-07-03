@@ -20,6 +20,10 @@
 
         TBuilder WithMaxInFlight(int? maxInFlight);
 
+        TBuilder WithMetadataRecoveryStrategy(MetadataRecoveryStrategy? metadataRecoveryStrategy);
+
+        TBuilder WithMetadataRecoveryRebootstrapTriggerMs(int? metadataRecoveryRebootstrapTriggerMs);
+
         TBuilder WithTopicMetadataRefreshIntervalMs(int? topicMetadataRefreshIntervalMs);
 
         TBuilder WithMetadataMaxAgeMs(int? metadataMaxAgeMs);
@@ -100,6 +104,10 @@
 
         TBuilder WithSslCaLocation(string sslCaLocation);
 
+        TBuilder WithHttpsCaLocation(string httpsCaLocation);
+
+        TBuilder WithHttpsCaPem(string httpsCaPem);
+
         TBuilder WithSslCaPem(string sslCaPem);
 
         TBuilder WithSslCaCertificateStores(string sslCaCertificateStores);
@@ -149,6 +157,32 @@
         TBuilder WithSaslOauthbearerExtensions(string saslOauthbearerExtensions);
 
         TBuilder WithSaslOauthbearerTokenEndpointUrl(string saslOauthbearerTokenEndpointUrl);
+
+        TBuilder WithSaslOauthbearerGrantType(SaslOauthbearerGrantType? saslOauthbearerGrantType);
+
+        TBuilder WithSaslOauthbearerAssertionAlgorithm(SaslOauthbearerAssertionAlgorithm? saslOauthbearerAssertionAlgorithm);
+
+        TBuilder WithSaslOauthbearerAssertionPrivateKeyFile(string saslOauthbearerAssertionPrivateKeyFile);
+
+        TBuilder WithSaslOauthbearerAssertionPrivateKeyPassphrase(string saslOauthbearerAssertionPrivateKeyPassphrase);
+
+        TBuilder WithSaslOauthbearerAssertionPrivateKeyPem(string saslOauthbearerAssertionPrivateKeyPem);
+
+        TBuilder WithSaslOauthbearerAssertionFile(string saslOauthbearerAssertionFile);
+
+        TBuilder WithSaslOauthbearerAssertionClaimAud(string saslOauthbearerAssertionClaimAud);
+
+        TBuilder WithSaslOauthbearerAssertionClaimExpSeconds(int? saslOauthbearerAssertionClaimExpSeconds);
+
+        TBuilder WithSaslOauthbearerAssertionClaimIss(string saslOauthbearerAssertionClaimIss);
+
+        TBuilder WithSaslOauthbearerAssertionClaimJtiInclude(bool? saslOauthbearerAssertionClaimJtiInclude);
+
+        TBuilder WithSaslOauthbearerAssertionClaimNbfSeconds(int? saslOauthbearerAssertionClaimNbfSeconds);
+
+        TBuilder WithSaslOauthbearerAssertionClaimSub(string saslOauthbearerAssertionClaimSub);
+
+        TBuilder WithSaslOauthbearerAssertionJwtTemplateFile(string saslOauthbearerAssertionJwtTemplateFile);
 
         TBuilder WithPluginLibraryPaths(string pluginLibraryPaths);
 

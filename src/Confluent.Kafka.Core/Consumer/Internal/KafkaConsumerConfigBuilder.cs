@@ -91,6 +91,18 @@ namespace Confluent.Kafka.Core.Consumer.Internal
             return this;
         }
 
+        public IKafkaConsumerConfigBuilder WithMetadataRecoveryStrategy(MetadataRecoveryStrategy? metadataRecoveryStrategy)
+        {
+            AppendAction(config => config.MetadataRecoveryStrategy = metadataRecoveryStrategy);
+            return this;
+        }
+
+        public IKafkaConsumerConfigBuilder WithMetadataRecoveryRebootstrapTriggerMs(int? metadataRecoveryRebootstrapTriggerMs)
+        {
+            AppendAction(config => config.MetadataRecoveryRebootstrapTriggerMs = metadataRecoveryRebootstrapTriggerMs);
+            return this;
+        }
+
         public IKafkaConsumerConfigBuilder WithTopicMetadataRefreshIntervalMs(int? topicMetadataRefreshIntervalMs)
         {
             AppendAction(config => config.TopicMetadataRefreshIntervalMs = topicMetadataRefreshIntervalMs);
@@ -331,6 +343,18 @@ namespace Confluent.Kafka.Core.Consumer.Internal
             return this;
         }
 
+        public IKafkaConsumerConfigBuilder WithHttpsCaLocation(string httpsCaLocation)
+        {
+            AppendAction(config => config.HttpsCaLocation = httpsCaLocation);
+            return this;
+        }
+
+        public IKafkaConsumerConfigBuilder WithHttpsCaPem(string httpsCaPem)
+        {
+            AppendAction(config => config.HttpsCaPem = httpsCaPem);
+            return this;
+        }
+
         public IKafkaConsumerConfigBuilder WithSslCaPem(string sslCaPem)
         {
             AppendAction(config => config.SslCaPem = sslCaPem);
@@ -478,6 +502,84 @@ namespace Confluent.Kafka.Core.Consumer.Internal
         public IKafkaConsumerConfigBuilder WithSaslOauthbearerTokenEndpointUrl(string saslOauthbearerTokenEndpointUrl)
         {
             AppendAction(config => config.SaslOauthbearerTokenEndpointUrl = saslOauthbearerTokenEndpointUrl);
+            return this;
+        }
+
+        public IKafkaConsumerConfigBuilder WithSaslOauthbearerGrantType(SaslOauthbearerGrantType? saslOauthbearerGrantType)
+        {
+            AppendAction(config => config.SaslOauthbearerGrantType = saslOauthbearerGrantType);
+            return this;
+        }
+
+        public IKafkaConsumerConfigBuilder WithSaslOauthbearerAssertionAlgorithm(SaslOauthbearerAssertionAlgorithm? saslOauthbearerAssertionAlgorithm)
+        {
+            AppendAction(config => config.SaslOauthbearerAssertionAlgorithm = saslOauthbearerAssertionAlgorithm);
+            return this;
+        }
+
+        public IKafkaConsumerConfigBuilder WithSaslOauthbearerAssertionPrivateKeyFile(string saslOauthbearerAssertionPrivateKeyFile)
+        {
+            AppendAction(config => config.SaslOauthbearerAssertionPrivateKeyFile = saslOauthbearerAssertionPrivateKeyFile);
+            return this;
+        }
+
+        public IKafkaConsumerConfigBuilder WithSaslOauthbearerAssertionPrivateKeyPassphrase(string saslOauthbearerAssertionPrivateKeyPassphrase)
+        {
+            AppendAction(config => config.SaslOauthbearerAssertionPrivateKeyPassphrase = saslOauthbearerAssertionPrivateKeyPassphrase);
+            return this;
+        }
+
+        public IKafkaConsumerConfigBuilder WithSaslOauthbearerAssertionPrivateKeyPem(string saslOauthbearerAssertionPrivateKeyPem)
+        {
+            AppendAction(config => config.SaslOauthbearerAssertionPrivateKeyPem = saslOauthbearerAssertionPrivateKeyPem);
+            return this;
+        }
+
+        public IKafkaConsumerConfigBuilder WithSaslOauthbearerAssertionFile(string saslOauthbearerAssertionFile)
+        {
+            AppendAction(config => config.SaslOauthbearerAssertionFile = saslOauthbearerAssertionFile);
+            return this;
+        }
+
+        public IKafkaConsumerConfigBuilder WithSaslOauthbearerAssertionClaimAud(string saslOauthbearerAssertionClaimAud)
+        {
+            AppendAction(config => config.SaslOauthbearerAssertionClaimAud = saslOauthbearerAssertionClaimAud);
+            return this;
+        }
+
+        public IKafkaConsumerConfigBuilder WithSaslOauthbearerAssertionClaimExpSeconds(int? saslOauthbearerAssertionClaimExpSeconds)
+        {
+            AppendAction(config => config.SaslOauthbearerAssertionClaimExpSeconds = saslOauthbearerAssertionClaimExpSeconds);
+            return this;
+        }
+
+        public IKafkaConsumerConfigBuilder WithSaslOauthbearerAssertionClaimIss(string saslOauthbearerAssertionClaimIss)
+        {
+            AppendAction(config => config.SaslOauthbearerAssertionClaimIss = saslOauthbearerAssertionClaimIss);
+            return this;
+        }
+
+        public IKafkaConsumerConfigBuilder WithSaslOauthbearerAssertionClaimJtiInclude(bool? saslOauthbearerAssertionClaimJtiInclude)
+        {
+            AppendAction(config => config.SaslOauthbearerAssertionClaimJtiInclude = saslOauthbearerAssertionClaimJtiInclude);
+            return this;
+        }
+
+        public IKafkaConsumerConfigBuilder WithSaslOauthbearerAssertionClaimNbfSeconds(int? saslOauthbearerAssertionClaimNbfSeconds)
+        {
+            AppendAction(config => config.SaslOauthbearerAssertionClaimNbfSeconds = saslOauthbearerAssertionClaimNbfSeconds);
+            return this;
+        }
+
+        public IKafkaConsumerConfigBuilder WithSaslOauthbearerAssertionClaimSub(string saslOauthbearerAssertionClaimSub)
+        {
+            AppendAction(config => config.SaslOauthbearerAssertionClaimSub = saslOauthbearerAssertionClaimSub);
+            return this;
+        }
+
+        public IKafkaConsumerConfigBuilder WithSaslOauthbearerAssertionJwtTemplateFile(string saslOauthbearerAssertionJwtTemplateFile)
+        {
+            AppendAction(config => config.SaslOauthbearerAssertionJwtTemplateFile = saslOauthbearerAssertionJwtTemplateFile);
             return this;
         }
 
