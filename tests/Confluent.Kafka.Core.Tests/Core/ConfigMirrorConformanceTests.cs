@@ -4,12 +4,10 @@ using Confluent.Kafka.Core.Producer;
 using Confluent.Kafka.Core.Serialization.SchemaRegistry.Avro;
 using Confluent.Kafka.Core.Serialization.SchemaRegistry.Json;
 using Confluent.Kafka.Core.Serialization.SchemaRegistry.Protobuf;
+using Confluent.Kafka.Core.Tests.Conformance;
 using Confluent.SchemaRegistry;
 using Confluent.SchemaRegistry.Serdes;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 using Xunit;
 
 namespace Confluent.Kafka.Core.Tests.Core
@@ -89,62 +87,7 @@ namespace Confluent.Kafka.Core.Tests.Core
 
         private static void AssertMirrored(Type confluentConfigType, Type mirrorInterface, Type builderInterface)
         {
-            var properties = GetMirrorableProperties(confluentConfigType);
-
-            // Guards against the conformance check silently becoming vacuous if Confluent moves these properties onto a base type.
-            Assert.True(
-                properties.Count > 0,
-                $"No mirrorable properties were discovered on {confluentConfigType.FullName}. " +
-                "The declaring type has probably changed upstream and this test needs to be widened.");
-
-            var missing = new List<string>();
-
-            foreach (var property in properties)
-            {
-                if (mirrorInterface is not null && !HasProperty(mirrorInterface, property.Name))
-                {
-                    missing.Add($"{mirrorInterface.Name}.{property.Name}");
-                }
-
-                if (!HasMethod(builderInterface, $"With{property.Name}"))
-                {
-                    missing.Add($"{builderInterface.Name}.With{property.Name}");
-                }
-            }
-
-            Assert.True(
-                missing.Count == 0,
-                $"{confluentConfigType.FullName} exposes members that Confluent.Kafka.Core does not mirror, " +
-                "which usually means the Confluent packages were upgraded without syncing the mirrors. " +
-                $"Missing: {string.Join(", ", missing)}");
-        }
-
-        private static IReadOnlyList<PropertyInfo> GetMirrorableProperties(Type configType)
-        {
-            return [.. configType
-                .GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly)
-                .Where(property => property.CanRead && property.CanWrite)
-                .Where(property => property.GetIndexParameters().Length == 0)
-                .Where(property => property.GetCustomAttribute<ObsoleteAttribute>() is null)
-                .OrderBy(property => property.Name, StringComparer.Ordinal)];
-        }
-
-        private static bool HasProperty(Type interfaceType, string name)
-        {
-            return WithInheritedInterfaces(interfaceType).Any(type => type.GetProperty(name) is not null);
-        }
-
-        private static bool HasMethod(Type interfaceType, string name)
-        {
-            return WithInheritedInterfaces(interfaceType)
-                .SelectMany(type => type.GetMethods())
-                .Any(method => string.Equals(method.Name, name, StringComparison.Ordinal));
-        }
-
-        // Interface reflection does not surface inherited members, so the base interfaces are walked explicitly.
-        private static IEnumerable<Type> WithInheritedInterfaces(Type interfaceType)
-        {
-            return new[] { interfaceType }.Concat(interfaceType.GetInterfaces());
+            MirrorConformance.AssertMirrored(confluentConfigType, builderInterface, mirrorInterface);
         }
     }
 }
