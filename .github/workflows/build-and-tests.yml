@@ -42,7 +42,19 @@ jobs:
       run: dotnet build --configuration Release --no-restore
 
     - name: Wait for services availability
-      run: sleep 35s
+      run: |
+        for i in $(seq 1 60); do
+          if docker exec kafka kafka-broker-api-versions --bootstrap-server localhost:9092 >/dev/null 2>&1 \
+            && [ "$(curl -s -o /dev/null -w '%{http_code}' http://localhost:8081/subjects)" = "200" ] \
+            && [ "$(docker exec redis redis-cli ping 2>/dev/null)" = "PONG" ]; then
+            echo "Kafka, Schema Registry and Redis are ready after ~$((i * 2))s"
+            exit 0
+          fi
+          sleep 2
+        done
+        echo "Services did not become ready in time" >&2
+        docker ps -a
+        exit 1
       shell: bash
 
     - name: Check containers

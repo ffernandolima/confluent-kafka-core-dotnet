@@ -6,11 +6,9 @@ using Xunit;
 namespace Confluent.Kafka.Core.Tests.Serialization
 {
     /// <summary>
-    /// RegisteredSchemaBuilder and UnregisteredSchemaBuilder build their subjects through FunctionalBuilder,
-    /// which calls Activator.CreateInstance with positional arguments ordered by a private enum. 
-    /// That coupling is invisible to the compiler: if Confluent reorders, retypes or drops a
-    /// constructor parameter, the failure is a MissingMethodException at runtime. 
-    /// These tests pin the constructor shapes those builders depend on.
+    /// RegisteredSchemaBuilder and UnregisteredSchemaBuilder construct these types positionally via
+    /// Activator.CreateInstance, so a constructor change upstream fails at runtime rather than at
+    /// compile time. These tests pin the constructor shapes they depend on.
     /// </summary>
     public sealed class SchemaConstructorContractTests
     {

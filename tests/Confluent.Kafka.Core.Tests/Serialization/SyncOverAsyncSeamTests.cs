@@ -7,9 +7,9 @@ using Xunit;
 namespace Confluent.Kafka.Core.Tests.Serialization
 {
     /// <summary>
-    /// GetInnerSerializer/GetInnerDeserializer reach into private members of Confluent's sync-over-async wrappers by hard-coded name.
-    /// Those members carry no compatibility guarantee, and because the lookup is null-conditional a rename degrades to a silent null rather than an exception. 
-    /// These tests turn that silent failure into a build failure.
+    /// GetInnerSerializer/GetInnerDeserializer read private members of Confluent's sync-over-async
+    /// wrappers by name. The lookup is null-conditional, so an upstream rename yields null instead
+    /// of throwing. These tests make that visible.
     /// </summary>
     public sealed class SyncOverAsyncSeamTests
     {

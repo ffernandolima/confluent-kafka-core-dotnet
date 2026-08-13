@@ -28,21 +28,24 @@ namespace Confluent.Kafka.Core.Tests.Core.Hosting
 {
     using System.Text;
 
-    public sealed class KafkaRetryConsumerWorkerTests : IAsyncLifetime
+    public sealed class KafkaRetryConsumerWorkerTests : IClassFixture<KafkaRetryConsumerWorkerTests.TopicFixture>, IDisposable
     {
         private const string BootstrapServers = "localhost:9092";
 
         private static readonly int DefaultRetryCount = 3;
         private static readonly TimeSpan DefaultTimeout = TimeSpan.FromSeconds(1);
+
+        // ExecuteAsync runs until cancellation, so every test spends this in full. Keep it tight.
         private static readonly TimeSpan DefaultDelay = TimeSpan.FromSeconds(3);
+
+        // Flush returns the number of messages still in flight; delivery can take seconds under load.
+        private static readonly TimeSpan FlushTimeout = TimeSpan.FromSeconds(30);
 
         private readonly Mock<ILogger> _mockLogger;
         private readonly Mock<ILoggerFactory> _mockLoggerFactory;
 
         private readonly Encoding _encoding;
         private readonly IKafkaProducer<byte[], KafkaMetadataMessage> _producer;
-
-        private readonly KafkaTopicFixture _kafkaTopicFixture;
 
         public KafkaRetryConsumerWorkerTests()
         {
@@ -63,29 +66,24 @@ namespace Confluent.Kafka.Core.Tests.Core.Hosting
             _producer = CreateProducer<byte[], KafkaMetadataMessage>(
                 serializer: CreateJsonCoreSerializer<KafkaMetadataMessage>());
 
-            _kafkaTopicFixture = new KafkaTopicFixture(
-                BootstrapServers,
-                Enum.GetValues<KafkaTopic>()
-                    .Select(value => value.GetDescription()));
         }
 
-        #region IAsyncLifetime
-
-        public async Task InitializeAsync()
-        {
-            await _kafkaTopicFixture.InitializeAsync();
-        }
-
-        public async Task DisposeAsync()
+        public void Dispose()
         {
             _producer?.Dispose();
-
-            await _kafkaTopicFixture.DisposeAsync();
         }
 
-        #endregion IAsyncLifetime
-
         #region Stubs
+
+        public sealed class TopicFixture : KafkaTopicFixture
+        {
+            public TopicFixture()
+                : base(
+                    BootstrapServers,
+                    Enum.GetValues<KafkaTopic>()
+                        .Select(value => value.GetDescription()))
+            { }
+        }
 
         public enum KafkaTopic
         {
@@ -358,7 +356,7 @@ namespace Confluent.Kafka.Core.Tests.Core.Hosting
                     Headers = headers
                 });
 
-            _producer.Flush(DefaultTimeout);
+            Assert.Equal(0, _producer.Flush(FlushTimeout));
         }
     }
 }

@@ -15,10 +15,8 @@ using Xunit;
 namespace Confluent.Kafka.Core.Tests.Core
 {
     /// <summary>
-    /// Confluent.Kafka.Core hand-mirrors the Confluent config surface across several hundred members.
-    /// Nothing in the compiler enforces that mirror, so a Confluent package upgrade can silently leave
-    /// a newly added upstream config property unreachable through this library's fluent API.
-    /// These tests fail when that drift happens.
+    /// The config mirror is hand-maintained and not enforced by the compiler, so a Confluent upgrade
+    /// can leave a new upstream property unreachable through the fluent API. These tests catch that.
     /// </summary>
     public sealed class ConfigMirrorConformanceTests
     {
@@ -48,7 +46,7 @@ namespace Confluent.Kafka.Core.Tests.Core
             // src/Shared, so it cannot be named directly from here without an ambiguous reference.
             var schemaRegistryConfigBuilderType = typeof(IJsonSerializerConfigBuilder)
                 .Assembly
-                .GetType("Confluent.Kafka.Core.Serialization.SchemaRegistry.ISchemaRegistryConfigBuilder", throwOnError: true)
+                .GetType("Confluent.Kafka.Core.Serialization.SchemaRegistry.ISchemaRegistryConfigBuilder", throwOnError: true);
 
             AssertMirrored(typeof(SchemaRegistryConfig), mirrorInterface: null, schemaRegistryConfigBuilderType);
         }
