@@ -16,6 +16,8 @@ namespace Confluent.Kafka.Core.Serialization.JsonCore
 
         IJsonSerializerOptionsBuilder WithTypeInfoResolverChain(IList<IJsonTypeInfoResolver> typeInfoResolverChain);
 
+        IJsonSerializerOptionsBuilder WithAllowDuplicateProperties(bool allowDuplicateProperties);
+
         IJsonSerializerOptionsBuilder WithAllowOutOfOrderMetadataProperties(bool allowOutOfOrderMetadataProperties);
 
         IJsonSerializerOptionsBuilder WithAllowTrailingCommas(bool allowTrailingCommas);
