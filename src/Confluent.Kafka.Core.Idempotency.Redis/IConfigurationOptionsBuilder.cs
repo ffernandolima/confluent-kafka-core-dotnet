@@ -2,6 +2,7 @@
 using StackExchange.Redis;
 using StackExchange.Redis.Configuration;
 using System;
+using System.Buffers;
 using System.Net;
 using System.Net.Security;
 using System.Net.Sockets;
@@ -77,7 +78,20 @@ namespace Confluent.Kafka.Core.Idempotency.Redis
 
         IConfigurationOptionsBuilder WithServiceName(string serviceName);
 
+        [Obsolete("SocketManager is no longer used by StackExchange.Redis.")]
         IConfigurationOptionsBuilder WithSocketManager(SocketManager socketManager);
+
+        IConfigurationOptionsBuilder WithRequestBufferPool(MemoryPool<byte> requestBufferPool);
+
+        IConfigurationOptionsBuilder WithResponseBufferPool(MemoryPool<byte> responseBufferPool);
+
+        IConfigurationOptionsBuilder WithSentinelUser(string sentinelUser);
+
+        IConfigurationOptionsBuilder WithSentinelPassword(string sentinelPassword);
+
+        IConfigurationOptionsBuilder WithTcpKeepAlive(bool tcpKeepAlive);
+
+        IConfigurationOptionsBuilder WithHighIntegrity(bool highIntegrity);
 
 #if NETCOREAPP3_1_OR_GREATER
         IConfigurationOptionsBuilder WithSslClientAuthenticationOptions(

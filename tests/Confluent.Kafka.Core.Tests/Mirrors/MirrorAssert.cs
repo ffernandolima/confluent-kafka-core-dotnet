@@ -52,12 +52,23 @@ namespace Confluent.Kafka.Core.Tests.Mirrors
                 .Where(property => property.CanRead && property.CanWrite)
                 .Where(property => property.GetIndexParameters().Length == 0)
                 .Where(property => property.GetCustomAttribute<ObsoleteAttribute>() is null)
+                .Where(property => !IsExperimental(property))
                 .OrderBy(property => property.Name, StringComparer.Ordinal)];
+        }
+
+        // Vendors mark evaluation-only APIs [Experimental]; mirroring one would republish an unstable
+        // API to consumers without the diagnostic that warns them about it.
+        private static bool IsExperimental(PropertyInfo property)
+        {
+            return property
+                .GetCustomAttributes()
+                .Any(attribute => attribute.GetType().Name == "ExperimentalAttribute");
         }
 
         private static bool HasProperty(Type interfaceType, string name)
         {
-            return WithInheritedInterfaces(interfaceType).Any(type => type.GetProperty(name) is not null);
+            return WithInheritedInterfaces(interfaceType)
+                .Any(type => type.GetProperty(name) is not null);
         }
 
         private static bool HasMethod(Type interfaceType, string name)

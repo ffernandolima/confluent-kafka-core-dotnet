@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using StackExchange.Redis;
 using StackExchange.Redis.Configuration;
 using System;
+using System.Buffers;
 using System.Linq;
 using System.Net;
 using System.Net.Security;
@@ -255,9 +256,46 @@ namespace Confluent.Kafka.Core.Idempotency.Redis.Internal
             return this;
         }
 
+        [Obsolete("SocketManager is no longer used by StackExchange.Redis.")]
         public IConfigurationOptionsBuilder WithSocketManager(SocketManager socketManager)
         {
             AppendAction(options => options.SocketManager = socketManager);
+            return this;
+        }
+
+        public IConfigurationOptionsBuilder WithRequestBufferPool(MemoryPool<byte> requestBufferPool)
+        {
+            AppendAction(options => options.RequestBufferPool = requestBufferPool);
+            return this;
+        }
+
+        public IConfigurationOptionsBuilder WithResponseBufferPool(MemoryPool<byte> responseBufferPool)
+        {
+            AppendAction(options => options.ResponseBufferPool = responseBufferPool);
+            return this;
+        }
+
+        public IConfigurationOptionsBuilder WithSentinelUser(string sentinelUser)
+        {
+            AppendAction(options => options.SentinelUser = sentinelUser);
+            return this;
+        }
+
+        public IConfigurationOptionsBuilder WithSentinelPassword(string sentinelPassword)
+        {
+            AppendAction(options => options.SentinelPassword = sentinelPassword);
+            return this;
+        }
+
+        public IConfigurationOptionsBuilder WithTcpKeepAlive(bool tcpKeepAlive)
+        {
+            AppendAction(options => options.TcpKeepAlive = tcpKeepAlive);
+            return this;
+        }
+
+        public IConfigurationOptionsBuilder WithHighIntegrity(bool highIntegrity)
+        {
+            AppendAction(options => options.HighIntegrity = highIntegrity);
             return this;
         }
 
