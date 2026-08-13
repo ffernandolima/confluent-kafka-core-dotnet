@@ -4,37 +4,35 @@ using Confluent.Kafka.Core.Producer;
 using Confluent.Kafka.Core.Serialization.SchemaRegistry.Avro;
 using Confluent.Kafka.Core.Serialization.SchemaRegistry.Json;
 using Confluent.Kafka.Core.Serialization.SchemaRegistry.Protobuf;
-using Confluent.Kafka.Core.Tests.Conformance;
 using Confluent.SchemaRegistry;
 using Confluent.SchemaRegistry.Serdes;
-using System;
 using Xunit;
 
-namespace Confluent.Kafka.Core.Tests.Core
+namespace Confluent.Kafka.Core.Tests.Mirrors
 {
     /// <summary>
     /// The config mirror is hand-maintained and not enforced by the compiler, so a Confluent upgrade
     /// can leave a new upstream property unreachable through the fluent API. These tests catch that.
     /// </summary>
-    public sealed class ConfigMirrorConformanceTests
+    public sealed class ConfigMirrorTests
     {
         [Fact]
         public void ClientConfig_IsFullyMirrored()
         {
-            AssertMirrored(typeof(ClientConfig), typeof(IClientConfig), typeof(IKafkaConsumerConfigBuilder));
-            AssertMirrored(typeof(ClientConfig), typeof(IClientConfig), typeof(IKafkaProducerConfigBuilder));
+            MirrorAssert.IsComplete(typeof(ClientConfig), typeof(IKafkaConsumerConfigBuilder), typeof(IClientConfig));
+            MirrorAssert.IsComplete(typeof(ClientConfig), typeof(IKafkaProducerConfigBuilder), typeof(IClientConfig));
         }
 
         [Fact]
         public void ConsumerConfig_IsFullyMirrored()
         {
-            AssertMirrored(typeof(ConsumerConfig), typeof(IConsumerConfig), typeof(IKafkaConsumerConfigBuilder));
+            MirrorAssert.IsComplete(typeof(ConsumerConfig), typeof(IKafkaConsumerConfigBuilder), typeof(IConsumerConfig));
         }
 
         [Fact]
         public void ProducerConfig_IsFullyMirrored()
         {
-            AssertMirrored(typeof(ProducerConfig), typeof(IProducerConfig), typeof(IKafkaProducerConfigBuilder));
+            MirrorAssert.IsComplete(typeof(ProducerConfig), typeof(IKafkaProducerConfigBuilder), typeof(IProducerConfig));
         }
 
         [Fact]
@@ -46,48 +44,43 @@ namespace Confluent.Kafka.Core.Tests.Core
                 .Assembly
                 .GetType("Confluent.Kafka.Core.Serialization.SchemaRegistry.ISchemaRegistryConfigBuilder", throwOnError: true);
 
-            AssertMirrored(typeof(SchemaRegistryConfig), mirrorInterface: null, schemaRegistryConfigBuilderType);
+            MirrorAssert.IsComplete(typeof(SchemaRegistryConfig), schemaRegistryConfigBuilderType);
         }
 
         [Fact]
         public void AvroSerializerConfig_IsFullyMirrored()
         {
-            AssertMirrored(typeof(AvroSerializerConfig), mirrorInterface: null, typeof(IAvroSerializerConfigBuilder));
+            MirrorAssert.IsComplete(typeof(AvroSerializerConfig), typeof(IAvroSerializerConfigBuilder));
         }
 
         [Fact]
         public void AvroDeserializerConfig_IsFullyMirrored()
         {
-            AssertMirrored(typeof(AvroDeserializerConfig), mirrorInterface: null, typeof(IAvroDeserializerConfigBuilder));
+            MirrorAssert.IsComplete(typeof(AvroDeserializerConfig), typeof(IAvroDeserializerConfigBuilder));
         }
 
         [Fact]
         public void JsonSerializerConfig_IsFullyMirrored()
         {
-            AssertMirrored(typeof(JsonSerializerConfig), mirrorInterface: null, typeof(IJsonSerializerConfigBuilder));
+            MirrorAssert.IsComplete(typeof(JsonSerializerConfig), typeof(IJsonSerializerConfigBuilder));
         }
 
         [Fact]
         public void JsonDeserializerConfig_IsFullyMirrored()
         {
-            AssertMirrored(typeof(JsonDeserializerConfig), mirrorInterface: null, typeof(IJsonDeserializerConfigBuilder));
+            MirrorAssert.IsComplete(typeof(JsonDeserializerConfig), typeof(IJsonDeserializerConfigBuilder));
         }
 
         [Fact]
         public void ProtobufSerializerConfig_IsFullyMirrored()
         {
-            AssertMirrored(typeof(ProtobufSerializerConfig), mirrorInterface: null, typeof(IProtobufSerializerConfigBuilder));
+            MirrorAssert.IsComplete(typeof(ProtobufSerializerConfig), typeof(IProtobufSerializerConfigBuilder));
         }
 
         [Fact]
         public void ProtobufDeserializerConfig_IsFullyMirrored()
         {
-            AssertMirrored(typeof(ProtobufDeserializerConfig), mirrorInterface: null, typeof(IProtobufDeserializerConfigBuilder));
-        }
-
-        private static void AssertMirrored(Type confluentConfigType, Type mirrorInterface, Type builderInterface)
-        {
-            MirrorConformance.AssertMirrored(confluentConfigType, builderInterface, mirrorInterface);
+            MirrorAssert.IsComplete(typeof(ProtobufDeserializerConfig), typeof(IProtobufDeserializerConfigBuilder));
         }
     }
 }

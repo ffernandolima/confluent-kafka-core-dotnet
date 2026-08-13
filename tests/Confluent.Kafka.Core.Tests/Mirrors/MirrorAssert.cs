@@ -4,16 +4,16 @@ using System.Linq;
 using System.Reflection;
 using Xunit;
 
-namespace Confluent.Kafka.Core.Tests.Conformance
+namespace Confluent.Kafka.Core.Tests.Mirrors
 {
-    internal static class MirrorConformance
+    internal static class MirrorAssert
     {
         /// <summary>
         /// Asserts every settable public property declared on <paramref name="sourceType"/> has a
         /// matching <c>With*</c> on <paramref name="builderInterface"/>, and a matching property on
         /// <paramref name="mirrorInterface"/> when one is supplied.
         /// </summary>
-        public static void AssertMirrored(Type sourceType, Type builderInterface, Type mirrorInterface = null)
+        public static void IsComplete(Type sourceType, Type builderInterface, Type mirrorInterface = null)
         {
             var properties = GetMirrorableProperties(sourceType);
 
