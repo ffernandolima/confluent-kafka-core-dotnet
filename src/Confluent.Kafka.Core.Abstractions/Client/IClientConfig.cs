@@ -156,6 +156,8 @@
 
         string SaslOauthbearerTokenEndpointUrl { get; }
 
+        string SaslOauthbearerSubClaimName { get; }
+
         SaslOauthbearerGrantType? SaslOauthbearerGrantType { get; }
 
         SaslOauthbearerAssertionAlgorithm? SaslOauthbearerAssertionAlgorithm { get; }
@@ -181,6 +183,8 @@
         string SaslOauthbearerAssertionClaimSub { get; }
 
         string SaslOauthbearerAssertionJwtTemplateFile { get; }
+
+        SaslOauthbearerMetadataAuthenticationType? SaslOauthbearerMetadataAuthenticationType { get; }
 
         string PluginLibraryPaths { get; }
 

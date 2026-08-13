@@ -77,6 +77,13 @@ builder.Services.AddKafka(builder =>
 
 By default, consumers are going to be registered as **Singleton**.
 
+> [!NOTE]
+> As of `Confluent.Kafka` 2.15.0, calling `StoreOffset` or `Commit` with an end-of-partition consume result
+> throws an `InvalidOperationException`. Consumers only produce such results when `EnablePartitionEof` is set,
+> and they are identified by a `null` `Message`. `KafkaConsumerWorker` filters them out before dispatching work,
+> so the built-in worker pipeline is unaffected; only code that calls `StoreOffset`/`Commit` directly with the
+> result of `Consume()` needs to skip results where `IsPartitionEOF` is `true`.
+
 ### Consumer Configurations :gear:
 
 Some configurations should be pointed out as they enable custom behaviors:

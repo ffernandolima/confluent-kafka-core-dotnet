@@ -17,6 +17,8 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Json
 
         IJsonDeserializerConfigBuilder WithValidate(bool? validate);
 
+        IJsonDeserializerConfigBuilder WithValidateBeforeDomainRules(bool? validateBeforeDomainRules);
+
         IJsonDeserializerConfigBuilder WithConfigurationProperty(KeyValuePair<string, string> configurationProperty);
     }
 }

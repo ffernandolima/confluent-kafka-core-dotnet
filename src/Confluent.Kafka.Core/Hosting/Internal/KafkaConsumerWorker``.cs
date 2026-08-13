@@ -175,6 +175,8 @@ namespace Confluent.Kafka.Core.Hosting.Internal
                 return ExecutionResult.NoAvailableMessages;
             }
 
+            // End-of-partition results carry a null Message and must not be dispatched: as of Confluent.Kafka
+            // 2.15.0, passing one to Commit or StoreOffset throws an InvalidOperationException.
             foreach (var consumeResult in consumeResults.Where(consumeResult => consumeResult!.Message is not null))
             {
                 DispatchWorkItem(consumeResult, cancellationToken);

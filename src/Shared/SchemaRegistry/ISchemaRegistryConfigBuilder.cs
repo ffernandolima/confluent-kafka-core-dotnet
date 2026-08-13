@@ -18,6 +18,8 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry
 
         ISchemaRegistryConfigBuilder WithRetriesMaxWaitMs(int? retriesMaxWaitMs);
 
+        ISchemaRegistryConfigBuilder WithMaxConnectionsPerServer(int? maxConnectionsPerServer);
+
         ISchemaRegistryConfigBuilder WithSslCaLocation(string sslCaLocation);
 
         ISchemaRegistryConfigBuilder WithSslKeystoreLocation(string sslKeystoreLocation);
@@ -47,5 +49,7 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry
         ISchemaRegistryConfigBuilder WithBearerAuthScope(string bearerAuthScope);
 
         ISchemaRegistryConfigBuilder WithBearerAuthTokenEndpointUrl(string bearerAuthTokenEndpointUrl);
+
+        ISchemaRegistryConfigBuilder WithBearerAuthTokenEndpointQuery(string bearerAuthTokenEndpointQuery);
     }
 }

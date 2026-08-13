@@ -499,6 +499,12 @@ namespace Confluent.Kafka.Core.Producer.Internal
             return this;
         }
 
+        public IKafkaProducerConfigBuilder WithSaslOauthbearerSubClaimName(string saslOauthbearerSubClaimName)
+        {
+            AppendAction(config => config.SaslOauthbearerSubClaimName = saslOauthbearerSubClaimName);
+            return this;
+        }
+
         public IKafkaProducerConfigBuilder WithSaslOauthbearerGrantType(SaslOauthbearerGrantType? saslOauthbearerGrantType)
         {
             AppendAction(config => config.SaslOauthbearerGrantType = saslOauthbearerGrantType);
@@ -574,6 +580,12 @@ namespace Confluent.Kafka.Core.Producer.Internal
         public IKafkaProducerConfigBuilder WithSaslOauthbearerAssertionJwtTemplateFile(string saslOauthbearerAssertionJwtTemplateFile)
         {
             AppendAction(config => config.SaslOauthbearerAssertionJwtTemplateFile = saslOauthbearerAssertionJwtTemplateFile);
+            return this;
+        }
+
+        public IKafkaProducerConfigBuilder WithSaslOauthbearerMetadataAuthenticationType(SaslOauthbearerMetadataAuthenticationType? saslOauthbearerMetadataAuthenticationType)
+        {
+            AppendAction(config => config.SaslOauthbearerMetadataAuthenticationType = saslOauthbearerMetadataAuthenticationType);
             return this;
         }
 

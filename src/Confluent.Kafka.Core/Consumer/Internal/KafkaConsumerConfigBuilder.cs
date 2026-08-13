@@ -505,6 +505,12 @@ namespace Confluent.Kafka.Core.Consumer.Internal
             return this;
         }
 
+        public IKafkaConsumerConfigBuilder WithSaslOauthbearerSubClaimName(string saslOauthbearerSubClaimName)
+        {
+            AppendAction(config => config.SaslOauthbearerSubClaimName = saslOauthbearerSubClaimName);
+            return this;
+        }
+
         public IKafkaConsumerConfigBuilder WithSaslOauthbearerGrantType(SaslOauthbearerGrantType? saslOauthbearerGrantType)
         {
             AppendAction(config => config.SaslOauthbearerGrantType = saslOauthbearerGrantType);
@@ -580,6 +586,12 @@ namespace Confluent.Kafka.Core.Consumer.Internal
         public IKafkaConsumerConfigBuilder WithSaslOauthbearerAssertionJwtTemplateFile(string saslOauthbearerAssertionJwtTemplateFile)
         {
             AppendAction(config => config.SaslOauthbearerAssertionJwtTemplateFile = saslOauthbearerAssertionJwtTemplateFile);
+            return this;
+        }
+
+        public IKafkaConsumerConfigBuilder WithSaslOauthbearerMetadataAuthenticationType(SaslOauthbearerMetadataAuthenticationType? saslOauthbearerMetadataAuthenticationType)
+        {
+            AppendAction(config => config.SaslOauthbearerMetadataAuthenticationType = saslOauthbearerMetadataAuthenticationType);
             return this;
         }
 
@@ -776,6 +788,18 @@ namespace Confluent.Kafka.Core.Consumer.Internal
         public IKafkaConsumerConfigBuilder WithCheckCrcs(bool? checkCrcs)
         {
             AppendAction(config => config.CheckCrcs = checkCrcs);
+            return this;
+        }
+
+        public IKafkaConsumerConfigBuilder WithMaxPollRecords(int? maxPollRecords)
+        {
+            AppendAction(config => config.MaxPollRecords = maxPollRecords);
+            return this;
+        }
+
+        public IKafkaConsumerConfigBuilder WithShareAcknowledgementMode(string shareAcknowledgementMode)
+        {
+            AppendAction(config => config.ShareAcknowledgementMode = shareAcknowledgementMode);
             return this;
         }
 

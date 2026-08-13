@@ -1,4 +1,4 @@
 {
-    "omnisharp.organizeImportsOnFormat": true,
-    "prettyxml.settings.preserveWhiteSpacesInComment": true
+    "prettyxml.settings.preserveWhiteSpacesInComment": true,
+    "dotnet.formatting.organizeImportsOnFormat": true
 }
