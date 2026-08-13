@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+
+    <!-- Scoped to src so packaging metadata does not reach the test projects.
+         MSBuild only auto-imports the nearest Directory.Build.props, so the root one is chained explicitly. -->
+    <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../'))" />
+
+    <PropertyGroup Label="Build">
+        <TargetFrameworks>netstandard2.0;netstandard2.1;net8.0;net9.0;net10.0</TargetFrameworks>
+        <LangVersion>latest</LangVersion>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    </PropertyGroup>
+
+    <PropertyGroup Label="Package">
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <Version>1.0.6</Version>
+        <Authors>Lima Technology Services;Fernando Luiz de Lima</Authors>
+        <Copyright>Copyright © Lima Technology Services;Fernando Luiz de Lima</Copyright>
+        <PackageProjectUrl>https://github.com/ffernandolima/confluent-kafka-core-dotnet</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/ffernandolima/confluent-kafka-core-dotnet</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    </PropertyGroup>
+
+</Project>

@@ -1,23 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFrameworks>netstandard2.0;netstandard2.1;net8.0;net9.0;net10.0</TargetFrameworks>
-        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <GenerateDocumentationFile>true</GenerateDocumentationFile>
-        <NoWarn>1701;1702;1705;1591</NoWarn>
-        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
         <AssemblyName>Confluent.Kafka.Core.Serialization.SchemaRegistry.Protobuf</AssemblyName>
         <PackageId>Confluent.Kafka.Core.Serialization.SchemaRegistry.Protobuf</PackageId>
-        <Authors>Lima Technology Services;Fernando Luiz de Lima</Authors>
-        <Copyright>Copyright © Lima Technology Services;Fernando Luiz de Lima</Copyright>
         <Description>Provides serialization implementation through Confluent.SchemaRegistry.Serdes.Protobuf for Apache Kafka .NET client.</Description>
-        <PackageProjectUrl>https://github.com/ffernandolima/confluent-kafka-core-dotnet</PackageProjectUrl>
-        <RepositoryUrl>https://github.com/ffernandolima/confluent-kafka-core-dotnet</RepositoryUrl>
-        <PackageLicenseExpression>MIT</PackageLicenseExpression>
-        <RepositoryType>git</RepositoryType>
         <PackageTags>Apache;Kafka;Confluent;librdkafka;Serialization;SchemaRegistry;Confluent.SchemaRegistry.Serdes.Protobuf</PackageTags>
-        <Version>1.0.6</Version>
-        <LangVersion>latest</LangVersion>
     </PropertyGroup>
 
     <ItemGroup Label="Builders">
