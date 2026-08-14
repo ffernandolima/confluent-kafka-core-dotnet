@@ -10,5 +10,7 @@ namespace Confluent.Kafka.Core.Diagnostics
         Activity StartProducerActivity(string activityName, IDictionary<string, string> carrier);
 
         Activity StartConsumerActivity(string activityName, IDictionary<string, string> carrier);
+
+        Activity StartConsumerActivity(string activityName, ActivityKind activityKind, IDictionary<string, string> carrier);
     }
 }

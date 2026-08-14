@@ -13,19 +13,28 @@ using Xunit;
 
 namespace Confluent.Kafka.Core.Tests.Core.Producer
 {
-    public sealed class KafkaProducerPartitioningTests : IAsyncLifetime
+    public sealed class KafkaProducerPartitioningTests : IClassFixture<KafkaProducerPartitioningTests.TopicFixture>, IDisposable
     {
         private const string BootstrapServers = "localhost:9092";
         private const string Topic = "production-partitioning-test-topic";
 
         private static readonly TimeSpan DefaultTimeout = TimeSpan.FromSeconds(1);
 
+        // Flush returns the number of messages still in flight; a timed-out Flush leaves the
+        // delivery callbacks below unrun, so the partitions they capture stay Partition.Any.
+        private static readonly TimeSpan FlushTimeout = TimeSpan.FromSeconds(30);
+
+        public sealed class TopicFixture : KafkaTopicFixture
+        {
+            public TopicFixture()
+                : base(BootstrapServers, [Topic], numPartitions: 3)
+            { }
+        }
+
         private readonly Mock<ILogger> _mockLogger;
         private readonly Mock<ILoggerFactory> _mockLoggerFactory;
 
         private readonly IKafkaProducer<string, string> _producer;
-
-        private readonly KafkaTopicFixture _kafkaTopicFixture;
 
         public KafkaProducerPartitioningTests()
         {
@@ -51,28 +60,12 @@ namespace Confluent.Kafka.Core.Tests.Core.Producer
                 })
                 .WithLoggerFactory(_mockLoggerFactory.Object)
                 .Build();
-
-            _kafkaTopicFixture = new KafkaTopicFixture(
-                BootstrapServers,
-                [Topic],
-                numPartitions: 3);
         }
 
-        #region IAsyncLifetime Members
-
-        public async Task InitializeAsync()
-        {
-            await _kafkaTopicFixture.InitializeAsync();
-        }
-
-        public async Task DisposeAsync()
+        public void Dispose()
         {
             _producer?.Dispose();
-
-            await _kafkaTopicFixture.DisposeAsync();
         }
-
-        #endregion IAsyncLifetime Members
 
         [Fact]
         public void Produce_SameKeyMessagesGoToSamePartition()
@@ -118,7 +111,7 @@ namespace Confluent.Kafka.Core.Tests.Core.Producer
                     partition2 = deliveryResult2.Partition;
                 });
 
-            _producer.Flush(DefaultTimeout);
+            Assert.Equal(0, _producer.Flush(FlushTimeout));
 
             // Assert
             Assert.True(partition1 != Partition.Any);

@@ -28,21 +28,24 @@ namespace Confluent.Kafka.Core.Tests.Core.Hosting
 {
     using System.Text;
 
-    public sealed class KafkaConsumerWorkerTests : IAsyncLifetime
+    public sealed class KafkaConsumerWorkerTests : IClassFixture<KafkaConsumerWorkerTests.TopicFixture>, IDisposable
     {
         private const string BootstrapServers = "localhost:9092";
 
         private static readonly int DefaultRetryCount = 3;
         private static readonly TimeSpan DefaultTimeout = TimeSpan.FromSeconds(1);
+
+        // ExecuteAsync runs until cancellation, so every test spends this in full. Keep it tight.
         private static readonly TimeSpan DefaultDelay = TimeSpan.FromSeconds(3);
+
+        // Flush returns the number of messages still in flight; delivery can take seconds under load.
+        private static readonly TimeSpan FlushTimeout = TimeSpan.FromSeconds(30);
 
         private readonly Mock<ILogger> _mockLogger;
         private readonly Mock<ILoggerFactory> _mockLoggerFactory;
 
         private readonly Encoding _encoding;
         private readonly IKafkaProducer<Null, byte[]> _producer;
-
-        private readonly KafkaTopicFixture _kafkaTopicFixture;
 
         public KafkaConsumerWorkerTests()
         {
@@ -61,30 +64,24 @@ namespace Confluent.Kafka.Core.Tests.Core.Hosting
             _encoding = EncodingFactory.Instance.CreateDefault();
 
             _producer = CreateProducer<Null, byte[]>();
-
-            _kafkaTopicFixture = new KafkaTopicFixture(
-                BootstrapServers,
-                Enum.GetValues<KafkaTopic>()
-                    .Select(value => value.GetDescription()));
         }
 
-        #region IAsyncLifetime
-
-        public async Task InitializeAsync()
-        {
-            await _kafkaTopicFixture.InitializeAsync();
-        }
-
-        public async Task DisposeAsync()
+        public void Dispose()
         {
             _producer?.Dispose();
-
-            await _kafkaTopicFixture.DisposeAsync();
         }
 
-        #endregion IAsyncLifetime
-
         #region Stubs
+
+        public sealed class TopicFixture : KafkaTopicFixture
+        {
+            public TopicFixture()
+                : base(
+                    BootstrapServers,
+                    Enum.GetValues<KafkaTopic>()
+                        .Select(value => value.GetDescription()))
+            { }
+        }
 
         public enum KafkaTopic
         {
@@ -102,6 +99,18 @@ namespace Confluent.Kafka.Core.Tests.Core.Hosting
 
             [Description($"faulty-processing-test-topic-2{KafkaProducerConstants.DeadLetterTopicSuffix}")]
             FaultyProcessingTestTopic2DeadLetter,
+
+            [Description("traced-processing-test-topic-1")]
+            TracedProcessingTestTopic1,
+
+            [Description($"traced-processing-test-topic-1{KafkaRetryConstants.RetryTopicSuffix}")]
+            TracedProcessingTestTopic1Retry,
+
+            [Description("traced-processing-test-topic-2")]
+            TracedProcessingTestTopic2,
+
+            [Description($"traced-processing-test-topic-2{KafkaProducerConstants.DeadLetterTopicSuffix}")]
+            TracedProcessingTestTopic2DeadLetter,
         }
 
         public sealed class ConsumeResultHandler : IConsumeResultHandler<Null, string>
@@ -265,6 +274,112 @@ namespace Confluent.Kafka.Core.Tests.Core.Hosting
             _mockLogger.VerifyLog(LogLevel.Error, Times.Once());
         }
 
+        [Fact]
+        public async Task ExecuteAsync_OnException_ShouldPreserveTraceAcrossRetryTopic()
+        {
+            // Arrange
+            var topic = KafkaTopic.TracedProcessingTestTopic1.GetDescription();
+            var retryTopic = KafkaTopic.TracedProcessingTestTopic1Retry.GetDescription();
+
+            var retryActivities = new List<Activity>();
+            using var listener = KafkaActivityListener.StartListening(activity =>
+            {
+                if (activity.HasTopic(retryTopic))
+                {
+                    retryActivities.Add(activity);
+                }
+            });
+
+            using var worker = CreateWorker(
+                [topic],
+                enableRetryTopic: true,
+                handler: FaultyConsumeResultHandler.Create());
+
+            using var retryConsumer = CreateConsumer<byte[], KafkaMetadataMessage>(
+                [retryTopic],
+                deserializer: CreateJsonCoreSerializer<KafkaMetadataMessage>());
+
+            using var rootActivity = new Activity("trace-continuity-root").Start();
+
+            var expectedTraceId = rootActivity.TraceId;
+
+            await ProduceAsync(topic, "test-value");
+
+            // Act
+            var cts = new CancellationTokenSource(DefaultDelay);
+
+            await worker.StartAsync(cts.Token);
+            await worker.ExecuteAsync(cts.Token);
+
+            var retryMessage = retryConsumer.Consume(DefaultTimeout, DefaultRetryCount);
+
+            // Assert
+            Assert.NotNull(retryMessage);
+
+            AssertTraceFlowsThroughTheMessage(retryActivities, expectedTraceId);
+        }
+
+        [Fact]
+        public async Task ExecuteAsync_OnException_ShouldPreserveTraceAcrossDeadLetterTopic()
+        {
+            // Arrange
+            var topic = KafkaTopic.TracedProcessingTestTopic2.GetDescription();
+            var deadLetterTopic = KafkaTopic.TracedProcessingTestTopic2DeadLetter.GetDescription();
+
+            var deadLetterActivities = new List<Activity>();
+            using var listener = KafkaActivityListener.StartListening(activity =>
+            {
+                if (activity.HasTopic(deadLetterTopic))
+                {
+                    deadLetterActivities.Add(activity);
+                }
+            });
+
+            using var worker = CreateWorker(
+                [topic],
+                enableDeadLetterTopic: true,
+                handler: FaultyConsumeResultHandler.Create());
+
+            using var deadLetterConsumer = CreateConsumer<byte[], KafkaMetadataMessage>(
+                [deadLetterTopic],
+                deserializer: CreateJsonCoreSerializer<KafkaMetadataMessage>());
+
+            using var rootActivity = new Activity("trace-continuity-root").Start();
+
+            var expectedTraceId = rootActivity.TraceId;
+
+            await ProduceAsync(topic, "test-value");
+
+            // Act
+            var cts = new CancellationTokenSource(DefaultDelay);
+
+            await worker.StartAsync(cts.Token);
+            await worker.ExecuteAsync(cts.Token);
+
+            var deadLetterMessage = deadLetterConsumer.Consume(DefaultTimeout, DefaultRetryCount);
+
+            // Assert
+            Assert.NotNull(deadLetterMessage);
+
+            AssertTraceFlowsThroughTheMessage(deadLetterActivities, expectedTraceId);
+        }
+
+        /// <summary>
+        /// The producer and the consumer of the downstream topic are separate clients, so the only
+        /// way the consume span can be a child of the produce span is via the trace context carried
+        /// in the message headers. Asserting the trace id alone would not prove that: in a single
+        /// process the ambient Activity.Current preserves it even when propagation is broken.
+        /// </summary>
+        private static void AssertTraceFlowsThroughTheMessage(List<Activity> activities, ActivityTraceId expectedTraceId)
+        {
+            Assert.NotEmpty(activities);
+            Assert.All(activities, activity => Assert.Equal(expectedTraceId, activity.TraceId));
+
+            var produceActivity = Assert.Single(activities, activity => activity.Kind == ActivityKind.Producer);
+
+            Assert.Contains(activities, activity => activity.Kind == ActivityKind.Client && activity.ParentSpanId == produceActivity.SpanId);
+        }
+
         private IKafkaConsumerWorker<TKey, TValue> CreateWorker<TKey, TValue>(
             IEnumerable<string> topics = null,
             bool? enableRetryTopic = null,
@@ -366,7 +481,7 @@ namespace Confluent.Kafka.Core.Tests.Core.Hosting
                     Value = _encoding.GetBytes(value)
                 });
 
-            _producer.Flush(DefaultTimeout);
+            Assert.Equal(0, _producer.Flush(FlushTimeout));
         }
     }
 }

@@ -175,6 +175,8 @@ namespace Confluent.Kafka.Core.Hosting.Internal
                 return ExecutionResult.NoAvailableMessages;
             }
 
+            // End-of-partition results have a null Message. Since Confluent.Kafka 2.15.0, passing one
+            // to Commit or StoreOffset throws an InvalidOperationException.
             foreach (var consumeResult in consumeResults.Where(consumeResult => consumeResult!.Message is not null))
             {
                 DispatchWorkItem(consumeResult, cancellationToken);
@@ -628,9 +630,9 @@ namespace Confluent.Kafka.Core.Hosting.Internal
 
         protected virtual Activity StartActivity(string topic, IDictionary<string, string> headers)
         {
-            var activityName = $"{topic} {OperationNames.ProcessOperation}";
+            var activityName = $"{OperationNames.ProcessOperation} {topic}";
 
-            var activity = _options.DiagnosticsManager!.StartConsumerActivity(activityName, headers);
+            var activity = _options.DiagnosticsManager!.StartConsumerActivity(activityName, ActivityKind.Consumer, headers);
 
             return activity;
         }

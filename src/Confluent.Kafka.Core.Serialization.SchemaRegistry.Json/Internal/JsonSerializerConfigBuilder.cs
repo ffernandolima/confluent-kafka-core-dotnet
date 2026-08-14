@@ -92,6 +92,12 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Json.Internal
             return this;
         }
 
+        public IJsonSerializerConfigBuilder WithValidateBeforeDomainRules(bool? validateBeforeDomainRules)
+        {
+            AppendAction(config => config.ValidateBeforeDomainRules = validateBeforeDomainRules);
+            return this;
+        }
+
         public IJsonSerializerConfigBuilder WithConfigurationProperty(KeyValuePair<string, string> configurationProperty)
         {
             AppendAction(config => config.Set(configurationProperty.Key, configurationProperty.Value));

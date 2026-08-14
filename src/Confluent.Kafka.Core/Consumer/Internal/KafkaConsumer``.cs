@@ -1027,7 +1027,7 @@ namespace Confluent.Kafka.Core.Consumer.Internal
 
         private Activity StartActivity(string topic, IDictionary<string, string> headers)
         {
-            var activityName = $"{topic} {OperationNames.ReceiveOperation}";
+            var activityName = $"{OperationNames.ReceiveOperation} {topic}";
 
             var activity = _options.DiagnosticsManager!.StartConsumerActivity(activityName, headers);
 

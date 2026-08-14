@@ -55,5 +55,9 @@ namespace Confluent.Kafka.Core.Consumer
         bool? EnablePartitionEof { get; }
 
         bool? CheckCrcs { get; }
+
+        int? MaxPollRecords { get; }
+
+        string ShareAcknowledgementMode { get; }
     }
 }

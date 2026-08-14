@@ -57,5 +57,9 @@ namespace Confluent.Kafka.Core.Consumer
         TBuilder WithEnablePartitionEof(bool? enablePartitionEof);
 
         TBuilder WithCheckCrcs(bool? checkCrcs);
+
+        TBuilder WithMaxPollRecords(int? maxPollRecords);
+
+        TBuilder WithShareAcknowledgementMode(string shareAcknowledgementMode);
     }
 }

@@ -24,9 +24,14 @@ namespace Confluent.Kafka.Core.Tests.Core.Extensions
             return isProducerKind;
         }
 
+        /// <summary>
+        /// Matches both consumer-side kinds: 
+        /// receive is Client and processing is Consumer, per the messaging conventions. 
+        /// Tests use this to mean "a consumer-side span for this topic".
+        /// </summary>
         public static bool IsConsumerKind(this Activity activity)
         {
-            var isConsumerKind = activity is not null && activity.Kind == ActivityKind.Consumer;
+            var isConsumerKind = activity is not null && activity.Kind is ActivityKind.Consumer or ActivityKind.Client;
 
             return isConsumerKind;
         }

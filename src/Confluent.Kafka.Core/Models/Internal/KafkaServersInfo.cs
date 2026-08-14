@@ -1,24 +1,54 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Linq;
-using System.Net;
 
 namespace Confluent.Kafka.Core.Models.Internal
 {
     internal sealed class KafkaServersInfo
     {
         private const char PortSeparator = ':';
-        private const string JoinSeparator = ",";
         private static readonly char[] SplitSeparators = [','];
         private static readonly ConcurrentDictionary<string, KafkaServersInfo> ServersInfo = [];
 
-        public string ServerHostnames { get; }
-        public string ServerIpAddresses { get; }
+        /// <summary>
+        /// The first bootstrap entry, as configured:
+        /// server.address and server.port describe a single server, and must not come from a reverse DNS lookup.
+        /// </summary>
+        public string ServerAddress { get; }
+        public int? ServerPort { get; }
 
         private KafkaServersInfo(string bootstrapServers)
         {
-            ServerHostnames = GetServerHostnames(bootstrapServers);
-            ServerIpAddresses = GetServerIpAddresses(bootstrapServers);
+            var firstServer = bootstrapServers
+                .Split(SplitSeparators, StringSplitOptions.RemoveEmptyEntries)
+                .Select(bootstrapServer => bootstrapServer.Trim())
+                .FirstOrDefault(bootstrapServer => !string.IsNullOrWhiteSpace(bootstrapServer));
+
+            if (firstServer is null)
+            {
+                return;
+            }
+
+            var delimiterIndex = firstServer.LastIndexOf(PortSeparator);
+
+            if (delimiterIndex <= 0)
+            {
+                ServerAddress = firstServer;
+                return;
+            }
+
+#if NETSTANDARD2_0
+            ServerAddress = firstServer.Substring(0, delimiterIndex);
+            var portText = firstServer.Substring(delimiterIndex + 1);
+#else
+            ServerAddress = firstServer[..delimiterIndex];
+            var portText = firstServer[(delimiterIndex + 1)..];
+#endif
+
+            if (int.TryParse(portText, out var port))
+            {
+                ServerPort = port;
+            }
         }
 
         public static KafkaServersInfo Parse(string bootstrapServers)
@@ -28,82 +58,9 @@ namespace Confluent.Kafka.Core.Models.Internal
                 return null;
             }
 
-            var serversInfo = ServersInfo.GetOrAdd(bootstrapServers, new KafkaServersInfo(bootstrapServers));
+            var serversInfo = ServersInfo.GetOrAdd(bootstrapServers, static key => new KafkaServersInfo(key));
 
             return serversInfo;
-        }
-
-        private static string GetServerHostnames(string bootstrapServers)
-        {
-            try
-            {
-                var serverHostnames = bootstrapServers
-                    .Split(SplitSeparators, StringSplitOptions.RemoveEmptyEntries)
-                    .Select(bootstrapServer => ExtractServerHostName(bootstrapServer.Trim()))
-                    .Where(serverHostname => !string.IsNullOrWhiteSpace(serverHostname));
-
-                return string.Join(JoinSeparator, serverHostnames);
-            }
-            catch
-            {
-                return null;
-            }
-        }
-
-        private static string GetServerIpAddresses(string bootstrapServers)
-        {
-            try
-            {
-                var serverIpAddresses = bootstrapServers
-                    .Split(SplitSeparators, StringSplitOptions.RemoveEmptyEntries)
-                    .Select(bootstrapServer => ExtractServerIpAddress(bootstrapServer.Trim()))
-                    .Where(serverIpAddress => !string.IsNullOrWhiteSpace(serverIpAddress));
-
-                return string.Join(JoinSeparator, serverIpAddresses);
-            }
-            catch
-            {
-                return null;
-            }
-        }
-
-        private static string ExtractServerHostName(string bootstrapServer)
-        {
-            var hostEntry = GetHostEntry(bootstrapServer);
-
-            return hostEntry?.HostName;
-        }
-
-        private static string ExtractServerIpAddress(string bootstrapServer)
-        {
-            var hostEntry = GetHostEntry(bootstrapServer);
-
-            var ipAddresses = hostEntry?.AddressList?.Select(ipAddress => ipAddress.ToString())
-                ?? [];
-
-            return string.Join(JoinSeparator, ipAddresses);
-        }
-
-        private static IPHostEntry GetHostEntry(string bootstrapServer)
-        {
-            var bootstrapServerSpan = bootstrapServer.AsSpan();
-
-            var delimiterIndex = bootstrapServerSpan.IndexOf(PortSeparator);
-
-            if (delimiterIndex > 0)
-            {
-#if NETSTANDARD2_0
-                bootstrapServerSpan = bootstrapServerSpan.Slice(0, delimiterIndex);
-#else
-                bootstrapServerSpan = bootstrapServerSpan[..delimiterIndex];
-#endif
-            }
-
-            var hostNameOrAddress = bootstrapServerSpan.ToString();
-
-            var hostEntry = Dns.GetHostEntry(hostNameOrAddress);
-
-            return hostEntry;
         }
     }
 }

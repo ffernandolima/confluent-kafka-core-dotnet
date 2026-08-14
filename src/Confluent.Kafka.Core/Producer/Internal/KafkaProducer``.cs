@@ -575,7 +575,7 @@ namespace Confluent.Kafka.Core.Producer.Internal
 
         private Activity StartActivity(string topic, IDictionary<string, string> headers)
         {
-            var activityName = $"{topic} {OperationNames.PublishOperation}";
+            var activityName = $"{OperationNames.PublishOperation} {topic}";
 
             var activity = _options.DiagnosticsManager!.StartProducerActivity(activityName, headers);
 

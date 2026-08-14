@@ -61,6 +61,12 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Internal
             return this;
         }
 
+        public ISchemaRegistryConfigBuilder WithMaxConnectionsPerServer(int? maxConnectionsPerServer)
+        {
+            AppendAction(config => config.MaxConnectionsPerServer = maxConnectionsPerServer);
+            return this;
+        }
+
         public ISchemaRegistryConfigBuilder WithSslCaLocation(string sslCaLocation)
         {
             AppendAction(config => config.SslCaLocation = sslCaLocation);
@@ -148,6 +154,12 @@ namespace Confluent.Kafka.Core.Serialization.SchemaRegistry.Internal
         public ISchemaRegistryConfigBuilder WithBearerAuthTokenEndpointUrl(string bearerAuthTokenEndpointUrl)
         {
             AppendAction(config => config.BearerAuthTokenEndpointUrl = bearerAuthTokenEndpointUrl);
+            return this;
+        }
+
+        public ISchemaRegistryConfigBuilder WithBearerAuthTokenEndpointQuery(string bearerAuthTokenEndpointQuery)
+        {
+            AppendAction(config => config.BearerAuthTokenEndpointQuery = bearerAuthTokenEndpointQuery);
             return this;
         }
 

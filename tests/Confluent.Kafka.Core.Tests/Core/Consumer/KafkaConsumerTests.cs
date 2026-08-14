@@ -25,12 +25,15 @@ namespace Confluent.Kafka.Core.Tests.Core.Consumer
 {
     using System.Text;
 
-    public sealed class KafkaConsumerTests : IAsyncLifetime
+    public sealed class KafkaConsumerTests : IClassFixture<KafkaConsumerTests.TopicFixture>, IDisposable
     {
         private const string BootstrapServers = "localhost:9092";
 
         private static readonly int DefaultRetryCount = 3;
         private static readonly TimeSpan DefaultTimeout = TimeSpan.FromSeconds(1);
+
+        // Flush returns the number of messages still in flight; delivery can take seconds under load.
+        private static readonly TimeSpan FlushTimeout = TimeSpan.FromSeconds(30);
 
         private readonly Mock<ILogger> _mockLogger;
         private readonly Mock<ILoggerFactory> _mockLoggerFactory;
@@ -38,7 +41,8 @@ namespace Confluent.Kafka.Core.Tests.Core.Consumer
         private readonly Encoding _encoding;
         private readonly IKafkaProducer<Null, byte[]> _producer;
 
-        private readonly KafkaTopicFixture _kafkaTopicFixture;
+        // Topics are created once per class, so a shared group would leak committed offsets between tests.
+        private readonly string _groupId = $"test-consumer-group-{Guid.NewGuid():N}";
 
         public KafkaConsumerTests()
         {
@@ -57,30 +61,24 @@ namespace Confluent.Kafka.Core.Tests.Core.Consumer
             _encoding = EncodingFactory.Instance.CreateDefault();
 
             _producer = CreateProducer<Null, byte[]>();
-
-            _kafkaTopicFixture = new KafkaTopicFixture(
-                BootstrapServers,
-                Enum.GetValues<KafkaTopic>()
-                    .Select(value => value.GetDescription()));
         }
 
-        #region IAsyncLifetime
-
-        public async Task InitializeAsync()
-        {
-            await _kafkaTopicFixture.InitializeAsync();
-        }
-
-        public async Task DisposeAsync()
+        public void Dispose()
         {
             _producer?.Dispose();
-
-            await _kafkaTopicFixture.DisposeAsync();
         }
 
-        #endregion IAsyncLifetime
-
         #region Stubs
+
+        public sealed class TopicFixture : KafkaTopicFixture
+        {
+            public TopicFixture()
+                : base(
+                    BootstrapServers,
+                    Enum.GetValues<KafkaTopic>()
+                        .Select(value => value.GetDescription()))
+            { }
+        }
 
         public enum KafkaTopic
         {
@@ -396,7 +394,7 @@ namespace Confluent.Kafka.Core.Tests.Core.Consumer
             // Act
             Assert.Throws<ConsumeException>(() => consumer.Consume(DefaultTimeout, DefaultRetryCount));
 
-            consumer.Options!.DeadLetterProducer!.Flush(DefaultTimeout);
+            Assert.Equal(0, consumer.Options!.DeadLetterProducer!.Flush(FlushTimeout));
 
             var deadLetterMessage = deadLetterConsumer.Consume(DefaultTimeout, DefaultRetryCount);
 
@@ -439,7 +437,7 @@ namespace Confluent.Kafka.Core.Tests.Core.Consumer
             // Act
             Assert.Throws<ConsumeException>(() => consumer.ConsumeBatch(DefaultTimeout, DefaultRetryCount));
 
-            consumer.Options!.DeadLetterProducer!.Flush(DefaultTimeout);
+            Assert.Equal(0, consumer.Options!.DeadLetterProducer!.Flush(FlushTimeout));
 
             var deadLetterMessage = deadLetterConsumer.Consume(DefaultTimeout, DefaultRetryCount);
 
@@ -483,7 +481,7 @@ namespace Confluent.Kafka.Core.Tests.Core.Consumer
                 new KafkaConsumerConfig
                 {
                     BootstrapServers = BootstrapServers,
-                    GroupId = "test-consumer-group",
+                    GroupId = _groupId,
                     AutoOffsetReset = AutoOffsetReset.Earliest,
                     PartitionAssignments = topics?.Select(topic => new TopicPartition(topic, new Partition(0))),
                     EnableDeadLetterTopic = enableDeadLetterTopic ?? false,
@@ -528,7 +526,7 @@ namespace Confluent.Kafka.Core.Tests.Core.Consumer
                     Value = _encoding.GetBytes(value)
                 });
 
-            _producer.Flush(DefaultTimeout);
+            Assert.Equal(0, _producer.Flush(FlushTimeout));
         }
     }
 }

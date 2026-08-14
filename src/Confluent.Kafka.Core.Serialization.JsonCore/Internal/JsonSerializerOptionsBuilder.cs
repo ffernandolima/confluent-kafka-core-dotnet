@@ -83,6 +83,12 @@ namespace Confluent.Kafka.Core.Serialization.JsonCore.Internal
             return this;
         }
 
+        public IJsonSerializerOptionsBuilder WithAllowDuplicateProperties(bool allowDuplicateProperties)
+        {
+            AppendAction(options => options.AllowDuplicateProperties = allowDuplicateProperties);
+            return this;
+        }
+
         public IJsonSerializerOptionsBuilder WithAllowOutOfOrderMetadataProperties(bool allowOutOfOrderMetadataProperties)
         {
             AppendAction(options => options.AllowOutOfOrderMetadataProperties = allowOutOfOrderMetadataProperties);

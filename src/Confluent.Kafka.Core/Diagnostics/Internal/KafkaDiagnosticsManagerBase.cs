@@ -40,12 +40,22 @@ namespace Confluent.Kafka.Core.Diagnostics.Internal
             return activity;
         }
 
+        /// <summary>
+        /// Pull-based receive is Client per the conventions; only push-based processing is Consumer.
+        /// </summary>
         public Activity StartConsumerActivity(string activityName, IDictionary<string, string> carrier)
+        {
+            return StartConsumerActivity(activityName, ActivityKind.Client, carrier);
+        }
+
+        public Activity StartConsumerActivity(string activityName, ActivityKind activityKind, IDictionary<string, string> carrier)
         {
             var propagationContext = ExtractContext(carrier);
 
-            var activity = StartActivity(activityName, ActivityKind.Consumer, propagationContext);
+            var activity = StartActivity(activityName, activityKind, propagationContext);
 
+            // The carrier wraps the live message headers. Injecting here is deliberate: the retry and
+            // dead-letter paths reuse that Headers instance, so this keeps the whole chain in one trace.
             InjectContext(activity, carrier);
 
             return activity;

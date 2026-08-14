@@ -13,19 +13,27 @@ using Xunit;
 
 namespace Confluent.Kafka.Core.Tests.Core.Producer
 {
-    public sealed class KafkaProducerTests : IAsyncLifetime
+    public sealed class KafkaProducerTests : IClassFixture<KafkaProducerTests.TopicFixture>, IDisposable
     {
         private const string BootstrapServers = "localhost:9092";
         private const string Topic = "production-test-topic";
 
         private static readonly TimeSpan DefaultTimeout = TimeSpan.FromSeconds(1);
 
+        // Flush returns the number of messages still in flight; delivery can take seconds under load.
+        private static readonly TimeSpan FlushTimeout = TimeSpan.FromSeconds(30);
+
+        public sealed class TopicFixture : KafkaTopicFixture
+        {
+            public TopicFixture()
+                : base(BootstrapServers, [Topic])
+            { }
+        }
+
         private readonly Mock<ILogger> _mockLogger;
         private readonly Mock<ILoggerFactory> _mockLoggerFactory;
 
         private readonly IKafkaProducer<Null, string> _producer;
-
-        private readonly KafkaTopicFixture _kafkaTopicFixture;
 
         public KafkaProducerTests()
         {
@@ -51,27 +59,12 @@ namespace Confluent.Kafka.Core.Tests.Core.Producer
                 })
                 .WithLoggerFactory(_mockLoggerFactory.Object)
                 .Build();
-
-            _kafkaTopicFixture = new KafkaTopicFixture(
-                BootstrapServers,
-                [Topic]);
         }
 
-        #region IAsyncLifetime Members
-
-        public async Task InitializeAsync()
-        {
-            await _kafkaTopicFixture.InitializeAsync();
-        }
-
-        public async Task DisposeAsync()
+        public void Dispose()
         {
             _producer?.Dispose();
-
-            await _kafkaTopicFixture.DisposeAsync();
         }
-
-        #endregion IAsyncLifetime Members
 
         [Fact]
         public void Produce_WithMessage_ProducesMessageSuccessfully()
@@ -96,7 +89,7 @@ namespace Confluent.Kafka.Core.Tests.Core.Producer
                 Assert.Equal(message.Value, deliveryReport.Message.Value);
             });
 
-            _producer.Flush(DefaultTimeout);
+            Assert.Equal(0, _producer.Flush(FlushTimeout));
 
             // Assert
             Assert.NotEmpty(activities);
@@ -128,7 +121,7 @@ namespace Confluent.Kafka.Core.Tests.Core.Producer
                 Assert.Equal(message.Value, deliveryReport.Message.Value);
             });
 
-            _producer.Flush(DefaultTimeout);
+            Assert.Equal(0, _producer.Flush(FlushTimeout));
 
             Assert.NotEmpty(activities);
 
@@ -160,7 +153,7 @@ namespace Confluent.Kafka.Core.Tests.Core.Producer
                 Assert.Equal(message.Value, deliveryReport.Message.Value);
             });
 
-            _producer.Flush(DefaultTimeout);
+            Assert.Equal(0, _producer.Flush(FlushTimeout));
 
             Assert.NotEmpty(activities);
 

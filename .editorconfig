@@ -1,0 +1,21 @@
+root = true
+
+[*]
+indent_style = space
+indent_size = 4
+end_of_line = crlf
+
+# utf-8-bom, not utf-8: this is what dotnet new and Visual Studio emit, so it is
+# what the repository already contains and what new files will keep.
+[*.cs]
+charset = utf-8-bom
+
+[*.{csproj,props,targets,sln,config}]
+charset = utf-8-bom
+
+[*.{yml,yaml}]
+indent_size = 2
+end_of_line = lf
+
+[*.{md,json}]
+indent_size = 2

@@ -158,6 +158,8 @@
 
         TBuilder WithSaslOauthbearerTokenEndpointUrl(string saslOauthbearerTokenEndpointUrl);
 
+        TBuilder WithSaslOauthbearerSubClaimName(string saslOauthbearerSubClaimName);
+
         TBuilder WithSaslOauthbearerGrantType(SaslOauthbearerGrantType? saslOauthbearerGrantType);
 
         TBuilder WithSaslOauthbearerAssertionAlgorithm(SaslOauthbearerAssertionAlgorithm? saslOauthbearerAssertionAlgorithm);
@@ -183,6 +185,8 @@
         TBuilder WithSaslOauthbearerAssertionClaimSub(string saslOauthbearerAssertionClaimSub);
 
         TBuilder WithSaslOauthbearerAssertionJwtTemplateFile(string saslOauthbearerAssertionJwtTemplateFile);
+
+        TBuilder WithSaslOauthbearerMetadataAuthenticationType(SaslOauthbearerMetadataAuthenticationType? saslOauthbearerMetadataAuthenticationType);
 
         TBuilder WithPluginLibraryPaths(string pluginLibraryPaths);
 

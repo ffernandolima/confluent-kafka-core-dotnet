@@ -17,7 +17,7 @@
 - **:recycle: Idempotent Consumer Pattern**: Guarantee that message processing is safe and repeatable, preventing duplicate actions.
 - **:outbox_tray: Support for Multiple Serializers**: Easily switch between various serialization formats based on your requirements.
 - **:scroll: Schema Registry Support**: Seamlessly integrate with schema registries for better data governance.
-- **:computer: Broad Compatibility**: Fully supports .NET Framework, .NET Core, and .NET 5 and above, ensuring versatility in deployment.
+- **:computer: Broad Compatibility**: Targets `netstandard2.0`, `netstandard2.1`, `net8.0`, `net9.0` and `net10.0`, so it runs on current .NET and stays reachable from older runtimes, including .NET Framework, through .NET Standard.
 
 | [Go Back](/README.md) |
 |-----------------------| 

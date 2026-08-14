@@ -7,7 +7,8 @@ using Xunit;
 
 namespace Confluent.Kafka.Core.Tests.Core.Fixtures
 {
-    public sealed class KafkaTopicFixture : IAsyncLifetime
+    // Derived types supply the topic list: IClassFixture requires a parameterless constructor.
+    public class KafkaTopicFixture : IAsyncLifetime
     {
         private readonly int _numPartitions;
         private readonly short _replicationFactor;

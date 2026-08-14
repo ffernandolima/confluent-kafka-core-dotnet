@@ -1,0 +1,18 @@
+# Normalise every text file to LF inside the repository.
+* text=auto
+
+# Check these out as CRLF regardless of each developer's core.autocrlf setting.
+*.cs        text eol=crlf
+*.csproj    text eol=crlf
+*.props     text eol=crlf
+*.targets   text eol=crlf
+*.sln       text eol=crlf
+*.config    text eol=crlf
+
+# Keep cross-platform tooling happy.
+*.yml       text eol=lf
+*.yaml      text eol=lf
+*.sh        text eol=lf
+
+*.avsc      text
+*.proto     text
