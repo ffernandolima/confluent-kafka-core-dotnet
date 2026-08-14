@@ -1,4 +1,4 @@
-﻿using Confluent.Kafka.Core.Consumer;
+using Confluent.Kafka.Core.Consumer;
 using Confluent.Kafka.Core.Hosting;
 using Confluent.Kafka.Core.Models.Internal;
 using Confluent.Kafka.Core.Producer;
@@ -41,6 +41,7 @@ namespace Confluent.Kafka.Core.Diagnostics.Internal
 
             using var builder = new KafkaActivityAttributesBuilder()
                 .WithBootstrapServers(consumerConfig.BootstrapServers)
+                .WithClientId(consumerConfig.ClientId)
                 .WithGroupId(consumerConfig.GroupId)
                 .WithTopic(consumerRecord.Topic)
                 .WithPartition(consumerRecord.Partition)
@@ -48,7 +49,7 @@ namespace Confluent.Kafka.Core.Diagnostics.Internal
                 .WithMessageKey(consumerRecord.Message!.Key)
                 .WithMessageValue(consumerRecord.Message!.Value)
                 .WithMessageBody(consumerRecord.Message!.Value)
-                .WithOperation(OperationNames.ReceiveOperation)
+                .WithOperation(OperationNames.ReceiveOperation, OperationTypes.Receive)
                 .WithError(consumeException.Error)
                 .WithException(consumeException);
 
@@ -91,6 +92,7 @@ namespace Confluent.Kafka.Core.Diagnostics.Internal
 
             using var builder = new KafkaActivityAttributesBuilder()
                 .WithBootstrapServers(options.ConsumerConfig!.BootstrapServers)
+                .WithClientId(options.ConsumerConfig!.ClientId)
                 .WithGroupId(options.ConsumerConfig!.GroupId)
                 .WithTopic(consumeResult.Topic)
                 .WithPartition(consumeResult.Partition)
@@ -103,7 +105,7 @@ namespace Confluent.Kafka.Core.Diagnostics.Internal
                         consumeResult.Message!.Value,
                         options.ValueDeserializer,
                         () => new(MessageComponentType.Value, consumeResult.Topic, consumeResult.Message!.Headers)))
-                .WithOperation(OperationNames.ReceiveOperation);
+                .WithOperation(OperationNames.ReceiveOperation, OperationTypes.Receive);
 
             var attributes = builder.Build();
 
@@ -144,6 +146,7 @@ namespace Confluent.Kafka.Core.Diagnostics.Internal
 
             using var builder = new KafkaActivityAttributesBuilder()
                 .WithBootstrapServers(options.ProducerConfig!.BootstrapServers)
+                .WithClientId(options.ProducerConfig!.ClientId)
                 .WithTopic(deliveryResult.Topic)
                 .WithPartition(deliveryResult.Partition)
                 .WithOffset(deliveryResult.Offset)
@@ -155,7 +158,7 @@ namespace Confluent.Kafka.Core.Diagnostics.Internal
                         deliveryResult.Message!.Value,
                         options.ValueSerializer,
                         () => new(MessageComponentType.Value, deliveryResult.Topic, deliveryResult.Message!.Headers)))
-                .WithOperation(OperationNames.PublishOperation)
+                .WithOperation(OperationNames.PublishOperation, OperationTypes.Send)
                 .WithError(produceException.Error)
                 .WithException(produceException);
 
@@ -199,6 +202,7 @@ namespace Confluent.Kafka.Core.Diagnostics.Internal
 
             using var builder = new KafkaActivityAttributesBuilder()
                 .WithBootstrapServers(options.ProducerConfig!.BootstrapServers)
+                .WithClientId(options.ProducerConfig!.ClientId)
                 .WithTopic(deliveryReport.Topic)
                 .WithPartition(deliveryReport.Partition)
                 .WithOffset(deliveryReport.Offset)
@@ -210,7 +214,7 @@ namespace Confluent.Kafka.Core.Diagnostics.Internal
                         deliveryReport.Message!.Value,
                         options.ValueSerializer,
                         () => new(MessageComponentType.Value, deliveryReport.Topic, deliveryReport.Message!.Headers)))
-                .WithOperation(OperationNames.PublishOperation)
+                .WithOperation(OperationNames.PublishOperation, OperationTypes.Send)
                 .WithError(deliveryReport.Error);
 
             var attributes = builder.Build();
@@ -252,6 +256,7 @@ namespace Confluent.Kafka.Core.Diagnostics.Internal
 
             using var builder = new KafkaActivityAttributesBuilder()
                 .WithBootstrapServers(options.ProducerConfig!.BootstrapServers)
+                .WithClientId(options.ProducerConfig!.ClientId)
                 .WithTopic(deliveryResult.Topic)
                 .WithPartition(deliveryResult.Partition)
                 .WithOffset(deliveryResult.Offset)
@@ -263,7 +268,7 @@ namespace Confluent.Kafka.Core.Diagnostics.Internal
                         deliveryResult.Message!.Value,
                         options.ValueSerializer,
                         () => new(MessageComponentType.Value, deliveryResult.Topic, deliveryResult.Message!.Headers)))
-                .WithOperation(OperationNames.PublishOperation);
+                .WithOperation(OperationNames.PublishOperation, OperationTypes.Send);
 
             var attributes = builder.Build();
 
@@ -308,6 +313,7 @@ namespace Confluent.Kafka.Core.Diagnostics.Internal
 
             using var builder = new KafkaActivityAttributesBuilder()
                 .WithBootstrapServers(options.Consumer!.Options!.ConsumerConfig!.BootstrapServers)
+                .WithClientId(options.Consumer!.Options!.ConsumerConfig!.ClientId)
                 .WithGroupId(options.Consumer!.Options!.ConsumerConfig!.GroupId)
                 .WithTopic(consumeResult.Topic)
                 .WithPartition(consumeResult.Partition)
@@ -320,7 +326,7 @@ namespace Confluent.Kafka.Core.Diagnostics.Internal
                         consumeResult.Message!.Value,
                         options.Consumer!.Options!.ValueDeserializer,
                         () => new(MessageComponentType.Value, consumeResult.Topic, consumeResult.Message!.Headers)))
-                .WithOperation(OperationNames.ProcessOperation)
+                .WithOperation(OperationNames.ProcessOperation, OperationTypes.Process)
                 .WithException(exception);
 
             var attributes = builder.Build();
@@ -364,6 +370,7 @@ namespace Confluent.Kafka.Core.Diagnostics.Internal
 
             using var builder = new KafkaActivityAttributesBuilder()
                 .WithBootstrapServers(options.Consumer!.Options!.ConsumerConfig!.BootstrapServers)
+                .WithClientId(options.Consumer!.Options!.ConsumerConfig!.ClientId)
                 .WithGroupId(options.Consumer!.Options!.ConsumerConfig!.GroupId)
                 .WithTopic(consumeResult.Topic)
                 .WithPartition(consumeResult.Partition)
@@ -376,7 +383,7 @@ namespace Confluent.Kafka.Core.Diagnostics.Internal
                         consumeResult.Message!.Value,
                         options.Consumer!.Options!.ValueDeserializer,
                         () => new(MessageComponentType.Value, consumeResult.Topic, consumeResult.Message!.Headers)))
-                .WithOperation(OperationNames.ProcessOperation);
+                .WithOperation(OperationNames.ProcessOperation, OperationTypes.Process);
 
             var attributes = builder.Build();
 
@@ -430,15 +437,23 @@ namespace Confluent.Kafka.Core.Diagnostics.Internal
         private static void EnrichInternal(Activity activity, KafkaActivityAttributes attributes)
         {
             activity.SetTag(SemanticConventions.Messaging.System, attributes.System);
-            activity.SetTag(SemanticConventions.Messaging.Operation, attributes.Operation);
-            activity.SetTag(SemanticConventions.Messaging.ClientId, attributes.ClientId);
+            activity.SetTag(SemanticConventions.Messaging.OperationName, attributes.OperationName);
+            activity.SetTag(SemanticConventions.Messaging.OperationType, attributes.OperationType);
+
+            if (!string.IsNullOrWhiteSpace(attributes.ClientId))
+            {
+                activity.SetTag(SemanticConventions.Messaging.ClientId, attributes.ClientId);
+            }
 
             if (attributes.MessageId is not null)
             {
                 activity.SetTag(SemanticConventions.Messaging.MessageId, attributes.MessageId);
             }
 
-            activity.SetTag(SemanticConventions.Messaging.Kafka.MessageOffset, attributes.MessageOffset);
+            if (attributes.MessageOffset.HasValue)
+            {
+                activity.SetTag(SemanticConventions.Messaging.Kafka.MessageOffset, attributes.MessageOffset);
+            }
 
             if (!string.IsNullOrWhiteSpace(attributes.MessageKey))
             {
@@ -450,11 +465,14 @@ namespace Confluent.Kafka.Core.Diagnostics.Internal
                 activity.SetTag(SemanticConventions.Messaging.MessageBodySize, attributes.MessageBodySize);
             }
 
-            activity.SetTag(SemanticConventions.Messaging.Kafka.MessageTombstone, attributes.MessageTombstone);
+            if (attributes.MessageTombstone)
+            {
+                activity.SetTag(SemanticConventions.Messaging.Kafka.MessageTombstone, attributes.MessageTombstone);
+            }
 
             if (!string.IsNullOrWhiteSpace(attributes.ConsumerGroup))
             {
-                activity.SetTag(SemanticConventions.Messaging.Kafka.ConsumerGroup, attributes.ConsumerGroup);
+                activity.SetTag(SemanticConventions.Messaging.Kafka.ConsumerGroupName, attributes.ConsumerGroup);
             }
 
             if (!string.IsNullOrWhiteSpace(attributes.DestinationName))
@@ -462,39 +480,37 @@ namespace Confluent.Kafka.Core.Diagnostics.Internal
                 activity.SetTag(SemanticConventions.Messaging.DestinationName, attributes.DestinationName);
             }
 
-            if (attributes.DestinationPartition.HasValue)
+            if (!string.IsNullOrWhiteSpace(attributes.DestinationPartitionId))
             {
-                activity.SetTag(SemanticConventions.Messaging.Kafka.DestinationPartition, attributes.DestinationPartition);
+                activity.SetTag(SemanticConventions.Messaging.Kafka.DestinationPartitionId, attributes.DestinationPartitionId);
             }
-
-            activity.SetTag(SemanticConventions.Messaging.Kafka.ResultIsError, attributes.ResultIsError);
 
             if (attributes.ResultIsError)
             {
+                activity.SetTag(SemanticConventions.Messaging.Kafka.ResultIsError, attributes.ResultIsError);
                 activity.SetTag(SemanticConventions.Messaging.Kafka.ResultErrorCode, attributes.ResultErrorCode);
                 activity.SetTag(SemanticConventions.Messaging.Kafka.ResultErrorReason, attributes.ResultErrorReason);
             }
 
-            activity.SetTag(SemanticConventions.Messaging.NetworkTransport, attributes.NetworkTransport);
+            if (!string.IsNullOrWhiteSpace(attributes.ErrorType))
+            {
+                activity.SetTag(SemanticConventions.Messaging.ErrorType, attributes.ErrorType);
+            }
 
             if (!string.IsNullOrWhiteSpace(attributes.ServerAddress))
             {
                 activity.SetTag(SemanticConventions.Messaging.ServerAddress, attributes.ServerAddress);
             }
 
-            if (!string.IsNullOrWhiteSpace(attributes.ExceptionType))
+            if (attributes.ServerPort.HasValue)
             {
-                activity.SetTag(SemanticConventions.Messaging.ExceptionType, attributes.ExceptionType);
+                activity.SetTag(SemanticConventions.Messaging.ServerPort, attributes.ServerPort);
             }
 
-            if (!string.IsNullOrWhiteSpace(attributes.ExceptionMessage))
+            // Exceptions are recorded as span events rather than span attributes.
+            if (attributes.Exception is not null)
             {
-                activity.SetTag(SemanticConventions.Messaging.ExceptionMessage, attributes.ExceptionMessage);
-            }
-
-            if (!string.IsNullOrWhiteSpace(attributes.ExceptionStackTrace))
-            {
-                activity.SetTag(SemanticConventions.Messaging.ExceptionStackTrace, attributes.ExceptionStackTrace);
+                activity.AddException(attributes.Exception);
             }
         }
     }

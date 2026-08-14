@@ -65,10 +65,44 @@ builder.Services.AddOpenTelemetry()
 
 ### Semantic Conventions :open_book:
 
-The library automatically includes all the tags defined by the OpenTelemetry semantic conventions for messaging. For more information, refer to the following links:
+The library follows the OpenTelemetry semantic conventions for messaging, **v1.44.0**. For more information, refer to the following links:
 
-- [OpenTelemetry Messaging Spans](https://github.com/open-telemetry/semantic-conventions/blob/v1.23.1/docs/messaging/messaging-spans.md)
-- [OpenTelemetry Kafka Span Attributes](https://github.com/open-telemetry/semantic-conventions/blob/v1.23.1/docs/messaging/kafka.md#span-attributes)
+- [OpenTelemetry Messaging Spans](https://github.com/open-telemetry/semantic-conventions/blob/v1.44.0/docs/messaging/messaging-spans.md)
+- [OpenTelemetry Kafka Span Attributes](https://github.com/open-telemetry/semantic-conventions/blob/v1.44.0/docs/messaging/kafka.md#span-attributes)
+
+> [!NOTE]
+> The messaging conventions are still marked *Development* upstream, so these attribute names may
+> change again in a future release.
+
+Spans are named `{operation} {topic}` — for example `publish orders`, `receive orders`,
+`process orders`. Producing and processing use the `Producer` and `Consumer` activity kinds; a
+pull-based receive uses `Client`, as the conventions require.
+
+Attributes emitted:
+
+| Attribute | Notes |
+|---|---|
+| `messaging.system` | always `kafka` |
+| `messaging.operation.name` | `publish`, `receive` or `process` |
+| `messaging.operation.type` | `send`, `receive` or `process` — note publishing maps to `send` |
+| `messaging.client.id` | taken from your `ClientId` configuration |
+| `messaging.destination.name` | topic |
+| `messaging.destination.partition.id` | partition, as a string |
+| `messaging.consumer.group.name` | consumers only |
+| `messaging.message.id` | when a message id handler is configured |
+| `messaging.message.body.size` | |
+| `messaging.kafka.offset` | |
+| `messaging.kafka.message.key` | when the message has a key |
+| `messaging.kafka.message.tombstone` | only when `true` |
+| `server.address`, `server.port` | first bootstrap server |
+| `error.type` | on failure only |
+
+Exceptions are recorded as span events rather than attributes.
+
+The following are specific to this library and are not part of the OpenTelemetry conventions. They
+carry Kafka error detail that `error.type` cannot express:
+`messaging.kafka.result.is_error`, `messaging.kafka.result.error_code`,
+`messaging.kafka.result.error_reason` and `messaging.kafka.processing.is_error`.
 
 ### Additional Resources :spiral_notepad:
 

@@ -1,4 +1,4 @@
-﻿using Confluent.Kafka.Core.Consumer.Internal;
+using Confluent.Kafka.Core.Consumer.Internal;
 using Confluent.Kafka.Core.Conversion.Internal;
 using Confluent.Kafka.Core.Diagnostics.Internal;
 using Confluent.Kafka.Core.Internal;
@@ -630,9 +630,9 @@ namespace Confluent.Kafka.Core.Hosting.Internal
 
         protected virtual Activity StartActivity(string topic, IDictionary<string, string> headers)
         {
-            var activityName = $"{topic} {OperationNames.ProcessOperation}";
+            var activityName = $"{OperationNames.ProcessOperation} {topic}";
 
-            var activity = _options.DiagnosticsManager!.StartConsumerActivity(activityName, headers);
+            var activity = _options.DiagnosticsManager!.StartConsumerActivity(activityName, ActivityKind.Consumer, headers);
 
             return activity;
         }

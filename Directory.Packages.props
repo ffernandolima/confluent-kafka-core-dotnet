@@ -19,7 +19,7 @@
         <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.11" />
     </ItemGroup>
     <ItemGroup Label="Observability Packages">
-        <PackageVersion Include="OpenTelemetry.Api" Version="1.12.0" />
+        <PackageVersion Include="OpenTelemetry.Api" Version="1.17.0" />
     </ItemGroup>
     <ItemGroup Label="Resilience and Retry Packages">
         <PackageVersion Include="Polly" Version="8.7.0" />

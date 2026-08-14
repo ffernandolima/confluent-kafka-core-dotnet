@@ -1,4 +1,4 @@
-﻿using Confluent.Kafka.Core.Diagnostics;
+using Confluent.Kafka.Core.Diagnostics;
 using Confluent.Kafka.Core.Diagnostics.Internal;
 using System;
 using System.Collections.Generic;
@@ -44,13 +44,28 @@ namespace Confluent.Kafka.Core.Tests.Core.Diagnostics
         }
 
         [Fact]
-        public void StartConsumerActivity_ShouldStartConsumerActivity()
+        public void StartConsumerActivity_ShouldStartClientActivity()
         {
             // Arrange
             var activityName = "consumer-activity";
 
             // Act
             var activity = _diagnosticsManager.StartConsumerActivity(activityName, _carrier);
+
+            // Assert
+            Assert.NotNull(activity);
+            Assert.Equal(activityName, activity.DisplayName);
+            Assert.Equal(ActivityKind.Client, activity.Kind);
+        }
+
+        [Fact]
+        public void StartConsumerActivity_ShouldHonourTheRequestedKind()
+        {
+            // Arrange
+            var activityName = "processing-activity";
+
+            // Act
+            var activity = _diagnosticsManager.StartConsumerActivity(activityName, ActivityKind.Consumer, _carrier);
 
             // Assert
             Assert.NotNull(activity);

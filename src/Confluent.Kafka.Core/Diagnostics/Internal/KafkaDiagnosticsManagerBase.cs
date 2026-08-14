@@ -1,4 +1,4 @@
-﻿using Confluent.Kafka.Core.Consumer;
+using Confluent.Kafka.Core.Consumer;
 using Confluent.Kafka.Core.Hosting;
 using Confluent.Kafka.Core.Producer;
 using System;
@@ -40,11 +40,19 @@ namespace Confluent.Kafka.Core.Diagnostics.Internal
             return activity;
         }
 
+        /// <summary>
+        /// Pull-based receive is Client per the conventions; only push-based processing is Consumer.
+        /// </summary>
         public Activity StartConsumerActivity(string activityName, IDictionary<string, string> carrier)
+        {
+            return StartConsumerActivity(activityName, ActivityKind.Client, carrier);
+        }
+
+        public Activity StartConsumerActivity(string activityName, ActivityKind activityKind, IDictionary<string, string> carrier)
         {
             var propagationContext = ExtractContext(carrier);
 
-            var activity = StartActivity(activityName, ActivityKind.Consumer, propagationContext);
+            var activity = StartActivity(activityName, activityKind, propagationContext);
 
             InjectContext(activity, carrier);
 

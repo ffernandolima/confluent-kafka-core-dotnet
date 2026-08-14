@@ -1,4 +1,4 @@
-﻿using Confluent.Kafka.Core.Consumer;
+using Confluent.Kafka.Core.Consumer;
 using Confluent.Kafka.Core.Consumer.Internal;
 using Confluent.Kafka.Core.Diagnostics;
 using Confluent.Kafka.Core.Diagnostics.Internal;
@@ -92,7 +92,8 @@ namespace Confluent.Kafka.Core.Tests.Core.Diagnostics
             var consumerConfig = new KafkaConsumerConfig
             {
                 GroupId = "test-group",
-                BootstrapServers = "localhost:9092"
+                BootstrapServers = "localhost:9092",
+                ClientId = "diagnostics-test-client"
             };
 
             // Act
@@ -102,20 +103,18 @@ namespace Confluent.Kafka.Core.Tests.Core.Diagnostics
             Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.ClientId);
             Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.DestinationName);
             Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.MessageBodySize);
-            Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.Operation);
+            Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.OperationName);
+            Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.OperationType);
             Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.System);
-            Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.NetworkTransport);
             Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.ServerAddress);
-            Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.ExceptionType);
-            Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.ExceptionMessage);
-            Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.ExceptionStackTrace);
-            Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.Kafka.ConsumerGroup);
-            Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.Kafka.DestinationPartition);
+            Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.ServerPort);
+            Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.Kafka.ConsumerGroupName);
+            Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.Kafka.DestinationPartitionId);
             Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.Kafka.MessageOffset);
-            Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.Kafka.MessageTombstone);
             Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.Kafka.ResultIsError);
             Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.Kafka.ResultErrorCode);
             Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.Kafka.ResultErrorReason);
+            Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.ErrorType);
             Assert.Contains(activity.TagObjects, tag => tag.Key == "custom-consumption-failure-tag");
         }
 
@@ -141,7 +140,8 @@ namespace Confluent.Kafka.Core.Tests.Core.Diagnostics
                 ConsumerConfig = new KafkaConsumerConfig
                 {
                     GroupId = "test-group",
-                    BootstrapServers = "localhost:9092"
+                    BootstrapServers = "localhost:9092",
+                    ClientId = "diagnostics-test-client"
                 },
                 ValueDeserializer = Deserializers.Utf8,
                 MessageIdHandler = value => value
@@ -155,15 +155,14 @@ namespace Confluent.Kafka.Core.Tests.Core.Diagnostics
             Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.DestinationName);
             Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.MessageBodySize);
             Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.MessageId);
-            Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.Operation);
+            Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.OperationName);
+            Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.OperationType);
             Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.System);
-            Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.NetworkTransport);
             Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.ServerAddress);
-            Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.Kafka.ConsumerGroup);
-            Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.Kafka.DestinationPartition);
+            Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.ServerPort);
+            Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.Kafka.ConsumerGroupName);
+            Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.Kafka.DestinationPartitionId);
             Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.Kafka.MessageOffset);
-            Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.Kafka.MessageTombstone);
-            Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.Kafka.ResultIsError);
             Assert.Contains(activity.TagObjects, tag => tag.Key == "custom-consumption-tag");
         }
 
@@ -192,7 +191,8 @@ namespace Confluent.Kafka.Core.Tests.Core.Diagnostics
             {
                 ProducerConfig = new KafkaProducerConfig
                 {
-                    BootstrapServers = "localhost:9092"
+                    BootstrapServers = "localhost:9092",
+                    ClientId = "diagnostics-test-client"
                 },
                 ValueSerializer = Serializers.Utf8,
                 MessageIdHandler = value => value
@@ -206,19 +206,17 @@ namespace Confluent.Kafka.Core.Tests.Core.Diagnostics
             Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.DestinationName);
             Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.MessageBodySize);
             Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.MessageId);
-            Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.Operation);
+            Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.OperationName);
+            Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.OperationType);
             Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.System);
-            Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.NetworkTransport);
             Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.ServerAddress);
-            Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.ExceptionType);
-            Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.ExceptionMessage);
-            Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.ExceptionStackTrace);
-            Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.Kafka.DestinationPartition);
+            Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.ServerPort);
+            Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.Kafka.DestinationPartitionId);
             Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.Kafka.MessageOffset);
-            Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.Kafka.MessageTombstone);
             Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.Kafka.ResultIsError);
             Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.Kafka.ResultErrorCode);
             Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.Kafka.ResultErrorReason);
+            Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.ErrorType);
             Assert.Contains(activity.TagObjects, tag => tag.Key == "custom-production-failure-tag");
         }
 
@@ -244,7 +242,8 @@ namespace Confluent.Kafka.Core.Tests.Core.Diagnostics
             {
                 ProducerConfig = new KafkaProducerConfig
                 {
-                    BootstrapServers = "localhost:9092"
+                    BootstrapServers = "localhost:9092",
+                    ClientId = "diagnostics-test-client"
                 },
                 ValueSerializer = Serializers.Utf8,
                 MessageIdHandler = value => value
@@ -258,14 +257,13 @@ namespace Confluent.Kafka.Core.Tests.Core.Diagnostics
             Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.DestinationName);
             Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.MessageBodySize);
             Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.MessageId);
-            Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.Operation);
+            Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.OperationName);
+            Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.OperationType);
             Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.System);
-            Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.NetworkTransport);
             Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.ServerAddress);
-            Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.Kafka.DestinationPartition);
+            Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.ServerPort);
+            Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.Kafka.DestinationPartitionId);
             Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.Kafka.MessageOffset);
-            Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.Kafka.MessageTombstone);
-            Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.Kafka.ResultIsError);
             Assert.Contains(activity.TagObjects, tag => tag.Key == "custom-sync-production-tag");
         }
 
@@ -291,7 +289,8 @@ namespace Confluent.Kafka.Core.Tests.Core.Diagnostics
             {
                 ProducerConfig = new KafkaProducerConfig
                 {
-                    BootstrapServers = "localhost:9092"
+                    BootstrapServers = "localhost:9092",
+                    ClientId = "diagnostics-test-client"
                 },
                 ValueSerializer = Serializers.Utf8,
                 MessageIdHandler = value => value
@@ -305,14 +304,13 @@ namespace Confluent.Kafka.Core.Tests.Core.Diagnostics
             Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.DestinationName);
             Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.MessageBodySize);
             Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.MessageId);
-            Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.Operation);
+            Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.OperationName);
+            Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.OperationType);
             Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.System);
-            Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.NetworkTransport);
             Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.ServerAddress);
-            Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.Kafka.DestinationPartition);
+            Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.ServerPort);
+            Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.Kafka.DestinationPartitionId);
             Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.Kafka.MessageOffset);
-            Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.Kafka.MessageTombstone);
-            Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.Kafka.ResultIsError);
             Assert.Contains(activity.TagObjects, tag => tag.Key == "custom-async-production-tag");
         }
 
@@ -339,7 +337,8 @@ namespace Confluent.Kafka.Core.Tests.Core.Diagnostics
                 new KafkaConsumerConfig
                 {
                     GroupId = "test-group",
-                    BootstrapServers = "localhost:9092"
+                    BootstrapServers = "localhost:9092",
+                    ClientId = "diagnostics-test-client"
                 })
                .WithMessageIdHandler(value => value)
                .Build();
@@ -358,19 +357,16 @@ namespace Confluent.Kafka.Core.Tests.Core.Diagnostics
             Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.DestinationName);
             Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.MessageBodySize);
             Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.MessageId);
-            Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.Operation);
+            Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.OperationName);
+            Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.OperationType);
             Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.System);
-            Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.NetworkTransport);
             Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.ServerAddress);
-            Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.ExceptionType);
-            Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.ExceptionMessage);
-            Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.ExceptionStackTrace);
-            Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.Kafka.ConsumerGroup);
-            Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.Kafka.DestinationPartition);
+            Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.ServerPort);
+            Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.Kafka.ConsumerGroupName);
+            Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.Kafka.DestinationPartitionId);
             Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.Kafka.MessageOffset);
-            Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.Kafka.MessageTombstone);
-            Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.Kafka.ResultIsError);
             Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.Kafka.ProcessingIsError);
+            Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.ErrorType);
             Assert.Contains(activity.TagObjects, tag => tag.Key == "custom-processing-failure-tag");
         }
 
@@ -395,7 +391,8 @@ namespace Confluent.Kafka.Core.Tests.Core.Diagnostics
                 new KafkaConsumerConfig
                 {
                     GroupId = "test-group",
-                    BootstrapServers = "localhost:9092"
+                    BootstrapServers = "localhost:9092",
+                    ClientId = "diagnostics-test-client"
                 })
                .WithMessageIdHandler(value => value)
                .Build();
@@ -414,15 +411,14 @@ namespace Confluent.Kafka.Core.Tests.Core.Diagnostics
             Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.DestinationName);
             Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.MessageBodySize);
             Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.MessageId);
-            Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.Operation);
+            Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.OperationName);
+            Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.OperationType);
             Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.System);
-            Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.NetworkTransport);
             Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.ServerAddress);
-            Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.Kafka.ConsumerGroup);
-            Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.Kafka.DestinationPartition);
+            Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.ServerPort);
+            Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.Kafka.ConsumerGroupName);
+            Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.Kafka.DestinationPartitionId);
             Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.Kafka.MessageOffset);
-            Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.Kafka.MessageTombstone);
-            Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.Kafka.ResultIsError);
             Assert.Contains(activity.TagObjects, tag => tag.Key == SemanticConventions.Messaging.Kafka.ProcessingIsError);
             Assert.Contains(activity.TagObjects, tag => tag.Key == "custom-processing-tag");
         }

@@ -1,4 +1,5 @@
-﻿using Confluent.Kafka.Core.Internal;
+using Confluent.Kafka.Core.Encoding;
+using Confluent.Kafka.Core.Internal;
 using Confluent.Kafka.Core.Models.Internal;
 using System;
 
@@ -13,9 +14,16 @@ namespace Confluent.Kafka.Core.Diagnostics.Internal
                 var serversInfo = KafkaServersInfo.Parse(bootstrapServers);
                 if (serversInfo is not null)
                 {
-                    attribute.ServerAddress = serversInfo.ServerHostnames ?? serversInfo.ServerIpAddresses;
+                    attribute.ServerAddress = serversInfo.ServerHostname ?? serversInfo.ServerIpAddress;
+                    attribute.ServerPort = serversInfo.ServerPort;
                 }
             });
+            return this;
+        }
+
+        public KafkaActivityAttributesBuilder WithClientId(string clientId)
+        {
+            AppendAction(attribute => attribute.ClientId = clientId);
             return this;
         }
 
@@ -33,7 +41,7 @@ namespace Confluent.Kafka.Core.Diagnostics.Internal
 
         public KafkaActivityAttributesBuilder WithPartition(Partition partition)
         {
-            AppendAction(attribute => attribute.DestinationPartition = partition);
+            AppendAction(attribute => attribute.DestinationPartitionId = partition.Value.ToString());
             return this;
         }
 
@@ -49,7 +57,9 @@ namespace Confluent.Kafka.Core.Diagnostics.Internal
             {
                 if (messageKey is not null and not Null and not Ignore)
                 {
-                    attribute.MessageKey = messageKey.ToString();
+                    attribute.MessageKey = messageKey is byte[] messageKeyBytes
+                        ? EncodingFactory.Instance.CreateDefault().GetString(messageKeyBytes)
+                        : messageKey.ToString();
                 }
             });
             return this;
@@ -79,9 +89,13 @@ namespace Confluent.Kafka.Core.Diagnostics.Internal
             return this;
         }
 
-        public KafkaActivityAttributesBuilder WithOperation(string operation)
+        public KafkaActivityAttributesBuilder WithOperation(string operationName, string operationType)
         {
-            AppendAction(attribute => attribute.Operation = operation);
+            AppendAction(attribute =>
+            {
+                attribute.OperationName = operationName;
+                attribute.OperationType = operationType;
+            });
             return this;
         }
 
@@ -95,6 +109,7 @@ namespace Confluent.Kafka.Core.Diagnostics.Internal
                     {
                         attribute.ResultErrorCode = error.Code;
                         attribute.ResultErrorReason = error.Reason;
+                        attribute.ErrorType ??= error.Code.ToString();
                     }
                 }
             });
@@ -107,9 +122,8 @@ namespace Confluent.Kafka.Core.Diagnostics.Internal
             {
                 if (exception is not null)
                 {
-                    attribute.ExceptionType = exception.GetType().ExtractTypeName();
-                    attribute.ExceptionMessage = exception.Message;
-                    attribute.ExceptionStackTrace = exception.ToString();
+                    attribute.Exception = exception;
+                    attribute.ErrorType ??= exception.GetType().ExtractTypeName();
                 }
             });
             return this;
