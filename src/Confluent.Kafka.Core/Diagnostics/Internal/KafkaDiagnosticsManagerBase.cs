@@ -54,6 +54,8 @@ namespace Confluent.Kafka.Core.Diagnostics.Internal
 
             var activity = StartActivity(activityName, activityKind, propagationContext);
 
+            // The carrier wraps the live message headers. Injecting here is deliberate: the retry and
+            // dead-letter paths reuse that Headers instance, so this keeps the whole chain in one trace.
             InjectContext(activity, carrier);
 
             return activity;

@@ -1,4 +1,4 @@
-﻿using Confluent.Kafka.Core.Consumer;
+using Confluent.Kafka.Core.Consumer;
 using Confluent.Kafka.Core.Encoding;
 using Confluent.Kafka.Core.Hosting;
 using Confluent.Kafka.Core.Hosting.Internal;
@@ -99,6 +99,18 @@ namespace Confluent.Kafka.Core.Tests.Core.Hosting
 
             [Description($"faulty-processing-test-topic-2{KafkaProducerConstants.DeadLetterTopicSuffix}")]
             FaultyProcessingTestTopic2DeadLetter,
+
+            [Description("traced-processing-test-topic-1")]
+            TracedProcessingTestTopic1,
+
+            [Description($"traced-processing-test-topic-1{KafkaRetryConstants.RetryTopicSuffix}")]
+            TracedProcessingTestTopic1Retry,
+
+            [Description("traced-processing-test-topic-2")]
+            TracedProcessingTestTopic2,
+
+            [Description($"traced-processing-test-topic-2{KafkaProducerConstants.DeadLetterTopicSuffix}")]
+            TracedProcessingTestTopic2DeadLetter,
         }
 
         public sealed class ConsumeResultHandler : IConsumeResultHandler<Null, string>
@@ -260,6 +272,112 @@ namespace Confluent.Kafka.Core.Tests.Core.Hosting
             Assert.NotEmpty(activities);
 
             _mockLogger.VerifyLog(LogLevel.Error, Times.Once());
+        }
+
+        [Fact]
+        public async Task ExecuteAsync_OnException_ShouldPreserveTraceAcrossRetryTopic()
+        {
+            // Arrange
+            var topic = KafkaTopic.TracedProcessingTestTopic1.GetDescription();
+            var retryTopic = KafkaTopic.TracedProcessingTestTopic1Retry.GetDescription();
+
+            var retryActivities = new List<Activity>();
+            using var listener = KafkaActivityListener.StartListening(activity =>
+            {
+                if (activity.HasTopic(retryTopic))
+                {
+                    retryActivities.Add(activity);
+                }
+            });
+
+            using var worker = CreateWorker(
+                [topic],
+                enableRetryTopic: true,
+                handler: FaultyConsumeResultHandler.Create());
+
+            using var retryConsumer = CreateConsumer<byte[], KafkaMetadataMessage>(
+                [retryTopic],
+                deserializer: CreateJsonCoreSerializer<KafkaMetadataMessage>());
+
+            using var rootActivity = new Activity("trace-continuity-root").Start();
+
+            var expectedTraceId = rootActivity.TraceId;
+
+            await ProduceAsync(topic, "test-value");
+
+            // Act
+            var cts = new CancellationTokenSource(DefaultDelay);
+
+            await worker.StartAsync(cts.Token);
+            await worker.ExecuteAsync(cts.Token);
+
+            var retryMessage = retryConsumer.Consume(DefaultTimeout, DefaultRetryCount);
+
+            // Assert
+            Assert.NotNull(retryMessage);
+
+            AssertTraceFlowsThroughTheMessage(retryActivities, expectedTraceId);
+        }
+
+        [Fact]
+        public async Task ExecuteAsync_OnException_ShouldPreserveTraceAcrossDeadLetterTopic()
+        {
+            // Arrange
+            var topic = KafkaTopic.TracedProcessingTestTopic2.GetDescription();
+            var deadLetterTopic = KafkaTopic.TracedProcessingTestTopic2DeadLetter.GetDescription();
+
+            var deadLetterActivities = new List<Activity>();
+            using var listener = KafkaActivityListener.StartListening(activity =>
+            {
+                if (activity.HasTopic(deadLetterTopic))
+                {
+                    deadLetterActivities.Add(activity);
+                }
+            });
+
+            using var worker = CreateWorker(
+                [topic],
+                enableDeadLetterTopic: true,
+                handler: FaultyConsumeResultHandler.Create());
+
+            using var deadLetterConsumer = CreateConsumer<byte[], KafkaMetadataMessage>(
+                [deadLetterTopic],
+                deserializer: CreateJsonCoreSerializer<KafkaMetadataMessage>());
+
+            using var rootActivity = new Activity("trace-continuity-root").Start();
+
+            var expectedTraceId = rootActivity.TraceId;
+
+            await ProduceAsync(topic, "test-value");
+
+            // Act
+            var cts = new CancellationTokenSource(DefaultDelay);
+
+            await worker.StartAsync(cts.Token);
+            await worker.ExecuteAsync(cts.Token);
+
+            var deadLetterMessage = deadLetterConsumer.Consume(DefaultTimeout, DefaultRetryCount);
+
+            // Assert
+            Assert.NotNull(deadLetterMessage);
+
+            AssertTraceFlowsThroughTheMessage(deadLetterActivities, expectedTraceId);
+        }
+
+        /// <summary>
+        /// The producer and the consumer of the downstream topic are separate clients, so the only
+        /// way the consume span can be a child of the produce span is via the trace context carried
+        /// in the message headers. Asserting the trace id alone would not prove that: in a single
+        /// process the ambient Activity.Current preserves it even when propagation is broken.
+        /// </summary>
+        private static void AssertTraceFlowsThroughTheMessage(List<Activity> activities, ActivityTraceId expectedTraceId)
+        {
+            Assert.NotEmpty(activities);
+            Assert.All(activities, activity => Assert.Equal(expectedTraceId, activity.TraceId));
+
+            var produceActivity = Assert.Single(activities, activity => activity.Kind == ActivityKind.Producer);
+
+            Assert.Contains(activities, activity => activity.Kind == ActivityKind.Client && activity.ParentSpanId == produceActivity.SpanId);
         }
 
         private IKafkaConsumerWorker<TKey, TValue> CreateWorker<TKey, TValue>(
