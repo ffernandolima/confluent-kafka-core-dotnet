@@ -1,4 +1,4 @@
-using Confluent.Kafka.Core.Serialization.Internal;
+﻿using Confluent.Kafka.Core.Serialization.Internal;
 using Confluent.Kafka.SyncOverAsync;
 using System;
 using System.Threading.Tasks;

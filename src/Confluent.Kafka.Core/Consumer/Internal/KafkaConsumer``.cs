@@ -1,4 +1,4 @@
-using Confluent.Kafka.Core.Conversion.Internal;
+﻿using Confluent.Kafka.Core.Conversion.Internal;
 using Confluent.Kafka.Core.Diagnostics.Internal;
 using Confluent.Kafka.Core.Internal;
 using Confluent.Kafka.Core.Models;

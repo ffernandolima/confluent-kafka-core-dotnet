@@ -1,4 +1,4 @@
-using Confluent.Kafka.Core.Consumer;
+﻿using Confluent.Kafka.Core.Consumer;
 using Confluent.Kafka.Core.Consumer.Internal;
 using Confluent.Kafka.Core.Diagnostics;
 using Confluent.Kafka.Core.Diagnostics.Internal;

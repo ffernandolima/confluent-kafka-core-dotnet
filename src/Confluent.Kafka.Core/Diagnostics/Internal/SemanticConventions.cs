@@ -1,4 +1,4 @@
-namespace Confluent.Kafka.Core.Diagnostics.Internal
+﻿namespace Confluent.Kafka.Core.Diagnostics.Internal
 {
     /// <summary>
     /// Semantic Conventions v1.44.0

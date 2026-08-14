@@ -1,4 +1,4 @@
-using Confluent.Kafka.Core.Client;
+﻿using Confluent.Kafka.Core.Client;
 using Confluent.Kafka.Core.Consumer;
 using Confluent.Kafka.Core.Producer;
 using Confluent.Kafka.Core.Serialization.SchemaRegistry.Avro;

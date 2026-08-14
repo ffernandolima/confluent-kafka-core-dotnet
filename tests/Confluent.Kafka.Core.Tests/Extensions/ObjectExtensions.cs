@@ -1,4 +1,4 @@
-namespace Confluent.Kafka.Core.Tests.Extensions
+﻿namespace Confluent.Kafka.Core.Tests.Extensions
 {
     public static class ObjectExtensions
     {

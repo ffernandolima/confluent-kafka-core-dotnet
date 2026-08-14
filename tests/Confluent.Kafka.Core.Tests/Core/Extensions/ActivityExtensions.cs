@@ -1,4 +1,4 @@
-using Confluent.Kafka.Core.Diagnostics.Internal;
+﻿using Confluent.Kafka.Core.Diagnostics.Internal;
 using System.Diagnostics;
 using System.Linq;
 

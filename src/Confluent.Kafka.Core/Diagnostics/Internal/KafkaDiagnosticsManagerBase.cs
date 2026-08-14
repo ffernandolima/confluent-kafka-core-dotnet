@@ -1,4 +1,4 @@
-using Confluent.Kafka.Core.Consumer;
+﻿using Confluent.Kafka.Core.Consumer;
 using Confluent.Kafka.Core.Hosting;
 using Confluent.Kafka.Core.Producer;
 using System;

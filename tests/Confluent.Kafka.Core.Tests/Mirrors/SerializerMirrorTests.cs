@@ -1,4 +1,4 @@
-using Confluent.Kafka.Core.Serialization.JsonCore;
+﻿using Confluent.Kafka.Core.Serialization.JsonCore;
 using Confluent.Kafka.Core.Serialization.NewtonsoftJson;
 using Newtonsoft.Json;
 using System.Text.Json;

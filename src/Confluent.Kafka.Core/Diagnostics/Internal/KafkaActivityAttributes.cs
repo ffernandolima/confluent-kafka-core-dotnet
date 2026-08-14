@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 
 namespace Confluent.Kafka.Core.Diagnostics.Internal
 {

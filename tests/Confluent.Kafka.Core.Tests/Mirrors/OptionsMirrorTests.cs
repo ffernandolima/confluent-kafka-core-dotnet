@@ -1,4 +1,4 @@
-using Confluent.Kafka.Core.Retry.Polly;
+﻿using Confluent.Kafka.Core.Retry.Polly;
 using Confluent.Kafka.Core.Serialization.ProtobufNet;
 using Xunit;
 

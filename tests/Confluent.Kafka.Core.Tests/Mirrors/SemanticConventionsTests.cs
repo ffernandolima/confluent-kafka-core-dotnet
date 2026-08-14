@@ -1,4 +1,4 @@
-using Confluent.Kafka.Core.Diagnostics.Internal;
+﻿using Confluent.Kafka.Core.Diagnostics.Internal;
 using Xunit;
 
 namespace Confluent.Kafka.Core.Tests.Mirrors

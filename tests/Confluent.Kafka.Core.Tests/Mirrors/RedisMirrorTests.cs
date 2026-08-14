@@ -1,4 +1,4 @@
-using Confluent.Kafka.Core.Idempotency.Redis;
+﻿using Confluent.Kafka.Core.Idempotency.Redis;
 using StackExchange.Redis;
 using Xunit;
 

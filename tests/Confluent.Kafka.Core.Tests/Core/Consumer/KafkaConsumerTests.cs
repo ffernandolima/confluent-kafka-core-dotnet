@@ -1,4 +1,4 @@
-using Confluent.Kafka.Core.Consumer;
+﻿using Confluent.Kafka.Core.Consumer;
 using Confluent.Kafka.Core.Encoding;
 using Confluent.Kafka.Core.Models;
 using Confluent.Kafka.Core.Producer;

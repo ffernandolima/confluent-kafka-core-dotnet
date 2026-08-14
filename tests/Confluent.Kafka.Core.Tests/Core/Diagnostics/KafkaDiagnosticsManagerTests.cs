@@ -1,4 +1,4 @@
-using Confluent.Kafka.Core.Diagnostics;
+﻿using Confluent.Kafka.Core.Diagnostics;
 using Confluent.Kafka.Core.Diagnostics.Internal;
 using System;
 using System.Collections.Generic;

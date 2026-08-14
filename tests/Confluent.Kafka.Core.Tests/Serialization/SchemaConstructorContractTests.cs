@@ -1,4 +1,4 @@
-using Confluent.SchemaRegistry;
+﻿using Confluent.SchemaRegistry;
 using System;
 using System.Collections.Generic;
 using Xunit;

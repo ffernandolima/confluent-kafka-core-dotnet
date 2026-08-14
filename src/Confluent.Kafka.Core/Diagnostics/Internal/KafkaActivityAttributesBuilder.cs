@@ -1,4 +1,4 @@
-using Confluent.Kafka.Core.Encoding;
+﻿using Confluent.Kafka.Core.Encoding;
 using Confluent.Kafka.Core.Internal;
 using Confluent.Kafka.Core.Models.Internal;
 using System;

@@ -1,4 +1,4 @@
-namespace Confluent.Kafka.Core.Diagnostics.Internal
+﻿namespace Confluent.Kafka.Core.Diagnostics.Internal
 {
     /// <summary>
     /// Values for messaging.operation.name. Free-form, and also used to build the span name.
