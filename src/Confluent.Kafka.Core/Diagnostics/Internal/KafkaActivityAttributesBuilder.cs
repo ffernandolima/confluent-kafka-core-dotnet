@@ -14,7 +14,7 @@ namespace Confluent.Kafka.Core.Diagnostics.Internal
                 var serversInfo = KafkaServersInfo.Parse(bootstrapServers);
                 if (serversInfo is not null)
                 {
-                    attribute.ServerAddress = serversInfo.ServerHostname ?? serversInfo.ServerIpAddress;
+                    attribute.ServerAddress = serversInfo.ServerAddress;
                     attribute.ServerPort = serversInfo.ServerPort;
                 }
             });
