@@ -329,6 +329,38 @@ namespace Confluent.Kafka.Core.Tests.Core.Producer
             _mockLogger.VerifyLog(LogLevel.Error, Times.Never());
         }
 
+        /// <summary>
+        /// The sync path records from the delivery report, not from the Produce call returning. 
+        /// The partition proves it: the request carries Partition.Any, which is not reported, so a partition
+        /// tag can only have come from the report. Recording earlier would also count a delivery that later failed as a success.
+        /// </summary>
+        [Fact]
+        public void Produce_RecordsMetricsFromTheDeliveryReport()
+        {
+            // Arrange
+            using var meterListener = new KafkaMeterListener();
+
+            // Act
+            _producer.Produce(new Message<Null, string> { Value = "sync-metrics-value" });
+
+            Assert.Equal(0, _producer.Flush(FlushTimeout));
+
+            // Assert
+            var duration = Assert.Single(ForThisTopic(meterListener, SemanticConventions.Metrics.ClientOperationDuration));
+            var sent = Assert.Single(ForThisTopic(meterListener, SemanticConventions.Metrics.ClientSentMessages));
+
+            Assert.Equal(1, sent.Value);
+
+            foreach (var measurement in new[] { duration, sent })
+            {
+                Assert.Equal("publish", measurement.GetTag(SemanticConventions.Messaging.OperationName));
+                Assert.Equal("0", measurement.GetTag(SemanticConventions.Messaging.Kafka.DestinationPartitionId));
+                Assert.False(measurement.HasTag(SemanticConventions.Messaging.ErrorType));
+            }
+
+            _mockLogger.VerifyLog(LogLevel.Error, Times.Never());
+        }
+
         private static IEnumerable<MeasurementRecord> ForThisTopic(KafkaMeterListener listener, string instrumentName)
             => listener.ByInstrument(instrumentName)
                        .Where(measurement => Equals(measurement.GetTag(SemanticConventions.Messaging.DestinationName), Topic));

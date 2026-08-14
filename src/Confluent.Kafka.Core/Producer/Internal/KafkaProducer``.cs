@@ -389,6 +389,11 @@ namespace Confluent.Kafka.Core.Producer.Internal
 
                         produceResult.Complete(deliveryReport);
 
+                        // Recorded from the delivery report rather than after Produce returns.
+                        // The report is where the outcome and the resolved partition are known, so this measures the same
+                        // thing ProduceAsync does and attributes a failed delivery instead of counting it as a success.
+                        RecordProductionMetrics(startTimestamp, topicPartition, deliveryReport);
+
                         deliveryHandler?.Invoke(deliveryReport);
                     });
 
@@ -407,6 +412,9 @@ namespace Confluent.Kafka.Core.Producer.Internal
                 else
                 {
                     _producer.Produce(topicPartition, message);
+
+                    // No delivery report will ever arrive, so the enqueue is the only observable outcome.
+                    RecordProductionMetrics(startTimestamp, topicPartition, deliveryResult: null);
                 }
 
                 if (!produceResult.DeliveryHandled)
@@ -444,10 +452,6 @@ namespace Confluent.Kafka.Core.Producer.Internal
                 }
 
                 _options.DiagnosticsManager!.Enrich(activity, produceResult.DeliveryReport, _options);
-
-                // On this path the operation is the enqueue: the delivery report may be served later on a
-                // background thread, so only the inline case contributes a partition and an error.
-                RecordProductionMetrics(startTimestamp, topicPartition, produceResult.DeliveryReport);
             }
             catch (ProduceException<TKey, TValue> ex)
             {
