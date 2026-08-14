@@ -7,7 +7,7 @@
 
 - **Distributed Tracing**: Utilizes the `System.Diagnostics` implementation for tracing, which is part of the Kafka Core.
 - **OpenTelemetry Integration**: Registers the `Confluent.Kafka.Core` source with the `TracerProviderBuilder` from the OpenTelemetry API.
-- **Automatic Semantic Conventions**: By default, the library adds all tags from the OpenTelemetry semantic conventions for messaging.
+- **Automatic Semantic Conventions**: Spans are tagged automatically, following the OpenTelemetry semantic conventions for messaging. The attributes emitted are listed below.
 
 ### Installation :hammer_and_wrench:
 
@@ -85,7 +85,7 @@ Attributes emitted:
 | `messaging.system` | always `kafka` |
 | `messaging.operation.name` | `publish`, `receive` or `process` |
 | `messaging.operation.type` | `send`, `receive` or `process` — note publishing maps to `send` |
-| `messaging.client.id` | taken from your `ClientId` configuration |
+| `messaging.client.id` | your configured `ClientId`, or `rdkafka` when unset |
 | `messaging.destination.name` | topic |
 | `messaging.destination.partition.id` | partition, as a string |
 | `messaging.consumer.group.name` | consumers only |

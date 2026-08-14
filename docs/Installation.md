@@ -66,6 +66,13 @@
     dotnet add package Confluent.Kafka.Core.Serialization.SchemaRegistry.Protobuf
     ```
 
+### Supported Frameworks :dart:
+
+Every package targets `netstandard2.0`, `netstandard2.1`, `net8.0`, `net9.0` and `net10.0`.
+
+Projects on .NET 8 or later resolve a matching target directly. Older runtimes that support .NET
+Standard 2.0, including .NET Framework 4.6.2 and above, resolve the `netstandard2.0` target instead.
+
 ### Additional Notes :spiral_notepad:
 - Ensure you have the .NET SDK installed on your machine to run these commands.
 - You can also install these packages using the NuGet Package Manager in Visual Studio by searching for each package name.
