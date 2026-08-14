@@ -1,5 +1,6 @@
 ﻿using Confluent.Kafka.Core.Threading.Internal;
 using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace Confluent.Kafka.Core.Hosting.Internal
@@ -12,6 +13,12 @@ namespace Confluent.Kafka.Core.Hosting.Internal
         public object MessageId { get; private set; }
         public TaskActivity TaskActivity { get; private set; }
         public ConsumeResult<TKey, TValue> ConsumeResult { get; private set; }
+
+        /// <summary>
+        /// Taken at dispatch, so messaging.process.duration covers the whole processing lifecycle rather
+        /// than the activity, which is absent when nothing listens and when sampling drops the span.
+        /// </summary>
+        public long StartTimestamp { get; } = Stopwatch.GetTimestamp();
 
         public int Id => TaskActivity.ExecutingTask!.Id;
         public bool IsCompleted => TaskActivity.ExecutingTask!.IsCompleted;

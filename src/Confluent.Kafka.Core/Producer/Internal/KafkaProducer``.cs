@@ -371,6 +371,8 @@ namespace Confluent.Kafka.Core.Producer.Internal
 
             var produceResult = new ProduceResult<TKey, TValue>(topicPartition, message);
 
+            var startTimestamp = Stopwatch.GetTimestamp();
+
             using var activity = StartActivity(topicPartition.Topic, message.Headers!.ToDictionary());
 
             _logger.LogProducingNewMessage(messageId, topicPartition.Topic, topicPartition.Partition);
@@ -442,10 +444,14 @@ namespace Confluent.Kafka.Core.Producer.Internal
                 }
 
                 _options.DiagnosticsManager!.Enrich(activity, produceResult.DeliveryReport, _options);
+
+                // On this path the operation is the enqueue: the delivery report may be served later on a
+                // background thread, so only the inline case contributes a partition and an error.
+                RecordProductionMetrics(startTimestamp, topicPartition, produceResult.DeliveryReport);
             }
             catch (ProduceException<TKey, TValue> ex)
             {
-                HandleProduceException(ex, activity, messageId);
+                HandleProduceException(ex, activity, messageId, startTimestamp);
 
                 throw;
             }
@@ -461,6 +467,8 @@ namespace Confluent.Kafka.Core.Producer.Internal
             message.EnsureDefaultMetadata();
 
             var messageId = message.GetId(_options.MessageIdHandler);
+
+            var startTimestamp = Stopwatch.GetTimestamp();
 
             using var activity = StartActivity(topicPartition.Topic, message.Headers!.ToDictionary());
 
@@ -481,11 +489,13 @@ namespace Confluent.Kafka.Core.Producer.Internal
 
                 _options.DiagnosticsManager!.Enrich(activity, deliveryResult, _options);
 
+                RecordProductionMetrics(startTimestamp, topicPartition, deliveryResult);
+
                 return deliveryResult;
             }
             catch (ProduceException<TKey, TValue> ex)
             {
-                HandleProduceException(ex, activity, messageId);
+                HandleProduceException(ex, activity, messageId, startTimestamp);
 
                 throw;
             }
@@ -559,7 +569,7 @@ namespace Confluent.Kafka.Core.Producer.Internal
             }
         }
 
-        private void HandleProduceException(ProduceException<TKey, TValue> produceException, Activity activity, object messageId)
+        private void HandleProduceException(ProduceException<TKey, TValue> produceException, Activity activity, object messageId, long startTimestamp)
         {
             _logger.LogMessageProductionFailure(
                 produceException,
@@ -571,6 +581,39 @@ namespace Confluent.Kafka.Core.Producer.Internal
             activity?.SetStatus(ActivityStatusCode.Error);
 
             _options.DiagnosticsManager!.Enrich(activity, produceException, _options);
+
+            RecordProductionMetrics(
+                startTimestamp,
+                produceException.DeliveryResult!.TopicPartition,
+                produceException.DeliveryResult,
+                produceException.Error,
+                produceException);
+        }
+
+        /// <summary>
+        /// Recorded independently of the activity: 
+        /// a span is absent when nothing is listening and when sampling drops it, 
+        /// so metrics taken from one would undercount.
+        /// </summary>
+        private void RecordProductionMetrics(
+            long startTimestamp,
+            TopicPartition topicPartition,
+            DeliveryResult<TKey, TValue> deliveryResult,
+            Error error = null,
+            Exception exception = null)
+        {
+            if (!_options.ProducerConfig!.EnableDiagnostics)
+            {
+                return;
+            }
+
+            KafkaMetricsRecorder.RecordProduction(
+                startTimestamp,
+                _options.ProducerConfig!.BootstrapServers,
+                deliveryResult?.Topic ?? topicPartition?.Topic,
+                deliveryResult?.Partition ?? topicPartition?.Partition ?? Partition.Any,
+                error ?? (deliveryResult as DeliveryReport<TKey, TValue>)?.Error,
+                exception);
         }
 
         private Activity StartActivity(string topic, IDictionary<string, string> headers)

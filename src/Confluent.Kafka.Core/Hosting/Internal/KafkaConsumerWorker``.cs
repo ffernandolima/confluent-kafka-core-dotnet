@@ -427,6 +427,8 @@ namespace Confluent.Kafka.Core.Hosting.Internal
                 Logger.LogMessageProcessingSuccess(messageId);
 
                 _options.DiagnosticsManager!.Enrich(activity, consumeResult, _options);
+
+                RecordProcessingMetrics(workItem);
             }
             finally
             {
@@ -452,6 +454,8 @@ namespace Confluent.Kafka.Core.Hosting.Internal
                 Logger.LogMessageProcessingFailure(exception, messageId);
 
                 _options.DiagnosticsManager!.Enrich(activity, exception, consumeResult, _options);
+
+                RecordProcessingMetrics(workItem, exception);
 
                 if (_options.WorkerConfig!.EnableRetryTopic && ShouldProduceRetryMessage(exception, messageId))
                 {
@@ -626,6 +630,29 @@ namespace Confluent.Kafka.Core.Hosting.Internal
             var hasSameGroupId = string.Equals(_options.Consumer!.Options!.ConsumerConfig!.GroupId, retryGroupId, StringComparison.Ordinal);
 
             return hasSameGroupId;
+        }
+
+        /// <summary>
+        /// Recorded independently of the activity: 
+        /// a span is absent when nothing is listening and when sampling drops it, 
+        /// so metrics taken from one would undercount.
+        /// </summary>
+        private void RecordProcessingMetrics(BackgroundWorkItem<TKey, TValue> workItem, Exception exception = null)
+        {
+            if (!_options.WorkerConfig!.EnableDiagnostics)
+            {
+                return;
+            }
+
+            var consumerConfig = _options.Consumer!.Options!.ConsumerConfig;
+
+            KafkaMetricsRecorder.RecordProcessing(
+                workItem.StartTimestamp,
+                consumerConfig!.BootstrapServers,
+                consumerConfig!.GroupId,
+                workItem.ConsumeResult!.Topic,
+                workItem.ConsumeResult!.Partition,
+                exception);
         }
 
         protected virtual Activity StartActivity(string topic, IDictionary<string, string> headers)
