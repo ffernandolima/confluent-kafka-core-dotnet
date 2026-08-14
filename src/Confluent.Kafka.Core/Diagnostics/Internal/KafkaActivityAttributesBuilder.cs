@@ -23,7 +23,13 @@ namespace Confluent.Kafka.Core.Diagnostics.Internal
 
         public KafkaActivityAttributesBuilder WithClientId(string clientId)
         {
-            AppendAction(attribute => attribute.ClientId = clientId);
+            AppendAction(attribute =>
+            {
+                if (!string.IsNullOrWhiteSpace(clientId))
+                {
+                    attribute.ClientId = clientId;
+                }
+            });
             return this;
         }
 

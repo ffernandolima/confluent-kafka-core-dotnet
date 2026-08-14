@@ -5,7 +5,7 @@ namespace Confluent.Kafka.Core.Diagnostics.Internal
     internal sealed class KafkaActivityAttributes
     {
         public string System { get; set; } = "kafka";
-        public string ClientId { get; set; }
+        public string ClientId { get; set; } = "rdkafka";
         public string OperationName { get; set; }
         public string OperationType { get; set; }
         public string MessageKey { get; set; }
