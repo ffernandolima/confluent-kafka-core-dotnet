@@ -13,7 +13,7 @@
 
     <PropertyGroup Label="Package">
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <Version>1.0.6</Version>
+        <Version>2.0.0</Version>
         <Authors>Lima Technology Services;Fernando Luiz de Lima</Authors>
         <Copyright>Copyright © Lima Technology Services;Fernando Luiz de Lima</Copyright>
         <PackageProjectUrl>https://github.com/ffernandolima/confluent-kafka-core-dotnet</PackageProjectUrl>
