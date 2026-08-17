@@ -8,6 +8,7 @@
 - **Distributed Tracing**: Utilizes the `System.Diagnostics` implementation for tracing, which is part of the Kafka Core.
 - **OpenTelemetry Integration**: Registers the `Confluent.Kafka.Core` source with the `TracerProviderBuilder` from the OpenTelemetry API.
 - **Automatic Semantic Conventions**: Spans are tagged automatically, following the OpenTelemetry semantic conventions for messaging. The attributes emitted are listed below.
+- **Metrics**: The four messaging metrics are emitted from the `Confluent.Kafka.Core` meter.
 
 ### Installation :hammer_and_wrench:
 
@@ -103,6 +104,45 @@ The following are specific to this library and are not part of the OpenTelemetry
 carry Kafka error detail that `error.type` cannot express:
 `messaging.kafka.result.is_error`, `messaging.kafka.result.error_code`,
 `messaging.kafka.result.error_reason` and `messaging.kafka.processing.is_error`.
+
+### Metrics :bar_chart:
+
+Metrics are emitted from the `Confluent.Kafka.Core` meter. Register it alongside the tracing source:
+
+```C#
+builder.Services.AddOpenTelemetry()
+    .WithMetrics(builder => builder.AddKafkaCoreInstrumentation()); // Adds Confluent.Kafka.Core meter
+```
+
+There is no configuration to turn metrics on. Recording is nearly free while no `MeterProvider`
+listens, so registering the meter is the opt-in. Setting `EnableDiagnostics` to `false` disables
+tracing and metrics together.
+
+The library emits all four metrics defined by the messaging conventions, following
+[messaging-metrics.md](https://github.com/open-telemetry/semantic-conventions/blob/v1.44.0/docs/messaging/messaging-metrics.md):
+
+| Metric | Instrument | Unit | Recorded on |
+|---|---|---|---|
+| `messaging.client.operation.duration` | Histogram | `s` | producing and consuming |
+| `messaging.process.duration` | Histogram | `s` | worker processing |
+| `messaging.client.sent.messages` | Counter | `{message}` | producing |
+| `messaging.client.consumed.messages` | Counter | `{message}` | consuming |
+
+Attributes are a subset of the span attributes: `messaging.system`, `messaging.operation.name`,
+`messaging.operation.type`, `messaging.consumer.group.name` (consumers), `messaging.destination.name`,
+`messaging.destination.partition.id`, `server.address`, `server.port`, and `error.type` on failure.
+
+The counters measure attempts, so a failed operation is counted and told apart by `error.type`.
+An empty poll and a partition EOF are not message deliveries, so neither is recorded.
+
+> [!NOTE]
+> Metrics are recorded independently of the spans. A span is absent when nothing is listening and
+> when sampling drops it, so metrics derived from one would undercount in proportion to the sampling
+> rate.
+
+Consumer lag is deliberately absent: it is not part of the OpenTelemetry messaging conventions, and
+it cannot be derived without the broker high-watermark. Use `StatisticsIntervalMs` with a statistics
+handler if you need it today.
 
 ### Additional Resources :spiral_notepad:
 

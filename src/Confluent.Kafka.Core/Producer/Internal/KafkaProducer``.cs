@@ -371,6 +371,8 @@ namespace Confluent.Kafka.Core.Producer.Internal
 
             var produceResult = new ProduceResult<TKey, TValue>(topicPartition, message);
 
+            var startTimestamp = Stopwatch.GetTimestamp();
+
             using var activity = StartActivity(topicPartition.Topic, message.Headers!.ToDictionary());
 
             _logger.LogProducingNewMessage(messageId, topicPartition.Topic, topicPartition.Partition);
@@ -386,6 +388,11 @@ namespace Confluent.Kafka.Core.Producer.Internal
                         _logger.LogCallbackEventsServed(messageId);
 
                         produceResult.Complete(deliveryReport);
+
+                        // Recorded from the delivery report rather than after Produce returns.
+                        // The report is where the outcome and the resolved partition are known, so this measures the same
+                        // thing ProduceAsync does and attributes a failed delivery instead of counting it as a success.
+                        RecordProductionMetrics(startTimestamp, topicPartition, deliveryReport);
 
                         deliveryHandler?.Invoke(deliveryReport);
                     });
@@ -405,6 +412,9 @@ namespace Confluent.Kafka.Core.Producer.Internal
                 else
                 {
                     _producer.Produce(topicPartition, message);
+
+                    // No delivery report will ever arrive, so the enqueue is the only observable outcome.
+                    RecordProductionMetrics(startTimestamp, topicPartition, deliveryResult: null);
                 }
 
                 if (!produceResult.DeliveryHandled)
@@ -445,7 +455,7 @@ namespace Confluent.Kafka.Core.Producer.Internal
             }
             catch (ProduceException<TKey, TValue> ex)
             {
-                HandleProduceException(ex, activity, messageId);
+                HandleProduceException(ex, activity, messageId, startTimestamp);
 
                 throw;
             }
@@ -461,6 +471,8 @@ namespace Confluent.Kafka.Core.Producer.Internal
             message.EnsureDefaultMetadata();
 
             var messageId = message.GetId(_options.MessageIdHandler);
+
+            var startTimestamp = Stopwatch.GetTimestamp();
 
             using var activity = StartActivity(topicPartition.Topic, message.Headers!.ToDictionary());
 
@@ -481,11 +493,13 @@ namespace Confluent.Kafka.Core.Producer.Internal
 
                 _options.DiagnosticsManager!.Enrich(activity, deliveryResult, _options);
 
+                RecordProductionMetrics(startTimestamp, topicPartition, deliveryResult);
+
                 return deliveryResult;
             }
             catch (ProduceException<TKey, TValue> ex)
             {
-                HandleProduceException(ex, activity, messageId);
+                HandleProduceException(ex, activity, messageId, startTimestamp);
 
                 throw;
             }
@@ -559,7 +573,7 @@ namespace Confluent.Kafka.Core.Producer.Internal
             }
         }
 
-        private void HandleProduceException(ProduceException<TKey, TValue> produceException, Activity activity, object messageId)
+        private void HandleProduceException(ProduceException<TKey, TValue> produceException, Activity activity, object messageId, long startTimestamp)
         {
             _logger.LogMessageProductionFailure(
                 produceException,
@@ -571,6 +585,39 @@ namespace Confluent.Kafka.Core.Producer.Internal
             activity?.SetStatus(ActivityStatusCode.Error);
 
             _options.DiagnosticsManager!.Enrich(activity, produceException, _options);
+
+            RecordProductionMetrics(
+                startTimestamp,
+                produceException.DeliveryResult!.TopicPartition,
+                produceException.DeliveryResult,
+                produceException.Error,
+                produceException);
+        }
+
+        /// <summary>
+        /// Recorded independently of the activity: 
+        /// a span is absent when nothing is listening and when sampling drops it, 
+        /// so metrics taken from one would undercount.
+        /// </summary>
+        private void RecordProductionMetrics(
+            long startTimestamp,
+            TopicPartition topicPartition,
+            DeliveryResult<TKey, TValue> deliveryResult,
+            Error error = null,
+            Exception exception = null)
+        {
+            if (!_options.ProducerConfig!.EnableDiagnostics)
+            {
+                return;
+            }
+
+            KafkaMetricsRecorder.RecordProduction(
+                startTimestamp,
+                _options.ProducerConfig!.BootstrapServers,
+                deliveryResult?.Topic ?? topicPartition?.Topic,
+                deliveryResult?.Partition ?? topicPartition?.Partition ?? Partition.Any,
+                error ?? (deliveryResult as DeliveryReport<TKey, TValue>)?.Error,
+                exception);
         }
 
         private Activity StartActivity(string topic, IDictionary<string, string> headers)

@@ -1,5 +1,27 @@
 # Changelog
 
+## 2.1.0
+
+### Added
+
+- **OpenTelemetry messaging metrics.** All four metrics defined by semantic conventions v1.44.0 are
+  emitted from the `Confluent.Kafka.Core` meter: `messaging.client.operation.duration`,
+  `messaging.process.duration`, `messaging.client.sent.messages` and
+  `messaging.client.consumed.messages`. Both histograms carry the conventions' explicit bucket advice.
+- `MeterProviderBuilder.AddKafkaCoreInstrumentation()` in `Confluent.Kafka.Core.OpenTelemetry`,
+  mirroring the existing `TracerProviderBuilder` extension.
+
+There is no new configuration. Recording is nearly free while no `MeterProvider` listens, so
+registering the meter is the opt-in; `EnableDiagnostics = false` disables tracing and metrics
+together. No public interface changed, so this release is additive for implementers as well as callers.
+
+Metrics are recorded independently of the spans, because a span is absent when nothing is listening
+and when sampling drops it — metrics derived from one would undercount in proportion to the sampling
+rate.
+
+Consumer lag is not included: it is absent from the messaging conventions and cannot be derived
+without the broker high-watermark.
+
 ## 2.0.0
 
 ### Breaking: telemetry attributes renamed

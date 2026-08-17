@@ -1,4 +1,5 @@
 ﻿using Confluent.Kafka.Core.Consumer;
+using Confluent.Kafka.Core.Diagnostics.Internal;
 using Confluent.Kafka.Core.Encoding;
 using Confluent.Kafka.Core.Hosting;
 using Confluent.Kafka.Core.Hosting.Internal;
@@ -150,6 +151,8 @@ namespace Confluent.Kafka.Core.Tests.Core.Hosting
                 }
             });
 
+            using var meterListener = new KafkaMeterListener();
+
             using var worker = CreateWorker(
                 [topic],
                 handler: ConsumeResultHandler.Create());
@@ -170,6 +173,15 @@ namespace Confluent.Kafka.Core.Tests.Core.Hosting
                 workerImpl.WorkItems.All(workItem => workItem.IsHandled || workItem.IsCompleted));
 
             Assert.NotEmpty(activities);
+
+            var processed = Assert.Single(
+                meterListener.ByInstrument(SemanticConventions.Metrics.ProcessDuration),
+                measurement => Equals(measurement.GetTag(SemanticConventions.Messaging.DestinationName), topic));
+
+            Assert.Equal("s", processed.Unit);
+            Assert.Equal("process", processed.GetTag(SemanticConventions.Messaging.OperationName));
+            Assert.Equal("process", processed.GetTag(SemanticConventions.Messaging.OperationType));
+            Assert.False(processed.HasTag(SemanticConventions.Messaging.ErrorType));
 
             _mockLogger.VerifyLog(LogLevel.Error, Times.Never());
         }

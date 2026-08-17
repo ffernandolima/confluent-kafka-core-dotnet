@@ -42,5 +42,24 @@
                 public const string ProcessingIsError = "messaging.kafka.processing.is_error";
             }
         }
+
+        /// <summary>
+        /// https://github.com/open-telemetry/semantic-conventions/blob/v1.44.0/docs/messaging/messaging-metrics.md
+        /// </summary>
+        internal static class Metrics
+        {
+            public const string ClientOperationDuration = "messaging.client.operation.duration";
+            public const string ClientSentMessages = "messaging.client.sent.messages";
+            public const string ClientConsumedMessages = "messaging.client.consumed.messages";
+            public const string ProcessDuration = "messaging.process.duration";
+
+            public const string DurationUnit = "s";
+            public const string MessageUnit = "{message}";
+
+            /// <summary>
+            /// The ExplicitBucketBoundaries advisory parameter both duration histograms are specified with.
+            /// </summary>
+            public static readonly double[] DurationBuckets = [0.005, 0.01, 0.025, 0.05, 0.075, 0.1, 0.25, 0.5, 0.75, 1, 2.5, 5, 7.5, 10];
+        }
     }
 }

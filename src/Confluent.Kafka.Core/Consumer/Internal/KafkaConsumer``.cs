@@ -729,15 +729,17 @@ namespace Confluent.Kafka.Core.Consumer.Internal
         {
             ConsumeResult<TKey, TValue> consumeResult;
 
+            var startTimestamp = Stopwatch.GetTimestamp();
+
             try
             {
                 consumeResult = _consumer.Consume(millisecondsTimeout);
 
-                consumeResult = PostConsumeInternal(consumeResult);
+                consumeResult = PostConsumeInternal(consumeResult, startTimestamp);
             }
             catch (ConsumeException ex)
             {
-                HandleConsumeException(ex);
+                HandleConsumeException(ex, startTimestamp);
 
                 throw;
             }
@@ -749,15 +751,17 @@ namespace Confluent.Kafka.Core.Consumer.Internal
         {
             ConsumeResult<TKey, TValue> consumeResult;
 
+            var startTimestamp = Stopwatch.GetTimestamp();
+
             try
             {
                 consumeResult = _consumer.Consume(timeout);
 
-                consumeResult = PostConsumeInternal(consumeResult);
+                consumeResult = PostConsumeInternal(consumeResult, startTimestamp);
             }
             catch (ConsumeException ex)
             {
-                HandleConsumeException(ex);
+                HandleConsumeException(ex, startTimestamp);
 
                 throw;
             }
@@ -769,15 +773,17 @@ namespace Confluent.Kafka.Core.Consumer.Internal
         {
             ConsumeResult<TKey, TValue> consumeResult;
 
+            var startTimestamp = Stopwatch.GetTimestamp();
+
             try
             {
                 consumeResult = _consumer.Consume(cancellationToken);
 
-                consumeResult = PostConsumeInternal(consumeResult);
+                consumeResult = PostConsumeInternal(consumeResult, startTimestamp);
             }
             catch (ConsumeException ex)
             {
-                HandleConsumeException(ex);
+                HandleConsumeException(ex, startTimestamp);
 
                 throw;
             }
@@ -785,7 +791,7 @@ namespace Confluent.Kafka.Core.Consumer.Internal
             return consumeResult;
         }
 
-        private ConsumeResult<TKey, TValue> PostConsumeInternal(ConsumeResult<TKey, TValue> consumeResult)
+        private ConsumeResult<TKey, TValue> PostConsumeInternal(ConsumeResult<TKey, TValue> consumeResult, long startTimestamp)
         {
             if (consumeResult is null)
             {
@@ -848,6 +854,10 @@ namespace Confluent.Kafka.Core.Consumer.Internal
                 activity?.SetStatus(ActivityStatusCode.Ok);
 
                 _options.DiagnosticsManager!.Enrich(activity, consumeResult, _options);
+
+                // Only a delivered message is recorded, so the duration and the count stay consistent:
+                // a partition EOF and an empty poll are not message deliveries.
+                RecordConsumptionMetrics(startTimestamp, consumeResult.Topic, consumeResult.Partition);
             }
 
             return consumeResult;
@@ -928,7 +938,7 @@ namespace Confluent.Kafka.Core.Consumer.Internal
             }
         }
 
-        private void HandleConsumeException(ConsumeException consumeException)
+        private void HandleConsumeException(ConsumeException consumeException, long startTimestamp)
         {
             using var activity = StartActivity(
                 consumeException.ConsumerRecord!.Topic,
@@ -944,6 +954,13 @@ namespace Confluent.Kafka.Core.Consumer.Internal
             activity?.SetStatus(ActivityStatusCode.Error);
 
             _options.DiagnosticsManager!.Enrich(activity, consumeException, _options.ConsumerConfig);
+
+            RecordConsumptionMetrics(
+                startTimestamp,
+                consumeException.ConsumerRecord!.Topic,
+                consumeException.ConsumerRecord!.Partition,
+                consumeException.Error,
+                consumeException);
         }
 
         private void ProduceDeadLetterMessage(ConsumeResult<byte[], byte[]> consumeResult, Error error)
@@ -1023,6 +1040,32 @@ namespace Confluent.Kafka.Core.Consumer.Internal
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Recorded independently of the activity: 
+        /// a span is absent when nothing is listening and when sampling drops it, so metrics taken from one would undercount.
+        /// </summary>
+        private void RecordConsumptionMetrics(
+            long startTimestamp,
+            string topic,
+            Partition partition,
+            Error error = null,
+            Exception exception = null)
+        {
+            if (!_options.ConsumerConfig!.EnableDiagnostics)
+            {
+                return;
+            }
+
+            KafkaMetricsRecorder.RecordConsumption(
+                startTimestamp,
+                _options.ConsumerConfig!.BootstrapServers,
+                _options.ConsumerConfig!.GroupId,
+                topic,
+                partition,
+                error,
+                exception);
         }
 
         private Activity StartActivity(string topic, IDictionary<string, string> headers)

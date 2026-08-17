@@ -68,5 +68,34 @@ namespace Confluent.Kafka.Core.Tests.Mirrors
         {
             Assert.Equal(expected, actual);
         }
+
+        [Theory]
+        [InlineData("messaging.client.operation.duration", SemanticConventions.Metrics.ClientOperationDuration)]
+        [InlineData("messaging.client.sent.messages", SemanticConventions.Metrics.ClientSentMessages)]
+        [InlineData("messaging.client.consumed.messages", SemanticConventions.Metrics.ClientConsumedMessages)]
+        [InlineData("messaging.process.duration", SemanticConventions.Metrics.ProcessDuration)]
+        public void Metric_MatchesTheConvention(string expected, string actual)
+        {
+            Assert.Equal(expected, actual);
+        }
+
+        [Theory]
+        [InlineData("s", SemanticConventions.Metrics.DurationUnit)]
+        [InlineData("{message}", SemanticConventions.Metrics.MessageUnit)]
+        public void MetricUnit_MatchesTheConvention(string expected, string actual)
+        {
+            Assert.Equal(expected, actual);
+        }
+
+        /// <summary>
+        /// The ExplicitBucketBoundaries advisory parameter both duration histograms are specified with.
+        /// </summary>
+        [Fact]
+        public void DurationBuckets_MatchTheConvention()
+        {
+            Assert.Equal<double>(
+                [0.005, 0.01, 0.025, 0.05, 0.075, 0.1, 0.25, 0.5, 0.75, 1, 2.5, 5, 7.5, 10],
+                SemanticConventions.Metrics.DurationBuckets);
+        }
     }
 }
